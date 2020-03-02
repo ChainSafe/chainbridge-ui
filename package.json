@@ -16,7 +16,7 @@
   },
   "workspaces": {
     "packages": [
-      "Contracts"
+      "Contracts",
       "WebApp"
     ],
     "nohoist": [
