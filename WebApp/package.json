@@ -101,7 +101,7 @@
     "ip": "1.1.5",
     "jwt-decode": "^2.2.0",
     "lodash": "4.17.11",
-    "minimist": "1.2.0",
+    "minimist": "1.2.5",
     "node-loader": "^0.6.0",
     "normalizr": "^3.3.0",
     "prop-types": "15.7.2",
