@@ -100,7 +100,7 @@
     "invariant": "2.2.4",
     "ip": "1.1.5",
     "jwt-decode": "^2.2.0",
-    "lodash": "4.17.11",
+    "lodash": "4.17.19",
     "minimist": "1.2.0",
     "node-loader": "^0.6.0",
     "normalizr": "^3.3.0",
