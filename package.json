@@ -1,48 +1,44 @@
 {
-  "name": "dapp-boilerplate",
+  "name": "chainbridge-ui-monorepo",
   "version": "1.0.0",
-  "description": "A dapp boilerplate for standardising development",
-  "main": "index.js",
-  "repository": "https://github.com/ChainSafe/dapp-boilerplate.git",
-  "author": "Ryan Noble <ryanjnoble@gmail.com>",
+  "description": "Chainbridge UI monorepo",
+  "repository": "https://github.com/chainsafe/chainbridge-ui.git",
+  "author": "Michael Yankelev <michael@chainsafe.io>",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=12",
+    "yarn": ">=1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@sentry/cli": "1.58.0",
+    "chalk": "^4.1.0",
+    "husky": "^4.3.0",
+    "prettier": "2.1.2",
+    "pretty-quick": "^3.0.2",
+    "typescript": "^4.0.3",
+    "wsrun": "^5.2.4"
+  },
   "scripts": {
-    "build": "yarn wsrun --stages -c build",
-    "build:webapp": "yarn wsrun -p webapp -c build",
-    "start:dev": "yarn wsrun start:dev --parallel --exclude-missing",
-    "clean": "rm -rf ./node_modules && rm -rf ./*/node_modules",
-    "test:webapp": "cd Webapp && yarn test:watch"
+    "postinstall": "yarn build:contracts",
+    "build:contracts": "yarn wsrun -p @chainsafe/chainbridge-contracts -c build",
+    "build:webapp": "yarn wsrun -p @chainsafe/chainbridge-ui -c build",
+    "start:webapp": "yarn wsrun -p @chainsafe/chainbridge-ui -c start",
+    "clean:dependencies": "rm -rf ./node_modules && rm -rf ./*/**/node_modules",
+    "clean:dist": "rm -rf ./*/**/dist && rm -rf ./*/**/build && rm -rf ./*/**/storybook-static",
+    "clean": "yarn clean:dependencies && yarn clean:dist",
+    "prettier": "prettier --config .prettierrc 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --write",
+    "start:tunnel": "./ngrok http https://localhost:3000"
   },
   "workspaces": {
     "packages": [
-      "Contracts",
-      "WebApp"
-    ],
-    "nohoist": [
-      "**/*"
+      "packages/*"
     ]
   },
-  "devDependencies": {
-    "chalk": "^2.0.1",
-    "jest": "^24.5.0",
-    "jest-haste-map": "^24.5.0",
-    "jest-resolve": "^24.5.0",
-    "precommit": "^1.2.2",
-    "wsrun": "3.6.5"
-  },
-  "resolutions": {
-    "**/hoist-non-react-statics": "^3.0.1"
-  },
-  "keywords": [
-    "NodeJS",
-    "React",
-    "Redux",
-    "Monorepo",
-    "Ethers"
-  ],
-  "engines": {
-    "node": ">=8.0",
-    "yarn": ">=1.9.4"
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --staged"
+    }
   }
 }
