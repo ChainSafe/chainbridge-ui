@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@chainsafe/web3-context": "1.0.4",
-    "@imploy/common-themes": "1.0.0",
-    "@imploy/common-components": "1.0.0",
+    "@imploy/common-themes": "1.0.1",
+    "@imploy/common-components": "1.0.1",
     "@sentry/react": "^5.26.0",
     "@types/yup": "^0.29.8",
     "bnc-onboard": "^1.14.0",
