@@ -1661,13 +1661,13 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@imploy/common-components@1.0.0":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.0/6bc33b54ea766b5a2ee2f674ad72b376901d96933a8bbc493538833a004a1b68#49ded9698600bbb9bfe5bffe59b21fed93099d3d"
-  integrity sha512-Ij4+urpXN3B7wJ09iL7RKl5Fx/1Kw43MH6JmyRDRjF1uGVOI9OnRvmgID6n2pD7XYmhf28TmU63r/6R2VT2Zbw==
+"@imploy/common-components@1.0.1":
+  version "1.0.1"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.1/fdd67fd3ef029276dcda0029075758f7c182fd5199e73daab0089af8e97fa115#518a4381a0e896811240bf10574dabc2b09c5282"
+  integrity sha512-P2bkzgW+s1XO97eMrMLonu+Rhe6WoD/8Bur2C1LAtLw+Lh5E1ghjEKrzZ++tkdNQfoi7mpkptov6WBqYcwrf+w==
   dependencies:
     "@material-ui/styles" "^4.10.0"
-    "@types/react-select" "^3.0.20"
+    "@types/react-select" "^3.0.22"
     "@types/react-toast-notifications" "^2.4.0"
     a11y-react-emoji "^1.1.2"
     clsx "^1.1.1"
@@ -1681,10 +1681,10 @@
     reset-css "^5.0.1"
     rollup-plugin-babel "^4.4.0"
 
-"@imploy/common-themes@1.0.0":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-themes/1.0.0/d01be4ecaa4af080a48f3c3ed814b584be8d858e697fe3a4ed147f6ff910622c#b3cb434eac94b62ae245c236e643dbabdb67cfda"
-  integrity sha512-5vdmUMFoHCc/0yZOBEau7aaZnuUeuG8qC5m3v06OFEdxiUmDIFw+7MrwLrfiVseWgyHYyDJKDPlWnabxd+EnRA==
+"@imploy/common-themes@1.0.1":
+  version "1.0.1"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-themes/1.0.1/1e7c972679596255a51da0140653065d8fc5ad0c71de749cb53ed52996cf7445#2450d60322ea7a9380485beb03a3ce78d1b6694f"
+  integrity sha512-mnFvrhNA0AF+RQZV4hjzFxNTBSWd9MEhuGEiQ3xEA6SypcGgI5Q3UwPavTMWVoF2U+KPKdBtixKMK5FeBq3Ysw==
 
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
@@ -2542,7 +2542,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-select@^3.0.20":
+"@types/react-select@^3.0.22":
   version "3.0.22"
   resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.22.tgz#b88306365e99fa86809a5c0ce0f1b4e8d0b626bf"
   integrity sha512-fqgmC979JPr/6476Pau6QnmI9zVV664R7Q92Ld1rgTn+umtUXT5X3+PO/x6O4imCZnh7XCqZcouabWAlAQJNpQ==
