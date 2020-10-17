@@ -4,7 +4,7 @@
   "description": "Chainbridge UI monorepo",
   "repository": "https://github.com/chainsafe/chainbridge-ui.git",
   "author": "Michael Yankelev <michael@chainsafe.io>",
-  "license": "MIT",
+  "license": "GPL-v3",
   "private": true,
   "engines": {
     "node": ">=12",
