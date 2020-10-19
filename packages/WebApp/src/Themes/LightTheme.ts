@@ -1,3 +1,5 @@
 import { createTheme } from "@imploy/common-themes";
 
-export const lightTheme = createTheme();
+export const lightTheme = createTheme({
+  themeConfig: {},
+});
