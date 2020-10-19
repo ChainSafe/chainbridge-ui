@@ -17,6 +17,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
+    "react-toast-notifications": "2.4.0",
     "typescript": "~4.0.3",
     "yup": "^0.29.3"
   },

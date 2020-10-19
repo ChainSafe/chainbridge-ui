@@ -16,7 +16,8 @@
     "jsx": "react",
     "sourceMap": true,
     "inlineSources": true,
-    "sourceRoot": "/"
+    "sourceRoot": "/",
+    "downlevelIteration": true
   },
   "include": ["src"]
 }

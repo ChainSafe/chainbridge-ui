@@ -13,8 +13,8 @@ import {
   FormikTextInput,
   FormikCheckboxInput,
 } from "@imploy/common-components";
-import { Formik } from "formik/dist/Formik";
-import { Form } from "formik/dist/Form";
+import { Formik, Form } from "formik";
+import { useWeb3 } from "@chainsafe/web3-context";
 
 const useStyles = makeStyles(
   ({ palette, constants, typography, breakpoints }: ITheme) =>
@@ -37,23 +37,38 @@ enum WALLET_STATE {
 
 const MainPage = () => {
   const classes = useStyles();
+  const { isReady, checkIsReady } = useWeb3();
+  const [aboutDrawerOpen, setAboutDrawerOpen] = useState(false);
+  const [changeNetworkDrawerOpen, setChangeNetworkDrawerOpen] = useState(false);
+  const [
+    networkUnsupportedModalActive,
+    setNetworkUnsupportedModalActive,
+  ] = useState(false);
+  const [transactionModalActive, setTransactionModalActive] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  const [walletState, setWalletState] = useState<WALLET_STATE>(
-    WALLET_STATE.Disconnected
-  );
+  const handleConnect = async () => {
+    setIsConnecting(true);
+    await checkIsReady();
+    setIsConnecting(false);
+  };
 
   return (
     <article className={classes.root}>
-      {walletState == WALLET_STATE.Disconnected ? (
-        <Button className={classes.connectButton}>Connect Wallet</Button>
-      ) : walletState === WALLET_STATE.Connecting ? (
+      {!isReady && (
+        <Button className={classes.connectButton} onClick={handleConnect}>
+          Connect Wallet
+        </Button>
+      )}
+      {isConnecting && (
         <section className={classes.connecting}>
           <Typography component="p" variant="body2">
             This app requires access to your wallet, please login and authorize
             access to continue.
           </Typography>
         </section>
-      ) : (
+      )}
+      {isReady && (
         <section className={classes.connected}>
           <Typography variant="body2">Home network</Typography>
         </section>
@@ -119,10 +134,10 @@ const MainPage = () => {
           </Grid>
         </Form>
       </Formik>
-      <AboutDrawer />
-      <ChangeNetworkDrawer />
-      <NetworkUnsupportedModal />
-      <TransactionModal />
+      <AboutDrawer open={aboutDrawerOpen} />
+      <ChangeNetworkDrawer open={changeNetworkDrawerOpen} />
+      <NetworkUnsupportedModal active={networkUnsupportedModalActive} />
+      <TransactionModal open={transactionModalActive} />
     </article>
   );
 };

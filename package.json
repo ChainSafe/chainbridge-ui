@@ -21,8 +21,6 @@
     "wsrun": "^5.2.4"
   },
   "scripts": {
-    "postinstall": "yarn build:contracts",
-    "build:contracts": "yarn wsrun -p @chainsafe/chainbridge-contracts -c build",
     "build:webapp": "yarn wsrun -p @chainsafe/chainbridge-ui -c build",
     "start:webapp": "yarn wsrun -p @chainsafe/chainbridge-ui -c start",
     "clean:dependencies": "rm -rf ./node_modules && rm -rf ./*/**/node_modules",
