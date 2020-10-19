@@ -11,6 +11,7 @@ import { Web3Provider } from "@chainsafe/web3-context";
 import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
+import AppWrapper from "./Layouts/AppWrapper";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -50,7 +51,9 @@ const App: React.FC<{}> = () => {
           <Web3Provider networkIds={[1]}>
             <ChainbridgeProvider>
               <Router>
-                <Routes />
+                <AppWrapper>
+                  <Routes />
+                </AppWrapper>
               </Router>
             </ChainbridgeProvider>
           </Web3Provider>

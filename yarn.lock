@@ -1224,7 +1224,7 @@
     "@emotion/utils" "0.11.3"
     "@emotion/weak-memoize" "0.2.5"
 
-"@emotion/core@^10.0.14", "@emotion/core@^10.0.15", "@emotion/core@^10.0.9":
+"@emotion/core@^10.0.15", "@emotion/core@^10.0.9":
   version "10.0.35"
   resolved "https://registry.yarnpkg.com/@emotion/core/-/core-10.0.35.tgz#513fcf2e22cd4dfe9d3894ed138c9d7a859af9b3"
   integrity sha512-sH++vJCdk025fBlRZSAhkRlSUoqSqgCzYf5fMOmqqi3bM6how+sQpg3hkgJonj8GxXM4WbD7dRO+4tegDB9fUw==
@@ -1671,14 +1671,13 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@imploy/common-components@1.0.1":
-  version "1.0.1"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.1/fdd67fd3ef029276dcda0029075758f7c182fd5199e73daab0089af8e97fa115#518a4381a0e896811240bf10574dabc2b09c5282"
-  integrity sha512-P2bkzgW+s1XO97eMrMLonu+Rhe6WoD/8Bur2C1LAtLw+Lh5E1ghjEKrzZ++tkdNQfoi7mpkptov6WBqYcwrf+w==
+"@imploy/common-components@1.0.4":
+  version "1.0.4"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.4/8627d55deb8921b712c9e3d70e29e6277043758b76547743253a8f6dd3d94218#e8947716af9ad1ac008b490a335ba0fdda623bd0"
+  integrity sha512-EjnEW+W/1RgIZXEjLTbEHuEE9XtHHux6F4ojTIzjH2D/fSHDiUAjw3XVH7VBEQ2RV/CFp4tFbjHy8OQntECalA==
   dependencies:
     "@material-ui/styles" "^4.10.0"
     "@types/react-select" "^3.0.22"
-    "@types/react-toast-notifications" "^2.4.0"
     a11y-react-emoji "^1.1.2"
     clsx "^1.1.1"
     normalize.css "^8.0.1"
@@ -1687,7 +1686,6 @@
     react-router-dom "^5.2.0"
     react-select "^3.1.0"
     react-spinners "^0.9.0"
-    react-toast-notifications "^2.4.0"
     reset-css "^5.0.1"
     rollup-plugin-babel "^4.4.0"
 
@@ -2565,13 +2563,6 @@
     "@types/react" "*"
     "@types/react-dom" "*"
     "@types/react-transition-group" "*"
-
-"@types/react-toast-notifications@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@types/react-toast-notifications/-/react-toast-notifications-2.4.0.tgz#0ca0732cfae5a6ef5939a676fffac6e64c78bc25"
-  integrity sha512-nBI6gQ0E5gwi3IcTrVOR3oKoMGRfH1gK67kI6RIKUmiV5Sc3ZC/eymYBFt6iDo0dhlYET6kdtR0tcUh9h5L0sQ==
-  dependencies:
-    "@types/react" "*"
 
 "@types/react-transition-group@*":
   version "4.4.0"
@@ -12956,14 +12947,6 @@ react-spinners@^0.9.0:
   integrity sha512-+x6eD8tn/aYLdxZjNW7fSR1uoAXLb9qq6TFYZR1dFweJvckcf/HfP8Pa/cy5HOvB/cvI4JgrYXTjh2Me3S6Now==
   dependencies:
     "@emotion/core" "^10.0.15"
-
-react-toast-notifications@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/react-toast-notifications/-/react-toast-notifications-2.4.0.tgz#6213730bd1fe158fc01aeef200687ea94c5c5b24"
-  integrity sha512-8tkrbNh7LxkiFmtqAL/AiI55efIeI+fBk3c6ImsiZ0VObb4yvOq0cqYuJHyUiv9fuD2aBxvXGVH+n4Snt8qoWA==
-  dependencies:
-    "@emotion/core" "^10.0.14"
-    react-transition-group "^4.3.0"
 
 react-transition-group@^4.3.0:
   version "4.4.1"
