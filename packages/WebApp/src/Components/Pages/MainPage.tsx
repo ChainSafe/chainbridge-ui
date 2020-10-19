@@ -12,6 +12,7 @@ import {
   Grid,
   FormikTextInput,
   FormikCheckboxInput,
+  CheckboxInput,
 } from "@imploy/common-components";
 import { Formik, Form } from "formik";
 import { useWeb3 } from "@chainsafe/web3-context";
@@ -40,8 +41,19 @@ const MainPage = () => {
     networkUnsupportedModalActive,
     setNetworkUnsupportedModalActive,
   ] = useState(false);
+  const [sendToSelf, setSendToSelf] = useState(false);
   const [transactionModalActive, setTransactionModalActive] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+
+  const handleToggleSetToSelf = () => {
+    if (sendToSelf) {
+      setSendToSelf(false);
+      //set formik value to undefined
+    } else {
+      setSendToSelf(true);
+      //set formik value to user address
+    }
+  };
 
   const handleConnect = async () => {
     !wallet && (await onboard?.walletSelect());
@@ -74,11 +86,12 @@ const MainPage = () => {
         initialValues={{
           destinationChain: destinationChain?.chainId,
           token: undefined,
+          tokenAmount: "",
           sendToSelf: false,
           destinationAddress: undefined,
         }}
         onSubmit={(values: any) => {
-          console.log("Transfer");
+          console.log("values");
         }}
       >
         <Form className={classes.formArea}>
@@ -120,9 +133,10 @@ const MainPage = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <FormikCheckboxInput
-                name="sendToSelf"
+              <CheckboxInput
                 label="I want to send funds to my address"
+                value={sendToSelf}
+                onChange={handleToggleSetToSelf}
               />
             </Grid>
             <Grid item xs={12}>

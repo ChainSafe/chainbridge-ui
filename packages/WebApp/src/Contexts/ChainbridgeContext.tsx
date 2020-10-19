@@ -1,5 +1,6 @@
 import { useWeb3 } from "@chainsafe/web3-context";
 import React, { useContext, useEffect, useState } from "react";
+import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -45,15 +46,29 @@ const chains: Chain[] = [
 ];
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
-  const { isReady, network } = useWeb3();
+  const { isReady, network, provider } = useWeb3();
   const [homeChain, setHomeChain] = useState<Chain | undefined>();
   const [destinationChain, setDestinationChain] = useState<Chain | undefined>();
   const [destinationChains, setDestinationChains] = useState<Chain[]>([]);
-
+  const [bridgeContract, setBridgeContract] = useState<Bridge | undefined>(
+    undefined
+  );
   useEffect(() => {
     if (network && isReady) {
       const home = chains.find((c) => c.chainId === network);
+      if (!home) {
+        console.log("Invalid network selected");
+        return;
+      }
       setHomeChain(home);
+      const signer = provider?.getSigner();
+      if (!signer) {
+        console.log("No signer");
+        return;
+      }
+
+      const bridge = BridgeFactory.connect(home.bridgeAddress, signer);
+      setBridgeContract(bridge);
       setDestinationChains(chains.filter((c) => c.chainId !== network));
     } else {
       setHomeChain(undefined);
@@ -66,6 +81,16 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       throw new Error("Invalid destination chain selected");
     }
     setDestinationChain(chain);
+  };
+
+  const deposit = async (tokenAddress: string, amount: number) => {
+    if (!bridgeContract) {
+      console.log("Bridge contract is not instantiated");
+      return;
+    }
+    // TODO: create data object to be passed in
+    const data = "";
+    const tx = bridgeContract.deposit(2, ERC20ResourceId, data);
   };
 
   return (
