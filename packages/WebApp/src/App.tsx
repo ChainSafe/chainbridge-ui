@@ -48,7 +48,19 @@ const App: React.FC<{}> = () => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
         <ToasterProvider autoDismiss>
-          <Web3Provider networkIds={[1]}>
+          <Web3Provider
+            networkIds={[1]}
+            tokenAddresses={["0x21605f71845f372A9ed84253d2D024B7B10999f4"]}
+            onboardConfig={{
+              walletCheck: [
+                { checkName: "accounts" },
+                { checkName: "connect" },
+              ],
+              walletSelect: {
+                wallets: [{ walletName: "metamask", preferred: true }],
+              },
+            }}
+          >
             <ChainbridgeProvider>
               <Router>
                 <AppWrapper>

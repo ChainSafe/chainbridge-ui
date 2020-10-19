@@ -52,10 +52,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
   useEffect(() => {
     if (network && isReady) {
-      console.log(network);
-
       const home = chains.find((c) => c.chainId === network);
-      console.log(home);
       setHomeChain(home);
       setDestinationChains(chains.filter((c) => c.chainId !== network));
     } else {
@@ -65,6 +62,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
   const handleSetDestination = (chainId: number) => {
     const chain = destinationChains.find((c) => c.chainId === chainId);
+    if (!chain) {
+      throw new Error("Invalid destination chain selected");
+    }
     setDestinationChain(chain);
   };
 

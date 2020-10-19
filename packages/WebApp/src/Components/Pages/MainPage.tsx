@@ -15,6 +15,7 @@ import {
 } from "@imploy/common-components";
 import { Formik, Form } from "formik";
 import { useWeb3 } from "@chainsafe/web3-context";
+import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 
 const useStyles = makeStyles(
   ({ palette, constants, typography, breakpoints }: ITheme) =>
@@ -29,15 +30,10 @@ const useStyles = makeStyles(
     })
 );
 
-enum WALLET_STATE {
-  Disconnected = "disconnected",
-  Connecting = "connecting",
-  Connected = "connected",
-}
-
 const MainPage = () => {
   const classes = useStyles();
-  const { isReady, checkIsReady } = useWeb3();
+  const { isReady, checkIsReady, wallet, onboard, tokens } = useWeb3();
+  const { homeChain, destinationChains, destinationChain } = useChainbridge();
   const [aboutDrawerOpen, setAboutDrawerOpen] = useState(false);
   const [changeNetworkDrawerOpen, setChangeNetworkDrawerOpen] = useState(false);
   const [
@@ -48,11 +44,12 @@ const MainPage = () => {
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleConnect = async () => {
+    !wallet && (await onboard?.walletSelect());
     setIsConnecting(true);
     await checkIsReady();
     setIsConnecting(false);
   };
-
+  console.log(tokens);
   return (
     <article className={classes.root}>
       {!isReady && (
@@ -68,13 +65,18 @@ const MainPage = () => {
           </Typography>
         </section>
       )}
-      {isReady && (
+      {isReady && homeChain && (
         <section className={classes.connected}>
-          <Typography variant="body2">Home network</Typography>
+          <Typography variant="body2">{homeChain.name}</Typography>
         </section>
       )}
       <Formik
-        initialValues={{}}
+        initialValues={{
+          destinationChain: destinationChain?.chainId,
+          token: undefined,
+          sendToSelf: false,
+          destinationAddress: undefined,
+        }}
         onSubmit={(values: any) => {
           console.log("Transfer");
         }}
@@ -84,35 +86,35 @@ const MainPage = () => {
             <Grid item xs={12}>
               <FormikSelectInput
                 label="Destination Network"
-                name="select"
-                options={[
-                  { label: "a", value: "a" },
-                  { label: "b", value: "b" },
-                  { label: "c", value: "c" },
-                ]}
+                name="destinationChain"
+                options={destinationChains.map((dc) => ({
+                  value: dc.chainId,
+                  label: dc.name,
+                }))}
               />
             </Grid>
             <Grid item sm={10} xs={12}>
               <FormikTextInput name="tokenAmount" type="number" />
-              <Button className={classes.maxButton} variant="primary">
+              <Button
+                className={classes.maxButton}
+                variant="primary"
+                type="button"
+              >
                 MAX
               </Button>
             </Grid>
             <Grid item sm={2} xs={12}>
-              {/* TODO Wire up to approved tokens */}
               <FormikSelectInput
                 name="token"
-                options={[
-                  {
-                    label: <div className={classes.token}>ETH</div>,
-                    value: "a",
-                  },
-                ]}
+                options={Object.keys(tokens).map((t) => ({
+                  value: t,
+                  label: tokens.get(t)?.name || t,
+                }))}
               />
             </Grid>
             <Grid item xs={12}>
               <FormikTextInput
-                name="destination"
+                name="destinationAddress"
                 label="Destination Address"
                 placeholder="Please enter the recieving address"
               />
