@@ -1,6 +1,7 @@
 import { useWeb3 } from "@chainsafe/web3-context";
 import React, { useContext, useEffect, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
+import { BigNumber, utils } from "ethers";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -83,14 +84,30 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDestinationChain(chain);
   };
 
-  const deposit = async (tokenAddress: string, amount: number) => {
+  const deposit = async (
+    tokenAddress: string,
+    amount: number,
+    recipient: string
+  ) => {
     if (!bridgeContract) {
       console.log("Bridge contract is not instantiated");
       return;
     }
     // TODO: create data object to be passed in
-    const data = "";
-    const tx = bridgeContract.deposit(2, ERC20ResourceId, data);
+    const data =
+      "0x" +
+      utils
+        .hexZeroPad(
+          // TODO Wire up dynamic token decimals
+          BigNumber.from(utils.parseUnits(amount.toString(), 18)).toHexString(),
+          32
+        )
+        .substr(2) + // Deposit Amount        (32 bytes)
+      utils
+        .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
+        .substr(2) + // len(recipientAddress) (32 bytes)
+      recipient.substr(2); // recipientAddress      (?? bytes)
+    const tx = await bridgeContract.deposit(2, ERC20ResourceId, data);
   };
 
   return (
