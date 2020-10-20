@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
 import {
@@ -33,7 +33,6 @@ const AddressInput: React.FC<IAddressInput> = ({
   size,
   label,
   labelClassName,
-  disabled = false,
   captionMessage,
 }: IAddressInput) => {
   const classes = useStyles();
@@ -51,13 +50,20 @@ const AddressInput: React.FC<IAddressInput> = ({
     }
   }, [helpers, field, senderAddress, stored, setStored]);
 
+  useEffect(() => {
+    // Used to ensure value if address changes for some reason
+    if (stored !== "" && stored !== senderAddress) {
+      setStored(senderAddress);
+    }
+  }, [senderAddress]);
+
   return (
     <section className={clsx(classes.root, className)}>
       <div>
         <TextInput
           label={label ? label : field.name}
           inputVariant={inputVariant}
-          disabled={disabled}
+          disabled={stored !== ""}
           type={type}
           size={size}
           className={classNames?.input}
