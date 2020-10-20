@@ -33,8 +33,13 @@ const useStyles = makeStyles(
 
 const MainPage = () => {
   const classes = useStyles();
-  const { isReady, checkIsReady, wallet, onboard, tokens } = useWeb3();
-  const { homeChain, destinationChains, destinationChain } = useChainbridge();
+  const { isReady, checkIsReady, wallet, onboard, tokens, address } = useWeb3();
+  const {
+    homeChain,
+    destinationChains,
+    destinationChain,
+    deposit,
+  } = useChainbridge();
   const [aboutDrawerOpen, setAboutDrawerOpen] = useState(false);
   const [changeNetworkDrawerOpen, setChangeNetworkDrawerOpen] = useState(false);
   const [
@@ -44,24 +49,34 @@ const MainPage = () => {
   const [sendToSelf, setSendToSelf] = useState(false);
   const [transactionModalActive, setTransactionModalActive] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isDepositing, setIsDepositing] = useState(false);
 
   const handleToggleSetToSelf = () => {
     if (sendToSelf) {
       setSendToSelf(false);
-      //set formik value to undefined
     } else {
       setSendToSelf(true);
-      //set formik value to user address
     }
   };
 
   const handleConnect = async () => {
-    !wallet && (await onboard?.walletSelect());
     setIsConnecting(true);
+    !wallet && (await onboard?.walletSelect());
     await checkIsReady();
     setIsConnecting(false);
   };
-  console.log(tokens);
+
+  const handleDeposit = async (tokenAddress: string) => {
+    debugger;
+    setIsDepositing(true);
+    try {
+      address && (await deposit(500, address, tokenAddress));
+    } catch (error) {
+      console.log(error);
+    }
+    setIsDepositing(false);
+  };
+
   return (
     <article className={classes.root}>
       {!isReady && (
@@ -91,7 +106,8 @@ const MainPage = () => {
           destinationAddress: undefined,
         }}
         onSubmit={(values: any) => {
-          console.log("values");
+          console.log(values);
+          handleDeposit(values.tokenAddress);
         }}
       >
         <Form className={classes.formArea}>
@@ -118,7 +134,7 @@ const MainPage = () => {
             </Grid>
             <Grid item sm={2} xs={12}>
               <FormikSelectInput
-                name="token"
+                name="tokenAddress"
                 options={Object.keys(tokens).map((t) => ({
                   value: t,
                   label: tokens.get(t)?.name || t,
@@ -140,7 +156,12 @@ const MainPage = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button type="submit" fullsize variant="primary">
+              <Button
+                type="submit"
+                fullsize
+                variant="primary"
+                disabled={!isReady || isDepositing}
+              >
                 Start transfer
               </Button>
             </Grid>
