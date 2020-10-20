@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
 import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
 import { Drawer, IDrawerProps } from "@imploy/common-components";
