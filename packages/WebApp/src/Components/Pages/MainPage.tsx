@@ -15,6 +15,7 @@ import {
 } from "@imploy/common-components";
 import { Formik } from "formik/dist/Formik";
 import { Form } from "formik/dist/Form";
+import AddressInput from "../Custom/AddressInput";
 
 const useStyles = makeStyles(
   ({ palette, constants, typography, breakpoints }: ITheme) =>
@@ -96,17 +97,7 @@ const MainPage = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <FormikTextInput
-                name="destination"
-                label="Destination Address"
-                placeholder="Please enter the recieving address"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormikCheckboxInput
-                name="sendToSelf"
-                label="I want to send funds to my address"
-              />
+              <AddressInput name="receiver" senderAddress={"0xasdas"} />
             </Grid>
             <Grid item xs={12}>
               <Button type="submit" fullsize variant="primary">
