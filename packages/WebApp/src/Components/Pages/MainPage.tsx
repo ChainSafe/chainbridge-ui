@@ -58,7 +58,7 @@ const MainPage = () => {
       {walletState == WALLET_STATE.Disconnected ? (
         <Button
           className={classes.connectButton}
-          onClick={() => evmWallet.connect()}
+          onClick={() => evmWallet.connect("injected")}
         >
           Connect Metamask
         </Button>
