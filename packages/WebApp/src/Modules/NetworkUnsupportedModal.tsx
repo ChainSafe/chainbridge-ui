@@ -4,24 +4,23 @@ import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
 import CustomModal from "../Components/Custom/CustomModal";
 import { Button, Typography } from "@imploy/common-components";
 
-const useStyles = makeStyles(
-  ({ palette, constants, typography, breakpoints }: ITheme) =>
-    createStyles({
-      root: {},
-    })
+const useStyles = makeStyles(({}: ITheme) =>
+  createStyles({
+    root: {},
+  })
 );
 
 interface INetworkUnsupportedModalProps {
-  active: boolean;
+  open: boolean;
 }
 
 const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
-  active,
+  open,
 }) => {
   const classes = useStyles();
 
   return (
-    <CustomModal className={classes.root} active={active}>
+    <CustomModal className={classes.root} active={open}>
       <section>Icon</section>
       <section>
         <Typography>Network Unsupported</Typography>

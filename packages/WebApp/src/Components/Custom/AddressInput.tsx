@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "@imploy/common-components";
 import clsx from "clsx";
-import { useField } from "formik/dist/Field";
+import { useField } from "formik";
 
 const useStyles = makeStyles(({}: ITheme) =>
   createStyles({

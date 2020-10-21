@@ -12,6 +12,7 @@ const useStyles = makeStyles(({}: ITheme) =>
 
 interface IChangeNetworkDrawerProps {
   open: boolean;
+  close: () => void;
 }
 
 const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({ open }) => {

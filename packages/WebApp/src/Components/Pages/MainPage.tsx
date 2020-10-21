@@ -11,11 +11,10 @@ import {
   FormikSelectInput,
   Grid,
   FormikTextInput,
-  FormikCheckboxInput,
 } from "@imploy/common-components";
-import { Formik } from "formik/dist/Formik";
-import { Form } from "formik/dist/Form";
+import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
+import { useWallet } from "use-wallet";
 
 const useStyles = makeStyles(
   ({ palette, constants, typography, breakpoints }: ITheme) =>
@@ -43,10 +42,26 @@ const MainPage = () => {
     WALLET_STATE.Disconnected
   );
 
+  const [aboutOpen, setAboutOpen] = useState<boolean>(false);
+  const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
+  const [networkUnsupportedOpen, setnetworkUnsupportedOpen] = useState<boolean>(
+    false
+  );
+  const [transactionModalOpen, setTransactionModalOpen] = useState<boolean>(
+    false
+  );
+
+  const evmWallet = useWallet();
+
   return (
     <article className={classes.root}>
       {walletState == WALLET_STATE.Disconnected ? (
-        <Button className={classes.connectButton}>Connect Wallet</Button>
+        <Button
+          className={classes.connectButton}
+          onClick={() => evmWallet.connect()}
+        >
+          Connect Metamask
+        </Button>
       ) : walletState === WALLET_STATE.Connecting ? (
         <section className={classes.connecting}>
           <Typography component="p" variant="body2">
@@ -110,10 +125,13 @@ const MainPage = () => {
           </Grid>
         </Form>
       </Formik>
-      <AboutDrawer />
-      <ChangeNetworkDrawer />
-      <NetworkUnsupportedModal />
-      <TransactionModal />
+      <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
+      <ChangeNetworkDrawer
+        open={changeNetworkOpen}
+        close={() => setChangeNetworkOpen(false)}
+      />
+      <NetworkUnsupportedModal open={networkUnsupportedOpen} />
+      <TransactionModal open={transactionModalOpen} />
     </article>
   );
 };

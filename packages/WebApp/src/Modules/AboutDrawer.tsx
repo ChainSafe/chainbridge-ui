@@ -12,6 +12,7 @@ const useStyles = makeStyles(({}: ITheme) =>
 
 interface IAboutDrawerProps {
   open: boolean;
+  close: () => void;
 }
 
 const AboutDrawer: React.FC<IAboutDrawerProps> = ({ open }) => {
