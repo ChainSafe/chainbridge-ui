@@ -25,6 +25,7 @@ const getLanguages = (): string[] => {
   const { languages, language, userLanguage } = window.navigator;
   if (Array.isArray(languages)) {
     // Dedupe array of languages
+    // @ts-ignore
     return [...new Set(languages.map((l) => l.split("-")[0]))];
   }
   if (language) {
@@ -60,6 +61,7 @@ const LanguageProvider = ({
   const userLocales = getLocales();
   useEffect(() => {
     const userLanguages = getLanguages();
+    // @ts-ignore
     const matchingLanguages = [...new Set(userLanguages)].filter((x) =>
       new Set(availableLanguages.map((l) => l.id)).has(x)
     );

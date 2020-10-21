@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 
-import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles } from "@imploy/common-themes";
 import {
   CheckboxInput,
   FormikTextInputProps,
@@ -9,7 +9,7 @@ import {
 import clsx from "clsx";
 import { useField } from "formik";
 
-const useStyles = makeStyles(({}: ITheme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {},
   })
@@ -38,7 +38,7 @@ const AddressInput: React.FC<IAddressInput> = ({
   const classes = useStyles();
   const [field, meta, helpers] = useField(name);
 
-  const [stored, setStored] = useState<string | undefined>();
+  const [stored, setStored] = useState<string>("");
 
   const toggleReceiver = useCallback(() => {
     if (stored === "") {
@@ -55,7 +55,7 @@ const AddressInput: React.FC<IAddressInput> = ({
     if (stored !== "" && stored !== senderAddress) {
       setStored(senderAddress);
     }
-  }, [senderAddress]);
+  }, [senderAddress, stored]);
 
   return (
     <section className={clsx(classes.root, className)}>

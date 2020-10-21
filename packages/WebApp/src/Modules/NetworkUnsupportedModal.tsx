@@ -1,10 +1,10 @@
 import React from "react";
 
-import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles } from "@imploy/common-themes";
 import CustomModal from "../Components/Custom/CustomModal";
 import { Button, Typography } from "@imploy/common-components";
 
-const useStyles = makeStyles(({}: ITheme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {},
   })

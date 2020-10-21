@@ -1,4 +1,4 @@
-import { createStyles, ITheme, makeStyles } from "@imploy/common-themes";
+import { createStyles, makeStyles } from "@imploy/common-themes";
 import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
@@ -7,7 +7,7 @@ interface IAppWrapper {
   children: ReactNode | ReactNode[];
 }
 
-const useStyles = makeStyles(({}: ITheme) => {
+const useStyles = makeStyles(() => {
   return createStyles({
     root: {},
   });

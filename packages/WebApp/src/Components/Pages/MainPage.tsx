@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
@@ -16,17 +16,31 @@ import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import { useWallet } from "use-wallet";
 
-const useStyles = makeStyles(
-  ({ palette, constants, typography, breakpoints }: ITheme) =>
-    createStyles({
-      root: {},
-      connectButton: {},
-      connecting: {},
-      connected: {},
-      formArea: {},
-      maxButton: {},
-      token: {},
-    })
+const useStyles = makeStyles(({ breakpoints }: ITheme) =>
+  createStyles({
+    root: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      maxWidth: breakpoints.values["sm"],
+      display: "flex",
+      flexDirection: "column",
+    },
+    walletArea: {
+      minHeight: 200,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    connectButton: {},
+    connecting: {},
+    connected: {},
+    formArea: {},
+    maxButton: {},
+    token: {},
+  })
 );
 
 enum WALLET_STATE {
@@ -51,31 +65,49 @@ const MainPage = () => {
     false
   );
 
+  const [sendingAddress, setSendingAddress] = useState("");
   const evmWallet = useWallet();
+
+  useEffect(() => {
+    if (evmWallet.account && walletState !== WALLET_STATE.Connected) {
+      setWalletState(WALLET_STATE.Connected);
+    }
+  }, [evmWallet]);
 
   return (
     <article className={classes.root}>
-      {walletState == WALLET_STATE.Disconnected ? (
-        <Button
-          className={classes.connectButton}
-          onClick={() => evmWallet.connect("injected")}
-        >
-          Connect Metamask
-        </Button>
-      ) : walletState === WALLET_STATE.Connecting ? (
-        <section className={classes.connecting}>
-          <Typography component="p" variant="body2">
-            This app requires access to your wallet, please login and authorize
-            access to continue.
-          </Typography>
-        </section>
-      ) : (
-        <section className={classes.connected}>
-          <Typography variant="body2">Home network</Typography>
-        </section>
-      )}
+      <div className={classes.walletArea}>
+        {walletState === WALLET_STATE.Disconnected ? (
+          <Button
+            className={classes.connectButton}
+            fullsize
+            onClick={() => {
+              evmWallet.connect("injected");
+              setWalletState(WALLET_STATE.Connecting);
+            }}
+          >
+            Connect Metamask
+          </Button>
+        ) : walletState === WALLET_STATE.Connecting ? (
+          <section className={classes.connecting}>
+            <Typography component="p" variant="body2">
+              This app requires access to your wallet, please login and
+              authorize access to continue.
+            </Typography>
+          </section>
+        ) : (
+          <section className={classes.connected}>
+            <Typography variant="body2">Home network</Typography>
+          </section>
+        )}
+      </div>
       <Formik
-        initialValues={{}}
+        initialValues={{
+          tokenAmount: 0,
+          token: {},
+          receiver: "",
+          destinationNetwork: "",
+        }}
         onSubmit={(values: any) => {
           console.log("Transfer");
         }}
@@ -85,7 +117,7 @@ const MainPage = () => {
             <Grid item xs={12}>
               <FormikSelectInput
                 label="Destination Network"
-                name="select"
+                name="destinationNetwork"
                 options={[
                   { label: "a", value: "a" },
                   { label: "b", value: "b" },

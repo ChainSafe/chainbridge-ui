@@ -48,14 +48,7 @@ const App: React.FC<{}> = () => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
         <ToasterProvider autoDismiss>
-          <UseWalletProvider
-            connectors={{
-              injected: {
-                supportedChainIds: [1, 3, 4, 5, 42],
-              },
-            }}
-            chainId={1}
-          >
+          <UseWalletProvider chainId={1}>
             <ChainbridgeProvider>
               <Router>
                 <AppWrapper>
