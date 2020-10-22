@@ -49,21 +49,21 @@ const AddressInput: React.FC<IAddressInput> = ({
   const classes = useStyles();
   const [field, meta, helpers] = useField(name);
 
-  const [stored, setStored] = useState<string>("");
+  const [stored, setStored] = useState<string | undefined>();
 
   const toggleReceiver = useCallback(() => {
-    if (stored === "") {
+    if (stored === undefined) {
       setStored(field.value);
       helpers.setValue(senderAddress);
     } else {
       helpers.setValue(stored);
-      setStored("");
+      setStored(undefined);
     }
   }, [helpers, field, senderAddress, stored, setStored]);
 
   useEffect(() => {
     // Used to ensure value if address changes for some reason
-    if (stored !== "" && stored !== senderAddress) {
+    if (stored && stored !== senderAddress) {
       setStored(senderAddress);
     }
   }, [senderAddress, stored]);
@@ -95,7 +95,7 @@ const AddressInput: React.FC<IAddressInput> = ({
       <div className={classes.checkbox}>
         <CheckboxInput
           label="I want to send funds to my address"
-          value={stored !== ""}
+          value={stored !== undefined}
           onChange={() => toggleReceiver()}
         />
       </div>
