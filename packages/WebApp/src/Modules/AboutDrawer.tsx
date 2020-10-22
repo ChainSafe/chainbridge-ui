@@ -15,11 +15,14 @@ interface IAboutDrawerProps {
   close: () => void;
 }
 
-const AboutDrawer: React.FC<IAboutDrawerProps> = ({ open }) => {
+const AboutDrawer: React.FC<IAboutDrawerProps> = ({
+  open,
+  close,
+}: IAboutDrawerProps) => {
   const classes = useStyles();
 
   return (
-    <CustomDrawer open={open} className={classes.root}>
+    <CustomDrawer onClose={close} open={open} className={classes.root}>
       <Typography variant="h1" component="h1">
         What is ChainBridge?
       </Typography>

@@ -6,6 +6,11 @@ export const lightTheme = createTheme({
   },
   themeConfig: {
     overrides: {
+      CheckboxInput: {
+        root: {
+          alignItems: "center",
+        },
+      },
       Button: {
         variants: {
           primary: {

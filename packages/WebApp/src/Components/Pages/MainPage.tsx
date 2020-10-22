@@ -9,8 +9,8 @@ import {
   Button,
   Typography,
   FormikSelectInput,
-  Grid,
   FormikTextInput,
+  QuestionCircleSvg,
 } from "@imploy/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
@@ -31,6 +31,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       border: `1px solid ${palette.additional["gray"][7]}`,
       borderRadius: 4,
       color: palette.additional["gray"][8],
+      overflow: "hidden",
     },
     walletArea: {
       display: "flex",
@@ -90,10 +91,41 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     tokenInput: {
       margin: 0,
+      "& > *:last-child": {
+        height: 32,
+        "& input": {
+          borderBottomRightRadius: 0,
+          borderTopRightRadius: 0,
+          borderRight: 0,
+        },
+      },
     },
-    currencySelector: {},
-    maxButton: {},
+    maxButton: {
+      height: 32,
+      borderBottomLeftRadius: 0,
+      borderTopLeftRadius: 0,
+      left: -1,
+    },
+    currencySelector: {
+      width: 120,
+    },
     token: {},
+    address: {
+      margin: 0,
+      marginBottom: constants.generalUnit * 3,
+    },
+    addressInput: {},
+    generalInput: {
+      "& > span": {
+        marginBottom: constants.generalUnit,
+      },
+    },
+    faqButton: {
+      cursor: "pointer",
+      height: 20,
+      width: 20,
+      marginTop: constants.generalUnit * 5,
+    },
   })
 );
 
@@ -125,6 +157,7 @@ const MainPage = () => {
   useEffect(() => {
     if (evmWallet.account && walletState !== WALLET_STATE.Connected) {
       setWalletState(WALLET_STATE.Connected);
+      setSendingAddress(evmWallet.account);
     }
   }, [evmWallet]);
 
@@ -191,6 +224,7 @@ const MainPage = () => {
             <FormikSelectInput
               label="Destination Network"
               name="destinationNetwork"
+              className={classes.generalInput}
               disabled={walletState !== WALLET_STATE.Connected}
               options={[
                 { label: "a", value: "a" },
@@ -201,11 +235,14 @@ const MainPage = () => {
           </section>
           <section className={classes.currencySection}>
             <section>
-              <div className={classes.tokenInputArea}>
+              <div
+                className={clsx(classes.tokenInputArea, classes.generalInput)}
+              >
                 <FormikTextInput
-                  className={classes.tokenInput}
+                  className={clsx(classes.tokenInput, classes.generalInput)}
                   disabled={walletState !== WALLET_STATE.Connected}
                   name="tokenAmount"
+                  label="I want to send"
                   type="number"
                 />
                 <Button
@@ -217,15 +254,18 @@ const MainPage = () => {
                 </Button>
               </div>
             </section>
-            <section>
+            <section className={classes.currencySelector}>
               {/* TODO Wire up to approved tokens */}
               <FormikSelectInput
                 name="token"
                 disabled={walletState !== WALLET_STATE.Connected}
+                value={"ETH"}
+                label={`Balance: 0.00 ETH`}
+                className={classes.generalInput}
                 options={[
                   {
                     label: <div className={classes.token}>ETH</div>,
-                    value: "a",
+                    value: "ETH",
                   },
                 ]}
               />
@@ -235,7 +275,12 @@ const MainPage = () => {
             <AddressInput
               disabled={walletState !== WALLET_STATE.Connected}
               name="receiver"
-              senderAddress={"0xasdas"}
+              label="Destination Address"
+              className={classes.address}
+              classNames={{
+                input: classes.addressInput,
+              }}
+              senderAddress={`${sendingAddress}`}
             />
           </section>
           <section>
@@ -248,7 +293,12 @@ const MainPage = () => {
               Start transfer
             </Button>
           </section>
-          <section>Question mark</section>
+          <section>
+            <QuestionCircleSvg
+              onClick={() => setAboutOpen(true)}
+              className={classes.faqButton}
+            />
+          </section>
         </Form>
       </Formik>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />

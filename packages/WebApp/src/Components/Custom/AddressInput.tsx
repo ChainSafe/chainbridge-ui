@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 
-import { makeStyles, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import {
   CheckboxInput,
   FormikTextInputProps,
@@ -9,9 +9,19 @@ import {
 import clsx from "clsx";
 import { useField } from "formik";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
     root: {},
+    input: {
+      margin: 0,
+      width: "100%",
+    },
+    label: {
+      marginBottom: constants.generalUnit,
+    },
+    checkbox: {
+      marginTop: constants.generalUnit * 3,
+    },
   })
 );
 
@@ -34,6 +44,7 @@ const AddressInput: React.FC<IAddressInput> = ({
   label,
   labelClassName,
   captionMessage,
+  ...rest
 }: IAddressInput) => {
   const classes = useStyles();
   const [field, meta, helpers] = useField(name);
@@ -66,8 +77,8 @@ const AddressInput: React.FC<IAddressInput> = ({
           disabled={stored !== ""}
           type={type}
           size={size}
-          className={classNames?.input}
-          labelClassName={labelClassName}
+          className={clsx(classNames?.input, classes.input)}
+          labelClassName={clsx(labelClassName, classes.label)}
           name={field.name}
           value={field.value}
           placeholder={placeholder}
@@ -78,9 +89,10 @@ const AddressInput: React.FC<IAddressInput> = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             helpers.setValue(e.target?.value);
           }}
+          {...rest}
         />
       </div>
-      <div>
+      <div className={classes.checkbox}>
         <CheckboxInput
           label="I want to send funds to my address"
           value={stored !== ""}
