@@ -1,17 +1,27 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 
-import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import {
   CheckboxInput,
   FormikTextInputProps,
   TextInput,
 } from "@imploy/common-components";
 import clsx from "clsx";
-import { useField } from "formik/dist/Field";
+import { useField } from "formik";
 
-const useStyles = makeStyles(({}: ITheme) =>
+const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
     root: {},
+    input: {
+      margin: 0,
+      width: "100%",
+    },
+    label: {
+      marginBottom: constants.generalUnit,
+    },
+    checkbox: {
+      marginTop: constants.generalUnit * 3,
+    },
   })
 );
 
@@ -34,11 +44,12 @@ const AddressInput: React.FC<IAddressInput> = ({
   label,
   labelClassName,
   captionMessage,
+  ...rest
 }: IAddressInput) => {
   const classes = useStyles();
   const [field, meta, helpers] = useField(name);
 
-  const [stored, setStored] = useState<string | undefined>();
+  const [stored, setStored] = useState<string>("");
 
   const toggleReceiver = useCallback(() => {
     if (stored === "") {
@@ -55,7 +66,7 @@ const AddressInput: React.FC<IAddressInput> = ({
     if (stored !== "" && stored !== senderAddress) {
       setStored(senderAddress);
     }
-  }, [senderAddress]);
+  }, [senderAddress, stored]);
 
   return (
     <section className={clsx(classes.root, className)}>
@@ -66,8 +77,8 @@ const AddressInput: React.FC<IAddressInput> = ({
           disabled={stored !== ""}
           type={type}
           size={size}
-          className={classNames?.input}
-          labelClassName={labelClassName}
+          className={clsx(classNames?.input, classes.input)}
+          labelClassName={clsx(labelClassName, classes.label)}
           name={field.name}
           value={field.value}
           placeholder={placeholder}
@@ -78,9 +89,10 @@ const AddressInput: React.FC<IAddressInput> = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             helpers.setValue(e.target?.value);
           }}
+          {...rest}
         />
       </div>
-      <div>
+      <div className={classes.checkbox}>
         <CheckboxInput
           label="I want to send funds to my address"
           value={stored !== ""}

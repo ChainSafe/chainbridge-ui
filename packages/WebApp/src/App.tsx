@@ -6,12 +6,12 @@ import {
   Router,
   ToasterProvider,
 } from "@imploy/common-components";
-import { Web3Provider } from "@chainsafe/web3-context";
 
 import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
+import { UseWalletProvider } from "use-wallet";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -48,7 +48,7 @@ const App: React.FC<{}> = () => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
         <ToasterProvider autoDismiss>
-          <Web3Provider networkIds={[1]}>
+          <UseWalletProvider chainId={1}>
             <ChainbridgeProvider>
               <Router>
                 <AppWrapper>
@@ -56,7 +56,7 @@ const App: React.FC<{}> = () => {
                 </AppWrapper>
               </Router>
             </ChainbridgeProvider>
-          </Web3Provider>
+          </UseWalletProvider>
         </ToasterProvider>
       </ThemeSwitcher>
     </ErrorBoundary>

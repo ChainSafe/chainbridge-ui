@@ -1,10 +1,10 @@
 import React from "react";
 
-import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles } from "@imploy/common-themes";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@imploy/common-components";
 
-const useStyles = makeStyles(({}: ITheme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {},
   })
@@ -12,13 +12,17 @@ const useStyles = makeStyles(({}: ITheme) =>
 
 interface IAboutDrawerProps {
   open: boolean;
+  close: () => void;
 }
 
-const AboutDrawer: React.FC<IAboutDrawerProps> = ({ open }) => {
+const AboutDrawer: React.FC<IAboutDrawerProps> = ({
+  open,
+  close,
+}: IAboutDrawerProps) => {
   const classes = useStyles();
 
   return (
-    <CustomDrawer open={open} className={classes.root}>
+    <CustomDrawer onClose={close} open={open} className={classes.root}>
       <Typography variant="h1" component="h1">
         What is ChainBridge?
       </Typography>
