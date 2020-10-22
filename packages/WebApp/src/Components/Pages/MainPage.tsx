@@ -318,6 +318,7 @@ const MainPage = () => {
       <NetworkUnsupportedModal
         open={!networkUnsupportedOpen}
         close={() => setnetworkUnsupportedOpen(false)}
+        network={`Ropsten`}
       />
       <TransactionModal
         open={transactionModalOpen}
