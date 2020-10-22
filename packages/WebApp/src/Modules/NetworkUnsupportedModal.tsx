@@ -12,10 +12,13 @@ const useStyles = makeStyles(() =>
 
 interface INetworkUnsupportedModalProps {
   open: boolean;
+  close: () => void;
+  network: string;
 }
 
 const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
   open,
+  close,
 }) => {
   const classes = useStyles();
 

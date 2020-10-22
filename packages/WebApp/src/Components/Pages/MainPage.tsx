@@ -315,10 +315,26 @@ const MainPage = () => {
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}
       />
-      <NetworkUnsupportedModal open={networkUnsupportedOpen} />
-      <TransactionModal open={transactionModalOpen} />
+      <NetworkUnsupportedModal
+        open={!networkUnsupportedOpen}
+        close={() => setnetworkUnsupportedOpen(false)}
+      />
+      <TransactionModal
+        open={transactionModalOpen}
+        close={() => setTransactionModalOpen(false)}
+        receiver={"0xDC6fFC3f404D9dA507735c294f023373079D2B8b"}
+        sender={`0xDC6fFC3f404D9dA507735c294f023373079D2B8b`}
+        // sender={`${evmWallet.account}`}
+        start={() => {
+          console.log("start");
+          setTransactionModalOpen(false);
+        }}
+        sourceNetwork={"Ethereum"}
+        targetNetwork={"Celo"}
+        token="ETH"
+        value={0.02}
+      />
     </article>
   );
 };
-
 export default MainPage;
