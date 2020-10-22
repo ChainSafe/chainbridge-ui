@@ -12,6 +12,7 @@ type Chain = {
   chainId: number;
   name: string;
   bridgeAddress: string;
+  erc20HandlerAddress: string;
   rpcUrl: string;
   type: "Ethereum" | "Substrate";
 };
@@ -40,6 +41,7 @@ const chains: Chain[] = [
     chainId: 5,
     name: "EthA",
     bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
+    erc20HandlerAddress: "0x3167776db165d8ea0f51790ca2bbf44db5105adf",
     rpcUrl: "http://localhost:8545",
     type: "Ethereum",
   },
@@ -47,6 +49,7 @@ const chains: Chain[] = [
     chainId: 2,
     name: "EthB",
     bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
+    erc20HandlerAddress: "0x3167776db165d8ea0f51790ca2bbf44db5105adf",
     rpcUrl: "http://localhost:8546",
     type: "Ethereum",
   },
@@ -123,8 +126,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     try {
       const approval = await (
         await erc20.approve(
-          "0x3167776db165d8ea0f51790ca2bbf44db5105adf",
-          BigNumber.from(amount)
+          homeChain.erc20HandlerAddress, //chain ERC20 handler
+          BigNumber.from(utils.parseUnits(amount.toString(), 18))
         )
       ).wait(1);
       console.log(approval);
