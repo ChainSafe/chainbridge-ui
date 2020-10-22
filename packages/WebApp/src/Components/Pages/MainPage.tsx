@@ -284,6 +284,7 @@ const MainPage = () => {
               disabled={walletState !== WALLET_STATE.Connected}
               name="receiver"
               label="Destination Address"
+              placeholder="Please enter the receiving address"
               className={classes.address}
               classNames={{
                 input: classes.addressInput,

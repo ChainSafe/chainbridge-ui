@@ -2,7 +2,9 @@ import { createTheme } from "@imploy/common-themes";
 
 export const lightTheme = createTheme({
   globalStyling: {
-    backgroundColor: "#E8E8E8",
+    body: {
+      backgroundColor: "#F5F5F5",
+    },
   },
   themeConfig: {
     overrides: {
