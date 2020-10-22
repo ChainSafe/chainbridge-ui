@@ -15,29 +15,83 @@ import {
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import { useWallet } from "use-wallet";
+import clsx from "clsx";
 
-const useStyles = makeStyles(({ breakpoints }: ITheme) =>
+const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       position: "absolute",
       top: "50%",
       left: "50%",
       transform: "translate(-50%, -50%)",
-      maxWidth: breakpoints.values["sm"],
+      maxWidth: 460,
       display: "flex",
       flexDirection: "column",
+      padding: constants.generalUnit * 6,
+      border: `1px solid ${palette.additional["gray"][7]}`,
+      borderRadius: 4,
+      color: palette.additional["gray"][8],
     },
     walletArea: {
-      minHeight: 200,
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
+      width: "100%",
     },
-    connectButton: {},
-    connecting: {},
-    connected: {},
-    formArea: {},
+    connectButton: {
+      margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
+    },
+    connecting: {
+      textAlign: "center",
+      marginBottom: constants.generalUnit * 2,
+    },
+    connected: {
+      width: "100%",
+      "& > *:first-child": {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+      },
+    },
+    changeButton: {
+      cursor: "pointer",
+    },
+    networkName: {
+      padding: `${constants.generalUnit * 2}px ${
+        constants.generalUnit * 1.5
+      }px`,
+      border: `1px solid ${palette.additional["gray"][6]}`,
+      borderRadius: 2,
+      color: palette.additional["gray"][9],
+      marginTop: constants.generalUnit,
+      marginBottom: constants.generalUnit * 3,
+    },
+    formArea: {
+      "&.disabled": {
+        opacity: 0.4,
+      },
+    },
+    currencySection: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+      margin: `${constants.generalUnit * 3}px 0`,
+    },
+    tokenInputArea: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "flex-end",
+      justifyContent: "space-around",
+      paddingRight: constants.generalUnit,
+    },
+    tokenInput: {
+      margin: 0,
+    },
+    currencySelector: {},
     maxButton: {},
     token: {},
   })
@@ -90,14 +144,30 @@ const MainPage = () => {
           </Button>
         ) : walletState === WALLET_STATE.Connecting ? (
           <section className={classes.connecting}>
-            <Typography component="p" variant="body2">
-              This app requires access to your wallet, please login and
-              authorize access to continue.
+            <Typography component="p" variant="h5">
+              This app requires access to your wallet, <br />
+              please login and authorize access to continue.
             </Typography>
           </section>
         ) : (
           <section className={classes.connected}>
-            <Typography variant="body2">Home network</Typography>
+            <div>
+              <Typography variant="body1">Home network</Typography>
+              <Typography
+                className={classes.changeButton}
+                variant="body1"
+                onClick={() => console.log("change network")}
+              >
+                Change
+              </Typography>
+            </div>
+            <Typography
+              component="h2"
+              variant="h2"
+              className={classes.networkName}
+            >
+              {`Ethereum - ${evmWallet.networkName}`}
+            </Typography>
           </section>
         )}
       </div>
@@ -112,29 +182,46 @@ const MainPage = () => {
           console.log("Transfer");
         }}
       >
-        <Form className={classes.formArea}>
-          <Grid container flexDirection="column" fullWidth>
-            <Grid item xs={12}>
-              <FormikSelectInput
-                label="Destination Network"
-                name="destinationNetwork"
-                options={[
-                  { label: "a", value: "a" },
-                  { label: "b", value: "b" },
-                  { label: "c", value: "c" },
-                ]}
-              />
-            </Grid>
-            <Grid item sm={10} xs={12}>
-              <FormikTextInput name="tokenAmount" type="number" />
-              <Button className={classes.maxButton} variant="primary">
-                MAX
-              </Button>
-            </Grid>
-            <Grid item sm={2} xs={12}>
+        <Form
+          className={clsx(classes.formArea, {
+            ["disabled"]: walletState !== WALLET_STATE.Connected,
+          })}
+        >
+          <section>
+            <FormikSelectInput
+              label="Destination Network"
+              name="destinationNetwork"
+              disabled={walletState !== WALLET_STATE.Connected}
+              options={[
+                { label: "a", value: "a" },
+                { label: "b", value: "b" },
+                { label: "c", value: "c" },
+              ]}
+            />
+          </section>
+          <section className={classes.currencySection}>
+            <section>
+              <div className={classes.tokenInputArea}>
+                <FormikTextInput
+                  className={classes.tokenInput}
+                  disabled={walletState !== WALLET_STATE.Connected}
+                  name="tokenAmount"
+                  type="number"
+                />
+                <Button
+                  disabled={walletState !== WALLET_STATE.Connected}
+                  className={classes.maxButton}
+                  variant="outline"
+                >
+                  MAX
+                </Button>
+              </div>
+            </section>
+            <section>
               {/* TODO Wire up to approved tokens */}
               <FormikSelectInput
                 name="token"
+                disabled={walletState !== WALLET_STATE.Connected}
                 options={[
                   {
                     label: <div className={classes.token}>ETH</div>,
@@ -142,19 +229,26 @@ const MainPage = () => {
                   },
                 ]}
               />
-            </Grid>
-            <Grid item xs={12}>
-              <AddressInput name="receiver" senderAddress={"0xasdas"} />
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="submit" fullsize variant="primary">
-                Start transfer
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              Question mark
-            </Grid>
-          </Grid>
+            </section>
+          </section>
+          <section>
+            <AddressInput
+              disabled={walletState !== WALLET_STATE.Connected}
+              name="receiver"
+              senderAddress={"0xasdas"}
+            />
+          </section>
+          <section>
+            <Button
+              disabled={walletState !== WALLET_STATE.Connected}
+              type="submit"
+              fullsize
+              variant="primary"
+            >
+              Start transfer
+            </Button>
+          </section>
+          <section>Question mark</section>
         </Form>
       </Formik>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
