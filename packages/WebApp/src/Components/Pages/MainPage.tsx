@@ -13,6 +13,7 @@ import {
   FormikTextInput,
   FormikCheckboxInput,
   CheckboxInput,
+  SelectInput,
 } from "@imploy/common-components";
 import { Formik, Form } from "formik";
 import { useWeb3 } from "@chainsafe/web3-context";
@@ -39,6 +40,7 @@ const MainPage = () => {
     destinationChains,
     destinationChain,
     deposit,
+    setDestinationChain,
   } = useChainbridge();
   const [aboutDrawerOpen, setAboutDrawerOpen] = useState(false);
   const [changeNetworkDrawerOpen, setChangeNetworkDrawerOpen] = useState(false);
@@ -106,20 +108,19 @@ const MainPage = () => {
           destinationAddress: undefined,
         }}
         onSubmit={(values: any) => {
-          console.log(values);
           handleDeposit(values.tokenAddress);
         }}
       >
         <Form className={classes.formArea}>
           <Grid container flexDirection="column" fullWidth>
             <Grid item xs={12}>
-              <FormikSelectInput
+              <SelectInput
                 label="Destination Network"
-                name="destinationChain"
                 options={destinationChains.map((dc) => ({
                   value: dc.chainId,
                   label: dc.name,
                 }))}
+                onChange={(val) => setDestinationChain(val)}
               />
             </Grid>
             <Grid item sm={10} xs={12}>

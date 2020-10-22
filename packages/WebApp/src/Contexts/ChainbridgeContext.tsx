@@ -1,7 +1,7 @@
 import { useWeb3 } from "@chainsafe/web3-context";
 import React, { useContext, useEffect, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
 
 interface IChainbridgeContextProps {
@@ -60,9 +60,11 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const [homeChain, setHomeChain] = useState<Chain | undefined>();
   const [destinationChain, setDestinationChain] = useState<Chain | undefined>();
   const [destinationChains, setDestinationChains] = useState<Chain[]>([]);
-  const [bridgeContract, setBridgeContract] = useState<Bridge | undefined>(
-    undefined
-  );
+  const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
+  const [destinationBridge, setDestinationBridge] = useState<
+    Bridge | undefined
+  >(undefined);
+
   useEffect(() => {
     if (network && isReady) {
       const home = chains.find((c) => c.chainId === network);
@@ -78,7 +80,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       }
 
       const bridge = BridgeFactory.connect(home.bridgeAddress, signer);
-      setBridgeContract(bridge);
+      setHomeBridge(bridge);
       setDestinationChains(chains.filter((c) => c.chainId !== network));
     } else {
       setHomeChain(undefined);
@@ -91,6 +93,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       throw new Error("Invalid destination chain selected");
     }
     setDestinationChain(chain);
+    const provider = new ethers.providers.JsonRpcProvider(chain.rpcUrl);
+    const bridge = BridgeFactory.connect(chain.bridgeAddress, provider);
+    setDestinationBridge(bridge);
   };
 
   const deposit = async (
@@ -98,8 +103,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     recipient: string,
     tokenAddress: string
   ) => {
-    if (!bridgeContract || !homeChain) {
-      console.log("Bridge contract is not instantiated");
+    if (!homeBridge || !homeChain) {
+      console.log("Home bridge contract is not instantiated");
+      return;
+    }
+
+    if (!destinationChain || !destinationBridge) {
+      console.log("Destination bridge contract is not instantiated");
       return;
     }
 
@@ -108,6 +118,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       console.log("No signer");
       return;
     }
+
     const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
 
     const data =
@@ -126,15 +137,38 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     try {
       const approval = await (
         await erc20.approve(
-          homeChain.erc20HandlerAddress, //chain ERC20 handler
+          homeChain.erc20HandlerAddress,
           BigNumber.from(utils.parseUnits(amount.toString(), 18))
         )
       ).wait(1);
-      console.log(approval);
-      debugger;
-      // TODO Wire up dynamic chain ID
-      const tx = await bridgeContract.deposit(2, ERC20ResourceId, data);
-      await tx.wait();
+      const tx = await homeBridge.deposit(
+        destinationChain.chainId,
+        ERC20ResourceId,
+        data
+      );
+      const proposalEventFilter = homeBridge.filters.ProposalEvent(
+        homeChain.chainId,
+        null,
+        null,
+        null,
+        null
+      );
+
+      homeBridge.on(proposalEventFilter, () =>
+        console.log("Proposal created on dest chain")
+      );
+
+      const proposalVoteFilter = homeBridge.filters.ProposalVote(
+        homeChain.chainId,
+        null,
+        null,
+        null
+      );
+      destinationBridge.on(proposalVoteFilter, () =>
+        console.log("Proposal vote passed")
+      );
+      await tx.wait(5);
+
       return Promise.resolve();
     } catch (error) {
       console.log(error);
