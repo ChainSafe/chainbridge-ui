@@ -1,12 +1,24 @@
 import React from "react";
 
-import { makeStyles, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@imploy/common-components";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
-    root: {},
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+    },
+    buttons: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      "& *": {
+        marginRight: constants.generalUnit,
+      },
+    },
   })
 );
 
@@ -23,10 +35,10 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
 
   return (
     <CustomDrawer onClose={close} open={open} className={classes.root}>
-      <Typography variant="h1" component="h1">
+      <Typography variant="h1" component="h4">
         What is ChainBridge?
       </Typography>
-      <Typography component="p">
+      <Typography component="p" variant="h5">
         ChainBridge is a modular multi-directional blockchain bridge to allow
         data and value transfer between any number of blockchains. This should
         enable users to specify a destination blockchain from their source
@@ -37,9 +49,9 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
         or an operation that is executed on a destination chain and initiated on
         the source chain.
       </Typography>
-      <section>
-        <Button>OK</Button>
-        <Button>Ask a question on Discord</Button>
+      <section className={classes.buttons}>
+        <Button variant="outline">OK</Button>
+        <Button variant="outline">Ask a question on Discord</Button>
       </section>
     </CustomDrawer>
   );
