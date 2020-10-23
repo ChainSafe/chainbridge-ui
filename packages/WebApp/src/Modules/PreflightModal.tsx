@@ -41,7 +41,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   })
 );
 
-interface ITransactionModalProps {
+interface IPreflightModalProps {
   open: boolean;
   close: () => void;
   sender: string;
@@ -53,7 +53,7 @@ interface ITransactionModalProps {
   start: () => void;
 }
 
-const TransactionModal: React.FC<ITransactionModalProps> = ({
+const PreflightModal: React.FC<IPreflightModalProps> = ({
   open,
   close,
   receiver,
@@ -63,7 +63,7 @@ const TransactionModal: React.FC<ITransactionModalProps> = ({
   token,
   value,
   start,
-}: ITransactionModalProps) => {
+}: IPreflightModalProps) => {
   const classes = useStyles();
 
   return (
@@ -115,4 +115,4 @@ const TransactionModal: React.FC<ITransactionModalProps> = ({
   );
 };
 
-export default TransactionModal;
+export default PreflightModal;
