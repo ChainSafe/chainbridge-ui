@@ -16,6 +16,7 @@ import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import { useWallet } from "use-wallet";
 import clsx from "clsx";
+import TransactionActiveModal from "../../Modules/TransactionActiveModal";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -156,6 +157,9 @@ const MainPage = () => {
     false
   );
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
+  const [transactionActiveModalOpen, setTransactionActiveModalOpen] = useState<
+    boolean
+  >(false);
 
   const [sendingAddress, setSendingAddress] = useState("");
   const evmWallet = useWallet();
@@ -332,6 +336,10 @@ const MainPage = () => {
         targetNetwork={"Celo"}
         token="ETH"
         value={0.02}
+      />
+      <TransactionActiveModal
+        open={transactionActiveModalOpen}
+        close={() => setTransactionActiveModalOpen(false)}
       />
     </article>
   );
