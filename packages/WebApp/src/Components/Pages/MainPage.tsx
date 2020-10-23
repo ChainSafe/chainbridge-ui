@@ -140,7 +140,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
 );
 
 type PreflightDetails = {
+  tokenAmount: number;
   token: string;
+  receiver: string;
 };
 
 const MainPage = () => {
@@ -160,6 +162,8 @@ const MainPage = () => {
     destinationChain,
     deposit,
     setDestinationChain,
+    transactionStatus,
+    resetDeposit,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -228,12 +232,12 @@ const MainPage = () => {
       <Formik
         initialValues={{
           tokenAmount: 0,
-          token: {},
+          token: "",
           receiver: "",
-          destinationNetwork: "",
         }}
-        onSubmit={(values: any) => {
-          console.log("Transfer");
+        onSubmit={(values) => {
+          setPreflightDetails(values);
+          setPreflightModalOpen(true);
         }}
       >
         <Form
@@ -331,20 +335,23 @@ const MainPage = () => {
       <PreflightModal
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
-        receiver={"0xDC6fFC3f404D9dA507735c294f023373079D2B8b"}
+        receiver={preflightDetails?.receiver || ""}
         sender={address || ""}
         start={() => {
           setPreflightModalOpen(false);
+          preflightDetails &&
+            deposit(
+              preflightDetails.tokenAmount,
+              preflightDetails.receiver,
+              preflightDetails.token
+            );
         }}
-        sourceNetwork={"Ethereum"}
-        targetNetwork={"Celo"}
-        token="ETH"
-        value={0.02}
+        sourceNetwork={homeChain?.name || ""}
+        targetNetwork={destinationChain?.name || ""}
+        token={preflightDetails?.token || ""}
+        value={preflightDetails?.tokenAmount || 0}
       />
-      <TransactionActiveModal
-        open={transactionActiveModalOpen}
-        close={() => setTransactionActiveModalOpen(false)}
-      />
+      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />
     </article>
   );
 };

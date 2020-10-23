@@ -1,9 +1,8 @@
 import { useWeb3 } from "@chainsafe/web3-context";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { BigNumber, ethers, utils } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
-import { setIn } from "formik";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -54,6 +53,8 @@ type ChainbridgeContext = {
   transactionStatus?: TransactionStatus;
   depositVotes: number;
   relayerThreshold?: number;
+  depositNonce?: string;
+  inTransitMessages: string[];
 };
 
 type TransactionStatus =
@@ -143,7 +144,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           null
         ),
         (originChainId, depositNonce, status) => {
-          switch (status.toNumber()) {
+          switch (BigNumber.from(status).toNumber()) {
             case 1:
               setInTransitMessages(
                 inTransitMessages.concat(
@@ -283,6 +284,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         resetDeposit,
         depositVotes,
         relayerThreshold: relayerThreshold,
+        depositNonce,
+        transactionStatus,
+        inTransitMessages,
       }}
     >
       {children}
