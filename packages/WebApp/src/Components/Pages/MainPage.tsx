@@ -4,7 +4,7 @@ import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
-import TransactionModal from "../../Modules/TransactionModal";
+import PreflightModal from "../../Modules/PreflightModal";
 import {
   Button,
   Typography,
@@ -155,9 +155,7 @@ const MainPage = () => {
   const [networkUnsupportedOpen, setnetworkUnsupportedOpen] = useState<boolean>(
     false
   );
-  const [transactionModalOpen, setTransactionModalOpen] = useState<boolean>(
-    false
-  );
+  const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
   const [sendingAddress, setSendingAddress] = useState("");
   const evmWallet = useWallet();
@@ -320,15 +318,15 @@ const MainPage = () => {
         close={() => setnetworkUnsupportedOpen(false)}
         network={`Ropsten`}
       />
-      <TransactionModal
-        open={transactionModalOpen}
-        close={() => setTransactionModalOpen(false)}
+      <PreflightModal
+        open={preflightModalOpen}
+        close={() => setPreflightModalOpen(false)}
         receiver={"0xDC6fFC3f404D9dA507735c294f023373079D2B8b"}
         sender={`0xDC6fFC3f404D9dA507735c294f023373079D2B8b`}
         // sender={`${evmWallet.account}`}
         start={() => {
           console.log("start");
-          setTransactionModalOpen(false);
+          setPreflightModalOpen(false);
         }}
         sourceNetwork={"Ethereum"}
         targetNetwork={"Celo"}
