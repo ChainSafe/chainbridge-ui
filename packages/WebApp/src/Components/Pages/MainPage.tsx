@@ -105,6 +105,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
+      color: palette.additional["gray"][8],
+      backgroundColor: palette.additional["gray"][3],
+      borderColor: palette.additional["gray"][6],
+      "&:hover": {
+        borderColor: palette.additional["gray"][6],
+        backgroundColor: palette.additional["gray"][7],
+        color: palette.common.white.main,
+      },
     },
     currencySelector: {
       width: 120,
@@ -159,7 +167,7 @@ const MainPage = () => {
       setWalletState(WALLET_STATE.Connected);
       setSendingAddress(evmWallet.account);
     }
-  }, [evmWallet]);
+  }, [evmWallet, walletState]);
 
   return (
     <article className={classes.root}>
@@ -189,7 +197,7 @@ const MainPage = () => {
               <Typography
                 className={classes.changeButton}
                 variant="body1"
-                onClick={() => console.log("change network")}
+                onClick={() => setChangeNetworkOpen(true)}
               >
                 Change
               </Typography>
@@ -217,7 +225,7 @@ const MainPage = () => {
       >
         <Form
           className={clsx(classes.formArea, {
-            ["disabled"]: walletState !== WALLET_STATE.Connected,
+            disabled: walletState !== WALLET_STATE.Connected,
           })}
         >
           <section>
@@ -276,6 +284,7 @@ const MainPage = () => {
               disabled={walletState !== WALLET_STATE.Connected}
               name="receiver"
               label="Destination Address"
+              placeholder="Please enter the receiving address"
               className={classes.address}
               classNames={{
                 input: classes.addressInput,
@@ -306,10 +315,27 @@ const MainPage = () => {
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}
       />
-      <NetworkUnsupportedModal open={networkUnsupportedOpen} />
-      <TransactionModal open={transactionModalOpen} />
+      <NetworkUnsupportedModal
+        open={networkUnsupportedOpen}
+        close={() => setnetworkUnsupportedOpen(false)}
+        network={`Ropsten`}
+      />
+      <TransactionModal
+        open={transactionModalOpen}
+        close={() => setTransactionModalOpen(false)}
+        receiver={"0xDC6fFC3f404D9dA507735c294f023373079D2B8b"}
+        sender={`0xDC6fFC3f404D9dA507735c294f023373079D2B8b`}
+        // sender={`${evmWallet.account}`}
+        start={() => {
+          console.log("start");
+          setTransactionModalOpen(false);
+        }}
+        sourceNetwork={"Ethereum"}
+        targetNetwork={"Celo"}
+        token="ETH"
+        value={0.02}
+      />
     </article>
   );
 };
-
 export default MainPage;

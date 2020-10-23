@@ -2,7 +2,9 @@ import { createTheme } from "@imploy/common-themes";
 
 export const lightTheme = createTheme({
   globalStyling: {
-    backgroundColor: "#E8E8E8",
+    body: {
+      backgroundColor: "#F5F5F5",
+    },
   },
   themeConfig: {
     overrides: {
@@ -39,6 +41,40 @@ export const lightTheme = createTheme({
             focus: {
               backgroundColor: "#ffffff",
               color: "#262626",
+              "& svg": {
+                fill: "#262626",
+              },
+            },
+          },
+          outline: {
+            root: {
+              backgroundColor: "transparent",
+              color: "#ffffff",
+              border: `1px solid #ffffff`,
+              "& svg": {
+                fill: "#ffffff",
+              },
+            },
+            active: {
+              backgroundColor: "#ffffff",
+              color: "#262626",
+              borderColor: "#ffffff",
+              "& svg": {
+                fill: "#262626",
+              },
+            },
+            hover: {
+              backgroundColor: "#ffffff",
+              color: "#262626",
+              borderColor: "#ffffff",
+              "& svg": {
+                fill: "#262626",
+              },
+            },
+            focus: {
+              backgroundColor: "#ffffff",
+              color: "#262626",
+              borderColor: "#ffffff",
               "& svg": {
                 fill: "#262626",
               },
