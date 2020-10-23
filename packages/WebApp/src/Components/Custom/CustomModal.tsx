@@ -1,10 +1,10 @@
 import React from "react";
 
-import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles } from "@imploy/common-themes";
 import { IModalProps, Modal } from "@imploy/common-components";
 import clsx from "clsx";
 
-const useStyles = makeStyles(({}: ITheme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {},
   })

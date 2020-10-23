@@ -1,12 +1,21 @@
 import React from "react";
 
-import { makeStyles, ITheme, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Drawer, IDrawerProps } from "@imploy/common-components";
 import clsx from "clsx";
 
-const useStyles = makeStyles(({}: ITheme) =>
+const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
-    root: {},
+    root: {
+      backgroundColor: `${palette.additional["gray"][9]} !important`,
+      color: palette.common.white.main,
+      border: "none",
+      padding: `${constants.generalUnit * 3}px ${constants.generalUnit * 4}px`,
+    },
+    backdrop: {
+      backgroundColor: `${palette.additional["gray"][9]} !important`,
+      opacity: `0.6 !important`,
+    },
   })
 );
 
@@ -20,7 +29,13 @@ const CustomDrawer: React.FC<ICustomDrawerProps> = ({
   const classes = useStyles();
 
   return (
-    <Drawer className={clsx(classes.root, className)} {...rest}>
+    <Drawer
+      classNames={{
+        backdrop: classes.backdrop,
+      }}
+      className={clsx(classes.root, className)}
+      {...rest}
+    >
       {children}
     </Drawer>
   );
