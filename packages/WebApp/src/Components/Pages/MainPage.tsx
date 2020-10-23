@@ -69,7 +69,6 @@ const MainPage = () => {
   };
 
   const handleDeposit = async (tokenAddress: string) => {
-    debugger;
     setIsDepositing(true);
     try {
       address && (await deposit(500, address, tokenAddress));
