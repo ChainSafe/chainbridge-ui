@@ -167,7 +167,7 @@ const MainPage = () => {
       setWalletState(WALLET_STATE.Connected);
       setSendingAddress(evmWallet.account);
     }
-  }, [evmWallet]);
+  }, [evmWallet, walletState]);
 
   return (
     <article className={classes.root}>
@@ -225,7 +225,7 @@ const MainPage = () => {
       >
         <Form
           className={clsx(classes.formArea, {
-            ["disabled"]: walletState !== WALLET_STATE.Connected,
+            disabled: walletState !== WALLET_STATE.Connected,
           })}
         >
           <section>
@@ -316,7 +316,7 @@ const MainPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <NetworkUnsupportedModal
-        open={!networkUnsupportedOpen}
+        open={networkUnsupportedOpen}
         close={() => setnetworkUnsupportedOpen(false)}
         network={`Ropsten`}
       />

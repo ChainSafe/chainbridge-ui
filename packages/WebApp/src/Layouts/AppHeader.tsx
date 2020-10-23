@@ -2,6 +2,8 @@ import { createStyles, ITheme, makeStyles } from "@imploy/common-themes";
 import React from "react";
 import clsx from "clsx";
 import { Typography } from "@imploy/common-components";
+import { useWallet } from "use-wallet";
+import { shortenAddress } from "../Utils/Helpers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) => {
   return createStyles({
@@ -17,6 +19,23 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) => {
       color: palette.additional["gray"][8],
       alignItems: "center",
     },
+    state: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    indicator: {
+      display: "block",
+      height: 10,
+      width: 10,
+      borderRadius: "50%",
+      backgroundColor: palette.additional["green"][6],
+      marginRight: constants.generalUnit,
+    },
+    address: {
+      marginRight: constants.generalUnit,
+    },
+    network: {},
   });
 });
 
@@ -24,11 +43,26 @@ interface IAppHeader {}
 
 const AppHeader: React.FC<IAppHeader> = () => {
   const classes = useStyles();
+  const evmWallet = useWallet();
 
   return (
     <header className={clsx(classes.root)}>
       <Typography variant="h4">ChainBridge Token Swap</Typography>
-      <Typography variant="h5">No wallet connected</Typography>
+      <section className={classes.state}>
+        {!evmWallet.account ? (
+          <Typography variant="h5">No wallet connected</Typography>
+        ) : (
+          <>
+            <div className={classes.indicator}></div>
+            <Typography variant="h5" className={classes.address}>
+              {shortenAddress(evmWallet.account)}
+            </Typography>
+            <Typography variant="h5" className={classes.address}>
+              connected to <strong>{evmWallet.networkName}</strong>
+            </Typography>
+          </>
+        )}
+      </section>
     </header>
   );
 };
