@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Button, Typography } from "@imploy/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
-import { useWallet } from "use-wallet";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -125,7 +124,6 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
 }: ITransactionActiveModalProps) => {
   const classes = useStyles();
 
-  const evmWallet = useWallet();
   const Quorum: number = 6;
 
   const [state, setState] = useState<TRANSACTION_STATE>(TRANSACTION_STATE.done);
@@ -194,7 +192,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
           </div>
         ) : state === TRANSACTION_STATE.inTransit ? (
           <div className={classes.sendingCopy}>
-            <Typography>Proposal created on {evmWallet.networkName}</Typography>
+            <Typography>Proposal created on network name</Typography>
             {signatures.map((sig, index) => (
               <Typography className={classes.vote} component="p" key={index}>
                 <span>Vote casted by {sig.address}</span>
@@ -217,7 +215,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Successfully transferred{" "}
               <strong>
-                0.25 ETH <br /> from {evmWallet.networkName} to Rinkeby.
+                0.25 ETH <br /> from Home Network to DestinationName.
               </strong>
             </Typography>
             <section className={classes.buttons}>

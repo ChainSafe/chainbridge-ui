@@ -11,7 +11,7 @@ import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
-import { UseWalletProvider } from "use-wallet";
+import { Web3Provider } from "@chainsafe/web3-context";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -48,7 +48,19 @@ const App: React.FC<{}> = () => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
         <ToasterProvider autoDismiss>
-          <UseWalletProvider chainId={1}>
+          <Web3Provider
+            networkIds={[1]}
+            tokenAddresses={["0x21605f71845f372A9ed84253d2D024B7B10999f4"]}
+            onboardConfig={{
+              walletCheck: [
+                { checkName: "accounts" },
+                { checkName: "connect" },
+              ],
+              walletSelect: {
+                wallets: [{ walletName: "metamask", preferred: true }],
+              },
+            }}
+          >
             <ChainbridgeProvider>
               <Router>
                 <AppWrapper>
@@ -56,7 +68,7 @@ const App: React.FC<{}> = () => {
                 </AppWrapper>
               </Router>
             </ChainbridgeProvider>
-          </UseWalletProvider>
+          </Web3Provider>
         </ToasterProvider>
       </ThemeSwitcher>
     </ErrorBoundary>
