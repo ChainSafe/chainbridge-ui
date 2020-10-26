@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Button, Typography } from "@imploy/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
-import { useWallet } from "use-wallet";
+import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -124,38 +124,12 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
   close,
 }: ITransactionActiveModalProps) => {
   const classes = useStyles();
-
-  const evmWallet = useWallet();
-  const Quorum: number = 6;
-
-  const [state, setState] = useState<TRANSACTION_STATE>(TRANSACTION_STATE.done);
-  const [signatures, setSignatures] = useState<ISignature[]>([
-    {
-      address: "consmosasdasdasdasdasdasdasd3ex12",
-      signed: "rejected",
-    },
-    {
-      address: "c11111onsmosasdasdasdasdasdasdasd3ex12",
-      signed: "pending",
-    },
-    {
-      address: "consmoas22sasdasdasdasdasdasdasd3ex12",
-      signed: "pending",
-    },
-    {
-      address: "cons123123mosasdasdasdasdasdasdasd3ex12",
-      signed: "rejected",
-    },
-    {
-      address: "co11111nsmosasdasdasdasdasdasdasd3ex12",
-      signed: "confirmed",
-    },
-    {
-      address: "mmmconsmosasdasdasdasdasdasdasd3ex12",
-      signed: "confirmed",
-    },
-  ]);
-
+  const {
+    transactionStatus,
+    depositVotes,
+    relayerThreshold,
+    inTransitMessages,
+  } = useChainbridge();
   return (
     <CustomModal
       className={classes.root}
@@ -166,24 +140,22 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
     >
       <section>
         <div className={classes.stepIndicator}>
-          {state === TRANSACTION_STATE.init
+          {transactionStatus === "Initializing Transfer"
             ? "1"
-            : state === TRANSACTION_STATE.inTransit
+            : transactionStatus === "In Transit"
             ? "2"
             : "3  "}
         </div>
       </section>
       <section className={classes.content}>
         <Typography className={classes.heading} variant="h3" component="h3">
-          {state === TRANSACTION_STATE.init
+          {transactionStatus === "Initializing Transfer"
             ? "Initializing Transfer"
-            : state === TRANSACTION_STATE.inTransit
-            ? `In Transit (${
-                signatures.filter((sig) => sig.signed === "confirmed").length
-              }/${Quorum} signatures needed)`
+            : transactionStatus === "In Transit"
+            ? `In Transit (${depositVotes}/${relayerThreshold} signatures needed)`
             : "Transfer completed"}
         </Typography>
-        {state === TRANSACTION_STATE.init ? (
+        {transactionStatus === "Initializing Transfer" ? (
           <div className={classes.initCopy}>
             <Typography>Deposit pending...</Typography>
             <Typography>
@@ -192,19 +164,12 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
               Please do not refresh or leave the page.
             </Typography>
           </div>
-        ) : state === TRANSACTION_STATE.inTransit ? (
+        ) : transactionStatus === "In Transit" ? (
           <div className={classes.sendingCopy}>
-            <Typography>Proposal created on {evmWallet.networkName}</Typography>
-            {signatures.map((sig, index) => (
-              <Typography className={classes.vote} component="p" key={index}>
-                <span>Vote casted by {sig.address}</span>
-                <span>
-                  {sig.signed === "confirmed"
-                    ? "Confirmed"
-                    : sig.signed === "rejected"
-                    ? "Rejected"
-                    : null}
-                </span>
+            <Typography>Proposal created on network name</Typography>
+            {inTransitMessages.map((m, i) => (
+              <Typography className={classes.vote} component="p" key={i}>
+                {m}
               </Typography>
             ))}
             <Typography className={classes.warning}>
@@ -217,7 +182,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Successfully transferred{" "}
               <strong>
-                0.25 ETH <br /> from {evmWallet.networkName} to Rinkeby.
+                0.25 ETH <br /> from Home Network to DestinationName.
               </strong>
             </Typography>
             <section className={classes.buttons}>
@@ -229,7 +194,12 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
               >
                 View transaction
               </Button>
-              <Button size="small" className={classes.button} variant="outline">
+              <Button
+                size="small"
+                className={classes.button}
+                variant="outline"
+                onClick={close}
+              >
                 Start new transfer
               </Button>
             </section>

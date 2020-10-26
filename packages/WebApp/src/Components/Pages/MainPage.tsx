@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
@@ -11,12 +10,14 @@ import {
   FormikSelectInput,
   FormikTextInput,
   QuestionCircleSvg,
+  SelectInput,
 } from "@imploy/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
-import { useWallet } from "use-wallet";
 import clsx from "clsx";
 import TransactionActiveModal from "../../Modules/TransactionActiveModal";
+import { useWeb3 } from "@chainsafe/web3-context";
+import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -138,54 +139,68 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   })
 );
 
-enum WALLET_STATE {
-  Disconnected = "disconnected",
-  Connecting = "connecting",
-  Connected = "connected",
-}
+type PreflightDetails = {
+  tokenAmount: number;
+  token: string;
+  receiver: string;
+};
 
 const MainPage = () => {
   const classes = useStyles();
-
-  const [walletState, setWalletState] = useState<WALLET_STATE>(
-    WALLET_STATE.Disconnected
-  );
+  const {
+    isReady,
+    checkIsReady,
+    wallet,
+    onboard,
+    tokens,
+    address,
+    network,
+  } = useWeb3();
+  const {
+    homeChain,
+    destinationChains,
+    destinationChain,
+    deposit,
+    setDestinationChain,
+    transactionStatus,
+    resetDeposit,
+  } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
+  const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
-  const [networkUnsupportedOpen, setnetworkUnsupportedOpen] = useState<boolean>(
+  const [networkUnsupportedOpen, setNetworkUnsupportedOpen] = useState<boolean>(
     false
   );
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
   const [transactionActiveModalOpen, setTransactionActiveModalOpen] = useState<
     boolean
   >(false);
+  const [preflightDetails, setPreflightDetails] = useState<
+    PreflightDetails | undefined
+  >();
 
-  const [sendingAddress, setSendingAddress] = useState("");
-  const evmWallet = useWallet();
-
-  useEffect(() => {
-    if (evmWallet.account && walletState !== WALLET_STATE.Connected) {
-      setWalletState(WALLET_STATE.Connected);
-      setSendingAddress(evmWallet.account);
-    }
-  }, [evmWallet, walletState]);
+  const handleConnect = async () => {
+    setWalletConnecting(true);
+    !wallet && (await onboard?.walletSelect());
+    await checkIsReady();
+    setWalletConnecting(false);
+  };
 
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>
-        {walletState === WALLET_STATE.Disconnected ? (
+        {!isReady ? (
           <Button
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              evmWallet.connect("injected");
-              setWalletState(WALLET_STATE.Connecting);
+              handleConnect();
             }}
           >
             Connect Metamask
           </Button>
-        ) : walletState === WALLET_STATE.Connecting ? (
+        ) : walletConnecting ? (
           <section className={classes.connecting}>
             <Typography component="p" variant="h5">
               This app requires access to your wallet, <br />
@@ -209,7 +224,7 @@ const MainPage = () => {
               variant="h2"
               className={classes.networkName}
             >
-              {`Ethereum - ${evmWallet.networkName}`}
+              {`Ethereum - ${network}`}
             </Typography>
           </section>
         )}
@@ -217,30 +232,29 @@ const MainPage = () => {
       <Formik
         initialValues={{
           tokenAmount: 0,
-          token: {},
+          token: "",
           receiver: "",
-          destinationNetwork: "",
         }}
-        onSubmit={(values: any) => {
-          console.log("Transfer");
+        onSubmit={(values) => {
+          setPreflightDetails(values);
+          setPreflightModalOpen(true);
         }}
       >
         <Form
           className={clsx(classes.formArea, {
-            disabled: walletState !== WALLET_STATE.Connected,
+            disabled: !homeChain,
           })}
         >
           <section>
-            <FormikSelectInput
+            <SelectInput
               label="Destination Network"
-              name="destinationNetwork"
               className={classes.generalInput}
-              disabled={walletState !== WALLET_STATE.Connected}
-              options={[
-                { label: "a", value: "a" },
-                { label: "b", value: "b" },
-                { label: "c", value: "c" },
-              ]}
+              disabled={!homeChain}
+              options={destinationChains.map((dc) => ({
+                label: dc.name,
+                value: dc.chainId,
+              }))}
+              onChange={(value) => setDestinationChain(value)}
             />
           </section>
           <section className={classes.currencySection}>
@@ -250,13 +264,13 @@ const MainPage = () => {
               >
                 <FormikTextInput
                   className={clsx(classes.tokenInput, classes.generalInput)}
-                  disabled={walletState !== WALLET_STATE.Connected}
+                  disabled={!destinationChain}
                   name="tokenAmount"
                   label="I want to send"
                   type="number"
                 />
                 <Button
-                  disabled={walletState !== WALLET_STATE.Connected}
+                  disabled={!destinationChain}
                   className={classes.maxButton}
                   variant="outline"
                 >
@@ -265,25 +279,21 @@ const MainPage = () => {
               </div>
             </section>
             <section className={classes.currencySelector}>
-              {/* TODO Wire up to approved tokens */}
               <FormikSelectInput
                 name="token"
-                disabled={walletState !== WALLET_STATE.Connected}
-                value={"ETH"}
+                disabled={!destinationChain}
                 label={`Balance: 0.00 ETH`}
                 className={classes.generalInput}
-                options={[
-                  {
-                    label: <div className={classes.token}>ETH</div>,
-                    value: "ETH",
-                  },
-                ]}
+                options={Object.keys(tokens).map((t) => ({
+                  value: t,
+                  label: tokens.get(t)?.name || t,
+                }))}
               />
             </section>
           </section>
           <section>
             <AddressInput
-              disabled={walletState !== WALLET_STATE.Connected}
+              disabled={!destinationChain}
               name="receiver"
               label="Destination Address"
               placeholder="Please enter the receiving address"
@@ -291,12 +301,12 @@ const MainPage = () => {
               classNames={{
                 input: classes.addressInput,
               }}
-              senderAddress={`${sendingAddress}`}
+              senderAddress={`${address}`}
             />
           </section>
           <section>
             <Button
-              disabled={walletState !== WALLET_STATE.Connected}
+              disabled={!destinationChain}
               type="submit"
               fullsize
               variant="primary"
@@ -319,28 +329,29 @@ const MainPage = () => {
       />
       <NetworkUnsupportedModal
         open={networkUnsupportedOpen}
-        close={() => setnetworkUnsupportedOpen(false)}
+        close={() => setNetworkUnsupportedOpen(false)}
         network={`Ropsten`}
       />
       <PreflightModal
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
-        receiver={"0xDC6fFC3f404D9dA507735c294f023373079D2B8b"}
-        sender={`0xDC6fFC3f404D9dA507735c294f023373079D2B8b`}
-        // sender={`${evmWallet.account}`}
+        receiver={preflightDetails?.receiver || ""}
+        sender={address || ""}
         start={() => {
-          console.log("start");
           setPreflightModalOpen(false);
+          preflightDetails &&
+            deposit(
+              preflightDetails.tokenAmount,
+              preflightDetails.receiver,
+              preflightDetails.token
+            );
         }}
-        sourceNetwork={"Ethereum"}
-        targetNetwork={"Celo"}
-        token="ETH"
-        value={0.02}
+        sourceNetwork={homeChain?.name || ""}
+        targetNetwork={destinationChain?.name || ""}
+        token={preflightDetails?.token || ""}
+        value={preflightDetails?.tokenAmount || 0}
       />
-      <TransactionActiveModal
-        open={transactionActiveModalOpen}
-        close={() => setTransactionActiveModalOpen(false)}
-      />
+      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />
     </article>
   );
 };

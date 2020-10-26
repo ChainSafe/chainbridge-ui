@@ -4,7 +4,7 @@
   "description": "Chainbridge UI monorepo",
   "repository": "https://github.com/chainsafe/chainbridge-ui.git",
   "author": "Michael Yankelev <michael@chainsafe.io>",
-  "license": "MIT",
+  "license": "GPL-v3",
   "private": true,
   "engines": {
     "node": ">=12",
@@ -21,8 +21,6 @@
     "wsrun": "^5.2.4"
   },
   "scripts": {
-    "postinstall": "yarn build:contracts",
-    "build:contracts": "yarn wsrun -p @chainsafe/chainbridge-contracts -c build",
     "build:webapp": "yarn wsrun -p @chainsafe/chainbridge-ui -c build",
     "start:webapp": "yarn wsrun -p @chainsafe/chainbridge-ui -c start",
     "clean:dependencies": "rm -rf ./node_modules && rm -rf ./*/**/node_modules",

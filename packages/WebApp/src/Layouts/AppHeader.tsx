@@ -2,8 +2,8 @@ import { createStyles, ITheme, makeStyles } from "@imploy/common-themes";
 import React from "react";
 import clsx from "clsx";
 import { Typography } from "@imploy/common-components";
-import { useWallet } from "use-wallet";
 import { shortenAddress } from "../Utils/Helpers";
+import { useWeb3 } from "@chainsafe/web3-context";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) => {
   return createStyles({
@@ -43,22 +43,21 @@ interface IAppHeader {}
 
 const AppHeader: React.FC<IAppHeader> = () => {
   const classes = useStyles();
-  const evmWallet = useWallet();
-
+  const { isReady, address, network } = useWeb3();
   return (
     <header className={clsx(classes.root)}>
       <Typography variant="h4">ChainBridge Token Swap</Typography>
       <section className={classes.state}>
-        {!evmWallet.account ? (
+        {!isReady ? (
           <Typography variant="h5">No wallet connected</Typography>
         ) : (
           <>
             <div className={classes.indicator}></div>
             <Typography variant="h5" className={classes.address}>
-              {shortenAddress(evmWallet.account)}
+              {address && shortenAddress(address)}
             </Typography>
             <Typography variant="h5" className={classes.address}>
-              connected to <strong>{evmWallet.networkName}</strong>
+              connected to <strong>{network}</strong>
             </Typography>
           </>
         )}
