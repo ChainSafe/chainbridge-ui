@@ -22,19 +22,19 @@ const chains: Chain[] = [
   {
     chainId: 1,
     networkId: 5,
-    name: "EthA",
-    bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
-    erc20HandlerAddress: "0x3167776db165d8ea0f51790ca2bbf44db5105adf",
-    rpcUrl: "http://localhost:8545",
+    name: "Goerli",
+    bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
+    erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
+    rpcUrl: "https://goerli.prylabs.net",
     type: "Ethereum",
   },
   {
     chainId: 2,
-    networkId: 2,
-    name: "EthB",
-    bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
-    erc20HandlerAddress: "0x3167776db165d8ea0f51790ca2bbf44db5105adf",
-    rpcUrl: "http://localhost:8546",
+    networkId: 6,
+    name: "Kotti",
+    bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
+    erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
+    rpcUrl: "https://www.ethercluster.com/kotti",
     type: "Ethereum",
   },
 ];
@@ -68,7 +68,7 @@ const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
 );
 
 const ERC20ResourceId =
-  "0x00000000000000000000000021605f71845f372A9ed84253d2D024B7B10999f4";
+  "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001";
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const { isReady, network, provider, tokens } = useWeb3();

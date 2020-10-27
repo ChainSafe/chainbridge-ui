@@ -50,7 +50,7 @@ const App: React.FC<{}> = () => {
         <ToasterProvider autoDismiss>
           <Web3Provider
             networkIds={[1]}
-            tokenAddresses={["0x21605f71845f372A9ed84253d2D024B7B10999f4"]}
+            tokenAddresses={["0x14dD060dB55c0E7cc072BD3ab4709d55583119c0"]}
             onboardConfig={{
               walletCheck: [
                 { checkName: "accounts" },
