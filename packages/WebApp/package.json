@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@material-ui/styles": "4.10.0",
     "@chainsafe/chainbridge-contracts": "^1.0.3",
     "@chainsafe/web3-context": "1.0.4",
     "@imploy/common-components": "1.0.17",
