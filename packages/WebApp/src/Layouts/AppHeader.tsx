@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Typography } from "@imploy/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useWeb3 } from "@chainsafe/web3-context";
+import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) => {
   return createStyles({
@@ -43,7 +44,8 @@ interface IAppHeader {}
 
 const AppHeader: React.FC<IAppHeader> = () => {
   const classes = useStyles();
-  const { isReady, address, network } = useWeb3();
+  const { isReady, address } = useWeb3();
+  const { homeChain } = useChainbridge();
   return (
     <header className={clsx(classes.root)}>
       <Typography variant="h4">ChainBridge Token Swap</Typography>
@@ -57,7 +59,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
               {address && shortenAddress(address)}
             </Typography>
             <Typography variant="h5" className={classes.address}>
-              connected to <strong>{network}</strong>
+              connected to <strong>{homeChain?.name}</strong>
             </Typography>
           </>
         )}

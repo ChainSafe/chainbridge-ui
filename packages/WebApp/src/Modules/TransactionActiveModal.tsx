@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Button, Typography } from "@imploy/common-components";
@@ -103,17 +103,6 @@ const useStyles = makeStyles(
     })
 );
 
-enum TRANSACTION_STATE {
-  init = "init",
-  inTransit = "inTransit",
-  done = "done",
-}
-
-interface ISignature {
-  address: string;
-  signed: "pending" | "confirmed" | "rejected";
-}
-
 interface ITransactionActiveModalProps {
   open: boolean;
   close: () => void;
@@ -129,6 +118,9 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
     depositVotes,
     relayerThreshold,
     inTransitMessages,
+    homeChain,
+    destinationChain,
+    depositAmount,
   } = useChainbridge();
   return (
     <CustomModal
@@ -144,7 +136,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
             ? "1"
             : transactionStatus === "In Transit"
             ? "2"
-            : "3  "}
+            : "3"}
         </div>
       </section>
       <section className={classes.content}>
@@ -166,7 +158,6 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
           </div>
         ) : transactionStatus === "In Transit" ? (
           <div className={classes.sendingCopy}>
-            <Typography>Proposal created on network name</Typography>
             {inTransitMessages.map((m, i) => (
               <Typography className={classes.vote} component="p" key={i}>
                 {m}
@@ -182,7 +173,8 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Successfully transferred{" "}
               <strong>
-                0.25 ETH <br /> from Home Network to DestinationName.
+                {depositAmount} <br /> from {homeChain?.name} to{" "}
+                {destinationChain?.name}.
               </strong>
             </Typography>
             <section className={classes.buttons}>
