@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
@@ -6,8 +6,8 @@ import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import PreflightModal from "../../Modules/PreflightModal";
 import {
   Button,
-  Typography,
   FormikSelectInput,
+  Typography,
   FormikTextInput,
   QuestionCircleSvg,
   SelectInput,
@@ -147,15 +147,7 @@ type PreflightDetails = {
 
 const MainPage = () => {
   const classes = useStyles();
-  const {
-    isReady,
-    checkIsReady,
-    wallet,
-    onboard,
-    tokens,
-    address,
-    network,
-  } = useWeb3();
+  const { isReady, checkIsReady, wallet, onboard, tokens, address } = useWeb3();
   const {
     homeChain,
     destinationChains,
@@ -173,9 +165,7 @@ const MainPage = () => {
     false
   );
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
-  const [transactionActiveModalOpen, setTransactionActiveModalOpen] = useState<
-    boolean
-  >(false);
+
   const [preflightDetails, setPreflightDetails] = useState<
     PreflightDetails | undefined
   >();
@@ -224,7 +214,7 @@ const MainPage = () => {
               variant="h2"
               className={classes.networkName}
             >
-              {`Ethereum - ${network}`}
+              {homeChain?.name}
             </Typography>
           </section>
         )}
@@ -282,12 +272,14 @@ const MainPage = () => {
               <FormikSelectInput
                 name="token"
                 disabled={!destinationChain}
-                label={`Balance: 0.00 ETH`}
+                label={`Balance: Coming Soon`}
                 className={classes.generalInput}
-                options={Object.keys(tokens).map((t) => ({
-                  value: t,
-                  label: tokens.get(t)?.name || t,
-                }))}
+                options={
+                  homeChain?.tokenAddresses.map((t) => ({
+                    value: t,
+                    label: tokens.get(t)?.symbol || t,
+                  })) || []
+                }
               />
             </section>
           </section>
