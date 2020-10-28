@@ -18,6 +18,7 @@ import clsx from "clsx";
 import TransactionActiveModal from "../../Modules/TransactionActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
+import { Loader } from "../Custom/Loader/Loader";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -192,6 +193,7 @@ const MainPage = () => {
           </Button>
         ) : walletConnecting ? (
           <section className={classes.connecting}>
+            <Loader />
             <Typography component="p" variant="h5">
               This app requires access to your wallet, <br />
               please login and authorize access to continue.
