@@ -18,18 +18,6 @@
 - Forms & Validation: [Formik](https://jaredpalmer.com/formik) + [Yup](https://github.com/jquense/yup)
 - Notifications: [Imploy UI Components](https://github.com/imploy/ui/packages/common-components/)
 
-### Mono Repo Structure 🏗
-
-The repository is broken up into 4 main packages, managed using yarn workspaces. You can find these in the `packages` directory. These packages are as follows:
-
-#### 1\) **`packages/contracts`**
-
-All chainbridge contract artifacts can be found here, including all TS contract bindings generated using typechain.
-
-#### 2\) **`packages/webapp`**
-
-The Chainbridge UI
-
 ## Install
 
 You will need a Github Personal Access token with `read:package` permissions. This can be obtained [here](https://github.com/settings/tokens)
@@ -39,7 +27,7 @@ You will need a Github Personal Access token with `read:package` permissions. Th
 - Press `CTRL+X` to exit
 - Run `source .bash_profile`
 
-First, run yarn to install the workspace dependancies:
+First, install dependancies:
 
 ```
 yarn install
@@ -54,7 +42,7 @@ If you experience issues installing the @imploy packages due to authentication e
 For running a local instance use the command:
 
 ```
-yarn start:webapp
+yarn start
 ```
 
 ### Build
