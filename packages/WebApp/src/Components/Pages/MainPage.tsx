@@ -344,7 +344,7 @@ const MainPage = () => {
         token={preflightDetails?.token || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransactionActiveModal open={!transactionStatus} close={resetDeposit} />
+      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />
     </article>
   );
 };
