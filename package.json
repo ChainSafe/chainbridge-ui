@@ -32,7 +32,9 @@
     "@types/react-dom": "^16.9.0",
     "@types/yup": "^0.29.8",
     "craco": "^0.0.3",
-    "husky": "4.3.0"
+    "husky": "4.3.0",
+    "pretty-quick": "3.0.2",
+    "prettier": "2.1.2"
   },
   "scripts": {
     "start": "craco --max_old_space_size=4096 start",
