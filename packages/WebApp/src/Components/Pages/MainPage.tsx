@@ -135,6 +135,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       height: 20,
       width: 20,
       marginTop: constants.generalUnit * 5,
+      fill: `${palette.additional["transferUi"][1]} !important`,
     },
   })
 );

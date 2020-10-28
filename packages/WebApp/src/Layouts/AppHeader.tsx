@@ -16,9 +16,24 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) => {
       width: "100%",
       top: 0,
       left: 0,
-      borderBottom: `1px solid ${palette.additional["gray"][6]}`,
-      color: palette.additional["gray"][8],
+      backgroundColor: palette.additional["header"][1],
+      borderBottom: `1px solid ${palette.additional["header"][3]}`,
+      color: palette.additional["header"][2],
       alignItems: "center",
+    },
+    left: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+    logo: {
+      height: constants.generalUnit * 5,
+      width: constants.generalUnit * 5,
+      "& svg, & img": {
+        maxHeight: "100%",
+        maxWidth: "100%",
+      },
     },
     state: {
       display: "flex",
@@ -48,7 +63,13 @@ const AppHeader: React.FC<IAppHeader> = () => {
   const { homeChain } = useChainbridge();
   return (
     <header className={clsx(classes.root)}>
-      <Typography variant="h4">ChainBridge Token Swap</Typography>
+      <div className={classes.left}>
+        {/* ADD LOGO HERE */}
+        {/* <div className={classes.logo}>
+        
+        </div> */}
+        <Typography variant="h4">ChainBridge Token Swap</Typography>
+      </div>
       <section className={classes.state}>
         {!isReady ? (
           <Typography variant="h5">No wallet connected</Typography>
