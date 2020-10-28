@@ -135,6 +135,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       height: 20,
       width: 20,
       marginTop: constants.generalUnit * 5,
+      fill: `${palette.additional["transferUi"][1]} !important`,
     },
   })
 );
@@ -343,7 +344,7 @@ const MainPage = () => {
         token={preflightDetails?.token || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />
+      <TransactionActiveModal open={!transactionStatus} close={resetDeposit} />
     </article>
   );
 };

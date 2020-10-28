@@ -26,7 +26,7 @@ const useStyles = makeStyles(
         border: "none",
         borderRadius: 0,
         transitionDuration: `${animation.transform}ms`,
-        borderTop: `6px solid ${palette.additional["geekblue"][5]}`,
+        borderTop: `6px solid ${palette.additional["transactionModal"][1]}`,
       },
       heading: {
         marginBottom: constants.generalUnit,
@@ -41,8 +41,8 @@ const useStyles = makeStyles(
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        color: palette.additional["geekblue"][6],
-        border: `1px solid ${palette.additional["geekblue"][4]}`,
+        border: `1px solid ${palette.additional["transactionModal"][2]}`,
+        color: palette.additional["transactionModal"][3],
       },
       content: {
         display: "flex",

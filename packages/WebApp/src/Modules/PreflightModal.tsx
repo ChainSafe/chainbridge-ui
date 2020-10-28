@@ -34,8 +34,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       margin: `${constants.generalUnit * 2}px 0`,
     },
     startButton: {
-      backgroundColor: palette.additional["geekblue"][4],
-      color: palette.common.black.main,
+      backgroundColor: palette.additional["preflight"][1],
+      color: palette.additional["preflight"][2],
       marginBottom: constants.generalUnit * 2,
     },
   })

@@ -16,8 +16,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) => {
       width: "100%",
       top: 0,
       left: 0,
-      borderBottom: `1px solid ${palette.additional["gray"][6]}`,
-      color: palette.additional["gray"][8],
+      backgroundColor: palette.additional["header"][1],
+      borderBottom: `1px solid ${palette.additional["header"][3]}`,
+      color: palette.additional["header"][2],
       alignItems: "center",
     },
     state: {
