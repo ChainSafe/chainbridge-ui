@@ -10,24 +10,24 @@ export const lightTheme = createTheme({
     palette: {
       additional: {
         general: {
-          1: "#85A5FF", // Accents //geekblue4
+          1: "#00A308", // Accents // ETC main
         },
         transferUi: {
-          1: "#595959", // FAQ button // gray8
+          1: "#00A308", // FAQ button // ETC main
         },
         header: {
-          1: "transparent", // Background
-          2: "#595959", // Text color //gray8
-          3: "#BFBFBF", // border // gray6
+          1: "#191919", // Background // ETC black
+          2: "#EDEDED", // Text color // ETC gray
+          3: "#191919", // border // ETC black
         },
         preflight: {
-          1: "#85A5FF", // Button bg color
-          2: "#262626", // Button color
+          1: "#00A308", // Button bg color // ETC main
+          2: "#EDEDED", // Button color //  ETC gray
         },
         transactionModal: {
-          1: "#597EF7", // border //geekblue5
-          2: "#85A5FF", // indicator border //geekblue4
-          3: "#2F54EB", // indicator text //geekblue6
+          1: "#00A308", // border // ETC main
+          2: "#00A308", // indicator border // ETC main
+          3: "#00A308", // indicator text // ETC main
         },
       },
     },
