@@ -118,6 +118,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     currencySelector: {
       width: 120,
+      "& *": {
+        cursor: "pointer",
+      },
     },
     token: {},
     address: {
@@ -136,6 +139,23 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       width: 20,
       marginTop: constants.generalUnit * 5,
       fill: `${palette.additional["transferUi"][1]} !important`,
+    },
+    tokenItem: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      cursor: "pointer",
+      "& img": {
+        display: "block",
+        maxHeight: 14,
+        maxWidth: 14,
+        marginLeft: 10,
+      },
+      "& span": {
+        minWidth: `calc(100% - 14px)`,
+        textAlign: "right",
+      },
     },
   })
 );
@@ -281,7 +301,14 @@ const MainPage = () => {
                 options={
                   Object.keys(tokens).map((t) => ({
                     value: t,
-                    label: tokens[t]?.symbol || t,
+                    label: (
+                      <div className={classes.tokenItem}>
+                        {tokens[t]?.imageUri && (
+                          <img src={tokens[t]?.imageUri} />
+                        )}
+                        <span>{tokens[t]?.symbol || t}</span>
+                      </div>
+                    ),
                   })) || []
                 }
               />

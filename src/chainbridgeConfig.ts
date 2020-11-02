@@ -1,3 +1,5 @@
+import ETHIcon from "cryptocurrency-icons/svg/color/eth.svg";
+
 type TokenConfig = {
   address: string;
   name?: string;
@@ -30,6 +32,7 @@ export const chainbridgeConfig: BridgeConfig[] = [
         address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
         name: "Test Goerli",
         symbol: "TESTG",
+        imageUri: ETHIcon,
       },
     ],
   },
