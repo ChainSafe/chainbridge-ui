@@ -148,8 +148,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       cursor: "pointer",
       "& img": {
         display: "block",
-        maxHeight: 14,
-        maxWidth: 14,
+        height: 14,
+        width: 14,
         marginLeft: 10,
       },
       "& span": {
@@ -169,7 +169,6 @@ type PreflightDetails = {
 const MainPage = () => {
   const classes = useStyles();
   const { isReady, checkIsReady, wallet, onboard, tokens, address } = useWeb3();
-  console.log(tokens);
   const {
     homeChain,
     destinationChains,

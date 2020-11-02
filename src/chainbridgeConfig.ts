@@ -1,4 +1,4 @@
-import ETHIcon from "cryptocurrency-icons/svg/color/eth.svg";
+import ETHIcon from "./media/tokens/eth.svg";
 
 type TokenConfig = {
   address: string;
