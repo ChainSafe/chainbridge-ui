@@ -178,6 +178,8 @@ const MainPage = () => {
     setWalletConnecting(false);
   };
 
+  console.log(homeChain?.tokenAddresses);
+
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>
