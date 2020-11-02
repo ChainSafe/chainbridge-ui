@@ -149,6 +149,7 @@ type PreflightDetails = {
 const MainPage = () => {
   const classes = useStyles();
   const { isReady, checkIsReady, wallet, onboard, tokens, address } = useWeb3();
+  console.log(tokens);
   const {
     homeChain,
     destinationChains,
@@ -177,8 +178,6 @@ const MainPage = () => {
     await checkIsReady();
     setWalletConnecting(false);
   };
-
-  console.log(homeChain?.tokenAddresses);
 
   return (
     <article className={classes.root}>
