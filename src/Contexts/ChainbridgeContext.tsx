@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { BigNumber, ethers, utils } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
+import { BridgeConfig, chainbridgeConfig } from "../chainbridgeConfig";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -19,32 +20,9 @@ type Chain = {
   tokenAddresses: string[];
 };
 
-const chains: Chain[] = [
-  {
-    chainId: 1,
-    networkId: 5,
-    name: "Ethereum - Goerli",
-    bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-    erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-    rpcUrl: "https://goerli.prylabs.net",
-    type: "Ethereum",
-    tokenAddresses: ["0x14dD060dB55c0E7cc072BD3ab4709d55583119c0"],
-  },
-  {
-    chainId: 2,
-    networkId: 6,
-    name: "Ethereum Classic - Kotti",
-    bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-    erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-    rpcUrl: "https://www.ethercluster.com/kotti",
-    type: "Ethereum",
-    tokenAddresses: ["0x14dD060dB55c0E7cc072BD3ab4709d55583119c0"],
-  },
-];
-
 type ChainbridgeContext = {
-  homeChain?: Chain;
-  destinationChain?: Chain;
+  homeChain?: BridgeConfig;
+  destinationChain?: BridgeConfig;
   destinationChains: Array<{ chainId: number; name: string }>;
   setDestinationChain(chainId: number): void;
   deposit(
@@ -76,12 +54,16 @@ const ERC20ResourceId =
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const { isReady, network, provider } = useWeb3();
-  const [homeChain, setHomeChain] = useState<Chain | undefined>();
+  const [homeChain, setHomeChain] = useState<BridgeConfig | undefined>();
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
   );
-  const [destinationChain, setDestinationChain] = useState<Chain | undefined>();
-  const [destinationChains, setDestinationChains] = useState<Chain[]>([]);
+  const [destinationChain, setDestinationChain] = useState<
+    BridgeConfig | undefined
+  >();
+  const [destinationChains, setDestinationChains] = useState<BridgeConfig[]>(
+    []
+  );
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
   const [destinationBridge, setDestinationBridge] = useState<
     Bridge | undefined
@@ -107,7 +89,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
   useEffect(() => {
     if (network && isReady) {
-      const home = chains.find((c) => c.networkId === network);
+      const home = chainbridgeConfig.find((c) => c.networkId === network);
       if (!home) {
         return;
       }
@@ -121,7 +103,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
       const bridge = BridgeFactory.connect(home.bridgeAddress, signer);
       setHomeBridge(bridge);
-      setDestinationChains(chains.filter((c) => c.networkId !== network));
+      setDestinationChains(
+        chainbridgeConfig.filter((c) => c.networkId !== network)
+      );
     } else {
       setHomeChain(undefined);
     }

@@ -12,6 +12,7 @@ import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
 import { Web3Provider } from "@chainsafe/web3-context";
+import { chainbridgeConfig } from "./chainbridgeConfig";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -25,6 +26,16 @@ if (
 }
 
 const App: React.FC<{}> = () => {
+  const networks = chainbridgeConfig.map((bc) => bc.networkId);
+  const tokens = chainbridgeConfig.reduce((tca, bc) => {
+    console.log(bc);
+    return {
+      ...tca,
+      [bc.networkId]: bc.tokens,
+    };
+  }, {});
+
+  console.log(tokens);
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (
@@ -49,8 +60,8 @@ const App: React.FC<{}> = () => {
         <CssBaseline />
         <ToasterProvider autoDismiss>
           <Web3Provider
-            networkIds={[1]}
-            tokenAddresses={["0x14dD060dB55c0E7cc072BD3ab4709d55583119c0"]}
+            networkIds={networks}
+            tokensToWatch={tokens}
             onboardConfig={{
               walletCheck: [
                 { checkName: "accounts" },

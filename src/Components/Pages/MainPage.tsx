@@ -278,9 +278,9 @@ const MainPage = () => {
                 label={`Balance: Coming Soon`}
                 className={classes.generalInput}
                 options={
-                  homeChain?.tokenAddresses.map((t) => ({
+                  Object.keys(tokens).map((t) => ({
                     value: t,
-                    label: tokens.get(t)?.symbol || t,
+                    label: tokens[t]?.symbol || t,
                   })) || []
                 }
               />
