@@ -6,7 +6,6 @@ import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import PreflightModal from "../../Modules/PreflightModal";
 import {
   Button,
-  FormikSelectInput,
   Typography,
   FormikTextInput,
   QuestionCircleSvg,
@@ -18,6 +17,7 @@ import clsx from "clsx";
 import TransactionActiveModal from "../../Modules/TransactionActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
+import TokenSelectInput from "../Custom/TokenSelectInput";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -271,11 +271,13 @@ const MainPage = () => {
               </div>
             </section>
             <section className={classes.currencySelector}>
-              <FormikSelectInput
+              <TokenSelectInput
+                tokens={tokens}
                 name="token"
                 disabled={!destinationChain}
-                label={`Balance: Coming Soon`}
+                label={`Balance: `}
                 className={classes.generalInput}
+                placeholder=""
                 options={
                   Object.keys(tokens).map((t) => ({
                     value: t,

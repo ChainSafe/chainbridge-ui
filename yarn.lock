@@ -1655,10 +1655,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@imploy/common-components@1.0.17":
-  version "1.0.17"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.17/57de78224fb3b12c40a5577965c76f0a4c5a0046e0bc045c55d9afc0f3b62677#470d6eed57cfbfa3d9d17b1c6e2c8f4f030e27e2"
-  integrity sha512-or1f7uQ1q3YHwl9ri8PUqrE+D/Kw1b7uGdrfpeCfX9zXV9T3GMZtWGB938wv39uWceqWDgy+acS+OeengxgNcg==
+"@imploy/common-components@1.0.19":
+  version "1.0.19"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.19/c849e37f8162e0f5416db121c1d683f8864cb435e07995381e693a1b713f2382#d4ee6055b6bcf0c3c5b050a22f275f9099d1b097"
+  integrity sha512-jqCqk306Kkp3/R+4Z8AbmymPP8D6+J8g6EfrSXevGPzgWi+dJdA8FenTdwZ68YO9yOEV3l0nsg2sbLMelbsmgg==
   dependencies:
     "@material-ui/styles" "^4.10.0"
     "@types/react-select" "^3.0.22"
@@ -1666,7 +1666,7 @@
     clsx "^1.1.1"
     normalize.css "^8.0.1"
     react-blockies "^1.4.1"
-    react-dropzone "^11.2.0"
+    react-dropzone "^11.2.3"
     react-router-dom "^5.2.0"
     react-select "^3.1.0"
     react-spinners "^0.9.0"
@@ -12258,10 +12258,10 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-dropzone@^11.2.0:
-  version "11.2.1"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-11.2.1.tgz#7544439ed2e27d1e4ac8efff5c6290b758cc29f5"
-  integrity sha512-AVWKQKKd4M8vIYzRC7QvvyzsGMrz6UAtAYW2WvSlEmstHKXhHL3CAq9LUzALfzMcDd2mxmntSNcpxij0w7U4qA==
+react-dropzone@^11.2.3:
+  version "11.2.3"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-11.2.3.tgz#8a49e9fc7ab75eaccf748c382a790092c035cef1"
+  integrity sha512-D99BhHm7H1h7ztUH/FLDo4wDy7VzXMbHoS/tUZHtoaY37Y55uadq0kUKqoaJ8PXl+niqdb5t6GankuEaAL6Vwg==
   dependencies:
     attr-accept "^2.2.1"
     file-selector "^0.2.2"
