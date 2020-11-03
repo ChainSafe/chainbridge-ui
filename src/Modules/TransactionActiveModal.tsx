@@ -1,7 +1,11 @@
 import React from "react";
 
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
-import { Button, Typography } from "@imploy/common-components";
+import {
+  Button,
+  ExclamationCircleIcon,
+  Typography,
+} from "@imploy/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
@@ -132,11 +136,15 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
     >
       <section>
         <div className={classes.stepIndicator}>
-          {transactionStatus === "Initializing Transfer"
-            ? "1"
-            : transactionStatus === "In Transit"
-            ? "2"
-            : "3"}
+          {transactionStatus === "Initializing Transfer" ? (
+            "1"
+          ) : transactionStatus === "In Transit" ? (
+            "2"
+          ) : transactionStatus === "Transfer Completed" ? (
+            "3"
+          ) : (
+            <ExclamationCircleIcon />
+          )}
         </div>
       </section>
       <section className={classes.content}>
@@ -145,7 +153,9 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
             ? "Initializing Transfer"
             : transactionStatus === "In Transit"
             ? `In Transit (${depositVotes}/${relayerThreshold} signatures needed)`
-            : "Transfer completed"}
+            : transactionStatus === "Transfer Completed"
+            ? "Transfer completed"
+            : "Transfer aborted"}
         </Typography>
         {transactionStatus === "Initializing Transfer" ? (
           <div className={classes.initCopy}>
@@ -168,7 +178,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
               Please do not refresh or leave the page.
             </Typography>
           </div>
-        ) : (
+        ) : transactionStatus === "Transfer Completed" ? (
           <>
             <Typography className={classes.receipt} component="p">
               Successfully transferred{" "}
@@ -183,6 +193,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
                 size="small"
                 className={classes.button}
                 variant="outline"
+                disabled
               >
                 View transaction
               </Button>
@@ -193,6 +204,32 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
                 onClick={close}
               >
                 Start new transfer
+              </Button>
+            </section>
+          </>
+        ) : (
+          <>
+            <Typography className={classes.receipt} component="p">
+              Something went wrong and we could not complete your transfer.
+            </Typography>
+            <section className={classes.buttons}>
+              <Button
+                size="small"
+                className={classes.button}
+                variant="outline"
+                onClick={close}
+              >
+                Start new transfer
+              </Button>
+              <Button
+                size="small"
+                className={classes.button}
+                variant="outline"
+                onClick={() =>
+                  window.open("https://discord.com/invite/n2U6x9c", "_blank")
+                }
+              >
+                Ask question on Discord
               </Button>
             </section>
           </>

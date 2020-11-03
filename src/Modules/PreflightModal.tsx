@@ -47,7 +47,7 @@ interface IPreflightModalProps {
   sender: string;
   receiver: string;
   value: number;
-  token: string;
+  tokenSymbol: string;
   sourceNetwork: string;
   targetNetwork: string;
   start: () => void;
@@ -60,7 +60,7 @@ const PreflightModal: React.FC<IPreflightModalProps> = ({
   sender,
   sourceNetwork,
   targetNetwork,
-  token,
+  tokenSymbol,
   value,
   start,
 }: IPreflightModalProps) => {
@@ -99,11 +99,11 @@ const PreflightModal: React.FC<IPreflightModalProps> = ({
       <Typography className={classes.agreement} variant="h5" component="p">
         I agree and want to send{" "}
         <strong>
-          {value} {token}
+          {value} {tokenSymbol}
         </strong>{" "}
-        from&nbsp
+        from&nbsp;
         <strong>{shortenAddress(sender)}</strong> on{" "}
-        <strong>{sourceNetwork}</strong> to&nbsp
+        <strong>{sourceNetwork}</strong> to&nbsp;
         <strong>{shortenAddress(receiver)}</strong> on{" "}
         <strong>{targetNetwork}</strong>.
       </Typography>

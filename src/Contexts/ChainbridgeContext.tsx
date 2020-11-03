@@ -79,13 +79,34 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
 
   const resetDeposit = () => {
-    setDestinationChain(undefined);
+    chainbridgeConfig.length > 2 && setDestinationChain(undefined);
     setTransactionStatus(undefined);
     setDepositNonce(undefined);
     setDepositVotes(0);
     setDepositAmount(undefined);
     setInTransitMessages([]);
   };
+
+  const handleSetDestination = (chainId: number) => {
+    const chain = destinationChains.find((c) => c.chainId === chainId);
+    if (!chain) {
+      throw new Error("Invalid destination chain selected");
+    }
+    setDestinationChain(chain);
+  };
+
+  useEffect(() => {
+    if (destinationChain) {
+      const provider = new ethers.providers.JsonRpcProvider(
+        destinationChain?.rpcUrl
+      );
+      const bridge = BridgeFactory.connect(
+        destinationChain?.bridgeAddress,
+        provider
+      );
+      setDestinationBridge(bridge);
+    }
+  }, [destinationChain]);
 
   useEffect(() => {
     if (network && isReady) {
@@ -106,6 +127,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       setDestinationChains(
         chainbridgeConfig.filter((c) => c.networkId !== network)
       );
+      if (chainbridgeConfig.length === 2) {
+        const destChain = chainbridgeConfig.find(
+          (c) => c.networkId !== network
+        );
+
+        destChain && setDestinationChain(destChain);
+      }
     } else {
       setHomeChain(undefined);
     }
@@ -185,17 +213,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     destinationChain,
     inTransitMessages,
   ]);
-
-  const handleSetDestination = (chainId: number) => {
-    const chain = destinationChains.find((c) => c.chainId === chainId);
-    if (!chain) {
-      throw new Error("Invalid destination chain selected");
-    }
-    setDestinationChain(chain);
-    const provider = new ethers.providers.JsonRpcProvider(chain.rpcUrl);
-    const bridge = BridgeFactory.connect(chain.bridgeAddress, provider);
-    setDestinationBridge(bridge);
-  };
 
   const deposit = async (
     amount: number,
