@@ -28,14 +28,12 @@ if (
 const App: React.FC<{}> = () => {
   const networks = chainbridgeConfig.map((bc) => bc.networkId);
   const tokens = chainbridgeConfig.reduce((tca, bc) => {
-    console.log(bc);
     return {
       ...tca,
       [bc.networkId]: bc.tokens,
     };
   }, {});
 
-  console.log(tokens);
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (

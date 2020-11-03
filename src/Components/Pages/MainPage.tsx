@@ -6,7 +6,6 @@ import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import PreflightModal from "../../Modules/PreflightModal";
 import {
   Button,
-  FormikSelectInput,
   Typography,
   FormikTextInput,
   QuestionCircleSvg,
@@ -18,6 +17,8 @@ import clsx from "clsx";
 import TransactionActiveModal from "../../Modules/TransactionActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
+import TokenSelectInput from "../Custom/TokenSelectInput";
+import TokenInput from "../Custom/TokenInput";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -118,6 +119,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     currencySelector: {
       width: 120,
+      "& *": {
+        cursor: "pointer",
+      },
     },
     token: {},
     address: {
@@ -136,6 +140,23 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       width: 20,
       marginTop: constants.generalUnit * 5,
       fill: `${palette.additional["transferUi"][1]} !important`,
+    },
+    tokenItem: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      cursor: "pointer",
+      "& img": {
+        display: "block",
+        height: 14,
+        width: 14,
+        marginLeft: 10,
+      },
+      "& span": {
+        minWidth: `calc(100% - 14px)`,
+        textAlign: "right",
+      },
     },
   })
 );
@@ -253,32 +274,38 @@ const MainPage = () => {
               <div
                 className={clsx(classes.tokenInputArea, classes.generalInput)}
               >
-                <FormikTextInput
-                  className={clsx(classes.tokenInput, classes.generalInput)}
+                <TokenInput
+                  classNames={{
+                    input: clsx(classes.tokenInput, classes.generalInput),
+                    button: classes.maxButton,
+                  }}
+                  tokenSelectorKey="token"
+                  tokens={tokens}
                   disabled={!destinationChain}
                   name="tokenAmount"
                   label="I want to send"
-                  type="number"
                 />
-                <Button
-                  disabled={!destinationChain}
-                  className={classes.maxButton}
-                  variant="outline"
-                >
-                  MAX
-                </Button>
               </div>
             </section>
             <section className={classes.currencySelector}>
-              <FormikSelectInput
+              <TokenSelectInput
+                tokens={tokens}
                 name="token"
                 disabled={!destinationChain}
-                label={`Balance: Coming Soon`}
+                label={`Balance: `}
                 className={classes.generalInput}
+                placeholder=""
                 options={
                   Object.keys(tokens).map((t) => ({
                     value: t,
-                    label: tokens[t]?.symbol || t,
+                    label: (
+                      <div className={classes.tokenItem}>
+                        {tokens[t]?.imageUri && (
+                          <img src={tokens[t]?.imageUri} />
+                        )}
+                        <span>{tokens[t]?.symbol || t}</span>
+                      </div>
+                    ),
                   })) || []
                 }
               />

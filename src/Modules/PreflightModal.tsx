@@ -101,9 +101,9 @@ const PreflightModal: React.FC<IPreflightModalProps> = ({
         <strong>
           {value} {token}
         </strong>{" "}
-        from&nbsp;
+        from&nbsp
         <strong>{shortenAddress(sender)}</strong> on{" "}
-        <strong>{sourceNetwork}</strong> to&nbsp;
+        <strong>{sourceNetwork}</strong> to&nbsp
         <strong>{shortenAddress(receiver)}</strong> on{" "}
         <strong>{targetNetwork}</strong>.
       </Typography>
