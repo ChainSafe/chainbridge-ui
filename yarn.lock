@@ -1655,13 +1655,13 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@imploy/common-components@1.0.19":
-  version "1.0.19"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.19/c849e37f8162e0f5416db121c1d683f8864cb435e07995381e693a1b713f2382#d4ee6055b6bcf0c3c5b050a22f275f9099d1b097"
-  integrity sha512-jqCqk306Kkp3/R+4Z8AbmymPP8D6+J8g6EfrSXevGPzgWi+dJdA8FenTdwZ68YO9yOEV3l0nsg2sbLMelbsmgg==
+"@imploy/common-components@1.0.20":
+  version "1.0.20"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.20/dd55af367139448a741fb97b4cf5101e3f8a2907ff519045023cac4a50ad9ae0#252df04889af01ccd24231b12d75b80a3896726c"
+  integrity sha512-H2E89Kr4fabSK/ZeEQZO1Uo/TCuLSzmDNQHO/ptG+ehXz3ABsnLrYSwBjR68j7nRkFxF7+QBhtTcAV8hF4C9Vg==
   dependencies:
     "@material-ui/styles" "^4.10.0"
-    "@types/react-select" "^3.0.22"
+    "@types/react-select" "^3.0.23"
     a11y-react-emoji "^1.1.2"
     clsx "^1.1.1"
     normalize.css "^8.0.1"
@@ -2421,10 +2421,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-select@^3.0.22":
-  version "3.0.22"
-  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.22.tgz#b88306365e99fa86809a5c0ce0f1b4e8d0b626bf"
-  integrity sha512-fqgmC979JPr/6476Pau6QnmI9zVV664R7Q92Ld1rgTn+umtUXT5X3+PO/x6O4imCZnh7XCqZcouabWAlAQJNpQ==
+"@types/react-select@^3.0.23":
+  version "3.0.23"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.23.tgz#67fa25e3305e682d680058542a634964ef44af94"
+  integrity sha512-WrXjixjHlDfG4kSwasQZvZXD+hPamNTvJYWYb5TAt3hwhVg+4imNMPdUTDQhrGrCHIeKUc5h+syGCylnw30Suw==
   dependencies:
     "@types/react" "*"
     "@types/react-dom" "*"
