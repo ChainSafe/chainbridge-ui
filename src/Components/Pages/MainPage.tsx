@@ -115,6 +115,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         backgroundColor: palette.additional["gray"][7],
         color: palette.common.white.main,
       },
+      "&:focus": {
+        borderColor: palette.additional["gray"][6],
+      },
     },
     currencySelector: {
       width: 120,
@@ -266,10 +269,13 @@ const MainPage = () => {
               label="Destination Network"
               className={classes.generalInput}
               disabled={!homeChain}
-              options={destinationChains.map((dc) => ({
-                label: dc.name,
-                value: dc.chainId,
-              }))}
+              options={[
+                { label: "", value: "" },
+                ...destinationChains.map((dc) => ({
+                  label: dc.name,
+                  value: dc.chainId,
+                })),
+              ]}
               onChange={(value) => setDestinationChain(value)}
               value={destinationChain?.chainId}
             />

@@ -9,15 +9,9 @@ interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-type Chain = {
-  chainId: number;
-  networkId: number;
-  name: string;
-  bridgeAddress: string;
-  erc20HandlerAddress: string;
-  rpcUrl: string;
-  type: "Ethereum" | "Substrate";
-  tokenAddresses: string[];
+type Vote = {
+  address: string;
+  signed: "Confirmed" | "Rejected";
 };
 
 type ChainbridgeContext = {
@@ -35,8 +29,10 @@ type ChainbridgeContext = {
   depositVotes: number;
   relayerThreshold?: number;
   depositNonce?: string;
-  inTransitMessages: string[];
+  inTransitMessages: Array<string | Vote>;
   depositAmount?: number;
+  transferTxHash?: string;
+  selectedToken?: string;
 };
 
 type TransactionStatus =
@@ -48,9 +44,6 @@ type TransactionStatus =
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
   undefined
 );
-
-const ERC20ResourceId =
-  "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001";
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const { isReady, network, provider } = useWeb3();
@@ -75,11 +68,15 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     undefined
   );
   const [depositVotes, setDepositVotes] = useState<number>(0);
-  const [inTransitMessages, setInTransitMessages] = useState<string[]>([]);
+  const [inTransitMessages, setInTransitMessages] = useState<
+    Array<string | Vote>
+  >([]);
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
+  const [transferTxHash, setTransferTxHash] = useState<string>("");
+  const [selectedToken, setSelectedToken] = useState<string>("");
 
   const resetDeposit = () => {
-    chainbridgeConfig.length > 2 && setDestinationChain(undefined);
+    chainbridgeConfig.chains.length > 2 && setDestinationChain(undefined);
     setTransactionStatus(undefined);
     setDepositNonce(undefined);
     setDepositVotes(0);
@@ -110,7 +107,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
   useEffect(() => {
     if (network && isReady) {
-      const home = chainbridgeConfig.find((c) => c.networkId === network);
+      const home = chainbridgeConfig.chains.find(
+        (c) => c.networkId === network
+      );
       if (!home) {
         return;
       }
@@ -125,10 +124,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       const bridge = BridgeFactory.connect(home.bridgeAddress, signer);
       setHomeBridge(bridge);
       setDestinationChains(
-        chainbridgeConfig.filter((c) => c.networkId !== network)
+        chainbridgeConfig.chains.filter((c) => c.networkId !== network)
       );
-      if (chainbridgeConfig.length === 2) {
-        const destChain = chainbridgeConfig.find(
+      if (chainbridgeConfig.chains.length === 2) {
+        const destChain = chainbridgeConfig.chains.find(
           (c) => c.networkId !== network
         );
 
@@ -161,7 +160,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           null,
           null
         ),
-        (originChainId, depositNonce, status) => {
+        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
           switch (BigNumber.from(status).toNumber()) {
             case 1:
               setInTransitMessages(
@@ -177,9 +176,11 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               break;
             case 3:
               setTransactionStatus("Transfer Completed");
+              setTransferTxHash(tx.transactionHash);
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
+              setTransferTxHash(tx.transactionHash);
               break;
           }
         }
@@ -192,12 +193,17 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           null,
           null
         ),
-        (originChainId, depositNonce, status, resourceId, tx) => {
-          // TODO: Ensure that no event is emitted for NO votes.
-          setDepositVotes(depositVotes + 1);
-          // TODO: Improve these messages including the TX Hash
-          console.log(tx);
-          setInTransitMessages(inTransitMessages.concat(`Vote cast`));
+        async (originChainId, depositNonce, status, resourceId, tx) => {
+          const txReceipt = await tx.getTransactionReceipt();
+          if (txReceipt.status === 1) {
+            setDepositVotes(depositVotes + 1);
+          }
+          setInTransitMessages(
+            inTransitMessages.concat({
+              address: String(txReceipt.from),
+              signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
+            })
+          );
         }
       );
     }
@@ -237,7 +243,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
     setTransactionStatus("Initializing Transfer");
     setDepositAmount(amount);
-
+    setSelectedToken(tokenAddress);
     const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
 
     const data =
@@ -265,7 +271,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       homeBridge.once(
         homeBridge.filters.Deposit(
           destinationChain.chainId,
-          ERC20ResourceId,
+          chainbridgeConfig.erc20ResourceId,
           null
         ),
         (destChainId, resourceId, depositNonce) => {
@@ -277,7 +283,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       await (
         await homeBridge.deposit(
           destinationChain.chainId,
-          ERC20ResourceId,
+          chainbridgeConfig.erc20ResourceId,
           data
         )
       ).wait();
@@ -307,6 +313,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         transactionStatus,
         inTransitMessages,
         depositAmount,
+        transferTxHash,
+        selectedToken,
       }}
     >
       {children}
