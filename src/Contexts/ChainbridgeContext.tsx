@@ -82,6 +82,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDepositVotes(0);
     setDepositAmount(undefined);
     setInTransitMessages([]);
+    setSelectedToken("");
   };
 
   const handleSetDestination = (chainId: number) => {

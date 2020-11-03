@@ -250,13 +250,12 @@ const MainPage = () => {
           token: "",
           receiver: "",
         }}
-        onSubmit={(values, helpers) => {
+        onSubmit={(values) => {
           setPreflightDetails({
             ...values,
             tokenSymbol: tokens[values.token].symbol || "",
           });
           setPreflightModalOpen(true);
-          helpers.resetForm();
         }}
       >
         <Form
@@ -269,13 +268,10 @@ const MainPage = () => {
               label="Destination Network"
               className={classes.generalInput}
               disabled={!homeChain}
-              options={[
-                { label: "", value: "" },
-                ...destinationChains.map((dc) => ({
-                  label: dc.name,
-                  value: dc.chainId,
-                })),
-              ]}
+              options={destinationChains.map((dc) => ({
+                label: dc.name,
+                value: dc.chainId,
+              }))}
               onChange={(value) => setDestinationChain(value)}
               value={destinationChain?.chainId}
             />
