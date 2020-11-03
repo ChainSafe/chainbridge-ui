@@ -18,6 +18,7 @@ import TransactionActiveModal from "../../Modules/TransactionActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
+import TokenInput from "../Custom/TokenInput";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -273,20 +274,17 @@ const MainPage = () => {
               <div
                 className={clsx(classes.tokenInputArea, classes.generalInput)}
               >
-                <FormikTextInput
-                  className={clsx(classes.tokenInput, classes.generalInput)}
+                <TokenInput
+                  classNames={{
+                    input: clsx(classes.tokenInput, classes.generalInput),
+                    button: classes.maxButton,
+                  }}
+                  tokenSelectorKey="token"
+                  tokens={tokens}
                   disabled={!destinationChain}
                   name="tokenAmount"
                   label="I want to send"
-                  type="number"
                 />
-                <Button
-                  disabled={!destinationChain}
-                  className={classes.maxButton}
-                  variant="outline"
-                >
-                  MAX
-                </Button>
               </div>
             </section>
             <section className={classes.currencySelector}>
