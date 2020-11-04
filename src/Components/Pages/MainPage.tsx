@@ -207,9 +207,11 @@ const MainPage = () => {
     setWalletConnecting(false);
   };
 
+  // TODO: Pull from contract
+  const DECIMALS = 18;
   const transferSchema = object().shape({
     tokenAmount: number()
-      .min(1, "Minimum transfer is 1")
+      .min(0.0000000000000001, "Please provide a value")
       .test("Token selected", "Please select a token", (value) => {
         if (
           value &&
@@ -221,6 +223,12 @@ const MainPage = () => {
         } else {
           return false;
         }
+      })
+      .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
+        if (value && `${value}`.indexOf(".") >= 0) {
+          return `${value}`.split(".")[1].length <= DECIMALS;
+        }
+        return true;
       })
       .test("Max", "Insufficent funds", (value) => {
         if (

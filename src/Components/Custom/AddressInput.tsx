@@ -67,7 +67,7 @@ const AddressInput: React.FC<IAddressInput> = ({
       setStored(senderAddress);
     }
   }, [senderAddress, stored]);
-  console.log(stored !== undefined);
+
   return (
     <section className={clsx(classes.root, className)}>
       <div>
