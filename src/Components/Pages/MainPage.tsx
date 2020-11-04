@@ -7,7 +7,6 @@ import PreflightModal from "../../Modules/PreflightModal";
 import {
   Button,
   Typography,
-  FormikTextInput,
   QuestionCircleSvg,
   SelectInput,
 } from "@imploy/common-components";
@@ -116,6 +115,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         backgroundColor: palette.additional["gray"][7],
         color: palette.common.white.main,
       },
+      "&:focus": {
+        borderColor: palette.additional["gray"][6],
+      },
     },
     currencySelector: {
       width: 120,
@@ -164,6 +166,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
 type PreflightDetails = {
   tokenAmount: number;
   token: string;
+  tokenSymbol: string;
   receiver: string;
 };
 
@@ -248,7 +251,10 @@ const MainPage = () => {
           receiver: "",
         }}
         onSubmit={(values) => {
-          setPreflightDetails(values);
+          setPreflightDetails({
+            ...values,
+            tokenSymbol: tokens[values.token].symbol || "",
+          });
           setPreflightModalOpen(true);
         }}
       >
@@ -267,6 +273,7 @@ const MainPage = () => {
                 value: dc.chainId,
               }))}
               onChange={(value) => setDestinationChain(value)}
+              value={destinationChain?.chainId}
             />
           </section>
           <section className={classes.currencySection}>
@@ -301,7 +308,10 @@ const MainPage = () => {
                     label: (
                       <div className={classes.tokenItem}>
                         {tokens[t]?.imageUri && (
-                          <img src={tokens[t]?.imageUri} />
+                          <img
+                            src={tokens[t]?.imageUri}
+                            alt={tokens[t]?.symbol}
+                          />
                         )}
                         <span>{tokens[t]?.symbol || t}</span>
                       </div>
@@ -368,7 +378,7 @@ const MainPage = () => {
         }}
         sourceNetwork={homeChain?.name || ""}
         targetNetwork={destinationChain?.name || ""}
-        token={preflightDetails?.token || ""}
+        tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
       <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />

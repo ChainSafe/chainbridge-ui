@@ -24,7 +24,7 @@ const TokenInput: React.FC<ITokenInput> = ({
   tokenSelectorKey,
   name,
 }: ITokenInput) => {
-  const [field, meta, helpers] = useField(name);
+  const [, , helpers] = useField(name);
 
   const { values } = useFormikContext();
 
