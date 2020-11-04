@@ -246,23 +246,22 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            <Button
-              onClick={() =>
-                homeChain &&
-                homeChain.blockExplorer &&
-                transferTxHash &&
-                window.open(
-                  `${homeChain?.blockExplorer}/${transferTxHash}`,
-                  "_blank"
-                )
-              }
-              size="small"
-              className={classes.button}
-              variant="outline"
-              disabled
-            >
-              View transaction
-            </Button>
+            {homeChain && homeChain.blockExplorer && transferTxHash && (
+              <Button
+                onClick={() =>
+                  window.open(
+                    `${homeChain?.blockExplorer}/${transferTxHash}`,
+                    "_blank"
+                  )
+                }
+                size="small"
+                className={classes.button}
+                variant="outline"
+                disabled
+              >
+                View transaction
+              </Button>
+            )}
             <section className={classes.buttons}>
               <Button
                 size="small"
