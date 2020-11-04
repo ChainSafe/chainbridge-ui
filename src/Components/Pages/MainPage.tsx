@@ -18,6 +18,8 @@ import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
+import { number, object, string } from "yup";
+import { utils } from "ethers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -93,13 +95,16 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     tokenInput: {
       margin: 0,
-      "& > *:last-child": {
+      "& > div": {
         height: 32,
         "& input": {
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
           borderRight: 0,
         },
+      },
+      "& span:last-child.error": {
+        position: "absolute",
       },
     },
     maxButton: {
@@ -202,6 +207,51 @@ const MainPage = () => {
     setWalletConnecting(false);
   };
 
+  const transferSchema = object().shape({
+    tokenAmount: number()
+      .min(1, "Minimum transfer is 1")
+      .test("Token selected", "Please select a token", (value) => {
+        if (
+          value &&
+          preflightDetails &&
+          tokens[preflightDetails.token] &&
+          tokens[preflightDetails.token].balance
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .test("Max", "Insufficent funds", (value) => {
+        if (
+          preflightDetails &&
+          tokens[preflightDetails.token] &&
+          tokens[preflightDetails.token].balance
+        ) {
+          return (value as number) <= tokens[preflightDetails.token].balance;
+        }
+        return false;
+      })
+      .required("Please set a value"),
+    token: string()
+      .test("sync", "", (value) => {
+        setPreflightDetails({
+          ...preflightDetails,
+          token: value as string,
+          receiver: "",
+          tokenAmount: 0,
+          tokenSymbol: "",
+        });
+        return true;
+      })
+      .required("Please select a token"),
+    receiver: string()
+      .test("Valid address", "Please add a valid address", (value) => {
+        return utils.isAddress(value as string);
+      })
+      .required("Please add a receiving address"),
+  });
+
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>
@@ -250,6 +300,7 @@ const MainPage = () => {
           token: "",
           receiver: "",
         }}
+        validationSchema={transferSchema}
         onSubmit={(values) => {
           setPreflightDetails({
             ...values,
@@ -335,12 +386,7 @@ const MainPage = () => {
             />
           </section>
           <section>
-            <Button
-              disabled={!destinationChain}
-              type="submit"
-              fullsize
-              variant="primary"
-            >
+            <Button type="submit" fullsize variant="primary">
               Start transfer
             </Button>
           </section>
