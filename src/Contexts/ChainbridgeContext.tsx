@@ -1,15 +1,16 @@
 import { useWeb3 } from "@chainsafe/web3-context";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { BigNumber, ethers, utils } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
 import { BridgeConfig, chainbridgeConfig } from "../chainbridgeConfig";
+import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-type Vote = {
+export type Vote = {
   address: string;
   signed: "Confirmed" | "Rejected";
 };
@@ -68,9 +69,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     undefined
   );
   const [depositVotes, setDepositVotes] = useState<number>(0);
-  const [inTransitMessages, setInTransitMessages] = useState<
-    Array<string | Vote>
-  >([]);
+  const [inTransitMessages, tokensDispatch] = useReducer(
+    transitMessageReducer,
+    []
+  );
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [transferTxHash, setTransferTxHash] = useState<string>("");
   const [selectedToken, setSelectedToken] = useState<string>("");
@@ -81,7 +83,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDepositNonce(undefined);
     setDepositVotes(0);
     setDepositAmount(undefined);
-    setInTransitMessages([]);
+    tokensDispatch({
+      type: "resetMessages",
+    });
     setSelectedToken("");
   };
 
@@ -164,16 +168,16 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
           switch (BigNumber.from(status).toNumber()) {
             case 1:
-              setInTransitMessages(
-                inTransitMessages.concat(
-                  `Proposal created on ${destinationChain?.name}`
-                )
-              );
+              tokensDispatch({
+                type: "addMessage",
+                payload: `Proposal created on ${destinationChain?.name}`,
+              });
               break;
             case 2:
-              setInTransitMessages(
-                inTransitMessages.concat(`Proposal has passed. Executing...`)
-              );
+              tokensDispatch({
+                type: "addMessage",
+                payload: `Proposal has passed. Executing...`,
+              });
               break;
             case 3:
               setTransactionStatus("Transfer Completed");
@@ -199,12 +203,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           if (txReceipt.status === 1) {
             setDepositVotes(depositVotes + 1);
           }
-          setInTransitMessages(
-            inTransitMessages.concat({
+          tokensDispatch({
+            type: "addMessage",
+            payload: {
               address: String(txReceipt.from),
               signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
-            })
-          );
+            },
+          });
         }
       );
     }
