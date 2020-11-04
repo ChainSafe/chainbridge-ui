@@ -54,7 +54,7 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
         <Button onClick={() => close()} variant="outline">
           OK
         </Button>
-        <a href="http://test.com" target="_blank">
+        <a rel="noopener noreferrer" href="http://test.com" target="_blank">
           <Button variant="outline">Ask a question on Discord</Button>
         </a>
       </section>

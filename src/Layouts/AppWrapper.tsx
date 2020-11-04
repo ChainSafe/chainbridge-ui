@@ -30,7 +30,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       {children}
 
       {/* Put CTA here */}
-      {/* <a className={classes.cta} target="_blank" href="#">
+      {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
       </a> */}
     </section>
   );
