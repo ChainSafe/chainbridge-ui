@@ -36,6 +36,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: "row",
       marginTop: constants.generalUnit * 5,
       "& > *": {
+        textDecoration: "none",
         marginRight: constants.generalUnit,
       },
     },
@@ -92,9 +93,15 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
           >
             OK
           </Button>
-          <Button size="small" className={classes.button} variant="outline">
-            Ask a question on Discord
-          </Button>
+          <a
+            rel="noopener noreferrer"
+            href="https://discord.com/invite/n2U6x9c"
+            target="_blank"
+          >
+            <Button size="small" className={classes.button} variant="outline">
+              Ask a question on Discord
+            </Button>
+          </a>
         </section>
       </section>
     </CustomModal>

@@ -73,6 +73,7 @@ const useStyles = makeStyles(
           borderColor: `${palette.additional["gray"][8]} !important`,
           backgroundColor: `${palette.additional["gray"][8]} !important`,
           color: `${palette.common.white.main} !important`,
+          textDecoration: "none",
         },
       },
       initCopy: {
@@ -271,16 +272,19 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
               >
                 Start new transfer
               </Button>
-              <Button
-                size="small"
-                className={classes.button}
-                variant="outline"
-                onClick={() =>
-                  window.open("https://discord.com/invite/n2U6x9c", "_blank")
-                }
+              <a
+                rel="noopener noreferrer"
+                href="https://discord.com/invite/n2U6x9c"
+                target="_blank"
               >
-                Ask question on Discord
-              </Button>
+                <Button
+                  size="small"
+                  className={classes.button}
+                  variant="outline"
+                >
+                  Ask a question on Discord
+                </Button>
+              </a>
             </section>
           </>
         )}

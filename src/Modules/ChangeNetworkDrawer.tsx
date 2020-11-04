@@ -66,7 +66,11 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         >
           Connect different wallet
         </Button>
-        <a rel="noopener noreferrer" href="http://test.com" target="_blank">
+        <a
+          rel="noopener noreferrer"
+          href="https://discord.com/invite/n2U6x9c"
+          target="_blank"
+        >
           <Button variant="outline">Ask a question on Discord</Button>
         </a>
       </section>
