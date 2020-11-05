@@ -109,7 +109,11 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
         <br />
         <Typography component="p" variant="body1">
           This app is configured to work on{" "}
-          {supportedNetworks.map((n) => `${networkName(n)}, `)} networks
+          {supportedNetworks.map(
+            (n, i) =>
+              `${networkName(n)}${i < supportedNetworks.length - 1 ? ", " : ""}`
+          )}{" "}
+          networks
         </Typography>
         <section className={classes.buttons}>
           <Button
