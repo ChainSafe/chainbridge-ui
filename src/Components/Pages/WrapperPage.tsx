@@ -23,20 +23,7 @@ import { utils } from "ethers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
-    root: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      maxWidth: 460,
-      display: "flex",
-      flexDirection: "column",
-      padding: constants.generalUnit * 6,
-      border: `1px solid ${palette.additional["gray"][7]}`,
-      borderRadius: 4,
-      color: palette.additional["gray"][8],
-      overflow: "hidden",
-    },
+    root: {},
     walletArea: {
       display: "flex",
       flexDirection: "column",
