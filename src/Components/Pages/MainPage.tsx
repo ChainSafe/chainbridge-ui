@@ -196,9 +196,12 @@ const MainPage = () => {
   );
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
-  const [preflightDetails, setPreflightDetails] = useState<
-    PreflightDetails | undefined
-  >();
+  const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
+    receiver: "",
+    token: "",
+    tokenAmount: 0,
+    tokenSymbol: "",
+  });
 
   const handleConnect = async () => {
     setWalletConnecting(true);
@@ -211,7 +214,13 @@ const MainPage = () => {
   const DECIMALS = 18;
   const transferSchema = object().shape({
     tokenAmount: number()
-      .min(0.0000000000000001, "Please provide a value")
+      .typeError("Not a valid number")
+      .min(
+        tokens[preflightDetails.token]
+          ? 1 / 10 ** tokens[preflightDetails.token].decimals
+          : 1,
+        "Please provide a value"
+      )
       .test("Token selected", "Please select a token", (value) => {
         if (
           value &&
@@ -225,7 +234,7 @@ const MainPage = () => {
         }
       })
       .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
-        // console.log(value)
+        // console.log(value);
         if (value && `${value}`.indexOf(".") >= 0) {
           // TODO improve Decimal validation
           // console.log(`${value}`.split(".")[1])
@@ -354,6 +363,42 @@ const MainPage = () => {
                   tokens={tokens}
                   disabled={!destinationChain}
                   name="tokenAmount"
+                  // min={
+                  //   tokens[preflightDetails.token]
+                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
+                  //   : 1
+                  // }
+                  max={
+                    tokens[preflightDetails.token]
+                      ? tokens[preflightDetails.token].balance
+                      : 1
+                  }
+                  // step={
+                  //   tokens[preflightDetails.token]
+                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
+                  //   : 1
+                  // }
+                  precision={
+                    tokens[preflightDetails.token]
+                      ? tokens[preflightDetails.token].decimals
+                      : 1
+                  }
+                  // formatter={(value) => {
+                  //   console.log("Format", value)
+                  //   // do mod check
+                  //   const split = `${value}`.split('.')
+                  //   if (split[1]) {
+                  //     for(let i = split[1].length; i > 0; i--){
+                  //       if (split[1][i] != "0"){
+                  //         const temp = `${split[0]}.${split[1].substr(0, i)}`
+                  //         console.log(temp)
+                  //         return  temp
+                  //       }
+                  //     }
+                  //   }
+
+                  //   return `${value}`
+                  // }}
                   label="I want to send"
                 />
               </div>

@@ -1662,10 +1662,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@imploy/common-components@1.0.22":
-  version "1.0.22"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.22/f304bf2f9ff62d53167134a644016d590eabe6fe6083233b91a589e5fd7eecab#396a6feedf74499eac03c2637d3ef941654c935f"
-  integrity sha512-nlvccoI6UUk36aqswzoa0KUIiYnIH2u3XK43B5FW63Bjy7PRr9b7a2Otrgahg2RCEFFb+peEo1AmOX7t8+oldg==
+"@imploy/common-components@1.0.23":
+  version "1.0.23"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.23/ce6ad786bcdbfc3b24d652fac16162b5332775a943968e00dcb38244e915be1e#590032d0fd43685265d177fe804ae1e4ff8d5612"
+  integrity sha512-iHw0AurCs3WHmFvni00eqx9QzopEQ+qNDLPO11oW5i6oqAYKJol3BBim77n1/Fjs22AiTuxFRc69bd7q+KXi6g==
   dependencies:
     "@material-ui/styles" "^4.10.0"
     "@types/react-select" "^3.0.23"
