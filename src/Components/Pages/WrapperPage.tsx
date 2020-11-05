@@ -211,7 +211,10 @@ const MainPage = () => {
   };
 
   // TODO: Pull from contract
-  const DECIMALS = 18;
+  const DECIMALS =
+    tokens[preflightDetails.token] && tokens[preflightDetails.token].decimals
+      ? tokens[preflightDetails.token].decimals
+      : 1;
   const transferSchema = object().shape({
     tokenAmount: number()
       .typeError("Not a valid number")
@@ -378,11 +381,7 @@ const MainPage = () => {
                   //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
                   //   : 1
                   // }
-                  precision={
-                    tokens[preflightDetails.token]
-                      ? tokens[preflightDetails.token].decimals
-                      : 1
-                  }
+                  precision={DECIMALS}
                   // formatter={(value) => {
                   //   console.log("Format", value)
                   //   // do mod check
