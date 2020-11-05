@@ -3,33 +3,33 @@ import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
-import PreflightModal from "../../Modules/PreflightModal";
 import {
   Button,
   Typography,
   QuestionCircleSvg,
-  SelectInput,
 } from "@imploy/common-components";
 import { Form, Formik } from "formik";
-import AddressInput from "../Custom/AddressInput";
 import clsx from "clsx";
-import TransactionActiveModal from "../../Modules/TransactionActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
-import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
 import { number, object, string } from "yup";
-import { utils } from "ethers";
+import ETHIcon from "../../media/tokens/eth.svg";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
-    root: {},
+    root: {
+      minHeight: constants.generalUnit * 69,
+    },
     walletArea: {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
       width: "100%",
+    },
+    blurb: {
+      color: palette.common.black.main,
     },
     connectButton: {
       margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
@@ -111,18 +111,16 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         borderColor: palette.additional["gray"][6],
       },
     },
-    currencySelector: {
+    tokenIndicator: {
       width: 120,
+      textAlign: "right",
+      "& p": {
+        marginBottom: constants.generalUnit,
+      },
       "& *": {
         cursor: "pointer",
       },
     },
-    token: {},
-    address: {
-      margin: 0,
-      marginBottom: constants.generalUnit * 3,
-    },
-    addressInput: {},
     generalInput: {
       "& > span": {
         marginBottom: constants.generalUnit,
@@ -135,12 +133,19 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       marginTop: constants.generalUnit * 5,
       fill: `${palette.additional["transferUi"][1]} !important`,
     },
-    tokenItem: {
+    token: {
+      backgroundColor: palette.additional["gray"][1],
+      borderRadius: 2,
+      border: `1px solid ${palette.additional["gray"][6]}`,
+      padding: `${constants.generalUnit * 1}px ${
+        constants.generalUnit * 1.5
+      }px`,
       display: "flex",
       flexDirection: "row",
       justifyContent: "flex-end",
       alignItems: "center",
       cursor: "pointer",
+      height: constants.generalUnit * 4,
       "& img": {
         display: "block",
         height: 14,
@@ -150,8 +155,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& span": {
         minWidth: `calc(100% - 14px)`,
         textAlign: "right",
+        color: palette.additional["gray"][9],
       },
     },
+    submitButtonArea: {},
   })
 );
 
@@ -159,21 +166,20 @@ type PreflightDetails = {
   tokenAmount: number;
   token: string;
   tokenSymbol: string;
-  receiver: string;
 };
 
 const MainPage = () => {
   const classes = useStyles();
-  const { isReady, checkIsReady, wallet, onboard, tokens, address } = useWeb3();
   const {
-    homeChain,
-    destinationChains,
-    destinationChain,
-    deposit,
-    setDestinationChain,
-    transactionStatus,
-    resetDeposit,
-  } = useChainbridge();
+    isReady,
+    checkIsReady,
+    wallet,
+    onboard,
+    tokens,
+    address,
+    ethBalance,
+  } = useWeb3();
+  const { homeChain, destinationChain } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -184,7 +190,6 @@ const MainPage = () => {
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
-    receiver: "",
     token: "",
     tokenAmount: 0,
     tokenSymbol: "",
@@ -197,11 +202,7 @@ const MainPage = () => {
     setWalletConnecting(false);
   };
 
-  // TODO: Pull from contract
-  const DECIMALS =
-    tokens[preflightDetails.token] && tokens[preflightDetails.token].decimals
-      ? tokens[preflightDetails.token].decimals
-      : 1;
+  const DECIMALS = 18;
   const transferSchema = object().shape({
     tokenAmount: number()
       .typeError("Not a valid number")
@@ -211,18 +212,6 @@ const MainPage = () => {
           : 1,
         "Please provide a value"
       )
-      .test("Token selected", "Please select a token", (value) => {
-        if (
-          value &&
-          preflightDetails &&
-          tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      })
       .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
         // console.log(value);
         if (value && `${value}`.indexOf(".") >= 0) {
@@ -235,14 +224,7 @@ const MainPage = () => {
         return true;
       })
       .test("Max", "Insufficent funds", (value) => {
-        if (
-          preflightDetails &&
-          tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance
-        ) {
-          return (value as number) <= tokens[preflightDetails.token].balance;
-        }
-        return false;
+        return ethBalance && (value as number) <= ethBalance ? true : false;
       })
       .required("Please set a value"),
     token: string()
@@ -250,33 +232,35 @@ const MainPage = () => {
         setPreflightDetails({
           ...preflightDetails,
           token: value as string,
-          receiver: "",
           tokenAmount: 0,
           tokenSymbol: "",
         });
         return true;
       })
       .required("Please select a token"),
-    receiver: string()
-      .test("Valid address", "Please add a valid address", (value) => {
-        return utils.isAddress(value as string);
-      })
-      .required("Please add a receiving address"),
   });
 
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>
         {!isReady ? (
-          <Button
-            className={classes.connectButton}
-            fullsize
-            onClick={() => {
-              handleConnect();
-            }}
-          >
-            Connect Metamask
-          </Button>
+          <>
+            <Typography className={classes.blurb} component="p" variant="h5">
+              To convert a token that needs to be wrapped, please connect to the
+              network that the token exists natively for. For example, to
+              convert ETH into wrapped ETH (WETH), your wallet must be connected
+              to an Ethereum network.
+            </Typography>
+            <Button
+              className={classes.connectButton}
+              fullsize
+              onClick={() => {
+                handleConnect();
+              }}
+            >
+              Connect Metamask
+            </Button>
+          </>
         ) : walletConnecting ? (
           <section className={classes.connecting}>
             <Typography component="p" variant="h5">
@@ -310,7 +294,6 @@ const MainPage = () => {
         initialValues={{
           tokenAmount: 0,
           token: "",
-          receiver: "",
         }}
         validationSchema={transferSchema}
         onSubmit={(values) => {
@@ -326,19 +309,6 @@ const MainPage = () => {
             disabled: !homeChain,
           })}
         >
-          <section>
-            <SelectInput
-              label="Destination Network"
-              className={classes.generalInput}
-              disabled={!homeChain}
-              options={destinationChains.map((dc) => ({
-                label: dc.name,
-                value: dc.chainId,
-              }))}
-              onChange={(value) => setDestinationChain(value)}
-              value={destinationChain?.chainId}
-            />
-          </section>
           <section className={classes.currencySection}>
             <section>
               <div
@@ -358,11 +328,7 @@ const MainPage = () => {
                   //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
                   //   : 1
                   // }
-                  max={
-                    tokens[preflightDetails.token]
-                      ? tokens[preflightDetails.token].balance
-                      : 1
-                  }
+                  max={ethBalance ? ethBalance : 1}
                   // step={
                   //   tokens[preflightDetails.token]
                   //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
@@ -385,53 +351,23 @@ const MainPage = () => {
 
                   //   return `${value}`
                   // }}
-                  label="I want to send"
+                  label="I want to convert"
                 />
               </div>
             </section>
-            <section className={classes.currencySelector}>
-              <TokenSelectInput
-                tokens={tokens}
-                name="token"
-                disabled={!destinationChain}
-                label={`Balance: `}
-                className={classes.generalInput}
-                placeholder=""
-                options={
-                  Object.keys(tokens).map((t) => ({
-                    value: t,
-                    label: (
-                      <div className={classes.tokenItem}>
-                        {tokens[t]?.imageUri && (
-                          <img
-                            src={tokens[t]?.imageUri}
-                            alt={tokens[t]?.symbol}
-                          />
-                        )}
-                        <span>{tokens[t]?.symbol || t}</span>
-                      </div>
-                    ),
-                  })) || []
-                }
-              />
+            <section className={classes.tokenIndicator}>
+              <Typography component="p">
+                Balance: {ethBalance ? ethBalance.toFixed(2) : 0.0}
+              </Typography>
+              <div className={classes.token}>
+                <img src={ETHIcon} />
+                <Typography>ETH</Typography>
+              </div>
             </section>
           </section>
-          <section>
-            <AddressInput
-              disabled={!destinationChain}
-              name="receiver"
-              label="Destination Address"
-              placeholder="Please enter the receiving address"
-              className={classes.address}
-              classNames={{
-                input: classes.addressInput,
-              }}
-              senderAddress={`${address}`}
-            />
-          </section>
-          <section>
+          <section className={classes.submitButtonArea}>
             <Button type="submit" fullsize variant="primary">
-              Start transfer
+              Convert to Wrapped Token
             </Button>
           </section>
           <section>
@@ -452,7 +388,7 @@ const MainPage = () => {
         close={() => setNetworkUnsupportedOpen(false)}
         network={`Ropsten`}
       />
-      <PreflightModal
+      {/* <PreflightModal
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
         receiver={preflightDetails?.receiver || ""}
@@ -471,7 +407,7 @@ const MainPage = () => {
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />
+      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} /> */}
     </article>
   );
 };

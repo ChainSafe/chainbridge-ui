@@ -19,7 +19,9 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
 }: ITokenSelectInput) => {
   const [field] = useField(name);
   const labelParsed = tokens[field.value]
-    ? `${label} ${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
+    ? `${label} ${tokens[field.value]?.balance.toFixed(2)} ${
+        tokens[field.value]?.symbol
+      }`
     : "Please select token";
   return (
     <FormikSelectInput

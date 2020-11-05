@@ -15,7 +15,7 @@ interface ITokenInput {
     button?: string;
   };
   min?: number;
-  max?: number;
+  max: number;
   step?: number;
   formatter?: (value: number | string | undefined) => string;
   precision?: number;
@@ -52,14 +52,10 @@ const TokenInput: React.FC<ITokenInput> = ({
         formatter={formatter}
       />
       <Button
-        disabled={
-          disabled || !tokens[(values as Record<string, any>)[tokenSelectorKey]]
-        }
+        disabled={disabled}
         className={classNames?.button}
         onClick={() => {
-          helpers.setValue(
-            tokens[(values as Record<string, any>)[tokenSelectorKey]].balance
-          );
+          helpers.setValue(max);
         }}
         variant="outline"
         type="button"
