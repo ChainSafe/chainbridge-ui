@@ -86,9 +86,7 @@ const AddressInput: React.FC<IAddressInput> = ({
             meta.error ? `${meta.error}` : captionMessage && captionMessage
           }
           state={meta.error ? "error" : undefined}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            helpers.setValue(e.target?.value);
-          }}
+          onChange={helpers.setValue}
           disabled={stored !== undefined}
         />
       </div>

@@ -225,7 +225,12 @@ const MainPage = () => {
         }
       })
       .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
+        // console.log(value)
         if (value && `${value}`.indexOf(".") >= 0) {
+          // TODO improve Decimal validation
+          // console.log(`${value}`.split(".")[1])
+          // console.log(`${value}`.split(".")[1].length)
+          // console.log(`${value}`.split(".")[1].length <= DECIMALS )
           return `${value}`.split(".")[1].length <= DECIMALS;
         }
         return true;
