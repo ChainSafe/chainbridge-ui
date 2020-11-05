@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useField, useFormikContext } from "formik";
-import { Button, FormikTextInput } from "@imploy/common-components";
+import { Button, FormikNumberInput } from "@imploy/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 interface ITokenInput {
@@ -14,6 +14,10 @@ interface ITokenInput {
     input?: string;
     button?: string;
   };
+  min?: number;
+  max?: number;
+  step?: number;
+  precision?: number;
 }
 
 const TokenInput: React.FC<ITokenInput> = ({
@@ -23,6 +27,10 @@ const TokenInput: React.FC<ITokenInput> = ({
   tokens,
   tokenSelectorKey,
   name,
+  min,
+  max,
+  step,
+  precision,
 }: ITokenInput) => {
   const [, , helpers] = useField(name);
 
@@ -30,12 +38,15 @@ const TokenInput: React.FC<ITokenInput> = ({
 
   return (
     <>
-      <FormikTextInput
+      <FormikNumberInput
         className={classNames?.input}
         disabled={disabled}
         name={name}
         label={label}
-        type="number"
+        min={min}
+        max={max}
+        step={step}
+        precision={precision}
       />
       <Button
         disabled={

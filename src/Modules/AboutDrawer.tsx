@@ -17,6 +17,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
       alignItems: "center",
       "& *": {
         marginRight: constants.generalUnit,
+        textDecoration: "none",
       },
     },
   })
@@ -50,8 +51,16 @@ const AboutDrawer: React.FC<IAboutDrawerProps> = ({
         the source chain.
       </Typography>
       <section className={classes.buttons}>
-        <Button variant="outline">OK</Button>
-        <Button variant="outline">Ask a question on Discord</Button>
+        <Button onClick={() => close()} variant="outline">
+          OK
+        </Button>
+        <a
+          rel="noopener noreferrer"
+          href="https://discord.com/invite/n2U6x9c"
+          target="_blank"
+        >
+          <Button variant="outline">Ask a question on Discord</Button>
+        </a>
       </section>
     </CustomDrawer>
   );

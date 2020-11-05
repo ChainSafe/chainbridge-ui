@@ -72,9 +72,9 @@ const AddressInput: React.FC<IAddressInput> = ({
     <section className={clsx(classes.root, className)}>
       <div>
         <TextInput
+          {...rest}
           label={label ? label : field.name}
           inputVariant={inputVariant}
-          disabled={stored !== ""}
           type={type}
           size={size}
           className={clsx(classNames?.input, classes.input)}
@@ -86,10 +86,8 @@ const AddressInput: React.FC<IAddressInput> = ({
             meta.error ? `${meta.error}` : captionMessage && captionMessage
           }
           state={meta.error ? "error" : undefined}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            helpers.setValue(e.target?.value);
-          }}
-          {...rest}
+          onChange={helpers.setValue}
+          disabled={stored !== undefined}
         />
       </div>
       <div className={classes.checkbox}>
