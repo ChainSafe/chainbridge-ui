@@ -17,6 +17,7 @@ interface ITokenInput {
   min?: number;
   max?: number;
   step?: number;
+  formatter?: (value: number | string | undefined) => string;
   precision?: number;
 }
 
@@ -31,6 +32,7 @@ const TokenInput: React.FC<ITokenInput> = ({
   max,
   step,
   precision,
+  formatter,
 }: ITokenInput) => {
   const [, , helpers] = useField(name);
 
@@ -47,6 +49,7 @@ const TokenInput: React.FC<ITokenInput> = ({
         max={max}
         step={step}
         precision={precision}
+        formatter={formatter}
       />
       <Button
         disabled={
