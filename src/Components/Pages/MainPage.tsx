@@ -234,7 +234,7 @@ const MainPage = () => {
         }
       })
       .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
-        console.log(value);
+        // console.log(value);
         if (value && `${value}`.indexOf(".") >= 0) {
           // TODO improve Decimal validation
           // console.log(`${value}`.split(".")[1])
