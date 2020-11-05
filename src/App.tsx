@@ -69,6 +69,7 @@ const App: React.FC<{}> = () => {
                 wallets: [{ walletName: "metamask", preferred: true }],
               },
             }}
+            checkNetwork={false}
           >
             <ChainbridgeProvider>
               <Router>

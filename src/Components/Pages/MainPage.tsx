@@ -20,6 +20,7 @@ import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
 import { number, object, string } from "yup";
 import { utils } from "ethers";
+import { chainbridgeConfig } from "../../chainbridgeConfig";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -177,7 +178,15 @@ type PreflightDetails = {
 
 const MainPage = () => {
   const classes = useStyles();
-  const { isReady, checkIsReady, wallet, onboard, tokens, address } = useWeb3();
+  const {
+    isReady,
+    checkIsReady,
+    wallet,
+    onboard,
+    tokens,
+    address,
+    network,
+  } = useWeb3();
   const {
     homeChain,
     destinationChains,
@@ -462,9 +471,10 @@ const MainPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <NetworkUnsupportedModal
-        open={networkUnsupportedOpen}
+        open={networkUnsupportedOpen || (!homeChain && isReady)}
         close={() => setNetworkUnsupportedOpen(false)}
-        network={`Ropsten`}
+        network={network}
+        supportedNetworks={chainbridgeConfig.chains.map((bc) => bc.networkId)}
       />
       <PreflightModal
         open={preflightModalOpen}
