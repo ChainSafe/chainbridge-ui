@@ -36,7 +36,7 @@ type ChainbridgeContext = {
   transferTxHash?: string;
   selectedToken?: string;
 
-  wethDeposit;
+  wrapToken(depositValue: number): void;
 };
 
 type TransactionStatus =

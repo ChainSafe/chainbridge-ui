@@ -41,6 +41,12 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       blockExplorer: "https://goerli.etherscan.io/tx",
       tokens: [
         {
+          address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
+          name: "GWEth",
+          symbol: "Weth",
+          imageUri: ETHIcon,
+        },
+        {
           address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
           name: "Test Goerli",
           symbol: "TESTG",
@@ -58,6 +64,12 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       type: "Ethereum",
       blockExplorer: "https://blockscout.com/etc/kotti/tx",
       tokens: [
+        {
+          address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
+          name: "KWeth",
+          symbol: "Weth",
+          imageUri: ETHIcon,
+        },
         {
           address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
           name: "Test Kotti",
