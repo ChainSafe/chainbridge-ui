@@ -5,6 +5,7 @@ import { BigNumber, ethers, utils } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
 import { BridgeConfig, chainbridgeConfig } from "../chainbridgeConfig";
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
+import { Weth } from "../Contracts/Weth";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -34,6 +35,8 @@ type ChainbridgeContext = {
   depositAmount?: number;
   transferTxHash?: string;
   selectedToken?: string;
+
+  wethDeposit;
 };
 
 type TransactionStatus =

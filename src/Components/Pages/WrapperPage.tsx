@@ -14,7 +14,7 @@ import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenInput from "../Custom/TokenInput";
 import { number, object, string } from "yup";
-import ETHIcon from "../../media/tokens/eth.svg";
+import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -142,18 +142,18 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       }px`,
       display: "flex",
       flexDirection: "row",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
       alignItems: "center",
       cursor: "pointer",
       height: constants.generalUnit * 4,
-      "& img": {
+      "& img, & svg": {
         display: "block",
         height: 14,
         width: 14,
         marginLeft: 10,
       },
       "& span": {
-        minWidth: `calc(100% - 14px)`,
+        minWidth: `calc(100% - 30px)`,
         textAlign: "right",
         color: palette.additional["gray"][9],
       },
@@ -360,7 +360,11 @@ const MainPage = () => {
                 Balance: {ethBalance ? ethBalance.toFixed(2) : 0.0}
               </Typography>
               <div className={classes.token}>
-                <img src={ETHIcon} />
+                {typeof ETHIcon == "string" ? (
+                  <img src={ETHIcon} />
+                ) : (
+                  <ETHIcon />
+                )}
                 <Typography>ETH</Typography>
               </div>
             </section>

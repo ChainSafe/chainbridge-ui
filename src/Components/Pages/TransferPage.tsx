@@ -138,17 +138,17 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     tokenItem: {
       display: "flex",
       flexDirection: "row",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
       alignItems: "center",
       cursor: "pointer",
-      "& img": {
+      "& img, & svg": {
         display: "block",
         height: 14,
         width: 14,
-        marginLeft: 10,
+        marginRight: 10,
       },
       "& span": {
-        minWidth: `calc(100% - 14px)`,
+        minWidth: `calc(100% - 30px)`,
         textAlign: "right",
       },
     },
