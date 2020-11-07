@@ -63,12 +63,14 @@ const useStyles = makeStyles(
         flexDirection: "row",
         marginTop: constants.generalUnit * 5,
         "& > *": {
+          textDecoration: "none",
           marginRight: constants.generalUnit,
         },
       },
       button: {
         borderColor: `${palette.additional["gray"][8]} !important`,
         color: `${palette.additional["gray"][8]} !important`,
+        textDecoration: "none",
         "&:hover": {
           borderColor: `${palette.additional["gray"][8]} !important`,
           backgroundColor: `${palette.additional["gray"][8]} !important`,
@@ -106,10 +108,14 @@ const useStyles = makeStyles(
       warning: {
         marginTop: constants.generalUnit * 3.5,
         display: "block",
+        fontWeight: 600,
       },
       receipt: {
         marginTop: constants.generalUnit * 3.5,
         marginBottom: constants.generalUnit * 8,
+      },
+      weighted: {
+        fontWeight: 600,
       },
     })
 );
@@ -172,7 +178,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
         {transactionStatus === "Initializing Transfer" ? (
           <div className={classes.initCopy}>
             <Typography>Deposit pending...</Typography>
-            <Typography>
+            <Typography className={classes.weighted}>
               This should take a few minutes.
               <br />
               Please do not refresh or leave the page.

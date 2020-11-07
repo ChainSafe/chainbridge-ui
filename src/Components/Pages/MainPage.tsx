@@ -331,6 +331,7 @@ const MainPage = () => {
           token: "",
           receiver: "",
         }}
+        validateOnChange={false}
         validationSchema={transferSchema}
         onSubmit={(values) => {
           setPreflightDetails({
