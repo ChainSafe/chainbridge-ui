@@ -3,9 +3,15 @@ import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { BigNumber, ethers, utils } from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
-import { BridgeConfig, chainbridgeConfig } from "../chainbridgeConfig";
+import {
+  BridgeConfig,
+  chainbridgeConfig,
+  WrapperSymbol,
+} from "../chainbridgeConfig";
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
 import { Weth } from "../Contracts/Weth";
+import { WethFactory } from "../Contracts/WethFactory";
+import { parseUnits } from "ethers/lib/utils";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -61,7 +67,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const [destinationChains, setDestinationChains] = useState<BridgeConfig[]>(
     []
   );
+  // Contracts
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
+  const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
   const [destinationBridge, setDestinationBridge] = useState<
     Bridge | undefined
   >(undefined);
@@ -141,6 +149,18 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
         destChain && setDestinationChain(destChain);
       }
+
+      const wrapperToken = home.tokens.find(
+        (token) => token.symbol == WrapperSymbol
+      );
+
+      if (!wrapperToken) {
+        console.error("Wrapper token not found");
+        return;
+      }
+
+      const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
+      setWrapper(connectedWeth);
     } else {
       setHomeChain(undefined);
     }
@@ -304,6 +324,25 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     }
   };
 
+  const wrapToken = async (depositValue: number, decimals: number = 18) => {
+    if (!wrapper) {
+      console.error("Wrapper not connected");
+      return;
+    }
+    try {
+      await (
+        await wrapper.deposit({
+          value: parseUnits(`${depositValue}`, decimals),
+        })
+      ).wait();
+      return Promise.resolve();
+    } catch (error) {
+      console.error(error);
+      setTransactionStatus("Transfer Aborted");
+      return Promise.reject();
+    }
+  };
+
   return (
     <ChainbridgeContext.Provider
       value={{
@@ -324,6 +363,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         depositAmount,
         transferTxHash,
         selectedToken,
+        wrapToken,
       }}
     >
       {children}

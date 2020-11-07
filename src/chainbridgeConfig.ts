@@ -1,5 +1,7 @@
 import ETHIcon from "./media/tokens/eth.svg";
 
+export const WrapperSymbol = "Weth";
+
 type TokenConfig = {
   address: string;
   name?: string;
@@ -43,7 +45,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
         {
           address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
           name: "GWEth",
-          symbol: "Weth",
+          symbol: WrapperSymbol,
           imageUri: ETHIcon,
         },
         {
