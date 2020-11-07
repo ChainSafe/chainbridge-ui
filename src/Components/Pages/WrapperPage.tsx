@@ -164,8 +164,6 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
 
 type PreflightDetails = {
   tokenAmount: number;
-  token: string;
-  tokenSymbol: string;
 };
 
 const MainPage = () => {
@@ -176,10 +174,14 @@ const MainPage = () => {
     wallet,
     onboard,
     tokens,
-    address,
     ethBalance,
   } = useWeb3();
-  const { homeChain, destinationChain } = useChainbridge();
+  const {
+    homeChain,
+    destinationChain,
+    wrapToken,
+    wrapTokenConfig,
+  } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -190,9 +192,7 @@ const MainPage = () => {
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
-    token: "",
     tokenAmount: 0,
-    tokenSymbol: "",
   });
 
   const handleConnect = async () => {
@@ -207,8 +207,8 @@ const MainPage = () => {
     tokenAmount: number()
       .typeError("Not a valid number")
       .min(
-        tokens[preflightDetails.token]
-          ? 1 / 10 ** tokens[preflightDetails.token].decimals
+        wrapTokenConfig && tokens
+          ? 1 / 10 ** tokens[wrapTokenConfig.address].decimals
           : 1,
         "Please provide a value"
       )
@@ -227,17 +227,6 @@ const MainPage = () => {
         return ethBalance && (value as number) <= ethBalance ? true : false;
       })
       .required("Please set a value"),
-    token: string()
-      .test("sync", "", (value) => {
-        setPreflightDetails({
-          ...preflightDetails,
-          token: value as string,
-          tokenAmount: 0,
-          tokenSymbol: "",
-        });
-        return true;
-      })
-      .required("Please select a token"),
   });
 
   return (
@@ -299,7 +288,6 @@ const MainPage = () => {
         onSubmit={(values) => {
           setPreflightDetails({
             ...values,
-            tokenSymbol: tokens[values.token].symbol || "",
           });
           setPreflightModalOpen(true);
         }}

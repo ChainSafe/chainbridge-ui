@@ -2,7 +2,7 @@ import ETHIcon from "./media/tokens/eth.svg";
 
 export const WrapperSymbol = "Weth";
 
-type TokenConfig = {
+export type TokenConfig = {
   address: string;
   name?: string;
   symbol?: string;

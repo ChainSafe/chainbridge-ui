@@ -6,12 +6,14 @@ import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
 import {
   BridgeConfig,
   chainbridgeConfig,
+  TokenConfig,
   WrapperSymbol,
 } from "../chainbridgeConfig";
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
 import { Weth } from "../Contracts/Weth";
 import { WethFactory } from "../Contracts/WethFactory";
 import { parseUnits } from "ethers/lib/utils";
+import { TokenInfo } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -43,6 +45,7 @@ type ChainbridgeContext = {
   selectedToken?: string;
 
   wrapToken(depositValue: number): void;
+  wrapTokenConfig: TokenConfig | undefined;
 };
 
 type TransactionStatus =
@@ -70,6 +73,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   // Contracts
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
   const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
+  const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
+    undefined
+  );
   const [destinationBridge, setDestinationBridge] = useState<
     Bridge | undefined
   >(undefined);
@@ -158,6 +164,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         console.error("Wrapper token not found");
         return;
       }
+
+      setWrapperConfig(wrapperToken);
 
       const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
       setWrapper(connectedWeth);
@@ -364,6 +372,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         transferTxHash,
         selectedToken,
         wrapToken,
+        wrapTokenConfig,
       }}
     >
       {children}
