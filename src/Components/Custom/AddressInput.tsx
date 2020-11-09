@@ -61,13 +61,6 @@ const AddressInput: React.FC<IAddressInput> = ({
     }
   }, [helpers, field, senderAddress, stored, setStored]);
 
-  useEffect(() => {
-    // Used to ensure value if address changes for some reason
-    if (stored && stored !== senderAddress) {
-      setStored(senderAddress);
-    }
-  }, [senderAddress, stored]);
-
   return (
     <section className={clsx(classes.root, className)}>
       <div>
