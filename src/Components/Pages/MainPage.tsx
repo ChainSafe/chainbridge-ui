@@ -219,6 +219,10 @@ const MainPage = () => {
     setWalletConnecting(false);
   };
 
+  const DECIMALS =
+    preflightDetails && tokens[preflightDetails.token]
+      ? tokens[preflightDetails.token].decimals
+      : 18;
   const transferSchema = object().shape({
     tokenAmount: string()
       .test("Token selected", "Please select a token", (value) => {
@@ -255,7 +259,10 @@ const MainPage = () => {
         }
         return false;
       })
-      .matches(/^([0-9]{1,18})(\.[0-9]{1,18})?$/g, "Input invalid")
+      .matches(
+        new RegExp(`/^([0-9]{1,18})(\.[0-9]{1,${DECIMALS}})?$/g`),
+        "Input invalid"
+      )
       .required("Please set a value"),
     token: string().required("Please select a token"),
     receiver: string()
