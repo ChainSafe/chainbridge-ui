@@ -239,6 +239,7 @@ const MainPage = () => {
           return false;
         }
       })
+      .matches(REGEX, "Input invalid")
       .test("Max", "Insufficent funds", (value) => {
         if (
           value &&
@@ -256,7 +257,6 @@ const MainPage = () => {
         }
         return false;
       })
-      .matches(REGEX, "Input invalid")
       .required("Please set a value"),
     token: string().required("Please select a token"),
     receiver: string()
