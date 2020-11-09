@@ -223,6 +223,8 @@ const MainPage = () => {
     preflightDetails && tokens[preflightDetails.token]
       ? tokens[preflightDetails.token].decimals
       : 18;
+
+  const REGEX = new RegExp(`^[0-9]{1,18}(\.[0-9]{1,${DECIMALS}})?$`);
   const transferSchema = object().shape({
     tokenAmount: string()
       .test("Token selected", "Please select a token", (value) => {
@@ -248,21 +250,13 @@ const MainPage = () => {
         }
         return false;
       })
-      .test("Max", "Insufficent funds", (value) => {
-        if (
-          value &&
-          preflightDetails &&
-          tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance
-        ) {
-          return parseInt(value) <= tokens[preflightDetails.token].balance;
+      .test("Min", "Less than minimum", (value) => {
+        if (value) {
+          return parseInt(value) > 0;
         }
         return false;
       })
-      .matches(
-        new RegExp(`/^([0-9]{1,18})(\.[0-9]{1,${DECIMALS}})?$/g`),
-        "Input invalid"
-      )
+      .matches(REGEX, "Input invalid")
       .required("Please set a value"),
     token: string().required("Please select a token"),
     receiver: string()
