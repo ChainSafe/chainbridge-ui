@@ -219,17 +219,14 @@ const MainPage = () => {
     setWalletConnecting(false);
   };
 
-  // TODO: Pull from contract
-  const DECIMALS = 18;
+  const DECIMALS =
+    preflightDetails && tokens[preflightDetails.token]
+      ? tokens[preflightDetails.token].decimals
+      : 18;
+
+  const REGEX = new RegExp(`^[0-9]{1,18}(\.[0-9]{1,${DECIMALS}})?$`);
   const transferSchema = object().shape({
-    tokenAmount: number()
-      .typeError("Not a valid number")
-      .min(
-        tokens[preflightDetails.token]
-          ? 1 / 10 ** tokens[preflightDetails.token].decimals
-          : 1,
-        "Please provide a value"
-      )
+    tokenAmount: string()
       .test("Token selected", "Please select a token", (value) => {
         if (
           value &&
@@ -242,40 +239,27 @@ const MainPage = () => {
           return false;
         }
       })
-      .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
-        // console.log(value);
-        if (value && `${value}`.indexOf(".") >= 0) {
-          // TODO improve Decimal validation
-          // console.log(`${value}`.split(".")[1])
-          // console.log(`${value}`.split(".")[1].length)
-          // console.log(`${value}`.split(".")[1].length <= DECIMALS )
-          return `${value}`.split(".")[1].length <= DECIMALS;
-        }
-        return true;
-      })
+      .matches(REGEX, "Input invalid")
       .test("Max", "Insufficent funds", (value) => {
         if (
+          value &&
           preflightDetails &&
           tokens[preflightDetails.token] &&
           tokens[preflightDetails.token].balance
         ) {
-          return (value as number) <= tokens[preflightDetails.token].balance;
+          return parseInt(value) <= tokens[preflightDetails.token].balance;
+        }
+        return false;
+      })
+      .test("Min", "Less than minimum", (value) => {
+        if (value) {
+          console.error(value);
+          return parseFloat(value) > 0;
         }
         return false;
       })
       .required("Please set a value"),
-    token: string()
-      .test("sync", "", (value) => {
-        setPreflightDetails({
-          ...preflightDetails,
-          token: value as string,
-          receiver: "",
-          tokenAmount: 0,
-          tokenSymbol: "",
-        });
-        return true;
-      })
-      .required("Please select a token"),
+    token: string().required("Please select a token"),
     receiver: string()
       .test("Valid address", "Please add a valid address", (value) => {
         return utils.isAddress(value as string);
@@ -371,44 +355,12 @@ const MainPage = () => {
                   }}
                   tokenSelectorKey="token"
                   tokens={tokens}
-                  disabled={!destinationChain}
+                  disabled={
+                    !destinationChain ||
+                    !preflightDetails.token ||
+                    preflightDetails.token === ""
+                  }
                   name="tokenAmount"
-                  // min={
-                  //   tokens[preflightDetails.token]
-                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
-                  //   : 1
-                  // }
-                  max={
-                    tokens[preflightDetails.token]
-                      ? tokens[preflightDetails.token].balance
-                      : 1
-                  }
-                  // step={
-                  //   tokens[preflightDetails.token]
-                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
-                  //   : 1
-                  // }
-                  precision={
-                    tokens[preflightDetails.token]
-                      ? tokens[preflightDetails.token].decimals
-                      : 1
-                  }
-                  // formatter={(value) => {
-                  //   console.log("Format", value)
-                  //   // do mod check
-                  //   const split = `${value}`.split('.')
-                  //   if (split[1]) {
-                  //     for(let i = split[1].length; i > 0; i--){
-                  //       if (split[1][i] != "0"){
-                  //         const temp = `${split[0]}.${split[1].substr(0, i)}`
-                  //         console.log(temp)
-                  //         return  temp
-                  //       }
-                  //     }
-                  //   }
-
-                  //   return `${value}`
-                  // }}
                   label="I want to send"
                 />
               </div>
@@ -421,6 +373,15 @@ const MainPage = () => {
                 label={`Balance: `}
                 className={classes.generalInput}
                 placeholder=""
+                sync={(tokenAddress) => {
+                  setPreflightDetails({
+                    ...preflightDetails,
+                    token: tokenAddress,
+                    receiver: "",
+                    tokenAmount: 0,
+                    tokenSymbol: "",
+                  });
+                }}
                 options={
                   Object.keys(tokens).map((t) => ({
                     value: t,
