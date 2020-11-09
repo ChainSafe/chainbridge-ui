@@ -26,7 +26,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
 
   const [synced, setSynced] = useState();
   useEffect(() => {
-    if (sync && field.value != synced) {
+    if (sync && field.value !== synced) {
       setSynced(field.value);
       if (field.value !== "") {
         sync(field.value);
