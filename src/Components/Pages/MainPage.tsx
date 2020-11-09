@@ -264,18 +264,7 @@ const MainPage = () => {
         return false;
       })
       .required("Please set a value"),
-    token: string()
-      .test("sync", "", (value) => {
-        setPreflightDetails({
-          ...preflightDetails,
-          token: value as string,
-          receiver: "",
-          tokenAmount: 0,
-          tokenSymbol: "",
-        });
-        return true;
-      })
-      .required("Please select a token"),
+    token: string().required("Please select a token"),
     receiver: string()
       .test("Valid address", "Please add a valid address", (value) => {
         return utils.isAddress(value as string);
@@ -283,6 +272,12 @@ const MainPage = () => {
       .required("Please add a receiving address"),
   });
 
+  console.log(
+    tokens[preflightDetails.token] ? tokens[preflightDetails.token].balance : 1
+  );
+  console.log(preflightDetails.token);
+  console.log(tokens);
+  console.log(tokens[preflightDetails.token]);
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>
@@ -421,6 +416,15 @@ const MainPage = () => {
                 label={`Balance: `}
                 className={classes.generalInput}
                 placeholder=""
+                sync={(tokenAddress) => {
+                  setPreflightDetails({
+                    ...preflightDetails,
+                    token: tokenAddress,
+                    receiver: "",
+                    tokenAmount: 0,
+                    tokenSymbol: "",
+                  });
+                }}
                 options={
                   Object.keys(tokens).map((t) => ({
                     value: t,
