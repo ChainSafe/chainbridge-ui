@@ -7,13 +7,11 @@ import {
   BridgeConfig,
   chainbridgeConfig,
   TokenConfig,
-  WrapperSymbol,
 } from "../chainbridgeConfig";
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
 import { Weth } from "../Contracts/Weth";
 import { WethFactory } from "../Contracts/WethFactory";
 import { parseUnits } from "ethers/lib/utils";
-import { TokenInfo } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -43,7 +41,6 @@ type ChainbridgeContext = {
   depositAmount?: number;
   transferTxHash?: string;
   selectedToken?: string;
-
   wrapToken(depositValue: number): void;
   wrapTokenConfig: TokenConfig | undefined;
 };
@@ -157,7 +154,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       }
 
       const wrapperToken = home.tokens.find(
-        (token) => token.symbol == WrapperSymbol
+        (token) => token.isNativeWrappedToken
       );
 
       if (!wrapperToken) {
@@ -178,7 +175,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     const getRelayerThreshold = async () => {
       if (homeBridge) {
         const threshold = BigNumber.from(
-          await homeBridge?._relayerThreshold()
+          await homeBridge._relayerThreshold()
         ).toNumber();
         setRelayerThreshold(threshold);
       }
@@ -278,6 +275,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return;
     }
 
+    const token = homeChain.tokens.find((token) => token.isNativeWrappedToken);
+
+    if (!token) {
+      console.log("No signer");
+      return;
+    }
+
     setTransactionStatus("Initializing Transfer");
     setDepositAmount(amount);
     setSelectedToken(tokenAddress);
@@ -308,7 +312,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       homeBridge.once(
         homeBridge.filters.Deposit(
           destinationChain.chainId,
-          chainbridgeConfig.erc20ResourceId,
+          token.resourceId,
           null
         ),
         (destChainId, resourceId, depositNonce) => {
@@ -320,7 +324,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       await (
         await homeBridge.deposit(
           destinationChain.chainId,
-          chainbridgeConfig.erc20ResourceId,
+          token.resourceId,
           data
         )
       ).wait();
@@ -338,6 +342,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return;
     }
     try {
+      debugger;
       await (
         await wrapper.deposit({
           value: parseUnits(`${depositValue}`, decimals),
@@ -346,7 +351,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return Promise.resolve();
     } catch (error) {
       console.error(error);
-      setTransactionStatus("Transfer Aborted");
       return Promise.reject();
     }
   };

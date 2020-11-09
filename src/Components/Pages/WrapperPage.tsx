@@ -15,6 +15,7 @@ import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenInput from "../Custom/TokenInput";
 import { number, object, string } from "yup";
 import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
+import { chainbridgeConfig } from "../../chainbridgeConfig";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -175,14 +176,10 @@ const MainPage = () => {
     onboard,
     tokens,
     ethBalance,
+    network,
   } = useWeb3();
-  const {
-    homeChain,
-    destinationChain,
-    wrapToken,
-    wrapTokenConfig,
-  } = useChainbridge();
-
+  const { homeChain, destinationChain, wrapTokenConfig } = useChainbridge();
+  console.log(!wrapTokenConfig);
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -208,7 +205,7 @@ const MainPage = () => {
       .typeError("Not a valid number")
       .min(
         wrapTokenConfig && tokens
-          ? 1 / 10 ** tokens[wrapTokenConfig.address].decimals
+          ? 1 / 10 ** tokens[wrapTokenConfig?.address]?.decimals
           : 1,
         "Please provide a value"
       )
@@ -282,14 +279,14 @@ const MainPage = () => {
       <Formik
         initialValues={{
           tokenAmount: 0,
-          token: "",
         }}
         validationSchema={transferSchema}
         onSubmit={(values) => {
-          setPreflightDetails({
-            ...values,
-          });
-          setPreflightModalOpen(true);
+          // setPreflightDetails({
+          //   ...values,
+          // });
+          // setPreflightModalOpen(true);
+          console.log(values);
         }}
       >
         <Form
@@ -353,7 +350,7 @@ const MainPage = () => {
                 ) : (
                   <ETHIcon />
                 )}
-                <Typography>ETH</Typography>
+                <Typography>{wrapTokenConfig?.nativeTokenSymbol}</Typography>
               </div>
             </section>
           </section>
@@ -376,9 +373,12 @@ const MainPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <NetworkUnsupportedModal
-        open={networkUnsupportedOpen}
+        open={networkUnsupportedOpen || (!wrapTokenConfig && isReady)}
         close={() => setNetworkUnsupportedOpen(false)}
-        network={`Ropsten`}
+        network={network}
+        supportedNetworks={chainbridgeConfig.chains
+          .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))
+          .map((bc) => bc.networkId)}
       />
       {/* <PreflightModal
         open={preflightModalOpen}
