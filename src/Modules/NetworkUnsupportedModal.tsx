@@ -52,16 +52,37 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   })
 );
 
+const networkName = (id: any) => {
+  switch (Number(id)) {
+    case 1:
+      return "Mainnet";
+    case 3:
+      return "Ropsten";
+    case 4:
+      return "Rinkeby";
+    case 5:
+      return "Goerli";
+    case 6:
+      return "Kotti";
+    case 42:
+      return "Kovan";
+    default:
+      return "Other";
+  }
+};
+
 interface INetworkUnsupportedModalProps {
   open: boolean;
   close: () => void;
-  network: string;
+  network: number | undefined;
+  supportedNetworks: number[];
 }
 
 const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
   open,
   close,
   network,
+  supportedNetworks,
 }) => {
   const classes = useStyles();
 
@@ -81,8 +102,18 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
           Network Unsupported
         </Typography>
         <Typography component="p" variant="body1">
-          This app does not currently support transfers on {network}. Please
-          change networks from within your browser wallet.
+          This app does not currently support transfers on{" "}
+          {networkName(network)}. Please change networks from within your
+          browser wallet.
+        </Typography>
+        <br />
+        <Typography component="p" variant="body1">
+          This app is configured to work on{" "}
+          {supportedNetworks.map(
+            (n, i) =>
+              `${networkName(n)}${i < supportedNetworks.length - 1 ? ", " : ""}`
+          )}{" "}
+          networks
         </Typography>
         <section className={classes.buttons}>
           <Button
