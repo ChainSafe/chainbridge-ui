@@ -73,14 +73,12 @@ const networkName = (id: any) => {
 
 interface INetworkUnsupportedModalProps {
   open: boolean;
-  close: () => void;
   network: number | undefined;
   supportedNetworks: number[];
 }
 
 const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
   open,
-  close,
   network,
   supportedNetworks,
 }) => {
@@ -116,14 +114,6 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
           networks
         </Typography>
         <section className={classes.buttons}>
-          <Button
-            onClick={close}
-            size="small"
-            className={classes.button}
-            variant="outline"
-          >
-            OK
-          </Button>
           <a
             rel="noopener noreferrer"
             href="https://discord.com/invite/n2U6x9c"

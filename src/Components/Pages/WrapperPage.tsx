@@ -23,6 +23,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       minHeight: constants.generalUnit * 69,
+      padding: constants.generalUnit * 6,
+      overflow: "hidden",
     },
     walletArea: {
       display: "flex",
@@ -190,16 +192,11 @@ const MainPage = () => {
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
-  const [networkUnsupportedOpen, setNetworkUnsupportedOpen] = useState<boolean>(
-    false
-  );
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     tokenAmount: 0,
   });
-
-  console.log(networkUnsupportedOpen || (!wrapTokenConfig && isReady));
 
   const handleConnect = async () => {
     setWalletConnecting(true);
@@ -347,8 +344,7 @@ const MainPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <NetworkUnsupportedModal
-        open={networkUnsupportedOpen || (!wrapTokenConfig && isReady)}
-        close={() => setNetworkUnsupportedOpen(false)}
+        open={!wrapTokenConfig && isReady}
         network={network}
         supportedNetworks={chainbridgeConfig.chains
           .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))

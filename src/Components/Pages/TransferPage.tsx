@@ -24,7 +24,9 @@ import { chainbridgeConfig } from "../../chainbridgeConfig";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
-    root: {},
+    root: {
+      padding: constants.generalUnit * 6,
+    },
     walletArea: {
       display: "flex",
       flexDirection: "column",
@@ -187,9 +189,6 @@ const TransferPage = () => {
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
-  const [networkUnsupportedOpen, setNetworkUnsupportedOpen] = useState<boolean>(
-    false
-  );
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
@@ -419,8 +418,7 @@ const TransferPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <NetworkUnsupportedModal
-        open={networkUnsupportedOpen || (!homeChain && isReady)}
-        close={() => setNetworkUnsupportedOpen(false)}
+        open={!homeChain && isReady}
         network={network}
         supportedNetworks={chainbridgeConfig.chains.map((bc) => bc.networkId)}
       />
