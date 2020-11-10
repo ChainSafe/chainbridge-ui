@@ -129,6 +129,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
   const classes = useStyles();
   const { homeChain } = useChainbridge();
 
+  // TODO
   const [STATE, setState] = useState<"wrapping" | "done">("wrapping");
   const VALUE = "3";
   const SYMBOL = "ETH";

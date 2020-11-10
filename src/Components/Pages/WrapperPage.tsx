@@ -353,13 +353,20 @@ const MainPage = () => {
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
         sender={address || ""}
-        start={() => {}}
+        start={() => {
+          // TODO
+        }}
         sourceNetwork={homeChain?.name || ""}
         tokenSymbol={"ETH"}
         value={preflightDetails?.tokenAmount || 0}
         wrappedTitle={"Wrapped ETH (Weth)"}
       />
-      <WrapActiveModal open={!!transactionStatus} close={() => {}} />
+      <WrapActiveModal
+        open={!!transactionStatus}
+        close={() => {
+          // TODO
+        }}
+      />
     </article>
   );
 };
