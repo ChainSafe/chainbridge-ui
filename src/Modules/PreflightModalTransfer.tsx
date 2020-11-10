@@ -41,7 +41,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   })
 );
 
-interface IPreflightModalProps {
+interface IPreflightModalTransferProps {
   open: boolean;
   close: () => void;
   sender: string;
@@ -53,7 +53,7 @@ interface IPreflightModalProps {
   start: () => void;
 }
 
-const PreflightModal: React.FC<IPreflightModalProps> = ({
+const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
   open,
   close,
   receiver,
@@ -63,7 +63,7 @@ const PreflightModal: React.FC<IPreflightModalProps> = ({
   tokenSymbol,
   value,
   start,
-}: IPreflightModalProps) => {
+}: IPreflightModalTransferProps) => {
   const classes = useStyles();
 
   return (
@@ -115,4 +115,4 @@ const PreflightModal: React.FC<IPreflightModalProps> = ({
   );
 };
 
-export default PreflightModal;
+export default PreflightModalTransfer;

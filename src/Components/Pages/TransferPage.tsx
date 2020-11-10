@@ -3,7 +3,7 @@ import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
-import PreflightModal from "../../Modules/PreflightModal";
+import PreflightModalTransfer from "../../Modules/PreflightModalTransfer";
 import {
   Button,
   Typography,
@@ -13,12 +13,12 @@ import {
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import clsx from "clsx";
-import TransactionActiveModal from "../../Modules/TransactionActiveModal";
+import TransferActiveModal from "../../Modules/TransferActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
-import { number, object, string } from "yup";
+import { object, string } from "yup";
 import { utils } from "ethers";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
 
@@ -206,66 +206,46 @@ const TransferPage = () => {
     setWalletConnecting(false);
   };
 
-  // TODO: Pull from contract
   const DECIMALS =
-    tokens[preflightDetails.token] && tokens[preflightDetails.token].decimals
+    preflightDetails && tokens[preflightDetails.token]
       ? tokens[preflightDetails.token].decimals
-      : 1;
+      : 18;
+
+  const REGEX = new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`);
   const transferSchema = object().shape({
-    tokenAmount: number()
-      .typeError("Not a valid number")
-      .min(
-        tokens[preflightDetails.token]
-          ? 1 / 10 ** tokens[preflightDetails.token].decimals
-          : 1,
-        "Please provide a value"
-      )
+    tokenAmount: string()
       .test("Token selected", "Please select a token", (value) => {
         if (
-          value &&
+          !!value &&
           preflightDetails &&
           tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance
+          tokens[preflightDetails.token].balance !== undefined
         ) {
           return true;
         } else {
           return false;
         }
       })
-      .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
-        // console.log(value);
-        if (value && `${value}`.indexOf(".") >= 0) {
-          // TODO improve Decimal validation
-          // console.log(`${value}`.split(".")[1])
-          // console.log(`${value}`.split(".")[1].length)
-          // console.log(`${value}`.split(".")[1].length <= DECIMALS )
-          return `${value}`.split(".")[1].length <= DECIMALS;
-        }
-        return true;
-      })
+      .matches(REGEX, "Input invalid")
       .test("Max", "Insufficent funds", (value) => {
         if (
+          value &&
           preflightDetails &&
           tokens[preflightDetails.token] &&
           tokens[preflightDetails.token].balance
         ) {
-          return (value as number) <= tokens[preflightDetails.token].balance;
+          return parseFloat(value) <= tokens[preflightDetails.token].balance;
+        }
+        return false;
+      })
+      .test("Min", "Less than minimum", (value) => {
+        if (value) {
+          return parseFloat(value) > 0;
         }
         return false;
       })
       .required("Please set a value"),
-    token: string()
-      .test("sync", "", (value) => {
-        setPreflightDetails({
-          ...preflightDetails,
-          token: value as string,
-          receiver: "",
-          tokenAmount: 0,
-          tokenSymbol: "",
-        });
-        return true;
-      })
-      .required("Please select a token"),
+    token: string().required("Please select a token"),
     receiver: string()
       .test("Valid address", "Please add a valid address", (value) => {
         return utils.isAddress(value as string);
@@ -361,40 +341,12 @@ const TransferPage = () => {
                   }}
                   tokenSelectorKey="token"
                   tokens={tokens}
-                  disabled={!destinationChain}
-                  name="tokenAmount"
-                  // min={
-                  //   tokens[preflightDetails.token]
-                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
-                  //   : 1
-                  // }
-                  max={
-                    tokens[preflightDetails.token]
-                      ? tokens[preflightDetails.token].balance
-                      : 1
+                  disabled={
+                    !destinationChain ||
+                    !preflightDetails.token ||
+                    preflightDetails.token === ""
                   }
-                  // step={
-                  //   tokens[preflightDetails.token]
-                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
-                  //   : 1
-                  // }
-                  precision={DECIMALS}
-                  // formatter={(value) => {
-                  //   console.log("Format", value)
-                  //   // do mod check
-                  //   const split = `${value}`.split('.')
-                  //   if (split[1]) {
-                  //     for(let i = split[1].length; i > 0; i--){
-                  //       if (split[1][i] != "0"){
-                  //         const temp = `${split[0]}.${split[1].substr(0, i)}`
-                  //         console.log(temp)
-                  //         return  temp
-                  //       }
-                  //     }
-                  //   }
-
-                  //   return `${value}`
-                  // }}
+                  name="tokenAmount"
                   label="I want to send"
                 />
               </div>
@@ -407,6 +359,15 @@ const TransferPage = () => {
                 label={`Balance: `}
                 className={classes.generalInput}
                 placeholder=""
+                sync={(tokenAddress) => {
+                  setPreflightDetails({
+                    ...preflightDetails,
+                    token: tokenAddress,
+                    receiver: "",
+                    tokenAmount: 0,
+                    tokenSymbol: "",
+                  });
+                }}
                 options={
                   Object.keys(tokens).map((t) => ({
                     value: t,
@@ -463,7 +424,7 @@ const TransferPage = () => {
         network={network}
         supportedNetworks={chainbridgeConfig.chains.map((bc) => bc.networkId)}
       />
-      <PreflightModal
+      <PreflightModalTransfer
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
         receiver={preflightDetails?.receiver || ""}
@@ -482,7 +443,7 @@ const TransferPage = () => {
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />
+      <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
     </article>
   );
 };

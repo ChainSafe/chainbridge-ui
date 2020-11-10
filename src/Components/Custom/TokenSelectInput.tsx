@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useField } from "formik";
 import {
   IFormikSelectInputProps,
@@ -8,6 +8,7 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 interface ITokenSelectInput extends IFormikSelectInputProps {
   tokens: Tokens;
+  sync?: (value: string) => void;
 }
 
 const TokenSelectInput: React.FC<ITokenSelectInput> = ({
@@ -15,14 +16,24 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   label,
   name,
   tokens,
+  sync,
   ...rest
 }: ITokenSelectInput) => {
   const [field] = useField(name);
   const labelParsed = tokens[field.value]
-    ? `${label} ${tokens[field.value]?.balance.toFixed(2)} ${
-        tokens[field.value]?.symbol
-      }`
+    ? `${label} ${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
     : "Please select token";
+
+  const [synced, setSynced] = useState();
+  useEffect(() => {
+    if (sync && field.value !== synced) {
+      setSynced(field.value);
+      if (field.value !== "") {
+        sync(field.value);
+      }
+    }
+  }, [field]);
+
   return (
     <FormikSelectInput
       name={name}

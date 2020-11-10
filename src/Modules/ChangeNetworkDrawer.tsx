@@ -35,7 +35,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { checkIsReady, wallet, onboard } = useWeb3();
+  const { checkIsReady, onboard } = useWeb3();
 
   const handleConnect = async () => {
     await onboard?.walletSelect();

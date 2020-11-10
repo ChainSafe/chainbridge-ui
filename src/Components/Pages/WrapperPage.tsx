@@ -13,9 +13,11 @@ import clsx from "clsx";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenInput from "../Custom/TokenInput";
-import { number, object, string } from "yup";
+import { object, string } from "yup";
 import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
+import PreflightModalWrap from "../../Modules/PreflightModalWrap";
+import WrapActiveModal from "../../Modules/WrapActiveModal";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -177,9 +179,14 @@ const MainPage = () => {
     tokens,
     ethBalance,
     network,
+    address,
   } = useWeb3();
-  const { homeChain, destinationChain, wrapTokenConfig } = useChainbridge();
-  console.log(!wrapTokenConfig);
+  const {
+    homeChain,
+    destinationChain,
+    wrapTokenConfig,
+    transactionStatus,
+  } = useChainbridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -192,6 +199,8 @@ const MainPage = () => {
     tokenAmount: 0,
   });
 
+  console.log(networkUnsupportedOpen || (!wrapTokenConfig && isReady));
+
   const handleConnect = async () => {
     setWalletConnecting(true);
     !wallet && (await onboard?.walletSelect());
@@ -200,28 +209,20 @@ const MainPage = () => {
   };
 
   const DECIMALS = 18;
+  const REGEX = new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`);
   const transferSchema = object().shape({
-    tokenAmount: number()
-      .typeError("Not a valid number")
-      .min(
-        wrapTokenConfig && tokens
-          ? 1 / 10 ** tokens[wrapTokenConfig?.address]?.decimals
-          : 1,
-        "Please provide a value"
-      )
-      .test("Decimals", `Maximum of ${DECIMALS} decimals`, (value) => {
-        // console.log(value);
-        if (value && `${value}`.indexOf(".") >= 0) {
-          // TODO improve Decimal validation
-          // console.log(`${value}`.split(".")[1])
-          // console.log(`${value}`.split(".")[1].length)
-          // console.log(`${value}`.split(".")[1].length <= DECIMALS )
-          return `${value}`.split(".")[1].length <= DECIMALS;
+    tokenAmount: string()
+      .matches(REGEX, "Input invalid")
+      .test("Min", "Less than minimum", (value) => {
+        if (value) {
+          return parseFloat(value) > 0;
         }
-        return true;
+        return false;
       })
       .test("Max", "Insufficent funds", (value) => {
-        return ethBalance && (value as number) <= ethBalance ? true : false;
+        return ethBalance && value && parseFloat(value) <= ethBalance
+          ? true
+          : false;
       })
       .required("Please set a value"),
   });
@@ -281,6 +282,7 @@ const MainPage = () => {
           tokenAmount: 0,
         }}
         validationSchema={transferSchema}
+        validateOnChange={false}
         onSubmit={(values) => {
           // setPreflightDetails({
           //   ...values,
@@ -308,34 +310,6 @@ const MainPage = () => {
                   tokens={tokens}
                   disabled={!destinationChain}
                   name="tokenAmount"
-                  // min={
-                  //   tokens[preflightDetails.token]
-                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
-                  //   : 1
-                  // }
-                  max={ethBalance ? ethBalance : 1}
-                  // step={
-                  //   tokens[preflightDetails.token]
-                  //   ? 1 / (10 ** tokens[preflightDetails.token].decimals)
-                  //   : 1
-                  // }
-                  precision={DECIMALS}
-                  // formatter={(value) => {
-                  //   console.log("Format", value)
-                  //   // do mod check
-                  //   const split = `${value}`.split('.')
-                  //   if (split[1]) {
-                  //     for(let i = split[1].length; i > 0; i--){
-                  //       if (split[1][i] != "0"){
-                  //         const temp = `${split[0]}.${split[1].substr(0, i)}`
-                  //         console.log(temp)
-                  //         return  temp
-                  //       }
-                  //     }
-                  //   }
-
-                  //   return `${value}`
-                  // }}
                   label="I want to convert"
                 />
               </div>
@@ -380,26 +354,17 @@ const MainPage = () => {
           .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))
           .map((bc) => bc.networkId)}
       />
-      {/* <PreflightModal
+      <PreflightModalWrap
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
-        receiver={preflightDetails?.receiver || ""}
         sender={address || ""}
-        start={() => {
-          setPreflightModalOpen(false);
-          preflightDetails &&
-            deposit(
-              preflightDetails.tokenAmount,
-              preflightDetails.receiver,
-              preflightDetails.token
-            );
-        }}
+        start={() => {}}
         sourceNetwork={homeChain?.name || ""}
-        targetNetwork={destinationChain?.name || ""}
-        tokenSymbol={preflightDetails?.tokenSymbol || ""}
+        tokenSymbol={"ETH"}
         value={preflightDetails?.tokenAmount || 0}
+        wrappedTitle={"Wrapped ETH (Weth)"}
       />
-      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} /> */}
+      <WrapActiveModal open={!!transactionStatus} close={() => {}} />
     </article>
   );
 };
