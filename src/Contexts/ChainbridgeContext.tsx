@@ -1,7 +1,13 @@
 import { useWeb3 } from "@chainsafe/web3-context";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { BigNumber, ethers, utils } from "ethers";
+import {
+  BigNumber,
+  ContractTransaction,
+  ethers,
+  PayableOverrides,
+  utils,
+} from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
 import {
   BridgeConfig,
@@ -11,7 +17,6 @@ import {
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
 import { Weth } from "../Contracts/Weth";
 import { WethFactory } from "../Contracts/WethFactory";
-import { parseUnits } from "ethers/lib/utils";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -41,7 +46,12 @@ type ChainbridgeContext = {
   depositAmount?: number;
   transferTxHash?: string;
   selectedToken?: string;
-  wrapToken(depositValue: number): void;
+  wrapToken:
+    | ((
+        overrides?: PayableOverrides | undefined
+      ) => Promise<ContractTransaction>)
+    | undefined;
+
   wrapTokenConfig: TokenConfig | undefined;
 };
 
@@ -336,25 +346,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     }
   };
 
-  const wrapToken = async (depositValue: number, decimals: number = 18) => {
-    if (!wrapper) {
-      console.error("Wrapper not connected");
-      return;
-    }
-    try {
-      debugger;
-      await (
-        await wrapper.deposit({
-          value: parseUnits(`${depositValue}`, decimals),
-        })
-      ).wait();
-      return Promise.resolve();
-    } catch (error) {
-      console.error(error);
-      return Promise.reject();
-    }
-  };
-
   return (
     <ChainbridgeContext.Provider
       value={{
@@ -375,7 +366,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         depositAmount,
         transferTxHash,
         selectedToken,
-        wrapToken,
+        wrapToken: wrapper?.deposit,
         wrapTokenConfig,
       }}
     >

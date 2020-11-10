@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Button, Typography } from "@imploy/common-components";
@@ -6,6 +6,7 @@ import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { forwardTo } from "../Utils/History";
 import { ROUTE_LINKS } from "../Components/Routes";
+import { TokenConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -118,53 +119,54 @@ const useStyles = makeStyles(
 );
 
 interface IWrapActiveModalProps {
-  open: boolean;
+  txState?: "wrapping" | "done";
+  value: number;
+  tokenInfo: TokenConfig;
+  txHash?: string;
   close: () => void;
 }
 
 const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
-  open,
+  txState,
+  value,
+  tokenInfo,
+  txHash,
   close,
 }: IWrapActiveModalProps) => {
   const classes = useStyles();
   const { homeChain } = useChainbridge();
 
-  // TODO
-  const [STATE, setState] = useState<"wrapping" | "done">("wrapping");
-  const VALUE = "3";
-  const SYMBOL = "ETH";
-  const WRAPPED_SYMBOL = "WETH";
-  const WRAPPED_TX_HASH = "asda";
   return (
     <CustomModal
       className={classes.root}
       injectedClass={{
         inner: classes.inner,
       }}
-      active={open}
+      active={!!txState}
     >
       <section>
         <div className={classes.stepIndicator}>
-          {STATE === "wrapping" ? 1 : 2}
+          {txState === "wrapping" ? 1 : 2}
         </div>
       </section>
       <section className={classes.content}>
         <Typography className={classes.heading} variant="h3" component="h3">
-          {STATE === "wrapping"
-            ? `Wrapping ${VALUE} ${SYMBOL}`
+          {txState === "wrapping"
+            ? `Wrapping ${value} ${tokenInfo.nativeTokenSymbol}`
             : "Token wrapped"}
         </Typography>
-        {STATE !== "wrapping" && (
+        {txState !== "wrapping" && (
           <>
             <Typography className={classes.receipt} component="p">
-              Successfully transferred converted {SYMBOL} to {WRAPPED_SYMBOL}
-              {homeChain && homeChain.blockExplorer && WRAPPED_TX_HASH && (
+              Successfully transferred converted {tokenInfo.nativeTokenSymbol}{" "}
+              to {tokenInfo.symbol}
+              {homeChain && homeChain.blockExplorer && txHash && (
                 <>
                   <br />
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href={`${homeChain.blockExplorer}/${WRAPPED_TX_HASH}`}
+                    href={`${homeChain.blockExplorer}/${txHash}`}
                   >
                     View Transaction
                   </a>

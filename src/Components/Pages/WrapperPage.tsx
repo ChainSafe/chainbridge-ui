@@ -15,9 +15,10 @@ import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenInput from "../Custom/TokenInput";
 import { object, string } from "yup";
 import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
-import { chainbridgeConfig } from "../../chainbridgeConfig";
+import { chainbridgeConfig, TokenConfig } from "../../chainbridgeConfig";
 import PreflightModalWrap from "../../Modules/PreflightModalWrap";
 import WrapActiveModal from "../../Modules/WrapActiveModal";
+import { parseUnits } from "ethers/lib/utils";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -187,22 +188,55 @@ const MainPage = () => {
     homeChain,
     destinationChain,
     wrapTokenConfig,
-    transactionStatus,
+    wrapToken,
   } = useChainbridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
-
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     tokenAmount: 0,
   });
+  const [txDetails, setTxDetails] = useState<
+    | {
+        txState?: "wrapping" | "done";
+        value: number;
+        tokenInfo: TokenConfig;
+        txHash?: string;
+      }
+    | undefined
+  >(undefined);
 
   const handleConnect = async () => {
     setWalletConnecting(true);
     !wallet && (await onboard?.walletSelect());
     await checkIsReady();
     setWalletConnecting(false);
+  };
+
+  const handleWrapToken = async () => {
+    if (!wrapTokenConfig || !wrapToken) return;
+
+    try {
+      setTxDetails({
+        tokenInfo: wrapTokenConfig,
+        value: preflightDetails.tokenAmount,
+        txState: "wrapping",
+      });
+      const tx = await wrapToken({
+        value: parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
+      });
+
+      await tx?.wait();
+      setTxDetails({
+        tokenInfo: wrapTokenConfig,
+        value: preflightDetails.tokenAmount,
+        txHash: tx?.hash,
+        txState: "done",
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const DECIMALS = 18;
@@ -316,7 +350,7 @@ const MainPage = () => {
               </Typography>
               <div className={classes.token}>
                 {typeof ETHIcon == "string" ? (
-                  <img src={ETHIcon} />
+                  <img src={ETHIcon} alt="Token Icon" />
                 ) : (
                   <ETHIcon />
                 )}
@@ -354,19 +388,22 @@ const MainPage = () => {
         close={() => setPreflightModalOpen(false)}
         sender={address || ""}
         start={() => {
-          // TODO
+          handleWrapToken();
+          setPreflightModalOpen(false);
         }}
         sourceNetwork={homeChain?.name || ""}
-        tokenSymbol={"ETH"}
+        tokenSymbol={wrapTokenConfig?.nativeTokenSymbol || "ETH"}
         value={preflightDetails?.tokenAmount || 0}
-        wrappedTitle={"Wrapped ETH (Weth)"}
+        wrappedTitle={`${wrapTokenConfig?.name} (${wrapTokenConfig?.symbol})`}
       />
-      <WrapActiveModal
-        open={!!transactionStatus}
-        close={() => {
-          // TODO
-        }}
-      />
+      {txDetails && (
+        <WrapActiveModal
+          {...txDetails}
+          close={() => {
+            setTxDetails(undefined);
+          }}
+        />
+      )}
     </article>
   );
 };

@@ -32,6 +32,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
         sync(field.value);
       }
     }
+    // eslint-disable-next-line
   }, [field]);
 
   return (
