@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Button, Typography } from "@imploy/common-components";
@@ -31,8 +31,8 @@ const useStyles = makeStyles(
         borderTop: `6px solid ${palette.additional["transactionModal"][1]}`,
       },
       heading: {
-        marginBottom: constants.generalUnit,
         whiteSpace: "nowrap",
+        marginTop: constants.generalUnit / 2,
       },
       stepIndicator: {
         ...typography.h4,
@@ -129,7 +129,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
   const classes = useStyles();
   const { homeChain } = useChainbridge();
 
-  const STATE = "wrapping";
+  const [STATE, setState] = useState<"wrapping" | "done">("wrapping");
   const VALUE = "3";
   const SYMBOL = "ETH";
   const WRAPPED_SYMBOL = "WETH";

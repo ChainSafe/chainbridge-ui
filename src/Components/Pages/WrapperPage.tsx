@@ -281,11 +281,10 @@ const MainPage = () => {
         validationSchema={transferSchema}
         validateOnChange={false}
         onSubmit={(values) => {
-          // setPreflightDetails({
-          //   ...values,
-          // });
-          // setPreflightModalOpen(true);
-          console.log(values);
+          setPreflightDetails({
+            ...values,
+          });
+          setPreflightModalOpen(true);
         }}
       >
         <Form
