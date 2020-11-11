@@ -1,4 +1,5 @@
 import ETHIcon from "./media/tokens/eth.svg";
+import WETHIcon from "./media/tokens/weth.svg";
 
 export type TokenConfig = {
   address: string;
@@ -44,7 +45,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
           name: "Wrapped ETC",
           symbol: "wETC",
-          imageUri: ETHIcon,
+          imageUri: WETHIcon,
           resourceId:
             "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
         },
@@ -72,7 +73,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
           name: "Wrapped ETC",
           symbol: "wETC",
-          imageUri: ETHIcon,
+          imageUri: WETHIcon,
           resourceId:
             "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
           isNativeWrappedToken: true,
