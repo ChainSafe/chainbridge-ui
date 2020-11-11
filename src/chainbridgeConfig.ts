@@ -1,10 +1,14 @@
 import ETHIcon from "./media/tokens/eth.svg";
+import WETHIcon from "./media/tokens/weth.svg";
 
-type TokenConfig = {
+export type TokenConfig = {
   address: string;
   name?: string;
   symbol?: string;
   imageUri?: string;
+  resourceId: string;
+  isNativeWrappedToken?: boolean;
+  nativeTokenSymbol?: string;
 };
 
 export type BridgeConfig = {
@@ -21,14 +25,11 @@ export type BridgeConfig = {
 };
 
 export type ChainbridgeConfig = {
-  erc20ResourceId: string;
   chains: BridgeConfig[];
 };
 
 export const chainbridgeConfig: ChainbridgeConfig = {
   // Goerli - Kotti Bridge
-  erc20ResourceId:
-    "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
   chains: [
     {
       chainId: 1,
@@ -41,10 +42,20 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       blockExplorer: "https://goerli.etherscan.io/tx",
       tokens: [
         {
+          address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
+          name: "Wrapped ETC",
+          symbol: "wETC",
+          imageUri: WETHIcon,
+          resourceId:
+            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+        },
+        {
           address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "Test Goerli",
-          symbol: "TESTG",
+          name: "An ERC20",
+          symbol: "ERC20",
           imageUri: ETHIcon,
+          resourceId:
+            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
         },
       ],
     },
@@ -59,10 +70,22 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       blockExplorer: "https://blockscout.com/etc/kotti/tx",
       tokens: [
         {
+          address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
+          name: "Wrapped ETC",
+          symbol: "wETC",
+          imageUri: WETHIcon,
+          resourceId:
+            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+          isNativeWrappedToken: true,
+          nativeTokenSymbol: "ETC",
+        },
+        {
           address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "Test Kotti",
-          symbol: "TESTK",
+          name: "An ERC20",
+          symbol: "ERC20",
           imageUri: ETHIcon,
+          resourceId:
+            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
         },
       ],
     },

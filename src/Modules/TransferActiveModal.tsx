@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import {
@@ -120,15 +120,15 @@ const useStyles = makeStyles(
     })
 );
 
-interface ITransactionActiveModalProps {
+interface ITransferActiveModalProps {
   open: boolean;
   close: () => void;
 }
 
-const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
+const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   open,
   close,
-}: ITransactionActiveModalProps) => {
+}: ITransferActiveModalProps) => {
   const classes = useStyles();
   const {
     transactionStatus,
@@ -299,4 +299,4 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
   );
 };
 
-export default TransactionActiveModal;
+export default TransferActiveModal;

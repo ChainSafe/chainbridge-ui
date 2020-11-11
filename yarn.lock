@@ -1119,7 +1119,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.1":
+"@babel/runtime@^7.10.1", "@babel/runtime@^7.7.6":
   version "7.12.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
   integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
@@ -1662,10 +1662,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@imploy/common-components@1.0.23":
-  version "1.0.23"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.23/ce6ad786bcdbfc3b24d652fac16162b5332775a943968e00dcb38244e915be1e#590032d0fd43685265d177fe804ae1e4ff8d5612"
-  integrity sha512-iHw0AurCs3WHmFvni00eqx9QzopEQ+qNDLPO11oW5i6oqAYKJol3BBim77n1/Fjs22AiTuxFRc69bd7q+KXi6g==
+"@imploy/common-components@1.0.24":
+  version "1.0.24"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.24/bc910d5393b6486beb75326b0761fa2fff80dbaf8b43f6f018156c1ba4fb5f38#a1939ad99ae3015d527aae6e48922fab0033bcda"
+  integrity sha512-OrTG0UWSLFIxTTGxyfPvg6jACiJ0TC0Jpy+bD8K0dgvU7z87iPPf1kqZ99Lwf9ruqorUK5//d31Md0IYjwSkQA==
   dependencies:
     "@material-ui/styles" "^4.10.0"
     "@types/react-select" "^3.0.23"
@@ -2344,6 +2344,11 @@
   dependencies:
     "@types/minimatch" "*"
     "@types/node" "*"
+
+"@types/history@^4.7.8":
+  version "4.7.8"
+  resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.8.tgz#49348387983075705fe8f4e02fb67f7daaec4934"
+  integrity sha512-S78QIYirQcUoo6UJZx9CSP0O2ix9IaeAXwQi26Rhr/+mg7qqPy8TzaxHSUut7eGjL8WmLccT7/MXf304WjqHcA==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
@@ -7950,6 +7955,13 @@ history@^4.9.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
     value-equal "^1.0.1"
+
+history@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/history/-/history-5.0.0.tgz#0cabbb6c4bbf835addb874f8259f6d25101efd08"
+  integrity sha512-3NyRMKIiFSJmIPdq7FxkNMJkQ7ZEtVblOQ38VtKaA0zZMW1Eo6Q6W8oDKEflr1kNNTItSnk4JMCO1deeSgbLLg==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
 
 hmac-drbg@^1.0.0:
   version "1.0.1"

@@ -1,10 +1,22 @@
 import { useWeb3 } from "@chainsafe/web3-context";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { BigNumber, ethers, utils } from "ethers";
+import {
+  BigNumber,
+  ContractTransaction,
+  ethers,
+  PayableOverrides,
+  utils,
+} from "ethers";
 import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
-import { BridgeConfig, chainbridgeConfig } from "../chainbridgeConfig";
+import {
+  BridgeConfig,
+  chainbridgeConfig,
+  TokenConfig,
+} from "../chainbridgeConfig";
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
+import { Weth } from "../Contracts/Weth";
+import { WethFactory } from "../Contracts/WethFactory";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -34,6 +46,13 @@ type ChainbridgeContext = {
   depositAmount?: number;
   transferTxHash?: string;
   selectedToken?: string;
+  wrapToken:
+    | ((
+        overrides?: PayableOverrides | undefined
+      ) => Promise<ContractTransaction>)
+    | undefined;
+
+  wrapTokenConfig: TokenConfig | undefined;
 };
 
 type TransactionStatus =
@@ -58,7 +77,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const [destinationChains, setDestinationChains] = useState<BridgeConfig[]>(
     []
   );
+  // Contracts
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
+  const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
+  const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
+    undefined
+  );
   const [destinationBridge, setDestinationBridge] = useState<
     Bridge | undefined
   >(undefined);
@@ -138,6 +162,20 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
         destChain && setDestinationChain(destChain);
       }
+
+      const wrapperToken = home.tokens.find(
+        (token) => token.isNativeWrappedToken
+      );
+
+      if (!wrapperToken) {
+        console.error("Wrapper token not found");
+        return;
+      }
+
+      setWrapperConfig(wrapperToken);
+
+      const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
+      setWrapper(connectedWeth);
     } else {
       setHomeChain(undefined);
     }
@@ -147,7 +185,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     const getRelayerThreshold = async () => {
       if (homeBridge) {
         const threshold = BigNumber.from(
-          await homeBridge?._relayerThreshold()
+          await homeBridge._relayerThreshold()
         ).toNumber();
         setRelayerThreshold(threshold);
       }
@@ -247,6 +285,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return;
     }
 
+    const token = homeChain.tokens.find((token) => token.isNativeWrappedToken);
+
+    if (!token) {
+      console.log("No signer");
+      return;
+    }
+
     setTransactionStatus("Initializing Transfer");
     setDepositAmount(amount);
     setSelectedToken(tokenAddress);
@@ -277,7 +322,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       homeBridge.once(
         homeBridge.filters.Deposit(
           destinationChain.chainId,
-          chainbridgeConfig.erc20ResourceId,
+          token.resourceId,
           null
         ),
         (destChainId, resourceId, depositNonce) => {
@@ -289,7 +334,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       await (
         await homeBridge.deposit(
           destinationChain.chainId,
-          chainbridgeConfig.erc20ResourceId,
+          token.resourceId,
           data
         )
       ).wait();
@@ -321,6 +366,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         depositAmount,
         transferTxHash,
         selectedToken,
+        wrapToken: wrapper?.deposit,
+        wrapTokenConfig,
       }}
     >
       {children}

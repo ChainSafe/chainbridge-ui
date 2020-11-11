@@ -3,7 +3,7 @@ import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
-import PreflightModal from "../../Modules/PreflightModal";
+import PreflightModalTransfer from "../../Modules/PreflightModalTransfer";
 import {
   Button,
   Typography,
@@ -13,30 +13,19 @@ import {
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import clsx from "clsx";
-import TransactionActiveModal from "../../Modules/TransactionActiveModal";
+import TransferActiveModal from "../../Modules/TransferActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
-import { number, object, string } from "yup";
+import { object, string } from "yup";
 import { utils } from "ethers";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      maxWidth: 460,
-      display: "flex",
-      flexDirection: "column",
       padding: constants.generalUnit * 6,
-      border: `1px solid ${palette.additional["gray"][7]}`,
-      borderRadius: 4,
-      color: palette.additional["gray"][8],
-      overflow: "hidden",
     },
     walletArea: {
       display: "flex",
@@ -152,17 +141,17 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     tokenItem: {
       display: "flex",
       flexDirection: "row",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
       alignItems: "center",
       cursor: "pointer",
-      "& img": {
+      "& img, & svg": {
         display: "block",
         height: 14,
         width: 14,
-        marginLeft: 10,
+        marginRight: 10,
       },
       "& span": {
-        minWidth: `calc(100% - 14px)`,
+        minWidth: `calc(100% - 30px)`,
         textAlign: "right",
       },
     },
@@ -176,7 +165,7 @@ type PreflightDetails = {
   receiver: string;
 };
 
-const MainPage = () => {
+const TransferPage = () => {
   const classes = useStyles();
   const {
     isReady,
@@ -200,9 +189,6 @@ const MainPage = () => {
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
-  const [networkUnsupportedOpen, setNetworkUnsupportedOpen] = useState<boolean>(
-    false
-  );
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
@@ -224,15 +210,15 @@ const MainPage = () => {
       ? tokens[preflightDetails.token].decimals
       : 18;
 
-  const REGEX = new RegExp(`^[0-9]{1,18}(\.[0-9]{1,${DECIMALS}})?$`);
+  const REGEX = new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`);
   const transferSchema = object().shape({
     tokenAmount: string()
       .test("Token selected", "Please select a token", (value) => {
         if (
-          value &&
+          !!value &&
           preflightDetails &&
           tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance
+          tokens[preflightDetails.token].balance !== undefined
         ) {
           return true;
         } else {
@@ -247,13 +233,12 @@ const MainPage = () => {
           tokens[preflightDetails.token] &&
           tokens[preflightDetails.token].balance
         ) {
-          return parseInt(value) <= tokens[preflightDetails.token].balance;
+          return parseFloat(value) <= tokens[preflightDetails.token].balance;
         }
         return false;
       })
       .test("Min", "Less than minimum", (value) => {
         if (value) {
-          console.error(value);
           return parseFloat(value) > 0;
         }
         return false;
@@ -433,12 +418,11 @@ const MainPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <NetworkUnsupportedModal
-        open={networkUnsupportedOpen || (!homeChain && isReady)}
-        close={() => setNetworkUnsupportedOpen(false)}
+        open={!homeChain && isReady}
         network={network}
         supportedNetworks={chainbridgeConfig.chains.map((bc) => bc.networkId)}
       />
-      <PreflightModal
+      <PreflightModalTransfer
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
         receiver={preflightDetails?.receiver || ""}
@@ -457,8 +441,8 @@ const MainPage = () => {
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransactionActiveModal open={!!transactionStatus} close={resetDeposit} />
+      <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
     </article>
   );
 };
-export default MainPage;
+export default TransferPage;
