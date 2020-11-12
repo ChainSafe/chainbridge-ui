@@ -27,7 +27,6 @@ const TokenInput: React.FC<ITokenInput> = ({
   const [, , helpers] = useField(name);
 
   const { values } = useFormikContext();
-
   return (
     <>
       <FormikTextInput
@@ -35,7 +34,6 @@ const TokenInput: React.FC<ITokenInput> = ({
         disabled={disabled}
         name={name}
         label={label}
-        type="number"
       />
       <Button
         disabled={

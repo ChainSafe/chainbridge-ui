@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import {
   Button,
-  ExclamationCircleIcon,
+  ExclamationCircleSvg,
   Typography,
 } from "@imploy/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
@@ -48,6 +48,11 @@ const useStyles = makeStyles(
         alignItems: "center",
         border: `1px solid ${palette.additional["transactionModal"][2]}`,
         color: palette.additional["transactionModal"][3],
+        "& svg": {
+          height: 20,
+          width: 20,
+          display: "block",
+        },
       },
       content: {
         display: "flex",
@@ -58,16 +63,19 @@ const useStyles = makeStyles(
         flexDirection: "row",
         marginTop: constants.generalUnit * 5,
         "& > *": {
+          textDecoration: "none",
           marginRight: constants.generalUnit,
         },
       },
       button: {
-        borderColor: palette.additional["gray"][8],
-        color: palette.additional["gray"][8],
+        borderColor: `${palette.additional["gray"][8]} !important`,
+        color: `${palette.additional["gray"][8]} !important`,
+        textDecoration: "none",
         "&:hover": {
-          borderColor: palette.additional["gray"][8],
-          backgroundColor: palette.additional["gray"][8],
-          color: palette.common.white.main,
+          borderColor: `${palette.additional["gray"][8]} !important`,
+          backgroundColor: `${palette.additional["gray"][8]} !important`,
+          color: `${palette.common.white.main} !important`,
+          textDecoration: "none",
         },
       },
       initCopy: {
@@ -100,23 +108,27 @@ const useStyles = makeStyles(
       warning: {
         marginTop: constants.generalUnit * 3.5,
         display: "block",
+        fontWeight: 600,
       },
       receipt: {
         marginTop: constants.generalUnit * 3.5,
         marginBottom: constants.generalUnit * 8,
       },
+      weighted: {
+        fontWeight: 600,
+      },
     })
 );
 
-interface ITransactionActiveModalProps {
+interface ITransferActiveModalProps {
   open: boolean;
   close: () => void;
 }
 
-const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
+const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   open,
   close,
-}: ITransactionActiveModalProps) => {
+}: ITransferActiveModalProps) => {
   const classes = useStyles();
   const {
     transactionStatus,
@@ -149,7 +161,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
           ) : transactionStatus === "Transfer Completed" ? (
             "3"
           ) : (
-            <ExclamationCircleIcon />
+            <ExclamationCircleSvg />
           )}
         </div>
       </section>
@@ -166,7 +178,7 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
         {transactionStatus === "Initializing Transfer" ? (
           <div className={classes.initCopy}>
             <Typography>Deposit pending...</Typography>
-            <Typography>
+            <Typography className={classes.weighted}>
               This should take a few minutes.
               <br />
               Please do not refresh or leave the page.
@@ -218,11 +230,11 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
                 size="small"
                 className={classes.button}
                 variant="outline"
-                disabled={
-                  !destinationChain ||
-                  !destinationChain.blockExplorer ||
-                  !transferTxHash
-                }
+                // disabled={
+                //   !destinationChain ||
+                //   !destinationChain.blockExplorer ||
+                //   !transferTxHash
+                // }
               >
                 View transaction
               </Button>
@@ -241,23 +253,22 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            <Button
-              onClick={() =>
-                homeChain &&
-                homeChain.blockExplorer &&
-                transferTxHash &&
-                window.open(
-                  `${homeChain?.blockExplorer}/${transferTxHash}`,
-                  "_blank"
-                )
-              }
-              size="small"
-              className={classes.button}
-              variant="outline"
-              disabled
-            >
-              View transaction
-            </Button>
+            {homeChain && homeChain.blockExplorer && transferTxHash && (
+              <Button
+                onClick={() =>
+                  window.open(
+                    `${homeChain?.blockExplorer}/${transferTxHash}`,
+                    "_blank"
+                  )
+                }
+                size="small"
+                className={classes.button}
+                variant="outline"
+                disabled
+              >
+                View transaction
+              </Button>
+            )}
             <section className={classes.buttons}>
               <Button
                 size="small"
@@ -267,16 +278,19 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
               >
                 Start new transfer
               </Button>
-              <Button
-                size="small"
-                className={classes.button}
-                variant="outline"
-                onClick={() =>
-                  window.open("https://discord.com/invite/n2U6x9c", "_blank")
-                }
+              <a
+                rel="noopener noreferrer"
+                href="https://discord.com/invite/n2U6x9c"
+                target="_blank"
               >
-                Ask question on Discord
-              </Button>
+                <Button
+                  size="small"
+                  className={classes.button}
+                  variant="outline"
+                >
+                  Ask a question on Discord
+                </Button>
+              </a>
             </section>
           </>
         )}
@@ -285,4 +299,4 @@ const TransactionActiveModal: React.FC<ITransactionActiveModalProps> = ({
   );
 };
 
-export default TransactionActiveModal;
+export default TransferActiveModal;

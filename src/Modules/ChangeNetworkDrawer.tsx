@@ -3,6 +3,7 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@imploy/common-components";
+import { useWeb3 } from "@chainsafe/web3-context";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
@@ -14,6 +15,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
       "& > *": {
         marginTop: constants.generalUnit * 2,
         marginRight: constants.generalUnit,
+        textDecoration: "none",
       },
     },
     paragraph: {
@@ -33,6 +35,13 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
 }) => {
   const classes = useStyles();
 
+  const { checkIsReady, onboard } = useWeb3();
+
+  const handleConnect = async () => {
+    await onboard?.walletSelect();
+    await checkIsReady();
+  };
+
   return (
     <CustomDrawer open={open} className={classes.root}>
       <Typography variant="h3" component="h2">
@@ -49,8 +58,21 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         <Button onClick={close} variant="outline">
           OK
         </Button>
-        <Button variant="outline">Connect different wallet</Button>
-        <Button variant="outline">Ask a question on Discord</Button>
+        <Button
+          onClick={() => {
+            handleConnect();
+          }}
+          variant="outline"
+        >
+          Connect different wallet
+        </Button>
+        <a
+          rel="noopener noreferrer"
+          href="https://discord.com/invite/n2U6x9c"
+          target="_blank"
+        >
+          <Button variant="outline">Ask a question on Discord</Button>
+        </a>
       </section>
     </CustomDrawer>
   );

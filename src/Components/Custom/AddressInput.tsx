@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import {
@@ -61,20 +61,13 @@ const AddressInput: React.FC<IAddressInput> = ({
     }
   }, [helpers, field, senderAddress, stored, setStored]);
 
-  useEffect(() => {
-    // Used to ensure value if address changes for some reason
-    if (stored && stored !== senderAddress) {
-      setStored(senderAddress);
-    }
-  }, [senderAddress, stored]);
-
   return (
     <section className={clsx(classes.root, className)}>
       <div>
         <TextInput
+          {...rest}
           label={label ? label : field.name}
           inputVariant={inputVariant}
-          disabled={stored !== ""}
           type={type}
           size={size}
           className={clsx(classNames?.input, classes.input)}
@@ -86,10 +79,8 @@ const AddressInput: React.FC<IAddressInput> = ({
             meta.error ? `${meta.error}` : captionMessage && captionMessage
           }
           state={meta.error ? "error" : undefined}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            helpers.setValue(e.target?.value);
-          }}
-          {...rest}
+          onChange={helpers.setValue}
+          disabled={stored !== undefined}
         />
       </div>
       <div className={classes.checkbox}>

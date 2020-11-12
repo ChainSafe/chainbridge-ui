@@ -1119,6 +1119,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.10.1", "@babel/runtime@^7.7.6":
+  version "7.12.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
+  integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.10.4", "@babel/template@^7.4.0", "@babel/template@^7.8.6":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.10.4.tgz#3251996c4200ebc71d1a8fc405fba940f36ba278"
@@ -1655,16 +1662,17 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@imploy/common-components@1.0.21":
-  version "1.0.21"
-  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.21/eac9a76445f3e2ae3dc3ac00f8ecc6926752f0772e0d6970badcc1ee80e3e497#be727227acef87b69cb03686505640f2ec415be3"
-  integrity sha512-ULGRKtfXZbjcT7G8F1jbZ9TumzvZbqUd44VlCUY4aYMlTBRfNZqR89LJmvn7E21TGpRuoXGy5/V0UUGKJ1ggJA==
+"@imploy/common-components@1.0.24":
+  version "1.0.24"
+  resolved "https://npm.pkg.github.com/download/@imploy/common-components/1.0.24/bc910d5393b6486beb75326b0761fa2fff80dbaf8b43f6f018156c1ba4fb5f38#a1939ad99ae3015d527aae6e48922fab0033bcda"
+  integrity sha512-OrTG0UWSLFIxTTGxyfPvg6jACiJ0TC0Jpy+bD8K0dgvU7z87iPPf1kqZ99Lwf9ruqorUK5//d31Md0IYjwSkQA==
   dependencies:
     "@material-ui/styles" "^4.10.0"
     "@types/react-select" "^3.0.23"
     a11y-react-emoji "^1.1.2"
     clsx "^1.1.1"
     normalize.css "^8.0.1"
+    rc-input-number "^6.1.1"
     react-blockies "^1.4.1"
     react-dropzone "^11.2.3"
     react-router-dom "^5.2.0"
@@ -2337,6 +2345,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/history@^4.7.8":
+  version "4.7.8"
+  resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.8.tgz#49348387983075705fe8f4e02fb67f7daaec4934"
+  integrity sha512-S78QIYirQcUoo6UJZx9CSP0O2ix9IaeAXwQi26Rhr/+mg7qqPy8TzaxHSUut7eGjL8WmLccT7/MXf304WjqHcA==
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.3.tgz#4ba8ddb720221f432e443bd5f9117fd22cfd4762"
@@ -2521,10 +2534,10 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@types/yup@^0.29.8":
-  version "0.29.8"
-  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.29.8.tgz#83db15735987db9fe5a38772a0fb9500e3c5bf39"
-  integrity sha512-MBSp62AjB1KrSOI3gX9GekddXU5YYQAVA93+aSl78biBqoSzxg876aQY2KJK5Gnfbpqq7O2cadVX5kPAtBqIXw==
+"@types/yup@^0.29.9":
+  version "0.29.9"
+  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.29.9.tgz#e2015187ae5739fd3b791b3b7ab9094f2aa5a474"
+  integrity sha512-ZtjjlrHuHTYctHDz3c8XgInjj0v+Hahe32N/4cDa2banibf9w6aAgxwx0jZtBjKKzmGIU4NXhofEsBW1BbqrNg==
 
 "@typescript-eslint/eslint-plugin@^2.10.0":
   version "2.34.0"
@@ -4851,6 +4864,11 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+classnames@^2.2.5:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
 
 clean-css@^4.2.3:
   version "4.2.3"
@@ -7937,6 +7955,13 @@ history@^4.9.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
     value-equal "^1.0.1"
+
+history@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/history/-/history-5.0.0.tgz#0cabbb6c4bbf835addb874f8259f6d25101efd08"
+  integrity sha512-3NyRMKIiFSJmIPdq7FxkNMJkQ7ZEtVblOQ38VtKaA0zZMW1Eo6Q6W8oDKEflr1kNNTItSnk4JMCO1deeSgbLLg==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -12199,6 +12224,23 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+rc-input-number@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/rc-input-number/-/rc-input-number-6.1.1.tgz#818c426942d1b4dc4d6d2639d741ca67773a9118"
+  integrity sha512-9t2xf1G0YEism7FAXAvF1huBk7ZNABPBf6NL+3/aDL123WiT/vhhod4cldiDWTM1Yb2EDKR//ZIa546ScdsUaA==
+  dependencies:
+    "@babel/runtime" "^7.10.1"
+    classnames "^2.2.5"
+    rc-util "^5.0.1"
+
+rc-util@^5.0.1:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/rc-util/-/rc-util-5.5.0.tgz#76321bcb5c12f01f42bff9b971f170ff19506e5a"
+  integrity sha512-YJB+zZGvCll/bhxXRVLAekr7lOvTgqMlRIhgINoINfUek7wQvi5sft46NOi3yYUYhocpuW4k8+5okW46sBsZAQ==
+  dependencies:
+    react-is "^16.12.0"
+    shallowequal "^1.1.0"
+
 react-app-polyfill@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-1.0.6.tgz#890f8d7f2842ce6073f030b117de9130a5f385f0"
@@ -12284,7 +12326,7 @@ react-input-autosize@^2.2.2:
   dependencies:
     prop-types "^15.5.8"
 
-react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1, react-is@^16.8.4:
+react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -13292,6 +13334,11 @@ shallow-clone@^3.0.0:
   integrity sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==
   dependencies:
     kind-of "^6.0.2"
+
+shallowequal@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
+  integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
 shebang-command@^1.2.0:
   version "1.2.0"

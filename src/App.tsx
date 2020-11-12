@@ -33,7 +33,6 @@ const App: React.FC<{}> = () => {
       [bc.networkId]: bc.tokens,
     };
   }, {});
-
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (
@@ -69,6 +68,7 @@ const App: React.FC<{}> = () => {
                 wallets: [{ walletName: "metamask", preferred: true }],
               },
             }}
+            checkNetwork={false}
           >
             <ChainbridgeProvider>
               <Router>
