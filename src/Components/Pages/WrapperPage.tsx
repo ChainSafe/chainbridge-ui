@@ -19,6 +19,8 @@ import { chainbridgeConfig, TokenConfig } from "../../chainbridgeConfig";
 import PreflightModalWrap from "../../Modules/PreflightModalWrap";
 import WrapActiveModal from "../../Modules/WrapActiveModal";
 import { parseUnits } from "ethers/lib/utils";
+import { forwardTo } from "../../Utils/History";
+import { ROUTE_LINKS } from "../Routes";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -401,6 +403,7 @@ const MainPage = () => {
           {...txDetails}
           close={() => {
             setTxDetails(undefined);
+            forwardTo(ROUTE_LINKS.Transfer);
           }}
         />
       )}
