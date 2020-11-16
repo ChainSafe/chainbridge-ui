@@ -178,10 +178,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
                 size="small"
                 className={classes.button}
                 variant="outline"
-                onClick={() => {
-                  close();
-                  forwardTo(ROUTE_LINKS.Transfer);
-                }}
+                onClick={() => close()}
               >
                 Start a transfer
               </Button>
