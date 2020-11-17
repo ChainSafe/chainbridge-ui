@@ -1,12 +1,17 @@
 import React from "react";
 
-import { makeStyles, createStyles } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { IModalProps, Modal } from "@imploy/common-components";
 import clsx from "clsx";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
-    root: {},
+    root: {
+      height: `calc(100% - ${constants.navItemHeight}px) !important`,
+      borderTopLeftRadius: constants.generalUnit / 2,
+      borderTopRightRadius: constants.generalUnit / 2,
+      overflow: "hidden",
+    },
   })
 );
 
