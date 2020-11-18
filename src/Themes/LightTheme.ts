@@ -7,6 +7,9 @@ export const lightTheme = createTheme({
     },
   },
   themeConfig: {
+    constants: {
+      navItemHeight: 42,
+    },
     palette: {
       additional: {
         general: {
