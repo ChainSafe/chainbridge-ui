@@ -155,6 +155,22 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         textAlign: "right",
       },
     },
+    fees: {
+      display: "flex",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      marginBottom: constants.generalUnit,
+      "& > *": {
+        display: "block",
+        width: "50%",
+        color: palette.additional["gray"][8],
+        marginBottom: constants.generalUnit / 2,
+        "&:nth-child(even)": {
+          textAlign: "right",
+        },
+      },
+    },
   })
 );
 
@@ -398,6 +414,12 @@ const TransferPage = () => {
               }}
               senderAddress={`${address}`}
             />
+          </section>
+          <section className={classes.fees}>
+            <Typography component="p">Bridge Fee</Typography>
+            <Typography component="p">0..0000 ETH</Typography>
+            <Typography component="p">Transfer Amount:</Typography>
+            <Typography component="p">0.23 SDFSD</Typography>
           </section>
           <section>
             <Button type="submit" fullsize variant="primary">
