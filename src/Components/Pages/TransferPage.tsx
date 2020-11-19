@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
@@ -9,7 +9,7 @@ import {
   Typography,
   QuestionCircleSvg,
   SelectInput,
-} from "@imploy/common-components";
+} from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import clsx from "clsx";

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useField, useFormikContext } from "formik";
-import { Button, FormikTextInput } from "@imploy/common-components";
+import { Button, FormikTextInput } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 interface ITokenInput {

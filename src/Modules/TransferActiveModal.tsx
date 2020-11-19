@@ -1,11 +1,11 @@
 import React from "react";
 
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   Button,
   ExclamationCircleSvg,
   Typography,
-} from "@imploy/common-components";
+} from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { useWeb3 } from "@chainsafe/web3-context";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Typography } from "@imploy/common-components";
+import { Typography } from "@chainsafe/common-components";
 import { useFormikContext } from "formik";
 
 interface IFeesFormikWrapped {

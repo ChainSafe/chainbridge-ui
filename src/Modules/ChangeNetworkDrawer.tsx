@@ -1,8 +1,8 @@
 import React from "react";
 
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
-import { Button, Typography } from "@imploy/common-components";
+import { Button, Typography } from "@chainsafe/common-components";
 import { useWeb3 } from "@chainsafe/web3-context";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
