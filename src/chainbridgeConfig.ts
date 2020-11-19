@@ -19,7 +19,7 @@ export type BridgeConfig = {
   rpcUrl: string;
   type: "Ethereum" | "Substrate";
   tokens: TokenConfig[];
-  nativeTokenSymbol?: string;
+  nativeTokenSymbol: string;
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
 };
@@ -40,6 +40,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       rpcUrl: "https://goerli.prylabs.net",
       type: "Ethereum",
       blockExplorer: "https://goerli.etherscan.io/tx",
+      nativeTokenSymbol: "ETH",
       tokens: [
         {
           address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
