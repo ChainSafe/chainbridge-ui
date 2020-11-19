@@ -21,6 +21,7 @@ import TokenInput from "../Custom/TokenInput";
 import { object, string } from "yup";
 import { utils } from "ethers";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
+import FeesFormikWrapped from "./FormikContextElements/Fees";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -200,6 +201,7 @@ const TransferPage = () => {
     setDestinationChain,
     transactionStatus,
     resetDeposit,
+    bridgeFee,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -267,6 +269,8 @@ const TransferPage = () => {
       })
       .required("Please add a receiving address"),
   });
+
+  // TODO: line 467: How to pull correct HomeChain Symbol
 
   return (
     <article className={classes.root}>
@@ -415,12 +419,17 @@ const TransferPage = () => {
               senderAddress={`${address}`}
             />
           </section>
-          <section className={classes.fees}>
-            <Typography component="p">Bridge Fee</Typography>
-            <Typography component="p">0..0000 ETH</Typography>
-            <Typography component="p">Transfer Amount:</Typography>
-            <Typography component="p">0.23 SDFSD</Typography>
-          </section>
+          <FeesFormikWrapped
+            amountFormikName="tokenAmount"
+            className={classes.fees}
+            fee={bridgeFee}
+            feeSymbol={"ETH"}
+            symbol={
+              preflightDetails && tokens[preflightDetails.token]
+                ? tokens[preflightDetails.token].symbol
+                : undefined
+            }
+          />
           <section>
             <Button type="submit" fullsize variant="primary">
               Start transfer

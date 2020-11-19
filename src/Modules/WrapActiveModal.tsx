@@ -4,8 +4,6 @@ import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Button, Typography } from "@imploy/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { forwardTo } from "../Utils/History";
-import { ROUTE_LINKS } from "../Components/Routes";
 import { TokenConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(
