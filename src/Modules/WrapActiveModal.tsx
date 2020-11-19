@@ -4,8 +4,6 @@ import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
 import { Button, Typography } from "@imploy/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { forwardTo } from "../Utils/History";
-import { ROUTE_LINKS } from "../Components/Routes";
 import { TokenConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(
@@ -152,13 +150,13 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
       <section className={classes.content}>
         <Typography className={classes.heading} variant="h3" component="h3">
           {txState === "wrapping"
-            ? `Wrapping ${value} ${tokenInfo.nativeTokenSymbol}`
+            ? `Wrapping ${value} ${homeChain?.nativeTokenSymbol}`
             : "Token wrapped"}
         </Typography>
         {txState !== "wrapping" && (
           <>
             <Typography className={classes.receipt} component="p">
-              Successfully transferred converted {tokenInfo.nativeTokenSymbol}{" "}
+              Successfully transferred converted {homeChain?.nativeTokenSymbol}{" "}
               to {tokenInfo.symbol}
               {homeChain && homeChain.blockExplorer && txHash && (
                 <>
