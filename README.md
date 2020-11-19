@@ -60,7 +60,7 @@ type TokenConfig = {
   symbol?: string; // The symbol of the ERC20 token. This can be left out if the token implements the ERC20Detailed standard
   imageUri?: string; // A URL pointing to the token logo. Can be either locally or externally hosted.
   resourceId: string; // The resourceId to be used when transferring tokens of this type.
-  isNativeWrappedToken?: boolean // Flag to indicate that this is a wrapped native token (eg wETH on Ethereum). If this flag is not set for any of the tokens provided for this bridge, wrapping functionality will be unavailable on that network.
+  isNativeWrappedToken?: boolean // Flag to indicate that this is a wrapped native token (eg wETH on Ethereum). If this flag is not set for any of the tokens provided for this chain, wrapping functionality will be unavailable on that network.
 };
 ```
 
