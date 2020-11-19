@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect } from "@imploy/common-components";
+import { Switch, Route, Redirect } from "@chainsafe/common-components";
 import TransferPage from "./Pages/TransferPage";
 import WrapperPage from "./Pages/WrapperPage";
 

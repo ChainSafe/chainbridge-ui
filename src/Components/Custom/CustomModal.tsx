@@ -1,7 +1,7 @@
 import React from "react";
 
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
-import { IModalProps, Modal } from "@imploy/common-components";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import { IModalProps, Modal } from "@chainsafe/common-components";
 import clsx from "clsx";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>

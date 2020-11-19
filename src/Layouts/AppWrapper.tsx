@@ -1,5 +1,5 @@
-import { NavLink, Typography } from "@imploy/common-components";
-import { createStyles, ITheme, makeStyles } from "@imploy/common-themes";
+import { NavLink, Typography } from "@chainsafe/common-components";
+import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";

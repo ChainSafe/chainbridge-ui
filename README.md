@@ -14,9 +14,9 @@
 
 - JS Framework: [React](https://github.com/facebook/react) + [Typescript](https://github.com/microsoft/TypeScript)
 - Blockchain components: [Ethers.js](https://github.com/ethers-io/ethers.js/) + [web3-context](https://github.com/chainsafe/web3-context)
-- Styling: [JSS](https://cssinjs.org/?v=v10.0.3) + [Imploy UI Styling](https://github.com/imploy/ui/packages/common-themes/)
+- Styling: [JSS](https://cssinjs.org/?v=v10.0.3) + [Chainsafe UI Styling](https://npmjs.com/packages/@chainsafe/common-theme/)
 - Forms & Validation: [Formik](https://jaredpalmer.com/formik) + [Yup](https://github.com/jquense/yup)
-- Notifications: [Imploy UI Components](https://github.com/imploy/ui/packages/common-components/)
+- Notifications: [Chainsafe UI Components](https://npmjs.com/packages/@chainsafe/common-components/)
 
 ## Install
 

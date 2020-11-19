@@ -1,11 +1,11 @@
 import React from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
-import { ThemeSwitcher } from "@imploy/common-themes";
+import { ThemeSwitcher } from "@chainsafe/common-theme";
 import {
   CssBaseline,
   Router,
   ToasterProvider,
-} from "@imploy/common-components";
+} from "@chainsafe/common-components";
 
 import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
