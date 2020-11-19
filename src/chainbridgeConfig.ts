@@ -8,7 +8,6 @@ export type TokenConfig = {
   imageUri?: string;
   resourceId: string;
   isNativeWrappedToken?: boolean;
-  nativeTokenSymbol?: string;
 };
 
 export type BridgeConfig = {
@@ -20,6 +19,7 @@ export type BridgeConfig = {
   rpcUrl: string;
   type: "Ethereum" | "Substrate";
   tokens: TokenConfig[];
+  nativeTokenSymbol?: string;
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
 };
@@ -68,6 +68,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       rpcUrl: "https://www.ethercluster.com/kotti",
       type: "Ethereum",
       blockExplorer: "https://blockscout.com/etc/kotti/tx",
+      nativeTokenSymbol: "ETC",
       tokens: [
         {
           address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
@@ -77,7 +78,6 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           resourceId:
             "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
           isNativeWrappedToken: true,
-          nativeTokenSymbol: "ETC",
         },
         {
           address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",

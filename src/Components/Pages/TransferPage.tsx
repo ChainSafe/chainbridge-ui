@@ -423,7 +423,7 @@ const TransferPage = () => {
             amountFormikName="tokenAmount"
             className={classes.fees}
             fee={bridgeFee}
-            feeSymbol={"ETH"}
+            feeSymbol={homeChain?.nativeTokenSymbol}
             symbol={
               preflightDetails && tokens[preflightDetails.token]
                 ? tokens[preflightDetails.token].symbol

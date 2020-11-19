@@ -356,7 +356,7 @@ const MainPage = () => {
                 ) : (
                   <ETHIcon />
                 )}
-                <Typography>{wrapTokenConfig?.nativeTokenSymbol}</Typography>
+                <Typography>{homeChain?.nativeTokenSymbol || "ETH"}</Typography>
               </div>
             </section>
           </section>
@@ -394,7 +394,7 @@ const MainPage = () => {
           setPreflightModalOpen(false);
         }}
         sourceNetwork={homeChain?.name || ""}
-        tokenSymbol={wrapTokenConfig?.nativeTokenSymbol || "ETH"}
+        tokenSymbol={homeChain?.nativeTokenSymbol || "ETH"}
         value={preflightDetails?.tokenAmount || 0}
         wrappedTitle={`${wrapTokenConfig?.name} (${wrapTokenConfig?.symbol})`}
       />
