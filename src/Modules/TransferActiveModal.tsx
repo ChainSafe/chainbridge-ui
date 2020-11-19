@@ -143,7 +143,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   } = useChainbridge();
   const { tokens } = useWeb3();
 
-  const tokenSymbol = selectedToken && tokens[selectedToken].symbol;
+  const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
   return (
     <CustomModal
       className={classes.root}

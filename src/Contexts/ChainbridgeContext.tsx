@@ -179,6 +179,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     } else {
       setHomeChain(undefined);
     }
+    resetDeposit();
   }, [isReady, network, provider]);
 
   useEffect(() => {
