@@ -66,9 +66,9 @@ type TokenConfig = {
 
 Run `yarn build`.
 
-Deploy the contents of the `/build` folder to any static website host (eg. S3), IPFS.
+Deploy the contents of the `/build` folder to any static website host (eg. S3, Azure storage) or IPFS.
 
-The project can also be built and deployed to Netlify, Render.com by configuring the Build command and Publish directory.
+The project can also be built and deployed to Netlify, Render.com by configuring the Build command and Publish directory on the respective service.
 
 # ChainSafe Security Policy
 
