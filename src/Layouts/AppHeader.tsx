@@ -1,7 +1,7 @@
-import { createStyles, ITheme, makeStyles } from "@imploy/common-themes";
+import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import clsx from "clsx";
-import { Typography } from "@imploy/common-components";
+import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";

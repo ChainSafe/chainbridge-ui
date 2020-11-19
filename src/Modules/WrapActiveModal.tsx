@@ -1,7 +1,7 @@
 import React from "react";
 
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
-import { Button, Typography } from "@imploy/common-components";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import { Button, Typography } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { TokenConfig } from "../chainbridgeConfig";
