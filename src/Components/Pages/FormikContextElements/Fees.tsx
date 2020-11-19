@@ -34,7 +34,9 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
         <>
           <Typography component="p">Transfer Amount:</Typography>
           <Typography component="p">
-            {(values as Record<string, any>)[amountFormikName].toFixed(3)}{" "}
+            {Number((values as Record<string, any>)[amountFormikName])?.toFixed(
+              3
+            )}{" "}
             {symbol}
           </Typography>
         </>

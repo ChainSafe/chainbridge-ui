@@ -52,7 +52,6 @@ type ChainbridgeContext = {
         overrides?: PayableOverrides | undefined
       ) => Promise<ContractTransaction>)
     | undefined;
-
   wrapTokenConfig: TokenConfig | undefined;
 };
 
@@ -170,7 +169,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       if (!wrapperToken) {
-        console.error("Wrapper token not found");
         return;
       }
 
@@ -294,10 +292,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return;
     }
 
-    const token = homeChain.tokens.find((token) => token.isNativeWrappedToken);
+    const token = homeChain.tokens.find(
+      (token) => token.address === tokenAddress
+    );
 
     if (!token) {
-      console.log("No signer");
+      console.log("Invalid token selected");
       return;
     }
 
