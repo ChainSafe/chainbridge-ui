@@ -20,20 +20,9 @@
 
 ## Install
 
-You will need a Github Personal Access token with `read:package` permissions. This can be obtained [here](https://github.com/settings/tokens)
-
-- Run `nano ~/.bash_profile`
-- Add the following line to the file `export GITHUB_PACKAGES_AUTH_TOKEN="YOUR_TOKEN_HERE"`
-- Press `CTRL+X` to exit
-- Run `source ~/.bash_profile`
-
-First, install dependancies:
-
 ```
 yarn install
 ```
-
-If you experience issues installing the `@imploy` packages due to authentication errors, restart your machine and try again.
 
 ## Usage
 
@@ -47,7 +36,35 @@ yarn start
 
 ### Build
 
-To build the project across workspaces, at the root of the directory, run the command `yarn build`.
+Update the configs for the bridge in `src/chainbridgeContext.ts`. There should be at least 2 chains configured for correct functioning of the bridge. Each chain accepts the following configuration parameters:
+
+```
+type BridgeConfig = {
+  chainId: number // The bridge's chainId.
+  networkId: number // The networkId of this chain.
+  name: string // The human readable name of this chain.
+  bridgeAddress: string // The address on the brdige contract deployed on this chain.
+  erc20HandlerAddress: string // The ERC20 handler address.
+  rpcUrl: string // An RPC URL for this chain.
+  type: "Ethereum" | "Substrate" // The type of chain.
+  tokens: TokenConfig[] // An object to configure the tokens this bridge can transfer. See the TokenConfig object below.
+  nativeTokenSymbol: string // The native token symbol of this chain.
+  blockExplorer?: string //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
+}
+```
+
+```
+type TokenConfig = {
+  address: string; // The address of the ERC20 token
+  name?: string; // The name of the ERC20 token. This can be left out if the token implements the ERC20Detailed standard
+  symbol?: string; // The symbol of the ERC20 token. This can be left out if the token implements the ERC20Detailed standard
+  imageUri?: string; // A URL pointing to the token logo. Can be either locally or externally hosted.
+  resourceId: string; // The resourceId to be used when transferring tokens of this type.
+  isNativeWrappedToken?: boolean // Flag to indicate that this is a wrapped native token (eg wETH on Ethereum). If this flag is not set for any of the tokens provided for this bridge, wrapping functionality will be unavailable on that network.
+};
+```
+
+run the command `yarn build`.
 
 # ChainSafe Security Policy
 
