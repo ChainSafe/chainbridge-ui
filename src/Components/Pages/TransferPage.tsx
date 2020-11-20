@@ -243,7 +243,14 @@ const TransferPage = () => {
           return false;
         }
       })
-      .matches(REGEX, "Input invalid")
+      .test("InputValid", "Input invalid", (value) => {
+        try {
+          return REGEX.test(`${value}`);
+        } catch (error) {
+          console.error(error);
+          return false;
+        }
+      })
       .test("Max", "Insufficent funds", (value) => {
         if (
           value &&
