@@ -37,7 +37,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       name: "Ethereum Classic - Mainnet",
       bridgeAddress: "0x9C4073806e1b4432F49a6a3e2e8A42fC0e0D4b5d",
       erc20HandlerAddress: "0x2AE6613167c584550441373F2216f405D85512BA",
-      rpcUrl: "https://blockscout.com/etc/mainnet/api",
+      rpcUrl: "https://www.ethercluster.com/etc",
       type: "Ethereum",
       blockExplorer: "https://blockscout.com/etc/mainnet/tx",
       nativeTokenSymbol: "ETC",
