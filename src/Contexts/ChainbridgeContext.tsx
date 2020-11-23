@@ -141,6 +141,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         (c) => c.networkId === network
       );
       if (!home) {
+        setHomeChain(undefined);
+        setHomeBridge(undefined);
+        setWrapperConfig(undefined);
+        setWrapper(undefined);
         return;
       }
       setHomeChain(home);
@@ -169,15 +173,17 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       if (!wrapperToken) {
-        return;
+        setWrapperConfig(undefined);
+        setWrapper(undefined);
+      } else {
+        setWrapperConfig(wrapperToken);
+        const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
+        setWrapper(connectedWeth);
       }
-
-      setWrapperConfig(wrapperToken);
-
-      const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
-      setWrapper(connectedWeth);
     } else {
       setHomeChain(undefined);
+      setWrapperConfig(undefined);
+      setWrapper(undefined);
     }
     resetDeposit();
   }, [isReady, network, provider]);
