@@ -141,6 +141,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         (c) => c.networkId === network
       );
       if (!home) {
+        setHomeChain(undefined);
+        setHomeBridge(undefined);
+        setWrapperConfig(undefined);
+        setWrapper(undefined);
         return;
       }
       setHomeChain(home);
