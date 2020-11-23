@@ -3,7 +3,7 @@ import { useField } from "formik";
 import {
   IFormikSelectInputProps,
   FormikSelectInput,
-} from "@imploy/common-components";
+} from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 interface ITokenSelectInput extends IFormikSelectInputProps {

@@ -44,6 +44,7 @@ type ChainbridgeContext = {
   depositNonce?: string;
   inTransitMessages: Array<string | Vote>;
   depositAmount?: number;
+  bridgeFee?: number;
   transferTxHash?: string;
   selectedToken?: string;
   wrapToken:
@@ -51,7 +52,6 @@ type ChainbridgeContext = {
         overrides?: PayableOverrides | undefined
       ) => Promise<ContractTransaction>)
     | undefined;
-
   wrapTokenConfig: TokenConfig | undefined;
 };
 
@@ -98,6 +98,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     []
   );
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
+  const [bridgeFee, setBridgeFee] = useState<number | undefined>();
   const [transferTxHash, setTransferTxHash] = useState<string>("");
   const [selectedToken, setSelectedToken] = useState<string>("");
 
@@ -168,7 +169,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       if (!wrapperToken) {
-        console.error("Wrapper token not found");
         return;
       }
 
@@ -179,6 +179,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     } else {
       setHomeChain(undefined);
     }
+    resetDeposit();
   }, [isReady, network, provider]);
 
   useEffect(() => {
@@ -190,7 +191,14 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         setRelayerThreshold(threshold);
       }
     };
+    const getBridgeFee = async () => {
+      if (homeBridge) {
+        const bridgeFee = BigNumber.from(await homeBridge._fee()).toNumber();
+        setBridgeFee(bridgeFee);
+      }
+    };
     getRelayerThreshold();
+    getBridgeFee();
   }, [homeBridge]);
 
   useEffect(() => {
@@ -285,10 +293,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return;
     }
 
-    const token = homeChain.tokens.find((token) => token.isNativeWrappedToken);
+    const token = homeChain.tokens.find(
+      (token) => token.address === tokenAddress
+    );
 
     if (!token) {
-      console.log("No signer");
+      console.log("Invalid token selected");
       return;
     }
 
@@ -361,6 +371,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         depositVotes,
         relayerThreshold: relayerThreshold,
         depositNonce,
+        bridgeFee,
         transactionStatus,
         inTransitMessages,
         depositAmount,

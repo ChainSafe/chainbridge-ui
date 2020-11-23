@@ -1,4 +1,4 @@
-import { createTheme } from "@imploy/common-themes";
+import { createTheme } from "@chainsafe/common-theme";
 
 export const lightTheme = createTheme({
   globalStyling: {
@@ -7,6 +7,9 @@ export const lightTheme = createTheme({
     },
   },
   themeConfig: {
+    constants: {
+      navItemHeight: 42,
+    },
     palette: {
       additional: {
         general: {
