@@ -12,7 +12,7 @@
     "@material-ui/styles": "4.10.0",
     "@sentry/react": "^5.26.0",
     "@types/history": "^4.7.8",
-    "bnc-onboard": "^1.14.0",
+    "bnc-onboard": "1.15.0",
     "clsx": "^1.1.1",
     "dayjs": "^1.9.1",
     "ethers": "^5.0.17",

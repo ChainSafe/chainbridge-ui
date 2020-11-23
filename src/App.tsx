@@ -26,7 +26,6 @@ if (
 }
 
 const App: React.FC<{}> = () => {
-  const networks = chainbridgeConfig.chains.map((bc) => bc.networkId);
   const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
     return {
       ...tca,
@@ -57,7 +56,6 @@ const App: React.FC<{}> = () => {
         <CssBaseline />
         <ToasterProvider autoDismiss>
           <Web3Provider
-            networkIds={networks}
             tokensToWatch={tokens}
             onboardConfig={{
               walletCheck: [
