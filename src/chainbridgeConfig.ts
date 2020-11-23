@@ -49,6 +49,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WETHIcon,
           resourceId:
             "0x0000000000000000000000505c6120808e1dC50E84f9B2d8F5db3252666cBD01",
+          isNativeWrappedToken: true,
         },
       ],
     },
@@ -71,7 +72,6 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WETHIcon,
           resourceId:
             "0x0000000000000000000000505c6120808e1dC50E84f9B2d8F5db3252666cBD01",
-          isNativeWrappedToken: true,
         },
       ],
     },
