@@ -169,13 +169,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       if (!wrapperToken) {
-        return;
+        setWrapperConfig(undefined);
+        setWrapper(undefined);
+      } else {
+        setWrapperConfig(wrapperToken);
+        const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
+        setWrapper(connectedWeth);
       }
-
-      setWrapperConfig(wrapperToken);
-
-      const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
-      setWrapper(connectedWeth);
     } else {
       setHomeChain(undefined);
     }
