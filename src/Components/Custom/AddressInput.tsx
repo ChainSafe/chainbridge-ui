@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
 
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   CheckboxInput,
   FormikTextInputProps,
   TextInput,
-} from "@imploy/common-components";
+} from "@chainsafe/common-components";
 import clsx from "clsx";
 import { useField } from "formik";
 

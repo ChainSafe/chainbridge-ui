@@ -1,5 +1,5 @@
-import { NavLink, Typography } from "@imploy/common-components";
-import { createStyles, ITheme, makeStyles } from "@imploy/common-themes";
+import { NavLink, Typography } from "@chainsafe/common-components";
+import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
@@ -59,10 +59,11 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
         border: `1px solid ${palette.additional["gray"][7]}`,
         textDecoration: "none",
         marginRight: constants.generalUnit,
-        transitionDuraiton: `${animation.transform}ms`,
+        transitionDuration: `${animation.transform}ms`,
         color: palette.additional["gray"][8],
+        maxHeight: constants.navItemHeight,
         "& svg": {
-          transitionDuraiton: `${animation.transform}ms`,
+          transitionDuration: `${animation.transform}ms`,
           fill: palette.additional["gray"][8],
         },
         "&.active": {
@@ -105,7 +106,12 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       </section>
 
       {/* Put CTA here */}
-      <a className={classes.cta} target="_blank" href="https://etclabs.org/">
+      <a
+        className={classes.cta}
+        target="_blank"
+        href="https://etclabs.org/"
+        rel="noopener noreferrer"
+      >
         <svg
           width="152"
           height="55"
@@ -207,7 +213,6 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
           />
         </svg>
       </a>
-
     </section>
   );
 };

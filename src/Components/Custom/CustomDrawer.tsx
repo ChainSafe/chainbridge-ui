@@ -1,7 +1,7 @@
 import React from "react";
 
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
-import { Drawer, IDrawerProps } from "@imploy/common-components";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import { Drawer, IDrawerProps } from "@chainsafe/common-components";
 import clsx from "clsx";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>

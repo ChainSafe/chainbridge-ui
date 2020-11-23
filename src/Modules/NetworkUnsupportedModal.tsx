@@ -1,12 +1,12 @@
 import React from "react";
 
-import { makeStyles, createStyles, ITheme } from "@imploy/common-themes";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomModal from "../Components/Custom/CustomModal";
 import {
   Button,
   ExclamationCircleInverseSvg,
   Typography,
-} from "@imploy/common-components";
+} from "@chainsafe/common-components";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -66,6 +66,8 @@ const networkName = (id: any) => {
       return "Kotti";
     case 42:
       return "Kovan";
+    case 61:
+      return "Ethereum Classic - Mainnet";
     default:
       return "Other";
   }
