@@ -106,7 +106,12 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       </section>
 
       {/* Put CTA here */}
-      <a className={classes.cta} target="_blank" href="https://etclabs.org/">
+      <a
+        className={classes.cta}
+        target="_blank"
+        href="https://etclabs.org/"
+        rel="noopener noreferrer"
+      >
         <svg
           width="152"
           height="55"
@@ -208,7 +213,6 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
           />
         </svg>
       </a>
-
     </section>
   );
 };
