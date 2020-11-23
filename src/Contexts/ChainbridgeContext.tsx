@@ -193,7 +193,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     };
     const getBridgeFee = async () => {
       if (homeBridge) {
-        const bridgeFee = BigNumber.from(await homeBridge._fee()).toNumber();
+        const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
         setBridgeFee(bridgeFee);
       }
     };
