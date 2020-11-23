@@ -178,6 +178,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       }
     } else {
       setHomeChain(undefined);
+      setWrapperConfig(undefined);
+      setWrapper(undefined);
     }
     resetDeposit();
   }, [isReady, network, provider]);
