@@ -27,6 +27,8 @@ if (
 }
 
 const App: React.FC<{}> = () => {
+  const networks = chainbridgeConfig.chains.map((bc) => bc.networkId);
+
   const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
     return {
       ...tca,
@@ -57,15 +59,24 @@ const App: React.FC<{}> = () => {
         <CssBaseline />
         <ToasterProvider autoDismiss>
           <Web3Provider
+            networkIds={networks}
             tokensToWatch={tokens}
             onboardConfig={{
               walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
-              },
-              subscriptions: {
-                network: (network) => console.log("chainId: ", network),
-                balance: (amount) =>
-                  console.log("balance: ", utils.formatEther(amount)),
+                wallets: [
+                  { walletName: "metamask", preferred: true },
+                  {
+                    walletName: "walletConnect",
+                    infuraKey: "a7e16429d2254d488d396710084e2cd3",
+                  },
+                  { walletName: "opera" },
+                  { walletName: "operaTouch" },
+                  { walletName: "torus" },
+                  { walletName: "status" },
+                  { walletName: "unilogin" },
+                  { walletName: "meetone" },
+                  { walletName: "hyperpay" },
+                ],
               },
             }}
             checkNetwork={false}
