@@ -80,6 +80,7 @@ const App: React.FC<{}> = () => {
               },
             }}
             checkNetwork={false}
+            cacheWalletSelection={false}
           >
             <ChainbridgeProvider>
               <Router>
