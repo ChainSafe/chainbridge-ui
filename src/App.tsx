@@ -13,7 +13,6 @@ import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { chainbridgeConfig } from "./chainbridgeConfig";
-import { utils } from "ethers";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -77,6 +76,9 @@ const App: React.FC<{}> = () => {
                   { walletName: "meetone" },
                   { walletName: "hyperpay" },
                 ],
+              },
+              subscriptions: {
+                network: (id) => console.log(id),
               },
             }}
             checkNetwork={false}
