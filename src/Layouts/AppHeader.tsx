@@ -20,7 +20,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       borderBottom: `1px solid ${palette.additional["header"][3]}`,
       color: palette.additional["header"][2],
       alignItems: "center",
-      zIndex: zIndex?.blocker,
+      zIndex: zIndex?.layer2,
     },
     left: {
       display: "flex",
