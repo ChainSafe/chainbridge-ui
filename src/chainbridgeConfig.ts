@@ -42,6 +42,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       type: "Ethereum",
       blockExplorer: "https://blockscout.com/etc/mainnet/tx",
       nativeTokenSymbol: "ETC",
+      defaultGasPrice: 7,
       tokens: [
         {
           address: "0x505c6120808e1dC50E84f9B2d8F5db3252666cBD",
@@ -63,7 +64,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       rpcUrl:
         "https://eth-mainnet.alchemyapi.io/v2/o_08MvnDc-AJg852nXB04N5t9mi0aPjo",
       type: "Ethereum",
-      blockExplorer: "https://blockscout.com/etc/kotti/tx",
+      blockExplorer: "https://etherscan.io/tx",
       nativeTokenSymbol: "ETH",
       tokens: [
         {
