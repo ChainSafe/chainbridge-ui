@@ -8,6 +8,7 @@ import { shortenAddress } from "../Utils/Helpers";
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
+      position: "absolute",
       zIndex: zIndex?.blocker,
       "& li": {
         position: "relative",
@@ -40,6 +41,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginBottom: constants.generalUnit * 2,
     },
     backdrop: {
+      position: "absolute",
       zIndex: zIndex?.layer4,
     },
   })
