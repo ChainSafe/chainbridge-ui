@@ -7,10 +7,11 @@ import clsx from "clsx";
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
     root: {
-      height: `calc(100% - ${constants.navItemHeight}px) !important`,
+      height: `100% !important`,
       borderTopLeftRadius: constants.generalUnit / 2,
       borderTopRightRadius: constants.generalUnit / 2,
       overflow: "hidden",
+      position: "absolute",
     },
   })
 );
