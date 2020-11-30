@@ -28,6 +28,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       minHeight: constants.generalUnit * 69,
       padding: constants.generalUnit * 6,
       overflow: "hidden",
+      position: "relative",
     },
     walletArea: {
       display: "flex",
@@ -242,7 +243,10 @@ const MainPage = () => {
   };
 
   const DECIMALS = 18;
-  const REGEX = new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`);
+  const REGEX =
+    DECIMALS > 0
+      ? new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`)
+      : new RegExp(`^[0-9]{1,18}?$`);
   const transferSchema = object().shape({
     tokenAmount: string()
       .matches(REGEX, "Input invalid")

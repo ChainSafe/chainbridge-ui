@@ -5,9 +5,11 @@ import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 
-const useStyles = makeStyles(({ constants, palette }: ITheme) =>
+const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
+      zIndex: zIndex?.blocker,
+      position: "absolute",
       "& li": {
         position: "relative",
         padding: `${constants.generalUnit}px 0 ${constants.generalUnit}px ${
@@ -38,6 +40,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       color: palette.additional["preflight"][2],
       marginBottom: constants.generalUnit * 2,
     },
+    backdrop: {
+      position: "absolute",
+      zIndex: zIndex?.layer4,
+    },
   })
 );
 
@@ -67,7 +73,14 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
   const classes = useStyles();
 
   return (
-    <CustomDrawer size={430} open={open} className={classes.root}>
+    <CustomDrawer
+      className={classes.root}
+      classNames={{
+        backdrop: classes.backdrop,
+      }}
+      size={430}
+      open={open}
+    >
       <Typography variant="h3" component="h2">
         Pre-flight check
       </Typography>
