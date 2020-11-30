@@ -22,6 +22,7 @@ export type BridgeConfig = {
   nativeTokenSymbol: string;
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
+  defaultGasPrice?: number;
 };
 
 export type ChainbridgeConfig = {

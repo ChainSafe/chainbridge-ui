@@ -69,6 +69,8 @@ const App: React.FC<{}> = () => {
               },
             }}
             checkNetwork={false}
+            gasPricePollingInterval={120}
+            gasPriceSetting="fast"
           >
             <ChainbridgeProvider>
               <Router>

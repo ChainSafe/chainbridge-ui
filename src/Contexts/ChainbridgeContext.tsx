@@ -66,7 +66,7 @@ const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
 );
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
-  const { isReady, network, provider } = useWeb3();
+  const { isReady, network, provider, gasPrice, address } = useWeb3();
   const [homeChain, setHomeChain] = useState<BridgeConfig | undefined>();
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
@@ -294,7 +294,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     }
 
     const signer = provider?.getSigner();
-    if (!signer) {
+    if (!address || !signer) {
       console.log("No signer");
       return;
     }
@@ -327,13 +327,30 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         .substr(2) + // len(recipientAddress) (32 bytes)
       recipient.substr(2); // recipientAddress (?? bytes)
 
+    console.log(data);
+
     try {
-      await (
-        await erc20.approve(
-          homeChain.erc20HandlerAddress,
-          BigNumber.from(utils.parseUnits(amount.toString(), 18))
-        )
-      ).wait(1);
+      const currentAllowance = await erc20.allowance(
+        address,
+        homeChain.erc20HandlerAddress
+      );
+
+      if (Number(currentAllowance.toString()) < amount) {
+        await (
+          await erc20.approve(
+            homeChain.erc20HandlerAddress,
+            BigNumber.from(utils.parseUnits(amount.toString(), 18)),
+            {
+              gasPrice: BigNumber.from(
+                utils.parseUnits(
+                  (homeChain.defaultGasPrice || gasPrice).toString(),
+                  9
+                )
+              ).toString(),
+            }
+          )
+        ).wait(1);
+      }
 
       homeBridge.once(
         homeBridge.filters.Deposit(
@@ -351,7 +368,14 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         await homeBridge.deposit(
           destinationChain.chainId,
           token.resourceId,
-          data
+          data,
+          {
+            gasPrice: utils.parseUnits(
+              (homeChain.defaultGasPrice || gasPrice).toString(),
+              9
+            ),
+            value: utils.parseUnits((bridgeFee || 0).toString(), 18),
+          }
         )
       ).wait();
       return Promise.resolve();
