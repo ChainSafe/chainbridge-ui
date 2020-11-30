@@ -327,8 +327,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         .substr(2) + // len(recipientAddress) (32 bytes)
       recipient.substr(2); // recipientAddress (?? bytes)
 
-    console.log(data);
-
     try {
       const currentAllowance = await erc20.allowance(
         address,
