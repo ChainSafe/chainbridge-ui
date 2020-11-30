@@ -13,7 +13,6 @@ import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { chainbridgeConfig } from "./chainbridgeConfig";
-import { utils } from "ethers";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -27,6 +26,8 @@ if (
 }
 
 const App: React.FC<{}> = () => {
+  const networks = chainbridgeConfig.chains.map((bc) => bc.networkId);
+
   const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
     return {
       ...tca,
@@ -57,18 +58,31 @@ const App: React.FC<{}> = () => {
         <CssBaseline />
         <ToasterProvider autoDismiss>
           <Web3Provider
+            networkIds={networks}
             tokensToWatch={tokens}
             onboardConfig={{
               walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
+                wallets: [
+                  { walletName: "metamask", preferred: true },
+                  {
+                    walletName: "walletConnect",
+                    infuraKey: "a7e16429d2254d488d396710084e2cd3",
+                  },
+                  { walletName: "opera" },
+                  { walletName: "operaTouch" },
+                  { walletName: "torus" },
+                  { walletName: "status" },
+                  { walletName: "unilogin" },
+                  { walletName: "meetone" },
+                  { walletName: "hyperpay" },
+                ],
               },
               subscriptions: {
-                network: (network) => console.log("chainId: ", network),
-                balance: (amount) =>
-                  console.log("balance: ", utils.formatEther(amount)),
+                network: (id) => console.log(id),
               },
             }}
             checkNetwork={false}
+            cacheWalletSelection={false}
           >
             <ChainbridgeProvider>
               <Router>
