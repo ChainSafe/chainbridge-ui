@@ -28,6 +28,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       minHeight: constants.generalUnit * 69,
       padding: constants.generalUnit * 6,
       overflow: "hidden",
+      position: "relative",
     },
     walletArea: {
       display: "flex",

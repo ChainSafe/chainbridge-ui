@@ -27,6 +27,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       padding: constants.generalUnit * 6,
+      position: "relative",
     },
     walletArea: {
       display: "flex",

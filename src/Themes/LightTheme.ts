@@ -19,7 +19,7 @@ export const lightTheme = createTheme({
           1: "#595959", // FAQ button // gray8
         },
         header: {
-          1: "transparent", // Background
+          1: "#F5F5F5", // Background
           2: "#595959", // Text color //gray8
           3: "#BFBFBF", // border // gray6
         },

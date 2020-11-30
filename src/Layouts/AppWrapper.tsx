@@ -12,7 +12,17 @@ interface IAppWrapper {
 
 const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
   return createStyles({
-    root: {},
+    root: {
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      paddingTop: 60,
+    },
+    inner: {
+      paddingTop: (constants.navItemHeight as number) * 2,
+      paddingBottom: (constants.navItemHeight as number) * 2,
+    },
     cta: {
       display: "block",
       maxWidth: 200,
@@ -22,10 +32,11 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       right: constants.generalUnit * 3,
     },
     content: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
+      // position: "absolute",
+      // top: "50%",
+      // left: "50%",
+      margin: `0 auto`,
+      // transform: "translate(-50%, -50%)",
       maxWidth: 460,
       display: "flex",
       flexDirection: "column",
@@ -90,24 +101,26 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
 
   return (
     <section className={classes.root}>
-      <AppHeader />
-      <section className={classes.content}>
-        <section className={classes.navTabs}>
-          <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
-            <GlobalSvg />
-            <Typography variant="h5">Transfer</Typography>
-          </NavLink>
-          <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-            <GiftSvg />
-            <Typography variant="h5">Wrap token</Typography>
-          </NavLink>
+      <section className={classes.inner}>
+        <AppHeader />
+        <section className={classes.content}>
+          <section className={classes.navTabs}>
+            <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
+              <GlobalSvg />
+              <Typography variant="h5">Transfer</Typography>
+            </NavLink>
+            <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
+              <GiftSvg />
+              <Typography variant="h5">Wrap token</Typography>
+            </NavLink>
+          </section>
+          <div className={classes.pageArea}>{children}</div>
         </section>
-        <div className={classes.pageArea}>{children}</div>
-      </section>
 
-      {/* Put CTA here */}
-      {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
-      </a> */}
+        {/* Put CTA here */}
+        {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
+        </a> */}
+      </section>
     </section>
   );
 };
