@@ -1,7 +1,7 @@
 import React from "react";
 
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import { Button, Typography } from "@chainsafe/common-components";
+import { Button, ProgressBar, Typography } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { TokenConfig } from "../chainbridgeConfig";
@@ -113,6 +113,19 @@ const useStyles = makeStyles(
       weighted: {
         fontWeight: 600,
       },
+      progress: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        "& > *": {
+          borderRadius: "0 !important",
+          "&  >  *": {
+            borderRadius: "0 !important",
+            background: `${palette.additional["transactionModal"][1]} !important`,
+          },
+        },
+      },
     })
 );
 
@@ -142,6 +155,12 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
       }}
       active={!!txState}
     >
+      <ProgressBar
+        className={classes.progress}
+        size="small"
+        variant="primary"
+        progress={-1}
+      />
       <section>
         <div className={classes.stepIndicator}>
           {txState === "wrapping" ? 1 : 2}
