@@ -21,6 +21,7 @@ import WrapActiveModal from "../../Modules/WrapActiveModal";
 import { parseUnits } from "ethers/lib/utils";
 import { forwardTo } from "../../Utils/History";
 import { ROUTE_LINKS } from "../Routes";
+import { BigNumber, utils } from "ethers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -186,6 +187,7 @@ const MainPage = () => {
     ethBalance,
     network,
     address,
+    gasPrice,
   } = useWeb3();
   const {
     homeChain,
@@ -218,7 +220,7 @@ const MainPage = () => {
   };
 
   const handleWrapToken = async () => {
-    if (!wrapTokenConfig || !wrapToken) return;
+    if (!wrapTokenConfig || !wrapToken || !homeChain) return;
 
     try {
       setTxDetails({
@@ -228,6 +230,12 @@ const MainPage = () => {
       });
       const tx = await wrapToken({
         value: parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
+        gasPrice: BigNumber.from(
+          utils.parseUnits(
+            (homeChain.defaultGasPrice || gasPrice).toString(),
+            9
+          )
+        ).toString(),
       });
 
       await tx?.wait();

@@ -1164,12 +1164,12 @@
   resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-contracts/-/chainbridge-contracts-1.0.3.tgz#ff979ef9afd94a5fc00acef4a571813003138c5f"
   integrity sha512-2EZ73GaO7Ple5RoxpxpIBG17d0AeaDGvXyXhoCqaeCJqHjBLO67roLCsH2u4HeqGrXdoixCatXUNwo78FkaT/w==
 
-"@chainsafe/common-components@1.0.24":
-  version "1.0.24"
-  resolved "https://registry.yarnpkg.com/@chainsafe/common-components/-/common-components-1.0.24.tgz#4f0cfadf88fb6fbe3af4b38d69c28d771d91a579"
-  integrity sha512-R2kABLPWRHaKtfvsGYaKnlL/jjvRNoShMqCnCSa8czmUcgA8Zw1Gwf+2MWJXPyUrvml8yvLJ/991vKRZiF088g==
+"@chainsafe/common-components@1.0.26":
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/@chainsafe/common-components/-/common-components-1.0.26.tgz#d15850d2c9e06f87c2a74504f7f1f70e031daaeb"
+  integrity sha512-E3uzrkePm/8awYAflHm24+9zmkXix5GY5cLCYDCTKNNrW2GDE11yZRBfPONsB+YwtyhQastAfg3w5ExbSIhBJw==
   dependencies:
-    "@material-ui/styles" "^4.10.0"
+    "@material-ui/styles" "^4.11.1"
     "@types/react-select" "^3.0.26"
     a11y-react-emoji "^1.1.2"
     clsx "^1.1.1"
@@ -1178,7 +1178,7 @@
     react-blockies "^1.4.1"
     react-dropzone "^11.2.4"
     react-router-dom "^5.2.0"
-    react-select "^3.1.0"
+    react-select "^3.1.1"
     react-spinners "^0.9.0"
     reset-css "^5.0.1"
     rollup-plugin-babel "^4.4.0"
@@ -1903,10 +1903,32 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.26.0.tgz#171bd471265259663520abb02a0eed80e949e3a1"
   integrity sha512-/3EKvS9eHzKl9Om+t//SPnzJaahIoVIUlozLMSarINyO7SSh174kxl3jTNHBl7dLxvkQyDDs5imLvP04ohlQaw==
 
-"@material-ui/styles@4.10.0", "@material-ui/styles@^4.10.0":
+"@material-ui/styles@4.10.0":
   version "4.10.0"
   resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.10.0.tgz#2406dc23aa358217aa8cc772e6237bd7f0544071"
   integrity sha512-XPwiVTpd3rlnbfrgtEJ1eJJdFCXZkHxy8TrdieaTvwxNYj42VnnCyFzxYeNW9Lhj4V1oD8YtQ6S5Gie7bZDf7Q==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@emotion/hash" "^0.8.0"
+    "@material-ui/types" "^5.1.0"
+    "@material-ui/utils" "^4.9.6"
+    clsx "^1.0.4"
+    csstype "^2.5.2"
+    hoist-non-react-statics "^3.3.2"
+    jss "^10.0.3"
+    jss-plugin-camel-case "^10.0.3"
+    jss-plugin-default-unit "^10.0.3"
+    jss-plugin-global "^10.0.3"
+    jss-plugin-nested "^10.0.3"
+    jss-plugin-props-sort "^10.0.3"
+    jss-plugin-rule-value-function "^10.0.3"
+    jss-plugin-vendor-prefixer "^10.0.3"
+    prop-types "^15.7.2"
+
+"@material-ui/styles@^4.11.1":
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.11.1.tgz#089338637e9c358eddccd75c32f0bafd0237d573"
+  integrity sha512-GqzsFsVWT8jXa8OWAd1WD6WIaqtXr2mUPbRZ1EjkiM3Dlta4mCRaToDxkFVv6ZHfXlFjMJzdaIEvCpZOCvZTvg==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@emotion/hash" "^0.8.0"
@@ -12425,10 +12447,10 @@ react-scripts@3.4.3:
   optionalDependencies:
     fsevents "2.1.2"
 
-react-select@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.0.tgz#ab098720b2e9fe275047c993f0d0caf5ded17c27"
-  integrity sha512-wBFVblBH1iuCBprtpyGtd1dGMadsG36W5/t2Aj8OE6WbByDg5jIFyT7X5gT+l0qmT5TqWhxX+VsKJvCEl2uL9g==
+react-select@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.1.tgz#156a5b4a6c22b1e3d62a919cb1fd827adb4060bc"
+  integrity sha512-HjC6jT2BhUxbIbxMZWqVcDibrEpdUJCfGicN0MMV+BQyKtCaPTgFekKWiOizSCy4jdsLMGjLqcFGJMhVGWB0Dg==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@emotion/cache" "^10.0.9"
