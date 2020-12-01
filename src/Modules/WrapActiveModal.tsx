@@ -159,7 +159,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
         className={classes.progress}
         size="small"
         variant="primary"
-        progress={-1}
+        progress={txState != "done" ? -1 : 100}
       />
       <section>
         <div className={classes.stepIndicator}>
