@@ -4,6 +4,7 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   Button,
   ExclamationCircleSvg,
+  ProgressBar,
   Typography,
 } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
@@ -31,7 +32,6 @@ const useStyles = makeStyles(
         border: "none",
         borderRadius: 0,
         transitionDuration: `${animation.transform}ms`,
-        borderTop: `6px solid ${palette.additional["transactionModal"][1]}`,
       },
       heading: {
         marginBottom: constants.generalUnit,
@@ -117,6 +117,19 @@ const useStyles = makeStyles(
       weighted: {
         fontWeight: 600,
       },
+      progress: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        "& > *": {
+          borderRadius: "0 !important",
+          "&  >  *": {
+            borderRadius: "0 !important",
+            background: `${palette.additional["transactionModal"][1]} !important`,
+          },
+        },
+      },
     })
 );
 
@@ -152,6 +165,12 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
       }}
       active={open}
     >
+      <ProgressBar
+        className={classes.progress}
+        size="small"
+        variant="primary"
+        progress={transactionStatus != "Transfer Completed" ? -1 : 100}
+      />
       <section>
         <div className={classes.stepIndicator}>
           {transactionStatus === "Initializing Transfer" ? (
