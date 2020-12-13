@@ -3,7 +3,6 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
-import { shortenAddress } from "../Utils/Helpers";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
@@ -56,6 +55,7 @@ interface IPreflightModalWrapProps {
   sourceNetwork: string;
   start: () => void;
   wrappedTitle: string;
+  action: "wrap" | "unwrap";
 }
 
 const PreflightModalWrap: React.FC<IPreflightModalWrapProps> = ({
@@ -67,6 +67,7 @@ const PreflightModalWrap: React.FC<IPreflightModalWrapProps> = ({
   value,
   start,
   wrappedTitle,
+  action,
 }: IPreflightModalWrapProps) => {
   const classes = useStyles();
 
@@ -112,13 +113,11 @@ const PreflightModalWrap: React.FC<IPreflightModalWrapProps> = ({
         <strong>
           {value} {tokenSymbol}
         </strong>{" "}
-        from&nbsp;
-        <strong>{shortenAddress(sender)}</strong> on{" "}
-        <strong>{sourceNetwork}</strong> to&nbsp;
+        on <strong>{sourceNetwork}</strong> to&nbsp;
         <strong>{wrappedTitle}</strong>
       </Typography>
       <Button onClick={start} className={classes.startButton} fullsize>
-        Convert to Wrapped Token
+        Convert to {action === "wrap" ? "Wrapped" : "Native"} Token
       </Button>
       <Button onClick={close}>Back</Button>
     </CustomDrawer>
