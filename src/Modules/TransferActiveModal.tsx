@@ -169,7 +169,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         className={classes.progress}
         size="small"
         variant="primary"
-        progress={transactionStatus != "Transfer Completed" ? -1 : 100}
+        progress={transactionStatus !== "Transfer Completed" ? -1 : 100}
       />
       <section>
         <div className={classes.stepIndicator}>

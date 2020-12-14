@@ -3,8 +3,10 @@ import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import {
   BigNumber,
+  BigNumberish,
   ContractTransaction,
   ethers,
+  Overrides,
   PayableOverrides,
   utils,
 } from "ethers";
@@ -50,6 +52,12 @@ type ChainbridgeContext = {
   wrapToken:
     | ((
         overrides?: PayableOverrides | undefined
+      ) => Promise<ContractTransaction>)
+    | undefined;
+  unwrapToken:
+    | ((
+        wad: BigNumberish,
+        overrides?: Overrides | undefined
       ) => Promise<ContractTransaction>)
     | undefined;
   wrapTokenConfig: TokenConfig | undefined;
@@ -407,6 +415,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         selectedToken,
         wrapToken: wrapper?.deposit,
         wrapTokenConfig,
+        unwrapToken: wrapper?.withdraw,
       }}
     >
       {children}
