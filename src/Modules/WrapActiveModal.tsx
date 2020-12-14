@@ -27,7 +27,6 @@ const useStyles = makeStyles(
         border: "none",
         borderRadius: 0,
         transitionDuration: `${animation.transform}ms`,
-        borderTop: `6px solid ${palette.additional["transactionModal"][1]}`,
       },
       heading: {
         whiteSpace: "nowrap",
@@ -130,11 +129,12 @@ const useStyles = makeStyles(
 );
 
 interface IWrapActiveModalProps {
-  txState?: "wrapping" | "done";
+  txState?: "inProgress" | "done";
   value: number;
   tokenInfo: TokenConfig;
   txHash?: string;
   close: () => void;
+  action: "wrap" | "unwrap";
 }
 
 const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
@@ -143,6 +143,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
   tokenInfo,
   txHash,
   close,
+  action,
 }: IWrapActiveModalProps) => {
   const classes = useStyles();
   const { homeChain } = useChainbridge();
@@ -159,24 +160,29 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
         className={classes.progress}
         size="small"
         variant="primary"
-        progress={txState != "done" ? -1 : 100}
+        progress={txState !== "done" ? -1 : 100}
       />
       <section>
         <div className={classes.stepIndicator}>
-          {txState === "wrapping" ? 1 : 2}
+          {txState === "inProgress" ? 1 : 2}
         </div>
       </section>
       <section className={classes.content}>
         <Typography className={classes.heading} variant="h3" component="h3">
-          {txState === "wrapping"
-            ? `Wrapping ${value} ${homeChain?.nativeTokenSymbol}`
-            : "Token wrapped"}
+          {txState === "inProgress"
+            ? action === "wrap"
+              ? `Wrapping ${value} ${homeChain?.nativeTokenSymbol}`
+              : `Unwrapping ${value} ${tokenInfo.symbol}`
+            : action === "wrap"
+            ? "Token wrapped"
+            : "Token unwrapped"}
         </Typography>
-        {txState !== "wrapping" && (
+        {txState !== "inProgress" && (
           <>
             <Typography className={classes.receipt} component="p">
-              Successfully transferred converted {homeChain?.nativeTokenSymbol}{" "}
-              to {tokenInfo.symbol}
+              {action === "wrap"
+                ? `Successfully wrapped ${homeChain?.nativeTokenSymbol} to ${tokenInfo.symbol}`
+                : `Successfully unwrapped ${tokenInfo.symbol} to ${homeChain?.nativeTokenSymbol}`}
               {homeChain && homeChain.blockExplorer && txHash && (
                 <>
                   <br />
