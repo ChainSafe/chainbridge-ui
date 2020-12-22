@@ -3,8 +3,6 @@ import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
-import { ReactComponent as GlobalSvg } from "../media/Icons/global.svg";
-import { ReactComponent as GiftSvg } from "../media/Icons/gift.svg";
 import { ROUTE_LINKS } from "../Components/Routes";
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
@@ -13,85 +11,64 @@ interface IAppWrapper {
 const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
   return createStyles({
     root: {
-      minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
-      paddingTop: 60,
     },
     inner: {
-      paddingTop: (constants.navItemHeight as number) * 2,
       paddingBottom: (constants.navItemHeight as number) * 2,
     },
     cta: {
       display: "block",
       maxWidth: 200,
       maxHeight: 200,
-      position: "fixed",
       bottom: constants.generalUnit * 3,
       right: constants.generalUnit * 3,
     },
     content: {
-      // position: "absolute",
-      // top: "50%",
-      // left: "50%",
       margin: `0 auto`,
-      // transform: "translate(-50%, -50%)",
-      maxWidth: 460,
       display: "flex",
-      flexDirection: "column",
+      justifyContent: "center",
       overflow: "hidden",
       borderRadius: 4,
     },
     pageArea: {
       height: "100%",
-      width: "100%",
+      width: "570px",
       overflow: "hidden",
       border: `1px solid ${palette.additional["gray"][7]}`,
       borderRadius: 4,
     },
     navTabs: {
-      // position: "absolute",
-      // top: 0,
-      // left: 0,
-      width: "100%",
-      // transform: "translate(0,-100%)",
       display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "flex-start",
-      padding: `0 ${constants.generalUnit}px`,
-      transform: "translateY(1px)",
+      flexDirection: "column",
+      maxWidth: `${constants.generalUnit * 31.25}px`,
       "& > a": {
         display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        padding: `${constants.generalUnit}px ${constants.generalUnit * 1.5}px`,
+        justifyContent: "flex-end",
+        flexDirection: "column",
+        textAlign: "right",
+        padding: `${constants.generalUnit * 4}px ${
+          constants.generalUnit * 3
+        }px ${constants.generalUnit * 3}px ${constants.generalUnit * 3}px`,
         border: `1px solid ${palette.additional["gray"][7]}`,
+        borderRight: "0",
+        borderRadius: `${constants.generalUnit}px 0 0 ${constants.generalUnit}px`,
         textDecoration: "none",
-        marginRight: constants.generalUnit,
+        marginTop: `${constants.generalUnit}px`,
         transitionDuration: `${animation.transform}ms`,
-        color: palette.additional["gray"][8],
-        maxHeight: constants.navItemHeight,
-        "& svg": {
-          transitionDuration: `${animation.transform}ms`,
-          fill: palette.additional["gray"][8],
-        },
-        "&.active": {
-          color: palette.additional["gray"][9],
-          textDecoration: "underline",
-          "& svg": {
-            fill: palette.additional["geekblue"][5],
-          },
-        },
-        "& > *:first-child": {
-          marginRight: constants.generalUnit,
+        color: palette.common.white.main,
+        backgroundColor: palette.additional["navLink"][1],
+        "&:last-child": {
+          padding: `${constants.generalUnit * 3}px ${
+            constants.generalUnit * 3
+          }px ${constants.generalUnit * 4}px ${constants.generalUnit * 3}px`,
         },
       },
-      "& svg": {
-        height: 14,
-        width: 14,
-      },
+    },
+    link: {
+      fontSize: `${constants.generalUnit * 4}px`,
+      fontWeight: 600,
     },
   });
 });
@@ -106,12 +83,20 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
         <section className={classes.content}>
           <section className={classes.navTabs}>
             <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
-              <GlobalSvg />
-              <Typography variant="h5">Transfer</Typography>
+              <Typography variant="h3" className={classes.link}>
+                Transfer
+              </Typography>
+              <Typography variant="h5">
+                Move coins between Avalanche and Ethereum.
+              </Typography>
             </NavLink>
             <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-              <GiftSvg />
-              <Typography variant="h5">Wrap token</Typography>
+              <Typography variant="h3" className={classes.link}>
+                Wrap token
+              </Typography>
+              <Typography variant="h5">
+                Check the status of your transfer
+              </Typography>
             </NavLink>
           </section>
           <div className={classes.pageArea}>{children}</div>

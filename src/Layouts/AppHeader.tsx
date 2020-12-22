@@ -6,18 +6,19 @@ import { shortenAddress } from "../Utils/Helpers";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
+import ChainBridgeLogo from "../assets/ChainBridge.svg";
+import AvaEthBridgeLogo from "../assets/Avalanche_EthereumBridge.svg";
+
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
     root: {
       display: "flex",
-      position: "fixed",
       justifyContent: "space-between",
-      padding: `${constants.generalUnit * 2}px ${constants.generalUnit * 4}px`,
+      padding: `${constants.generalUnit * 4}px ${constants.generalUnit * 6}px`,
       width: "100%",
       top: 0,
       left: 0,
       backgroundColor: palette.additional["header"][1],
-      borderBottom: `1px solid ${palette.additional["header"][3]}`,
       color: palette.additional["header"][2],
       alignItems: "center",
       zIndex: zIndex?.layer2,
@@ -26,15 +27,18 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       display: "flex",
       flexDirection: "row",
       justifyContent: "flex-start",
-      alignItems: "center",
+      alignItems: "flex-end",
     },
     logo: {
-      height: constants.generalUnit * 5,
-      width: constants.generalUnit * 5,
-      "& svg, & img": {
-        maxHeight: "100%",
-        maxWidth: "100%",
-      },
+      marginRight: `${constants.generalUnit}px`,
+    },
+    subLogo: {
+      height: `${constants.generalUnit * 5}px`,
+      marginTop: `${constants.generalUnit * 2}px`,
+    },
+    semiBold: {
+      fontWeight: 500,
+      color: palette.additional["gray"][9],
     },
     state: {
       display: "flex",
@@ -64,12 +68,16 @@ const AppHeader: React.FC<IAppHeader> = () => {
   const { homeChain } = useChainbridge();
   return (
     <header className={clsx(classes.root)}>
-      <div className={classes.left}>
-        {/* ADD LOGO HERE */}
-        {/* <div className={classes.logo}>
-        
-        </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+      <div>
+        <div className={classes.left}>
+          <img src={ChainBridgeLogo} className={classes.logo} />
+          <Typography variant="h4" className={classes.semiBold}>
+            TokenSwap
+          </Typography>
+        </div>
+        <div>
+          <img src={AvaEthBridgeLogo} className={classes.subLogo} />
+        </div>
       </div>
       <section className={classes.state}>
         {!isReady ? (

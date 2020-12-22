@@ -32,6 +32,9 @@ export const lightTheme = createTheme({
           2: "#85A5FF", // indicator border //geekblue4
           3: "#2F54EB", // indicator text //geekblue6
         },
+        navLink: {
+          1: "#1d1c27",
+        },
       },
     },
     overrides: {
