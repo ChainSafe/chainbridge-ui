@@ -70,6 +70,11 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       fontSize: `${constants.generalUnit * 4}px`,
       fontWeight: 600,
     },
+    subLink: {
+      lineHeight: 1.2,
+      marginTop: `${constants.generalUnit * 0.75}px`,
+      fontSize: `${constants.generalUnit * 1.75}px`,
+    },
   });
 });
 
@@ -86,7 +91,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               <Typography variant="h3" className={classes.link}>
                 Transfer
               </Typography>
-              <Typography variant="h5">
+              <Typography variant="h5" className={classes.subLink}>
                 Move coins between Avalanche and Ethereum.
               </Typography>
             </NavLink>
@@ -94,7 +99,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               <Typography variant="h3" className={classes.link}>
                 Wrap token
               </Typography>
-              <Typography variant="h5">
+              <Typography variant="h5" className={classes.subLink}>
                 Check the status of your transfer
               </Typography>
             </NavLink>
