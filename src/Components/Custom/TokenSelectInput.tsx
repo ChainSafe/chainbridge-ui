@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { makeStyles, createStyles } from "@chainsafe/common-theme";
 import { useField } from "formik";
 import {
   IFormikSelectInputProps,
   FormikSelectInput,
 } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import clsx from "clsx";
 
 interface ITokenSelectInput extends IFormikSelectInputProps {
   tokens: Tokens;
   sync?: (value: string) => void;
 }
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    input: {},
+  })
+);
 
 const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   className,
@@ -22,8 +30,9 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   const [field] = useField(name);
   const labelParsed = tokens[field.value]
     ? `${label} ${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
-    : "Please select token";
+    : "Token";
 
+  const classes = useStyles();
   const [synced, setSynced] = useState();
   useEffect(() => {
     if (sync && field.value !== synced) {
@@ -38,7 +47,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   return (
     <FormikSelectInput
       name={name}
-      className={className}
+      className={clsx(className, classes.input)}
       label={labelParsed}
       {...rest}
     />

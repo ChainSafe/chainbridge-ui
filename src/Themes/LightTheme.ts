@@ -1,5 +1,9 @@
 import { createTheme } from "@chainsafe/common-theme";
 
+const inputSelectorHeight = 85;
+const inputSelectorBorderRadius = 15;
+const dropShadowStyle = "0px 1px 20px 0px #bdbdbd5e";
+
 export const lightTheme = createTheme({
   globalStyling: {
     body: {
@@ -9,6 +13,9 @@ export const lightTheme = createTheme({
   themeConfig: {
     constants: {
       navItemHeight: 42,
+      inputSelectorHeight,
+      inputSelectorBorderRadius,
+      dropShadowStyle,
     },
     palette: {
       additional: {
@@ -34,6 +41,12 @@ export const lightTheme = createTheme({
         },
         navLink: {
           1: "#1d1c27",
+        },
+        submitButton: {
+          1: "#FF1267", // pink
+        },
+        indicatorGreen: {
+          1: "#76ff03",
         },
       },
     },
@@ -108,6 +121,65 @@ export const lightTheme = createTheme({
               "& svg": {
                 fill: "#262626",
               },
+            },
+          },
+        },
+      },
+      Typography: {
+        body1: {
+          fontWeight: 700,
+        },
+      },
+      SelectInput: {
+        label: {
+          fontWeight: 700,
+        },
+        container: {
+          borderRadius: inputSelectorBorderRadius,
+          height: inputSelectorHeight,
+          display: "flex",
+          justifyContent: "center",
+          boxShadow: dropShadowStyle,
+          backgroundColor: "white",
+          borderColor: "transparent",
+        },
+        control: {
+          borderRadius: inputSelectorBorderRadius,
+          width: "100%",
+          backgroundColor: "white",
+        },
+        indicatorsContainer: {
+          "> span": {
+            backgroundColor: "transparent",
+          },
+        },
+        valueContainer: {
+          // fontSize: 20,
+          // left: 20,
+          fontWeight: 400,
+        },
+        singleValue: {
+          // fontSize: 20,
+          fontWeight: 400,
+          // left: 20,
+          color: "black",
+        },
+      },
+      TextInput: {
+        input: {
+          root: {
+            height: "100%",
+            borderRadius: inputSelectorBorderRadius,
+            border: "none",
+          },
+        },
+        inputArea: {
+          size: {
+            medium: {
+              borderRadius: inputSelectorBorderRadius,
+              backgroundColor: "transparent",
+              boxShadow: dropShadowStyle,
+              height: inputSelectorHeight,
             },
           },
         },

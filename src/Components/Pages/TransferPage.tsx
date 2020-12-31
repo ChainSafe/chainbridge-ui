@@ -22,12 +22,15 @@ import { object, string } from "yup";
 import { utils } from "ethers";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
 import FeesFormikWrapped from "./FormikContextElements/Fees";
+import { pageRootStylesBase, connectMetaMaskButton } from "./styles";
+import classNames from "classnames";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       padding: constants.generalUnit * 6,
       position: "relative",
+      ...pageRootStylesBase,
     },
     walletArea: {
       display: "flex",
@@ -38,6 +41,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     connectButton: {
       margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
+      ...connectMetaMaskButton,
     },
     connecting: {
       textAlign: "center",
@@ -56,15 +60,23 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     changeButton: {
       cursor: "pointer",
     },
+    tokenInputArea: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "flex-end",
+      justifyContent: "space-around",
+      paddingRight: constants.generalUnit,
+    },
     networkName: {
       padding: `${constants.generalUnit * 2}px ${
         constants.generalUnit * 1.5
       }px`,
-      border: `1px solid ${palette.additional["gray"][6]}`,
-      borderRadius: 2,
+      borderRadius: 15,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
       marginBottom: constants.generalUnit * 3,
+      fontWeight: 400,
+      paddingLeft: 60,
     },
     formArea: {
       "&.disabled": {
@@ -78,27 +90,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       alignItems: "flex-end",
       margin: `${constants.generalUnit * 3}px 0`,
     },
-    tokenInputArea: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-end",
-      justifyContent: "space-around",
-      paddingRight: constants.generalUnit,
-    },
-    tokenInput: {
-      margin: 0,
-      "& > div": {
-        height: 32,
-        "& input": {
-          borderBottomRightRadius: 0,
-          borderTopRightRadius: 0,
-          borderRight: 0,
-        },
-      },
-      "& span:last-child.error": {
-        position: "absolute",
-      },
-    },
+
     maxButton: {
       height: 32,
       borderBottomLeftRadius: 0,
@@ -172,6 +164,19 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
           textAlign: "right",
         },
       },
+    },
+    submit: {
+      borderRadius: 30,
+      height: 60,
+      fontSize: 20,
+      fontWeight: 700,
+      backgroundColor: palette.additional.submitButton[1],
+      border: "none",
+      maxWidth: 300,
+    },
+    submitContainer: {
+      display: "flex",
+      justifyContent: "center",
     },
   })
 );
@@ -319,7 +324,7 @@ const TransferPage = () => {
             <Typography
               component="h2"
               variant="h2"
-              className={classes.networkName}
+              className={classNames(classes.networkName, "basic-box-shadow")}
             >
               {homeChain?.name}
             </Typography>
@@ -356,6 +361,7 @@ const TransferPage = () => {
                 label: dc.name,
                 value: dc.chainId,
               }))}
+              size="large"
               onChange={(value) => setDestinationChain(value)}
               value={destinationChain?.chainId}
             />
@@ -366,10 +372,6 @@ const TransferPage = () => {
                 className={clsx(classes.tokenInputArea, classes.generalInput)}
               >
                 <TokenInput
-                  classNames={{
-                    input: clsx(classes.tokenInput, classes.generalInput),
-                    button: classes.maxButton,
-                  }}
                   tokenSelectorKey="token"
                   tokens={tokens}
                   disabled={
@@ -378,7 +380,7 @@ const TransferPage = () => {
                     preflightDetails.token === ""
                   }
                   name="tokenAmount"
-                  label="I want to send"
+                  label="Amount"
                 />
               </div>
             </section>
@@ -442,8 +444,13 @@ const TransferPage = () => {
                 : undefined
             }
           />
-          <section>
-            <Button type="submit" fullsize variant="primary">
+          <section className={classes.submitContainer}>
+            <Button
+              className={classes.submit}
+              type="submit"
+              fullsize
+              variant="primary"
+            >
               Start transfer
             </Button>
           </section>

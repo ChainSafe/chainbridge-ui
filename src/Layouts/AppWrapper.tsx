@@ -4,6 +4,7 @@ import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
 import { ROUTE_LINKS } from "../Components/Routes";
+import classNames from "classnames";
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
 }
@@ -31,13 +32,21 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       justifyContent: "center",
       overflow: "hidden",
       borderRadius: 4,
+      padding: "40px 0",
+      /**
+       * The tab and the child content area are reversed so that the z-index doesnt have to be changed and thus conflict with
+       * pop outs or modals.
+       */
+      flexDirection: "row-reverse",
     },
     pageArea: {
       height: "100%",
       width: "570px",
       overflow: "hidden",
-      border: `1px solid ${palette.additional["gray"][7]}`,
-      borderRadius: 4,
+      borderRadius: 15,
+      borderTopLeftRadius: 0,
+      backgroundColor: "white",
+      // boxShadow: "0px 1px 20px 0px #bdbdbd5e",
     },
     navTabs: {
       display: "flex",
@@ -55,7 +64,6 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
         borderRight: "0",
         borderRadius: `${constants.generalUnit}px 0 0 ${constants.generalUnit}px`,
         textDecoration: "none",
-        marginTop: `${constants.generalUnit}px`,
         transitionDuration: `${animation.transform}ms`,
         color: palette.common.white.main,
         backgroundColor: palette.additional["navLink"][1],
@@ -69,14 +77,70 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
     link: {
       fontSize: `${constants.generalUnit * 4}px`,
       fontWeight: 600,
+      marginTop: 0,
     },
     subLink: {
       lineHeight: 1.2,
       marginTop: `${constants.generalUnit * 0.75}px`,
       fontSize: `${constants.generalUnit * 1.75}px`,
     },
+    navLink: {
+      color: "#757575 !important", // did important since not able to get inside the style scope of component
+      marginBottom: "10px",
+      border: "none !important", // styles scoped to inside of custom component used !important to override
+      "&.active": {
+        color: "white !important",
+      },
+    },
+    contributorCredits: {
+      display: "flex",
+      position: "absolute",
+      bottom: 30,
+    },
+    credit: {
+      backgroundColor: palette.additional["gray"][4],
+      padding: 10,
+      borderRadius: 9,
+      marginLeft: 50,
+      display: "flex",
+      alignItems: "center",
+      textDecoration: "none",
+      "& .title": {
+        color: palette.additional["gray"][6],
+        marginRight: 5,
+      },
+      "& .name": {
+        fontWeight: 700,
+        color: palette.additional["gray"][9],
+        marginRight: 5,
+      },
+      "& img": {
+        height: 25,
+      },
+    },
   });
 });
+
+const contributionCredits = [
+  {
+    title: "Built by",
+    name: "Chainsafe",
+    link: "",
+    logoURI: "./chainsafe_logo.svg",
+  },
+  {
+    title: "Powered by",
+    name: "Avalanche",
+    link: "",
+    logoURI: "./avax_logo.svg",
+  },
+  {
+    title: "Powered by",
+    name: "Ethereum",
+    link: "",
+    logoURI: "./eth_logo.svg",
+  },
+];
 
 const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
   const classes = useStyles();
@@ -86,8 +150,15 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       <section className={classes.inner}>
         <AppHeader />
         <section className={classes.content}>
+          <div className={classNames(classes.pageArea, "basic-box-shadow")}>
+            {children}
+          </div>
           <section className={classes.navTabs}>
-            <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
+            <NavLink
+              activeClassName="active"
+              className={classes.navLink}
+              to={ROUTE_LINKS.Transfer}
+            >
               <Typography variant="h3" className={classes.link}>
                 Transfer
               </Typography>
@@ -95,7 +166,11 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
                 Move coins between Avalanche and Ethereum.
               </Typography>
             </NavLink>
-            <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
+            <NavLink
+              activeClassName="active"
+              className={classes.navLink}
+              to={ROUTE_LINKS.Wrap}
+            >
               <Typography variant="h3" className={classes.link}>
                 Wrap token
               </Typography>
@@ -104,13 +179,26 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               </Typography>
             </NavLink>
           </section>
-          <div className={classes.pageArea}>{children}</div>
         </section>
 
         {/* Put CTA here */}
         {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
         </a> */}
       </section>
+
+      <div className={classes.contributorCredits}>
+        {contributionCredits.map((credit) => (
+          <a
+            href={credit.link}
+            className={classNames(classes.credit, "credit")}
+            key={credit.name}
+          >
+            <span className="title">{credit.title}</span>
+            <span className="name">{credit.name}</span>
+            <img src={credit.logoURI} />
+          </a>
+        ))}
+      </div>
     </section>
   );
 };

@@ -18,9 +18,15 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
     },
     label: {
       marginBottom: constants.generalUnit,
+      fontWeight: 600,
+    },
+    checkboxContainer: {
+      marginTop: constants.generalUnit * 3,
     },
     checkbox: {
-      marginTop: constants.generalUnit * 3,
+      "&:first-child span": {
+        fontSize: 16,
+      },
     },
   })
 );
@@ -83,8 +89,9 @@ const AddressInput: React.FC<IAddressInput> = ({
           disabled={stored !== undefined}
         />
       </div>
-      <div className={classes.checkbox}>
+      <div className={classes.checkboxContainer}>
         <CheckboxInput
+          className={classes.checkbox}
           label="I want to send funds to my address"
           value={stored !== undefined}
           onChange={() => toggleReceiver()}

@@ -23,6 +23,7 @@ import { forwardTo } from "../../Utils/History";
 import { ROUTE_LINKS } from "../Routes";
 import { BigNumber, utils } from "ethers";
 import SimpleTokenInput from "../Custom/SimpleTokenInput";
+import { pageRootStylesBase, connectMetaMaskButton } from "./styles";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -31,6 +32,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       padding: constants.generalUnit * 6,
       overflow: "hidden",
       position: "relative",
+      ...pageRootStylesBase,
     },
     walletArea: {
       display: "flex",
@@ -44,6 +46,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     connectButton: {
       margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
+      ...connectMetaMaskButton,
     },
     connecting: {
       textAlign: "center",
@@ -186,7 +189,19 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         textAlign: "right",
       },
     },
-    submitButtonArea: {},
+    submitButtonArea: {
+      display: "flex",
+      justifyContent: "center",
+    },
+    submitButton: {
+      borderRadius: 30,
+      fontWeight: 600,
+      backgroundColor: palette.additional["submitButton"][1],
+      border: "none",
+      maxWidth: 300,
+      height: 60,
+      fontSize: 20,
+    },
   })
 );
 
@@ -414,7 +429,7 @@ const MainPage = () => {
                     button: classes.maxButton,
                   }}
                   name="tokenAmount"
-                  label="I want to convert"
+                  label="Amount"
                   max={
                     action === "wrap"
                       ? ethBalance
@@ -462,7 +477,12 @@ const MainPage = () => {
             </section>
           </section>
           <section className={classes.submitButtonArea}>
-            <Button type="submit" fullsize variant="primary">
+            <Button
+              className={classes.submitButton}
+              type="submit"
+              fullsize
+              variant="primary"
+            >
               {action === "wrap" ? "Wrap Token" : "Unwrap token"}
             </Button>
           </section>

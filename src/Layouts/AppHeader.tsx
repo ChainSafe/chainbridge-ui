@@ -1,13 +1,15 @@
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import classNames from "classnames";
 
 import ChainBridgeLogo from "../assets/ChainBridge.svg";
 import AvaEthBridgeLogo from "../assets/Avalanche_EthereumBridge.svg";
+import Toggle from "../Components/Custom/Toggle";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -57,6 +59,44 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       marginRight: constants.generalUnit,
     },
     network: {},
+    connectionIndicator: {
+      marginRight: "60px",
+    },
+    notConnectedIndicator: {
+      border: "solid 1px",
+      borderRadius: "35px",
+      padding: "10px 15px 10px 35px",
+      fontSize: "13px",
+      position: "relative",
+      "&:before": {
+        content: "''",
+        position: "absolute",
+        top: "8px",
+        left: "10px",
+        width: "18px",
+        height: "18px",
+        display: "block",
+        backgroundColor: palette.additional["red"][6],
+        borderRadius: "50%",
+      },
+    },
+    isConnectedIndicator: {
+      border: "solid 1px",
+      borderRadius: 35,
+      padding: "10px 15px 10px 35px",
+      position: "relative",
+      "&:before": {
+        content: "''",
+        position: "absolute",
+        top: 10,
+        left: 10,
+        width: 18,
+        height: 18,
+        display: "block",
+        backgroundColor: palette.additional.indicatorGreen[1],
+        borderRadius: "50%",
+      },
+    },
   });
 });
 
@@ -66,6 +106,8 @@ const AppHeader: React.FC<IAppHeader> = () => {
   const classes = useStyles();
   const { isReady, address } = useWeb3();
   const { homeChain } = useChainbridge();
+  const [isDarkTeme, setDarkTheme] = useState(false);
+
   return (
     <header className={clsx(classes.root)}>
       <div>
@@ -80,19 +122,38 @@ const AppHeader: React.FC<IAppHeader> = () => {
         </div>
       </div>
       <section className={classes.state}>
-        {!isReady ? (
-          <Typography variant="h5">No wallet connected</Typography>
-        ) : (
-          <>
-            <div className={classes.indicator}></div>
-            <Typography variant="h5" className={classes.address}>
-              {address && shortenAddress(address)}
+        <span
+          className={classNames(
+            classes.connectionIndicator,
+            "connected-indicator"
+          )}
+        >
+          {!isReady ? (
+            <Typography className={classes.notConnectedIndicator} variant="h5">
+              No wallet connected
             </Typography>
-            <Typography variant="h5" className={classes.address}>
-              connected to <strong>{homeChain?.name}</strong>
-            </Typography>
-          </>
-        )}
+          ) : (
+            <span className={classes.isConnectedIndicator}>
+              {/* <div className={classes.indicator}></div> */}
+              <Typography variant="h5" className={classes.address}>
+                {address && shortenAddress(address)}
+              </Typography>
+              <Typography variant="h5" className={classes.address}>
+                connected to <strong>{homeChain?.name}</strong>
+              </Typography>
+            </span>
+          )}
+        </span>
+        <Toggle
+          className=""
+          label="Night Mode"
+          value={isDarkTeme}
+          onChange={() => {
+            const isDark = !isDarkTeme;
+            document.body.className = isDark ? `dark-theme` : ``;
+            setDarkTheme(isDark);
+          }}
+        />
       </section>
     </header>
   );

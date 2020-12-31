@@ -35,3 +35,37 @@ input::-webkit-inner-spin-button {
 /* input[type="number"] {
   -moz-appearance: textfield;
 } */
+
+/* This theme is toggled in the app header component  */
+body.dark-theme {
+  background-color: black;
+}
+
+body.dark-theme header {
+  background-color: transparent;
+}
+
+body.dark-theme header span {
+  color: white;
+}
+
+body.dark-theme a.active {
+  color: black !important;
+  background-color: white;
+}
+
+body.dark-theme .connected-indicator {
+  border-color: white;
+}
+
+body.dark-theme .credit {
+  background-color: #212121;
+}
+
+body.dark-theme .credit .name {
+  color: white;
+}
+
+.basic-box-shadow {
+  box-shadow: 0px 1px 20px 0px #bdbdbd5e;
+}
