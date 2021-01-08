@@ -15,6 +15,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
+      position: "relative",
     },
     inner: {
       paddingBottom: (constants.navItemHeight as number) * 2,
@@ -125,19 +126,16 @@ const contributionCredits = [
   {
     title: "Built by",
     name: "Chainsafe",
-    link: "",
     logoURI: "./chainsafe_logo.svg",
   },
   {
     title: "Powered by",
     name: "Avalanche",
-    link: "",
     logoURI: "./avax_logo.svg",
   },
   {
     title: "Powered by",
     name: "Ethereum",
-    link: "",
     logoURI: "./eth_logo.svg",
   },
 ];
@@ -188,11 +186,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
 
       <div className={classes.contributorCredits}>
         {contributionCredits.map((credit) => (
-          <a
-            href={credit.link}
-            className={classNames(classes.credit, "credit")}
-            key={credit.name}
-          >
+          <a className={classNames(classes.credit, "credit")} key={credit.name}>
             <span className="title">{credit.title}</span>
             <span className="name">{credit.name}</span>
             <img src={credit.logoURI} />
