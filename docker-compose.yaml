@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  chainsafe:
+    container_name: chainsafe_UI
+    image: ipfs/go-ipfs
+    ports:
+      - 4001:4001
+      - 5001:5001
+      - 8080:8080

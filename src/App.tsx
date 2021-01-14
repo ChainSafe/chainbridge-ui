@@ -1,11 +1,8 @@
 import React from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
-import {
-  CssBaseline,
-  Router,
-  ToasterProvider,
-} from "@chainsafe/common-components";
+import { CssBaseline, ToasterProvider } from "@chainsafe/common-components";
+import IpfsRouter from "ipfs-react-router";
 
 import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
@@ -73,11 +70,11 @@ const App: React.FC<{}> = () => {
             gasPriceSetting="fast"
           >
             <ChainbridgeProvider>
-              <Router>
+              <IpfsRouter>
                 <AppWrapper>
                   <Routes />
                 </AppWrapper>
-              </Router>
+              </IpfsRouter>
             </ChainbridgeProvider>
           </Web3Provider>
         </ToasterProvider>

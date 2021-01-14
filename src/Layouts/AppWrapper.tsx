@@ -1,4 +1,5 @@
-import { NavLink, Typography } from "@chainsafe/common-components";
+import { Typography } from "@chainsafe/common-components";
+import { Link } from "react-router-dom";
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import { ReactNode } from "react";
@@ -152,8 +153,8 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
             {children}
           </div>
           <section className={classes.navTabs}>
-            <NavLink
-              activeClassName="active"
+            <Link
+              // activeClassName="active"
               className={classes.navLink}
               to={ROUTE_LINKS.Transfer}
             >
@@ -163,9 +164,9 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               <Typography variant="h5" className={classes.subLink}>
                 Move coins between Avalanche and Ethereum.
               </Typography>
-            </NavLink>
-            <NavLink
-              activeClassName="active"
+            </Link>
+            <Link
+              // activeClassName="active"
               className={classes.navLink}
               to={ROUTE_LINKS.Wrap}
             >
@@ -175,7 +176,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               <Typography variant="h5" className={classes.subLink}>
                 Check the status of your transfer
               </Typography>
-            </NavLink>
+            </Link>
           </section>
         </section>
 

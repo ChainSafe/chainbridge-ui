@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect } from "@chainsafe/common-components";
+import { Switch, Route, Redirect } from "react-router-dom";
 import TransferPage from "./Pages/TransferPage";
 import WrapperPage from "./Pages/WrapperPage";
 
@@ -13,9 +13,13 @@ const FilesRoutes = () => {
     <Switch>
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
       <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
-      <Route exact path="/">
-        <Redirect to={ROUTE_LINKS.Transfer} />
-      </Route>
+      <Route
+        exact
+        path="/"
+        render={() => {
+          return <Redirect to={ROUTE_LINKS.Transfer} />;
+        }}
+      ></Route>
     </Switch>
   );
 };
