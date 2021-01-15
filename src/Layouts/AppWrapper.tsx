@@ -15,7 +15,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
     root: {
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center",
+      // justifyContent: "center",
       position: "relative",
     },
     inner: {
@@ -29,17 +29,17 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       right: constants.generalUnit * 3,
     },
     content: {
-      margin: `0 auto`,
+      // margin: `0 auto`,
       display: "flex",
-      justifyContent: "center",
-      overflow: "hidden",
-      borderRadius: 4,
-      padding: "40px 0",
+      // justifyContent: "center",
+      // overflow: "hidden",
+      // borderRadius: 4,
+      padding: "40px 40px",
       /**
        * The tab and the child content area are reversed so that the z-index doesnt have to be changed and thus conflict with
        * pop outs or modals.
        */
-      flexDirection: "row-reverse",
+      flexDirection: "column",
     },
     pageArea: {
       height: "100%",
@@ -47,51 +47,70 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       overflow: "hidden",
       borderRadius: 15,
       borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
       backgroundColor: "white",
       // boxShadow: "0px 1px 20px 0px #bdbdbd5e",
     },
     navTabs: {
+      width: "570px",
       display: "flex",
-      flexDirection: "column",
-      maxWidth: `${constants.generalUnit * 31.25}px`,
-      "& > a": {
-        display: "flex",
-        justifyContent: "flex-end",
-        flexDirection: "column",
-        textAlign: "right",
-        padding: `${constants.generalUnit * 4}px ${
-          constants.generalUnit * 3
-        }px ${constants.generalUnit * 3}px ${constants.generalUnit * 3}px`,
-        border: `1px solid ${palette.additional["gray"][7]}`,
-        borderRight: "0",
-        borderRadius: `${constants.generalUnit}px 0 0 ${constants.generalUnit}px`,
-        textDecoration: "none",
-        transitionDuration: `${animation.transform}ms`,
-        color: palette.common.white.main,
-        backgroundColor: palette.additional["navLink"][1],
-        "&:last-child": {
-          padding: `${constants.generalUnit * 3}px ${
-            constants.generalUnit * 3
-          }px ${constants.generalUnit * 4}px ${constants.generalUnit * 3}px`,
-        },
-      },
+      // display: "flex",
+      // flexDirection: "column",
+      // maxWidth: `${constants.generalUnit * 31.25}px`,
+      // "& > a": {
+      //   display: "flex",
+      //   justifyContent: "flex-end",
+      //   flexDirection: "column",
+      //   textAlign: "right",
+      //   padding: `${constants.generalUnit * 4}px ${
+      //     constants.generalUnit * 3
+      //   }px ${constants.generalUnit * 3}px ${constants.generalUnit * 3}px`,
+      //   border: `1px solid ${palette.additional["gray"][7]}`,
+      //   borderRight: "0",
+      //   borderRadius: `${constants.generalUnit}px 0 0 ${constants.generalUnit}px`,
+      //   textDecoration: "none",
+      //   transitionDuration: `${animation.transform}ms`,
+      //   color: palette.common.white.main,
+      //   backgroundColor: palette.additional["navLink"][1],
+      //   "&:last-child": {
+      //     padding: `${constants.generalUnit * 3}px ${
+      //       constants.generalUnit * 3
+      //     }px ${constants.generalUnit * 4}px ${constants.generalUnit * 3}px`,
+      //   },
+      // },
     },
     link: {
-      fontSize: `${constants.generalUnit * 4}px`,
+      fontSize: `30px`,
       fontWeight: 600,
       marginTop: 0,
+      lineHeight: "20px",
     },
     subLink: {
       lineHeight: 1.2,
       marginTop: `${constants.generalUnit * 0.75}px`,
-      fontSize: `${constants.generalUnit * 1.75}px`,
+      fontSize: `11px`,
     },
     navLink: {
       color: "#757575 !important", // did important since not able to get inside the style scope of component
-      marginBottom: "10px",
       border: "none !important", // styles scoped to inside of custom component used !important to override
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "20px 0",
+      borderTopLeftRadius: 15,
+      borderTopRightRadius: 15,
+      textDecoration: "none",
+      backgroundColor: palette.additional["navLink"][1],
       "&.active": {
         color: "white !important",
+      },
+      "&.left": {
+        borderTopRightRadius: 0,
+      },
+      "&.right": {
+        borderTopLeftRadius: 0,
       },
     },
     contributorCredits: {
@@ -149,13 +168,10 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       <section className={classes.inner}>
         <AppHeader />
         <section className={classes.content}>
-          <div className={classNames(classes.pageArea, "basic-box-shadow")}>
-            {children}
-          </div>
           <section className={classes.navTabs}>
             <Link
               // activeClassName="active"
-              className={classes.navLink}
+              className={classNames(classes.navLink, "left")}
               to={ROUTE_LINKS.Transfer}
             >
               <Typography variant="h3" className={classes.link}>
@@ -167,7 +183,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
             </Link>
             <Link
               // activeClassName="active"
-              className={classes.navLink}
+              className={classNames(classes.navLink, "right")}
               to={ROUTE_LINKS.Wrap}
             >
               <Typography variant="h3" className={classes.link}>
@@ -178,6 +194,10 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               </Typography>
             </Link>
           </section>
+
+          <div className={classNames(classes.pageArea, "basic-box-shadow")}>
+            {children}
+          </div>
         </section>
 
         {/* Put CTA here */}
