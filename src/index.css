@@ -66,6 +66,10 @@ body.dark-theme .credit .name {
   color: white;
 }
 
+body.dark-theme .ava-eth-logo {
+  color: white;
+}
+
 .basic-box-shadow {
   box-shadow: 0px 1px 20px 0px #bdbdbd5e;
 }

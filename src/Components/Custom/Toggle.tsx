@@ -22,11 +22,13 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
     label: {
       fontWeight: 700,
       fontSize: "16px",
+      whiteSpace: "nowrap",
     },
     toggle: {
       display: "inline-block",
       border: "solid 1px",
       width: "40px",
+      minWidth: "40px",
       height: "20px",
       borderRadius: "10px",
       marginRight: "5px",

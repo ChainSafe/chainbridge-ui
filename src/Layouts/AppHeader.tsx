@@ -10,6 +10,7 @@ import classNames from "classnames";
 import ChainBridgeLogo from "../assets/ChainBridge.svg";
 import AvaEthBridgeLogo from "../assets/Avalanche_EthereumBridge.svg";
 import Toggle from "../Components/Custom/Toggle";
+import { start } from "repl";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -24,6 +25,10 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       color: palette.additional["header"][2],
       alignItems: "center",
       zIndex: zIndex?.layer2,
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        flexDirection: "column",
+        alignItems: "start",
+      },
     },
     left: {
       display: "flex",
@@ -46,6 +51,9 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        padding: "20px 0",
+      },
     },
     indicator: {
       display: "block",
@@ -68,6 +76,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       padding: "10px 15px 10px 35px",
       fontSize: "13px",
       position: "relative",
+      whiteSpace: "nowrap",
       "&:before": {
         content: "''",
         position: "absolute",
@@ -118,7 +127,10 @@ const AppHeader: React.FC<IAppHeader> = () => {
           </Typography>
         </div>
         <div>
-          <img src={AvaEthBridgeLogo} className={classes.subLogo} />
+          <img
+            src={AvaEthBridgeLogo}
+            className={classNames(classes.subLogo, "ava-eth-logo")}
+          />
         </div>
       </div>
       <section className={classes.state}>

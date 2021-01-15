@@ -1,5 +1,5 @@
 import { Typography } from "@chainsafe/common-components";
-import { Link } from "react-router-dom";
+import { NavLink as Link } from "react-router-dom";
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import { ReactNode } from "react";

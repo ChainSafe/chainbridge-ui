@@ -16,6 +16,7 @@ export const lightTheme = createTheme({
       inputSelectorHeight,
       inputSelectorBorderRadius,
       dropShadowStyle,
+      tabletMediaSize: 1200,
     },
     palette: {
       additional: {
