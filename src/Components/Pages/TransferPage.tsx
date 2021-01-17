@@ -24,6 +24,7 @@ import { chainbridgeConfig } from "../../chainbridgeConfig";
 import FeesFormikWrapped from "./FormikContextElements/Fees";
 import classNames from "classnames";
 import DropdownSelect, { OptionType } from "../Custom/DropdownSelector";
+import SimpleTokenInput from "../Custom/SimpleTokenInput";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -338,16 +339,13 @@ const TransferPage = () => {
               <div
                 className={clsx(classes.tokenInputArea, classes.generalInput)}
               >
-                <TokenInput
-                  tokenSelectorKey="token"
-                  tokens={tokens}
-                  disabled={
-                    !destinationChain ||
-                    !preflightDetails.token ||
-                    preflightDetails.token === ""
-                  }
+                <SimpleTokenInput
                   name="tokenAmount"
                   label="Amount"
+                  max={
+                    tokens[preflightDetails.token] &&
+                    tokens[preflightDetails.token].balance
+                  }
                 />
               </div>
             </section>

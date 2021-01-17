@@ -64,6 +64,7 @@ const TokenInput: React.FC<ITokenInput> = ({
   const [, , helpers] = useField(name);
   const classes = useStyles();
   const { values } = useFormikContext();
+
   return (
     <span className={classes.container}>
       <FormikTextInput

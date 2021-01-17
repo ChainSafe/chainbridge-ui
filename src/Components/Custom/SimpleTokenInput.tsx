@@ -2,7 +2,7 @@ import React from "react";
 
 import { useField } from "formik";
 import { Button, FormikTextInput } from "@chainsafe/common-components";
-import { makeStyles, createStyles } from "@chainsafe/common-theme";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import clsx from "clsx";
 
 interface ITokenInput {
@@ -16,15 +16,28 @@ interface ITokenInput {
   max?: number;
 }
 
-const useStyles = makeStyles(({ constants }: any) =>
+const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     container: {
       position: "relative",
-      marginBottom: "0 !important",
+      marginBottom: "0px !important",
     },
     input: {
-      "& input": {
-        borderRadius: "15px !important",
+      margin: 0,
+      "& > div": {
+        height: 85,
+        "& input": {
+          border: "none",
+          height: "100%",
+          backgroundColor: "white !important",
+          boxShadow: "0px 1px 20px 0px #bdbdbd5e",
+          fontSize: `${constants.inputSelectorFontSize as any}px !important`,
+          borderRadius: 15,
+          fontWeight: 600,
+        },
+      },
+      "& span:last-child.error": {
+        position: "absolute",
       },
     },
     maxButton: {
@@ -32,18 +45,14 @@ const useStyles = makeStyles(({ constants }: any) =>
       border: "none",
       position: "absolute",
       right: 0,
-      top: "24px",
-      left: "initial !important",
-      margin: "auto",
+      top: 23,
       bottom: 0,
       fontSize: constants.inputSelectorFontSize as any,
       borderRadius: 15,
       color: "black",
-      height: "85px !important",
     },
     label: {
-      fontWeight: 700,
-      marginBottom: "0 !important",
+      fontWeight: 600,
     },
   })
 );

@@ -45,7 +45,8 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   const [selectedToken, setSelectedToken] = useState<TokenInfo>();
 
   const classes = useStyles();
-  console.log(selectedToken);
+  const [, , helpers] = useField(name);
+
   return (
     <>
       <DropdownSelect
@@ -55,6 +56,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
         onChange={(option) => {
           sync && sync(option.value);
           setSelectedToken(tokens[option.value]);
+          helpers.setValue(option.value);
         }}
       ></DropdownSelect>
       <span className={classes.balance}>Balance {selectedToken?.balance}</span>
