@@ -10,7 +10,6 @@ import classNames from "classnames";
 import ChainBridgeLogo from "../assets/ChainBridge.svg";
 import AvaEthBridgeLogo from "../assets/Avalanche_EthereumBridge.svg";
 import Toggle from "../Components/Custom/Toggle";
-import { start } from "repl";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -21,13 +20,13 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       width: "100%",
       top: 0,
       left: 0,
-      backgroundColor: palette.additional["header"][1],
       color: palette.additional["header"][2],
       alignItems: "center",
       zIndex: zIndex?.layer2,
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
         flexDirection: "column",
         alignItems: "start",
+        padding: "10px",
       },
     },
     left: {
@@ -38,10 +37,30 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
     },
     logo: {
       marginRight: `${constants.generalUnit}px`,
+      height: 50,
+      marginBottom: 5,
+      whiteSpace: "nowrap",
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        height: 30,
+      },
+      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
+        height: 25,
+      },
     },
     subLogo: {
-      height: `${constants.generalUnit * 5}px`,
-      marginTop: `${constants.generalUnit * 2}px`,
+      color: "white",
+      textShadow: `-1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+       1px 1px 0 #000;`,
+      fontSize: 40,
+      whiteSpace: "nowrap",
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        fontSize: 30,
+      },
+      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
+        fontSize: 20,
+      },
     },
     semiBold: {
       fontWeight: 500,
@@ -77,6 +96,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       fontSize: "13px",
       position: "relative",
       whiteSpace: "nowrap",
+      backgroundColor: "white",
       "&:before": {
         content: "''",
         position: "absolute",
@@ -94,6 +114,8 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       borderRadius: 35,
       padding: "10px 15px 10px 35px",
       position: "relative",
+      whiteSpace: "nowrap",
+      backgroundColor: "white",
       "&:before": {
         content: "''",
         position: "absolute",
@@ -126,11 +148,8 @@ const AppHeader: React.FC<IAppHeader> = () => {
             TokenSwap
           </Typography>
         </div>
-        <div>
-          <img
-            src={AvaEthBridgeLogo}
-            className={classNames(classes.subLogo, "ava-eth-logo")}
-          />
+        <div className={classNames(classes.subLogo, "ava-eth-logo")}>
+          <p>Avalanche &#60;&#62; Ethereum Bridge</p>
         </div>
       </div>
       <section className={classes.state}>

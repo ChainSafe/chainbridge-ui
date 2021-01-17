@@ -22,26 +22,20 @@ import { object, string } from "yup";
 import { utils } from "ethers";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
 import FeesFormikWrapped from "./FormikContextElements/Fees";
-import { pageRootStylesBase, connectMetaMaskButton } from "./styles";
 import classNames from "classnames";
+import DropdownSelect, { OptionType } from "../Custom/DropdownSelector";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      padding: constants.generalUnit * 6,
-      position: "relative",
-      ...pageRootStylesBase,
+      ...(constants.pageRootStyles as any),
     },
     walletArea: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "100%",
+      ...(constants.walletArea as any),
     },
     connectButton: {
-      margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
-      ...connectMetaMaskButton,
+      margin: `0px 0px 38px`,
+      ...(constants.largeButtonStyle as any),
     },
     connecting: {
       textAlign: "center",
@@ -61,22 +55,13 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       cursor: "pointer",
     },
     tokenInputArea: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-end",
-      justifyContent: "space-around",
-      paddingRight: constants.generalUnit,
+      ...(constants.tokenInputArea as any),
+    },
+    homeNetworkTitle: {
+      ...(constants.headerTitleStyle as any),
     },
     networkName: {
-      padding: `${constants.generalUnit * 2}px ${
-        constants.generalUnit * 1.5
-      }px`,
-      borderRadius: 15,
-      color: palette.additional["gray"][9],
-      marginTop: constants.generalUnit,
-      marginBottom: constants.generalUnit * 3,
-      fontWeight: 400,
-      paddingLeft: 60,
+      ...(constants.networkNameStyle as any),
     },
     formArea: {
       "&.disabled": {
@@ -84,35 +69,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySection: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end",
-      margin: `${constants.generalUnit * 3}px 0`,
+      ...(constants.currencySection as any),
     },
 
     maxButton: {
-      height: 32,
-      borderBottomLeftRadius: 0,
-      borderTopLeftRadius: 0,
-      left: -1,
-      color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
-      borderColor: palette.additional["gray"][6],
-      "&:hover": {
-        borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
-        color: palette.common.white.main,
-      },
-      "&:focus": {
-        borderColor: palette.additional["gray"][6],
-      },
+      ...(constants.maxButton as any),
     },
     currencySelector: {
-      width: 120,
-      "& *": {
-        cursor: "pointer",
-      },
+      ...(constants.currencySelector as any),
     },
     token: {},
     address: {
@@ -166,13 +130,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     submit: {
-      borderRadius: 30,
-      height: 60,
-      fontSize: 20,
-      fontWeight: 700,
-      backgroundColor: palette.additional.submitButton[1],
-      border: "none",
-      maxWidth: 300,
+      backgroundColor: "#E84142",
+      ...(constants.largeButtonStyle as any),
     },
     submitContainer: {
       display: "flex",
@@ -214,6 +173,15 @@ const TransferPage = () => {
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
+
+  const destChains = destinationChains.map((dc) => ({
+    label: dc.name,
+    value: dc.chainId,
+  }));
+
+  const destChain = destChains.find(
+    (chain) => chain.value === destinationChain?.chainId
+  );
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: "",
@@ -312,7 +280,9 @@ const TransferPage = () => {
         ) : (
           <section className={classes.connected}>
             <div>
-              <Typography variant="body1">Home network</Typography>
+              <Typography className={classes.homeNetworkTitle} variant="body1">
+                Home network
+              </Typography>
               <Typography
                 className={classes.changeButton}
                 variant="body1"
@@ -324,7 +294,7 @@ const TransferPage = () => {
             <Typography
               component="h2"
               variant="h2"
-              className={classNames(classes.networkName, "basic-box-shadow")}
+              className={classNames(classes.networkName)}
             >
               {homeChain?.name}
             </Typography>
@@ -353,17 +323,14 @@ const TransferPage = () => {
           })}
         >
           <section>
-            <SelectInput
+            <DropdownSelect
               label="Destination Network"
-              className={classes.generalInput}
               disabled={!homeChain}
-              options={destinationChains.map((dc) => ({
-                label: dc.name,
-                value: dc.chainId,
-              }))}
-              size="large"
-              onChange={(value) => setDestinationChain(value)}
-              value={destinationChain?.chainId}
+              options={destChains}
+              onChange={(option: OptionType) =>
+                setDestinationChain(option.value)
+              }
+              value={destChain}
             />
           </section>
           <section className={classes.currencySection}>
@@ -391,7 +358,6 @@ const TransferPage = () => {
                 disabled={!destinationChain}
                 label={`Balance: `}
                 className={classes.generalInput}
-                placeholder=""
                 sync={(tokenAddress) => {
                   setPreflightDetails({
                     ...preflightDetails,
@@ -404,17 +370,9 @@ const TransferPage = () => {
                 options={
                   Object.keys(tokens).map((t) => ({
                     value: t,
-                    label: (
-                      <div className={classes.tokenItem}>
-                        {tokens[t]?.imageUri && (
-                          <img
-                            src={tokens[t]?.imageUri}
-                            alt={tokens[t]?.symbol}
-                          />
-                        )}
-                        <span>{tokens[t]?.symbol || t}</span>
-                      </div>
-                    ),
+                    icon: tokens[t]?.imageUri,
+                    alt: tokens[t]?.symbol,
+                    label: tokens[t]?.symbol || "Unknown",
                   })) || []
                 }
               />

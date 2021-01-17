@@ -13,10 +13,8 @@ interface IAppWrapper {
 const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
   return createStyles({
     root: {
-      display: "flex",
-      flexDirection: "column",
-      // justifyContent: "center",
-      position: "relative",
+      ...(constants.pageRootStyles as any),
+      border: "none",
     },
     inner: {
       paddingBottom: (constants.navItemHeight as number) * 2,
@@ -34,56 +32,40 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       // justifyContent: "center",
       // overflow: "hidden",
       // borderRadius: 4,
-      padding: "40px 40px",
+      padding: "0px 40px",
       /**
        * The tab and the child content area are reversed so that the z-index doesnt have to be changed and thus conflict with
        * pop outs or modals.
        */
       flexDirection: "column",
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        padding: 0,
+      },
     },
     pageArea: {
       height: "100%",
-      width: "570px",
       overflow: "hidden",
       borderRadius: 15,
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
       backgroundColor: "white",
-      // boxShadow: "0px 1px 20px 0px #bdbdbd5e",
+      maxWidth: 1024,
+      // minWidth: 570,
     },
     navTabs: {
-      width: "570px",
       display: "flex",
-      // display: "flex",
-      // flexDirection: "column",
-      // maxWidth: `${constants.generalUnit * 31.25}px`,
-      // "& > a": {
-      //   display: "flex",
-      //   justifyContent: "flex-end",
-      //   flexDirection: "column",
-      //   textAlign: "right",
-      //   padding: `${constants.generalUnit * 4}px ${
-      //     constants.generalUnit * 3
-      //   }px ${constants.generalUnit * 3}px ${constants.generalUnit * 3}px`,
-      //   border: `1px solid ${palette.additional["gray"][7]}`,
-      //   borderRight: "0",
-      //   borderRadius: `${constants.generalUnit}px 0 0 ${constants.generalUnit}px`,
-      //   textDecoration: "none",
-      //   transitionDuration: `${animation.transform}ms`,
-      //   color: palette.common.white.main,
-      //   backgroundColor: palette.additional["navLink"][1],
-      //   "&:last-child": {
-      //     padding: `${constants.generalUnit * 3}px ${
-      //       constants.generalUnit * 3
-      //     }px ${constants.generalUnit * 4}px ${constants.generalUnit * 3}px`,
-      //   },
-      // },
+      maxWidth: 1024,
+      // minWidth: 570,
     },
     link: {
-      fontSize: `30px`,
+      fontSize: 30,
       fontWeight: 600,
       marginTop: 0,
-      lineHeight: "20px",
+      lineHeight: "35px",
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        fontSize: 18,
+        lineHeight: "15px",
+      },
     },
     subLink: {
       lineHeight: 1.2,
@@ -91,20 +73,20 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       fontSize: `11px`,
     },
     navLink: {
-      color: "#757575 !important", // did important since not able to get inside the style scope of component
+      color: "#ccc !important", // did important since not able to get inside the style scope of component
       border: "none !important", // styles scoped to inside of custom component used !important to override
       flex: 1,
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
-      alignItems: "center",
-      padding: "20px 0",
+      padding: "15px 20px",
       borderTopLeftRadius: 15,
       borderTopRightRadius: 15,
       textDecoration: "none",
-      backgroundColor: palette.additional["navLink"][1],
+      // backgroundColor: palette.additional["navLink"][1],
+      backgroundColor: "white",
       "&.active": {
-        color: "white !important",
+        color: "black !important",
       },
       "&.left": {
         borderTopRightRadius: 0,
@@ -112,23 +94,32 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       "&.right": {
         borderTopLeftRadius: 0,
       },
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        padding: 10,
+      },
     },
     contributorCredits: {
       display: "flex",
-      position: "absolute",
-      bottom: 30,
+      justifyContent: "space-around",
+      maxWidth: 1024,
+      padding: 10,
+      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
+        flexDirection: "column",
+        alignItems: "center",
+      },
     },
     credit: {
       backgroundColor: palette.additional["gray"][4],
       padding: 10,
       borderRadius: 9,
-      marginLeft: 50,
       display: "flex",
       alignItems: "center",
       textDecoration: "none",
+      fontSize: 23,
       "& .title": {
         color: palette.additional["gray"][6],
         marginRight: 5,
+        whiteSpace: "nowrap",
       },
       "& .name": {
         fontWeight: 700,
@@ -136,7 +127,12 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
         marginRight: 5,
       },
       "& img": {
-        height: 25,
+        height: 23,
+      },
+      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
+        padding: "5px 10px",
+        marginBottom: 5,
+        fontSize: 16,
       },
     },
   });
@@ -198,22 +194,24 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
           <div className={classNames(classes.pageArea, "basic-box-shadow")}>
             {children}
           </div>
+          <div className={classes.contributorCredits}>
+            {contributionCredits.map((credit) => (
+              <a
+                className={classNames(classes.credit, "credit")}
+                key={credit.name}
+              >
+                <span className="title">{credit.title}</span>
+                <span className="name">{credit.name}</span>
+                <img src={credit.logoURI} />
+              </a>
+            ))}
+          </div>
         </section>
 
         {/* Put CTA here */}
         {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
         </a> */}
       </section>
-
-      <div className={classes.contributorCredits}>
-        {contributionCredits.map((credit) => (
-          <a className={classNames(classes.credit, "credit")} key={credit.name}>
-            <span className="title">{credit.title}</span>
-            <span className="name">{credit.name}</span>
-            <img src={credit.logoURI} />
-          </a>
-        ))}
-      </div>
     </section>
   );
 };

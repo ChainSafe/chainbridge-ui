@@ -24,29 +24,24 @@ import { ROUTE_LINKS } from "../Routes";
 import { BigNumber, utils } from "ethers";
 import SimpleTokenInput from "../Custom/SimpleTokenInput";
 import { pageRootStylesBase, connectMetaMaskButton } from "./styles";
+import TokenInput from "../Custom/TokenInput";
+import TokenSelectInput from "../Custom/TokenSelectInput";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      minHeight: constants.generalUnit * 69,
-      padding: constants.generalUnit * 6,
-      overflow: "hidden",
-      position: "relative",
-      ...pageRootStylesBase,
+      ...(constants.pageRootStyles as any),
     },
     walletArea: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "100%",
+      ...(constants.walletArea as any),
     },
     blurb: {
       color: palette.common.black.main,
+      padding: "10px 0",
     },
     connectButton: {
-      margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
-      ...connectMetaMaskButton,
+      margin: `0px 0px 38px`,
+      ...(constants.largeButtonStyle as any),
     },
     connecting: {
       textAlign: "center",
@@ -65,15 +60,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     changeButton: {
       cursor: "pointer",
     },
+    homeNetworkTitle: {
+      ...(constants.headerTitleStyle as any),
+    },
     networkName: {
-      padding: `${constants.generalUnit * 2}px ${
-        constants.generalUnit * 1.5
-      }px`,
-      border: `1px solid ${palette.additional["gray"][6]}`,
-      borderRadius: 2,
-      color: palette.additional["gray"][9],
-      marginTop: constants.generalUnit,
-      marginBottom: constants.generalUnit * 3,
+      ...(constants.networkNameStyle as any),
     },
     formArea: {
       "&.disabled": {
@@ -81,18 +72,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySection: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end",
-      margin: `${constants.generalUnit * 3}px 0`,
+      ...(constants.currencySection as any),
+      justifyContent: "space-evenly",
+      maxWidth: "100%",
     },
     tokenInputArea: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-end",
-      justifyContent: "space-around",
-      paddingRight: constants.generalUnit,
+      ...(constants.tokenInputArea as any),
     },
     tokenInput: {
       margin: 0,
@@ -109,21 +94,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     maxButton: {
-      height: 32,
-      borderBottomLeftRadius: 0,
-      borderTopLeftRadius: 0,
-      left: -1,
-      color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
-      borderColor: palette.additional["gray"][6],
-      "&:hover": {
-        borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
-        color: palette.common.white.main,
-      },
-      "&:focus": {
-        borderColor: palette.additional["gray"][6],
-      },
+      ...(constants.maxButton as any),
     },
     tokenIndicator: {
       width: 120,
@@ -194,13 +165,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       justifyContent: "center",
     },
     submitButton: {
-      borderRadius: 30,
-      fontWeight: 600,
-      backgroundColor: palette.additional["submitButton"][1],
-      border: "none",
-      maxWidth: 300,
-      height: 60,
-      fontSize: 20,
+      backgroundColor: "#E84142",
+      margin: `0px 0px 38px`,
+      ...(constants.largeButtonStyle as any),
+    },
+    currencySelector: {
+      ...(constants.currencySelector as any),
     },
   })
 );
@@ -381,7 +351,9 @@ const MainPage = () => {
         ) : (
           <section className={classes.connected}>
             <div>
-              <Typography variant="body1">Home network</Typography>
+              <Typography className={classes.homeNetworkTitle} variant="body1">
+                Home network
+              </Typography>
               <Typography
                 className={classes.changeButton}
                 variant="body1"
@@ -419,15 +391,23 @@ const MainPage = () => {
           })}
         >
           <section className={classes.currencySection}>
-            <section>
-              <div
-                className={clsx(classes.tokenInputArea, classes.generalInput)}
-              >
-                <SimpleTokenInput
-                  classNames={{
-                    input: clsx(classes.tokenInput, classes.generalInput),
-                    button: classes.maxButton,
-                  }}
+            <div className={clsx(classes.tokenInputArea, classes.generalInput)}>
+              <TokenInput
+                tokenSelectorKey="token"
+                tokens={tokens}
+                // max={
+                //   action === "wrap"
+                //     ? ethBalance
+                //     : tokens[wrapTokenConfig?.address || "0x"]?.balance
+                // }
+                name="tokenAmount"
+                label="Amount"
+              />
+              {/* <SimpleTokenInput
+                  // classNames={{
+                  //   input: clsx(classes.tokenInput, classes.generalInput),
+                  //   button: classes.maxButton,
+                  // }}
                   name="tokenAmount"
                   label="Amount"
                   max={
@@ -435,10 +415,9 @@ const MainPage = () => {
                       ? ethBalance
                       : tokens[wrapTokenConfig?.address || "0x"]?.balance
                   }
-                />
-              </div>
-            </section>
-            <section className={classes.tokenIndicator}>
+                /> */}
+            </div>
+            {/* <section className={classes.tokenIndicator}>
               <Typography component="p">
                 Balance:{" "}
                 {action === "wrap"
@@ -473,6 +452,32 @@ const MainPage = () => {
                 ]}
                 onChange={(val) => setAction(val)}
                 value={action}
+              />
+            </section> */}
+            <section className={classes.currencySelector}>
+              <TokenSelectInput
+                tokens={tokens}
+                name="token"
+                // disabled={!destinationChain}
+                label={`Balance: `}
+                className={classes.generalInput}
+                // sync={(tokenAddress) => {
+                //   setPreflightDetails({
+                //     ...preflightDetails,
+                //     token: tokenAddress,
+                //     receiver: "",
+                //     tokenAmount: 0,
+                //     tokenSymbol: "",
+                //   });
+                // }}
+                options={
+                  Object.keys(tokens).map((t) => ({
+                    value: t,
+                    icon: tokens[t]?.imageUri,
+                    alt: tokens[t]?.symbol,
+                    label: tokens[t]?.symbol || "Unknown",
+                  })) || []
+                }
               />
             </section>
           </section>

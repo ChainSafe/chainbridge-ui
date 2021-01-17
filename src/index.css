@@ -45,17 +45,9 @@ body.dark-theme header {
   background-color: transparent;
 }
 
-body.dark-theme header span {
-  color: white;
-}
-
 body.dark-theme a.active {
   color: black !important;
   background-color: white;
-}
-
-body.dark-theme .connected-indicator {
-  border-color: white;
 }
 
 body.dark-theme .credit {

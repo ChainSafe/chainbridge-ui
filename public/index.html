@@ -27,15 +27,28 @@
       body {
         background-image: url(./background-design.svg);
         background-repeat: no-repeat;
-        background-position: center;
-        background-size: 75%;
-        background-position-y: top;
+        background-size: 130%;
+        background-position-y: center;
+      }
+
+      body.dark-theme {
+        background-image: url(./dark-theme-background.svg);
+      }
+
+      /* @media only screen and (max-width: 1200px) {
+        body {
+          background-size: 300%;
+        }
+      } */
+
+      .main-root {
+        height: 100%;
       }
     </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root" class="main-root"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

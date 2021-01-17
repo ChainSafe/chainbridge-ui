@@ -26,6 +26,7 @@
     "yup": "^0.29.3"
   },
   "devDependencies": {
+    "@material-ui/core": "4.11.2",
     "@sentry/cli": "1.58.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",

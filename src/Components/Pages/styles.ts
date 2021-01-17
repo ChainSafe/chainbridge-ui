@@ -5,5 +5,11 @@ export const pageRootStylesBase = {
 };
 
 export const connectMetaMaskButton = {
-  borderRadius: "11px",
+  borderRadius: 30,
+  height: "6vw",
+  maxWidth: 400,
+  minWidth: 300,
+  fontSize: "3vw",
+  fontWeight: 700,
+  minHeight: 35,
 };

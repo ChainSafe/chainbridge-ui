@@ -1,8 +1,104 @@
 import { createTheme } from "@chainsafe/common-theme";
+import { grey } from "@material-ui/core/colors";
 
-const inputSelectorHeight = 85;
+const inputSelectorHeight = 45;
+const inputSelectorFontSize = 16;
 const inputSelectorBorderRadius = 15;
 const dropShadowStyle = "0px 1px 20px 0px #bdbdbd5e";
+const tabletMediaSize = 1200;
+const smallMediaSize = 720;
+
+const headerTitleStyle = {
+  fontWeight: 600,
+  fontSize: 12,
+};
+
+const networkNameStyle = {
+  padding: `0 20px`,
+  borderRadius: 15,
+  color: "#212121",
+  marginTop: 8,
+  marginBottom: 20,
+  fontWeight: 600,
+  height: inputSelectorHeight,
+  textTransform: "uppercase",
+  alignItems: "center",
+  display: "flex",
+  boxShadow: dropShadowStyle,
+  fontSize: inputSelectorFontSize,
+};
+
+const largeButtonStyle = {
+  borderRadius: 30,
+  height: 45,
+  fontSize: 20,
+  fontWeight: 700,
+  border: "none",
+  minHeight: 35,
+  maxWidth: 400,
+  minWidth: 300,
+};
+
+const pageRootStyles = {
+  border: "solid #E0E0E0",
+  margin: "10px",
+  borderRadius: "13px",
+  padding: 20,
+  position: "relative",
+  [`@media (max-width: ${tabletMediaSize}px)`]: {
+    padding: 10,
+  },
+};
+
+const walletArea = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+};
+
+const maxButton = {
+  height: 32,
+  borderBottomLeftRadius: 0,
+  borderTopLeftRadius: 0,
+  left: -1,
+  color: grey[800],
+  backgroundColor: grey[300],
+  borderColor: grey[600],
+  "&:hover": {
+    borderColor: grey[600],
+    backgroundColor: grey[700],
+    color: "white",
+  },
+  "&:focus": {
+    borderColor: grey[600],
+  },
+};
+
+const tokenInputArea = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "flex-end",
+  justifyContent: "space-around",
+  paddingRight: 8,
+};
+
+const currencySection = {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "flex-end",
+  margin: `24px 0`,
+  maxWidth: 570,
+};
+
+const currencySelector = {
+  width: 210,
+  "& *": {
+    cursor: "pointer",
+  },
+};
 
 export const lightTheme = createTheme({
   globalStyling: {
@@ -16,7 +112,18 @@ export const lightTheme = createTheme({
       inputSelectorHeight,
       inputSelectorBorderRadius,
       dropShadowStyle,
-      tabletMediaSize: 1200,
+      tabletMediaSize,
+      smallMediaSize,
+      headerTitleStyle,
+      inputSelectorFontSize,
+      largeButtonStyle,
+      networkNameStyle,
+      pageRootStyles,
+      walletArea,
+      maxButton,
+      tokenInputArea,
+      currencySection,
+      currencySelector,
     },
     palette: {
       additional: {

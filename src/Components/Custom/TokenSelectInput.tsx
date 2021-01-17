@@ -1,56 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles } from "@chainsafe/common-theme";
 import { useField } from "formik";
-import {
-  IFormikSelectInputProps,
-  FormikSelectInput,
-} from "@chainsafe/common-components";
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import clsx from "clsx";
 
-interface ITokenSelectInput extends IFormikSelectInputProps {
+import {
+  TokenInfo,
+  Tokens,
+} from "@chainsafe/web3-context/dist/context/tokensReducer";
+import clsx from "clsx";
+import DropdownSelect, {
+  OptionType,
+  ICustomDropdownProps,
+} from "./DropdownSelector";
+
+interface ITokenSelectInput extends ICustomDropdownProps {
   tokens: Tokens;
+  options: OptionType[];
   sync?: (value: string) => void;
+  name: string;
+  label: string;
+  className: string;
+  disabled?: boolean;
 }
 
 const useStyles = makeStyles(() =>
   createStyles({
-    input: {},
+    balance: {
+      fontSize: 12,
+      position: "absolute",
+      padding: 3,
+    },
   })
 );
 
 const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   className,
-  label,
   name,
   tokens,
   sync,
+  options,
+  disabled,
+  onChange,
   ...rest
 }: ITokenSelectInput) => {
-  const [field] = useField(name);
-  const labelParsed = tokens[field.value]
-    ? `${label} ${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
-    : "Token";
+  const [selectedToken, setSelectedToken] = useState<TokenInfo>();
 
   const classes = useStyles();
-  const [synced, setSynced] = useState();
-  useEffect(() => {
-    if (sync && field.value !== synced) {
-      setSynced(field.value);
-      if (field.value !== "") {
-        sync(field.value);
-      }
-    }
-    // eslint-disable-next-line
-  }, [field]);
-
+  console.log(selectedToken);
   return (
-    <FormikSelectInput
-      name={name}
-      className={clsx(className, classes.input)}
-      label={labelParsed}
-      {...rest}
-    />
+    <>
+      <DropdownSelect
+        label={"Selected Token"}
+        options={options}
+        disabled={disabled}
+        onChange={(option) => {
+          sync && sync(option.value);
+          setSelectedToken(tokens[option.value]);
+        }}
+      ></DropdownSelect>
+      <span className={classes.balance}>Balance {selectedToken?.balance}</span>
+    </>
   );
 };
 

@@ -16,7 +16,7 @@ interface ITokenInput {
   max?: number;
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles(({ constants }: any) =>
   createStyles({
     container: {
       position: "relative",
@@ -32,11 +32,11 @@ const useStyles = makeStyles(() =>
       border: "none",
       position: "absolute",
       right: 0,
-      top: 22,
+      top: "24px",
       left: "initial !important",
       margin: "auto",
       bottom: 0,
-      fontSize: 26,
+      fontSize: constants.inputSelectorFontSize as any,
       borderRadius: 15,
       color: "black",
       height: "85px !important",
