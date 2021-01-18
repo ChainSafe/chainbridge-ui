@@ -320,7 +320,7 @@ const MainPage = () => {
 
   const options = [
     {
-      imageUri: wrapTokenConfig?.imageUri,
+      imageUri: "./avax_logo.svg",
       symbol: "AVAX",
       label: "AVAX",
       value: "wrap",

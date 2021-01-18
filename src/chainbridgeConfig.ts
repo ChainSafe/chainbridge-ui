@@ -84,7 +84,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           address: "0x1D308089a2D1Ced3f1Ce36B1FcaF815b07217be3",
           name: "WAVAX",
           symbol: "WAVAX",
-          imageUri: ETHIcon,
+          imageUri: "./wavax_logo.png",
           resourceId:
             "0x0000000000000000000000ed52eCA444088D3892EdaEbb05Ccd012165545D305",
           isNativeWrappedToken: true,
