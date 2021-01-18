@@ -8,7 +8,9 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
       position: "absolute",
+      height: "auto !important",
       zIndex: zIndex?.blocker,
+      top: "-96px !important",
       "& li": {
         position: "relative",
         padding: `${constants.generalUnit}px 0 ${constants.generalUnit}px ${

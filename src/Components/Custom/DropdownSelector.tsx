@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import classNames from "classnames";
-import { useField } from "formik";
-
 export interface OptionType {
   label: string;
   icon?: string;

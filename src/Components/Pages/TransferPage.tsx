@@ -8,7 +8,6 @@ import {
   Button,
   Typography,
   QuestionCircleSvg,
-  SelectInput,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
@@ -17,7 +16,6 @@ import TransferActiveModal from "../../Modules/TransferActiveModal";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
-import TokenInput from "../Custom/TokenInput";
 import { object, string } from "yup";
 import { utils } from "ethers";
 import { chainbridgeConfig } from "../../chainbridgeConfig";

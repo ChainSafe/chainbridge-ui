@@ -27,16 +27,8 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       right: constants.generalUnit * 3,
     },
     content: {
-      // margin: `0 auto`,
       display: "flex",
-      // justifyContent: "center",
-      // overflow: "hidden",
-      // borderRadius: 4,
       padding: "0px 40px",
-      /**
-       * The tab and the child content area are reversed so that the z-index doesnt have to be changed and thus conflict with
-       * pop outs or modals.
-       */
       flexDirection: "column",
       [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
         padding: 0,
@@ -44,18 +36,16 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
     },
     pageArea: {
       height: "100%",
-      overflow: "hidden",
+      // overflow: "hidden",
       borderRadius: 15,
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
       backgroundColor: "white",
       maxWidth: 1024,
-      // minWidth: 570,
     },
     navTabs: {
       display: "flex",
       maxWidth: 1024,
-      // minWidth: 570,
     },
     link: {
       fontSize: 30,

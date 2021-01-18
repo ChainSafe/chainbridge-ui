@@ -7,14 +7,12 @@ import {
   Button,
   Typography,
   QuestionCircleSvg,
-  SelectInput,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import clsx from "clsx";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import { object, string } from "yup";
-import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
 import { chainbridgeConfig, TokenConfig } from "../../chainbridgeConfig";
 import PreflightModalWrap from "../../Modules/PreflightModalWrap";
 import WrapActiveModal from "../../Modules/WrapActiveModal";
@@ -23,8 +21,6 @@ import { forwardTo } from "../../Utils/History";
 import { ROUTE_LINKS } from "../Routes";
 import { BigNumber, utils } from "ethers";
 import SimpleTokenInput from "../Custom/SimpleTokenInput";
-import { pageRootStylesBase, connectMetaMaskButton } from "./styles";
-import TokenInput from "../Custom/TokenInput";
 import TokenSelectInput from "../Custom/TokenSelectInput";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
@@ -325,8 +321,8 @@ const MainPage = () => {
   const options = [
     {
       imageUri: wrapTokenConfig?.imageUri,
-      symbol: "ETH",
-      label: "ETH",
+      symbol: "AVAX",
+      label: "AVAX",
       value: "wrap",
     },
     {

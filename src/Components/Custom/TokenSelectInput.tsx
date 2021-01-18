@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles, createStyles } from "@chainsafe/common-theme";
 import { useField } from "formik";
 
@@ -6,7 +6,7 @@ import {
   TokenInfo,
   Tokens,
 } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import clsx from "clsx";
+
 import DropdownSelect, {
   OptionType,
   ICustomDropdownProps,

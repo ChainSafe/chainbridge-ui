@@ -8,7 +8,6 @@ import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import classNames from "classnames";
 
 import ChainBridgeLogo from "../assets/ChainBridge.svg";
-import AvaEthBridgeLogo from "../assets/Avalanche_EthereumBridge.svg";
 import Toggle from "../Components/Custom/Toggle";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
@@ -143,8 +142,15 @@ const AppHeader: React.FC<IAppHeader> = () => {
     <header className={clsx(classes.root)}>
       <div>
         <div className={classes.left}>
-          <img src={ChainBridgeLogo} className={classes.logo} />
-          <Typography variant="h4" className={classes.semiBold}>
+          <img
+            src={ChainBridgeLogo}
+            alt={"Chainbridge Logo"}
+            className={classes.logo}
+          />
+          <Typography
+            variant="h4"
+            className={classNames(classes.semiBold, "chain-bridge-sub-logo")}
+          >
             TokenSwap
           </Typography>
         </div>
