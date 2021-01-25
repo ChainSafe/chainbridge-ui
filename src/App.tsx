@@ -2,7 +2,7 @@ import React from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import { CssBaseline, ToasterProvider } from "@chainsafe/common-components";
-import IpfsRouter from "ipfs-react-router";
+import { HashRouter } from "react-router-dom";
 
 import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
@@ -70,11 +70,11 @@ const App: React.FC<{}> = () => {
             gasPriceSetting="fast"
           >
             <ChainbridgeProvider>
-              <IpfsRouter>
+              <HashRouter>
                 <AppWrapper>
                   <Routes />
                 </AppWrapper>
-              </IpfsRouter>
+              </HashRouter>
             </ChainbridgeProvider>
           </Web3Provider>
         </ToasterProvider>
