@@ -1,65 +1,50 @@
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React, { useState } from "react";
 import clsx from "clsx";
-import { Typography } from "@chainsafe/common-components";
+import { Typography, HamburgerMenu } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import classNames from "classnames";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import ChainBridgeLogo from "../assets/ChainBridge.svg";
 import Toggle from "../Components/Custom/Toggle";
+import useMedia from "use-media";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
     root: {
       display: "flex",
       justifyContent: "space-between",
-      padding: `${constants.generalUnit * 4}px ${constants.generalUnit * 6}px`,
       width: "100%",
       top: 0,
       left: 0,
       color: palette.additional["header"][2],
       alignItems: "center",
       zIndex: zIndex?.layer2,
-      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
-        flexDirection: "column",
-        alignItems: "start",
-        padding: "10px",
-      },
+      padding: "15px 20px 10px 20px",
+      borderBottom: "solid 1px black",
+      marginBottom: 30,
     },
     left: {
       display: "flex",
       flexDirection: "row",
       justifyContent: "flex-start",
-      alignItems: "flex-end",
     },
     logo: {
       marginRight: `${constants.generalUnit}px`,
-      height: 50,
+      height: 20,
       marginBottom: 5,
       whiteSpace: "nowrap",
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
-        height: 30,
-      },
-      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
-        height: 25,
-      },
     },
     subLogo: {
-      color: "white",
-      textShadow: `-1px -1px 0 #000,  
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-       1px 1px 0 #000;`,
-      fontSize: 40,
+      color: "##212121",
+      fontSize: 15,
       whiteSpace: "nowrap",
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
-        fontSize: 30,
-      },
-      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
-        fontSize: 20,
-      },
+      lineHeight: "20px",
+      fontWeight: 500,
     },
     semiBold: {
       fontWeight: 500,
@@ -69,9 +54,6 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
-        padding: "20px 0",
-      },
     },
     indicator: {
       display: "block",
@@ -107,6 +89,10 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
         backgroundColor: palette.additional["red"][6],
         borderRadius: "50%",
       },
+      [`@media (max-width: ${1000}px)`]: {
+        backgroundColor: "transparent",
+        border: "none",
+      },
     },
     isConnectedIndicator: {
       border: "solid 1px",
@@ -126,6 +112,10 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
         backgroundColor: palette.additional.indicatorGreen[1],
         borderRadius: "50%",
       },
+      [`@media (max-width: ${1000}px)`]: {
+        backgroundColor: "transparent",
+        border: "none",
+      },
     },
   });
 });
@@ -137,61 +127,124 @@ const AppHeader: React.FC<IAppHeader> = () => {
   const { isReady, address } = useWeb3();
   const { homeChain } = useChainbridge();
   const [isDarkTeme, setDarkTheme] = useState(false);
+  const isLessThan1000px = useMedia({ maxWidth: "1000px" });
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <header className={clsx(classes.root)}>
-      <div>
-        <div className={classes.left}>
-          <img
-            src={ChainBridgeLogo}
-            alt={"Chainbridge Logo"}
-            className={classes.logo}
-          />
-          <Typography
-            variant="h4"
-            className={classNames(classes.semiBold, "chain-bridge-sub-logo")}
-          >
-            TokenSwap
-          </Typography>
-        </div>
+      <div className={classes.left}>
+        <img
+          src={ChainBridgeLogo}
+          alt={"Chainbridge Logo"}
+          className={classes.logo}
+        />
+
         <div className={classNames(classes.subLogo, "ava-eth-logo")}>
           <p>Avalanche &#60;&#62; Ethereum Bridge</p>
         </div>
       </div>
-      <section className={classes.state}>
-        <span
-          className={classNames(
-            classes.connectionIndicator,
-            "connected-indicator"
-          )}
-        >
-          {!isReady ? (
-            <Typography className={classes.notConnectedIndicator} variant="h5">
-              No wallet connected
-            </Typography>
-          ) : (
-            <span className={classes.isConnectedIndicator}>
-              {/* <div className={classes.indicator}></div> */}
-              <Typography variant="h5" className={classes.address}>
-                {address && shortenAddress(address)}
+      {isLessThan1000px ? (
+        <>
+          <HamburgerMenu
+            onClick={handleClick}
+            variant={"default"}
+          ></HamburgerMenu>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem>
+              <span
+                className={classNames(
+                  classes.connectionIndicator,
+                  "connected-indicator"
+                )}
+              >
+                {!isReady ? (
+                  <Typography
+                    className={classes.notConnectedIndicator}
+                    variant="h5"
+                  >
+                    No wallet connected
+                  </Typography>
+                ) : (
+                  <span className={classes.isConnectedIndicator}>
+                    {/* <div className={classes.indicator}></div> */}
+                    <Typography variant="h5" className={classes.address}>
+                      {address && shortenAddress(address)}
+                    </Typography>
+                    <Typography variant="h5" className={classes.address}>
+                      connected to <strong>{homeChain?.name}</strong>
+                    </Typography>
+                  </span>
+                )}
+              </span>
+            </MenuItem>
+            <MenuItem>
+              <Toggle
+                className=""
+                label="Night Mode"
+                value={isDarkTeme}
+                onChange={() => {
+                  const isDark = !isDarkTeme;
+                  document.body.className = isDark ? `dark-theme` : ``;
+                  setDarkTheme(isDark);
+                }}
+              />
+            </MenuItem>
+          </Menu>
+        </>
+      ) : (
+        <section className={classes.state}>
+          <span
+            className={classNames(
+              classes.connectionIndicator,
+              "connected-indicator"
+            )}
+          >
+            {!isReady ? (
+              <Typography
+                className={classes.notConnectedIndicator}
+                variant="h5"
+              >
+                No wallet connected
               </Typography>
-              <Typography variant="h5" className={classes.address}>
-                connected to <strong>{homeChain?.name}</strong>
-              </Typography>
-            </span>
-          )}
-        </span>
-        <Toggle
-          className=""
-          label="Night Mode"
-          value={isDarkTeme}
-          onChange={() => {
-            const isDark = !isDarkTeme;
-            document.body.className = isDark ? `dark-theme` : ``;
-            setDarkTheme(isDark);
-          }}
-        />
-      </section>
+            ) : (
+              <span className={classes.isConnectedIndicator}>
+                {/* <div className={classes.indicator}></div> */}
+                <Typography variant="h5" className={classes.address}>
+                  {address && shortenAddress(address)}
+                </Typography>
+                <Typography variant="h5" className={classes.address}>
+                  connected to <strong>{homeChain?.name}</strong>
+                </Typography>
+              </span>
+            )}
+          </span>
+          <Toggle
+            className=""
+            label="Night Mode"
+            value={isDarkTeme}
+            onChange={() => {
+              const isDark = !isDarkTeme;
+              document.body.className = isDark ? `dark-theme` : ``;
+              setDarkTheme(isDark);
+            }}
+          />
+        </section>
+      )}
     </header>
   );
 };

@@ -15,6 +15,8 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
     root: {
       ...(constants.pageRootStyles as any),
       border: "none",
+      padding: 0,
+      margin: 0,
     },
     inner: {
       paddingBottom: (constants.navItemHeight as number) * 2,
