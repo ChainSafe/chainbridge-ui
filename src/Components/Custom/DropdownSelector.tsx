@@ -52,6 +52,8 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
       backgroundColor: "white",
       borderRadius: (constants.inputSelectorBorderRadius as number) - 5,
       boxShadow: constants.dropShadowStyle as string,
+      overflow: "scroll",
+      maxHeight: 300,
       "&.open": {
         display: "initial",
       },
@@ -141,6 +143,10 @@ export const DropdownSelect = ({
   useEffect(() => {
     ref?.current?.focus();
   }, [isOpen]);
+
+  useEffect(() => {
+    setAvailableOptions(options);
+  }, [options]);
 
   useOnClickOutside(node, isOpen ? () => setOpenState(false) : undefined);
 

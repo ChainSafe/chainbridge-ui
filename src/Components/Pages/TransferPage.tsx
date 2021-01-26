@@ -157,6 +157,7 @@ const TransferPage = () => {
     address,
     network,
   } = useWeb3();
+
   const {
     homeChain,
     destinationChains,
@@ -181,6 +182,14 @@ const TransferPage = () => {
   const destChain = destChains.find(
     (chain) => chain.value === destinationChain?.chainId
   );
+
+  const theTokens =
+    Object.keys(tokens).map((t) => ({
+      value: t,
+      icon: tokens[t]?.imageUri,
+      alt: tokens[t]?.symbol,
+      label: tokens[t]?.symbol || "Unknown",
+    })) || [];
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: "",
