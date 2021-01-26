@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState, createRef } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import classNames from "classnames";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 export interface OptionType {
   label: string;
   icon?: string;
@@ -12,6 +13,7 @@ export interface ICustomDropdownProps {
   value?: OptionType;
   onChange?(val: OptionType): void;
   options: OptionType[];
+  allowSearch?: boolean;
   comporator?(val1: OptionType, val2: OptionType): boolean;
   disabled?: boolean;
 }
@@ -73,6 +75,18 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
       height: constants.inputSelectorFontSize as any,
       marginRight: 5,
     },
+    searchInput: {
+      height: 45,
+      border: "none",
+      boxShadow: constants.dropShadowStyle as string,
+      borderRadius: constants.inputSelectorBorderRadius as string,
+      backgroundColor: "white",
+      width: "100%",
+      paddingLeft: 20,
+      "&:focus": {
+        outline: "none",
+      },
+    },
   })
 );
 export const DropdownSelect = ({
@@ -81,6 +95,7 @@ export const DropdownSelect = ({
   value,
   onChange,
   options,
+  allowSearch = false,
   disabled = false,
   comporator = function (val1, val2) {
     return val1 === val2;
@@ -89,10 +104,15 @@ export const DropdownSelect = ({
   const classes = useStyles();
   const [isOpen, setOpenState] = useState(false);
   const [isDisabled] = useState(false);
+  const node = useRef<HTMLDivElement>();
+  const ref = createRef<HTMLInputElement>();
 
   const [selectedItem, setSelectedItem] = useState<OptionType>({
     label: "",
   } as any);
+
+  const [availableOptions, setAvailableOptions] = useState(options);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     if (options.length === 1) {
@@ -108,36 +128,66 @@ export const DropdownSelect = ({
     }
   }, [options]);
 
+  useEffect(() => {
+    setAvailableOptions(
+      query
+        ? options.filter((option) => {
+            return option.label.toLowerCase().includes(query.toLowerCase());
+          })
+        : options
+    );
+  }, [query]);
+
+  useEffect(() => {
+    ref?.current?.focus();
+  }, [isOpen]);
+
+  useOnClickOutside(node, isOpen ? () => setOpenState(false) : undefined);
+
   return (
     <button
-      onBlur={() => setOpenState(false)}
-      onClick={() => {
-        setOpenState(!isOpen);
+      ref={node as any}
+      onMouseDown={(evt) => {
+        if (!evt.currentTarget.contains(evt.target as any)) {
+          setOpenState(!isOpen);
+        } else {
+          setOpenState(true);
+        }
       }}
       type="button"
       disabled={isDisabled}
       className={classNames(classes.container, "container", className)}
     >
       <span className={classNames(classes.label, "label")}>{label}</span>
-      <span className={classNames(classes.selectedBox, "selected")}>
-        {selectedItem.icon ? (
-          <img className={classes.icon} src={selectedItem.icon} alt="" />
-        ) : (
-          ""
-        )}
-        <span className="label">{selectedItem.label}</span>
-      </span>
+      {allowSearch && isOpen ? (
+        <input
+          className={classNames(classes.searchInput)}
+          type="text"
+          onChange={(el) => setQuery(el.currentTarget.value)}
+          ref={ref}
+        ></input>
+      ) : (
+        <span className={classNames(classes.selectedBox, "selected")}>
+          {selectedItem.icon ? (
+            <img className={classes.icon} src={selectedItem.icon} alt="" />
+          ) : (
+            ""
+          )}
+          <span className="label">{selectedItem.label}</span>
+        </span>
+      )}
       <div
         className={classNames(classes.items, "items", {
-          open: isOpen && options.length > 1,
+          open: isOpen,
         })}
       >
-        {options.map((option) => {
+        {availableOptions.map((option) => {
           return (
             <div
               className={classNames(classes.item, "item")}
               key={option.label}
               onClick={() => {
+                setOpenState(false);
                 setSelectedItem(option);
                 onChange && onChange(option);
               }}

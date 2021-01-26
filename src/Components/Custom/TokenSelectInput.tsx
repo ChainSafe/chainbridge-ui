@@ -53,6 +53,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
         label={"Selected Token"}
         options={options}
         disabled={disabled}
+        allowSearch={true}
         onChange={(option) => {
           sync && sync(option.value);
           setSelectedToken(tokens[option.value]);
