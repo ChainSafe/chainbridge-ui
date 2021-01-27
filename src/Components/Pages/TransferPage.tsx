@@ -190,7 +190,7 @@ const TransferPage = () => {
       alt: tokens[t]?.symbol,
       label: tokens[t]?.symbol || "Unknown",
     })) || [];
-
+  console.log(destChains, destChain, theTokens);
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: "",
     token: "",

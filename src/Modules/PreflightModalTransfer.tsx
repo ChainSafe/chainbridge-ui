@@ -85,12 +85,19 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         Pre-flight check
       </Typography>
       <Typography className={classes.subtitle} variant="h5" component="p">
-        Please be advised this is an experimental application:
+        Please be advised that this is an experimental application. While it has
+        been extensively tested, the developers cannot guarantee 100% success in
+        transferring tokens. This means:
       </Typography>
       <ul>
         <li>
           <Typography variant="h5">
-            You will not be able to cancel the transaction once you submit it.
+            Funds could be lost as a result of a technical bug
+          </Typography>
+        </li>
+        <li>
+          <Typography variant="h5">
+            You will not be able to cancel the transaction once you submit it
           </Typography>
         </li>
         <li>
@@ -100,15 +107,21 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         </li>
         <li>
           <Typography variant="h5">
-            Funds cannot be returned if they are sent to the wrong address.
+            Funds cannot be returned if they are sent to the wrong address
           </Typography>
         </li>
         <li>
           <Typography variant="h5">
-            The transaction fee may be higher than expected.
+            The transaction fee may be higher than expected
           </Typography>
         </li>
       </ul>
+
+      <Typography className={classes.subtitle} variant="h5" component="p">
+        Finally, please note that tokens successfully transferred from Ethereum
+        will not retain properties tied to non-standard operations including,
+        but not limited to rebases or interest accrual.
+      </Typography>
       <Typography className={classes.agreement} variant="h5" component="p">
         I agree and want to send{" "}
         <strong>

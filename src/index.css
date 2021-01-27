@@ -45,11 +45,6 @@ body.dark-theme header {
   background-color: transparent;
 }
 
-body.dark-theme a.active {
-  color: black !important;
-  background-color: white;
-}
-
 body.dark-theme .credit {
   background-color: #212121;
 }
@@ -63,9 +58,7 @@ body.dark-theme .chain-bridge-sub-logo {
 }
 
 body.dark-theme .ava-eth-logo {
-  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
-    1px 1px 0 white;
-  color: black;
+  color: white;
 }
 
 .basic-box-shadow {

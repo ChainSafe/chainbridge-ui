@@ -40,11 +40,12 @@ const largeButtonStyle = {
 };
 
 const pageRootStyles = {
-  border: "solid #E0E0E0",
-  margin: "10px",
+  // border: "solid #E0E0E0",
+  margin: "14px",
   borderRadius: "13px",
   padding: 20,
   position: "relative",
+  minWidth: 470,
   [`@media (max-width: ${tabletMediaSize}px)`]: {
     padding: 10,
   },

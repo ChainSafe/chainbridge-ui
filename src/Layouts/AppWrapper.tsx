@@ -32,9 +32,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       display: "flex",
       padding: "0px 40px",
       flexDirection: "column",
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
-        padding: 0,
-      },
+      alignItems: "center",
     },
     pageArea: {
       height: "100%",
@@ -43,21 +41,18 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
       backgroundColor: "white",
-      maxWidth: 1024,
+      maxWidth: 570,
     },
     navTabs: {
       display: "flex",
-      maxWidth: 1024,
+      maxWidth: 570,
+      minWidth: 470,
     },
     link: {
-      fontSize: 30,
+      fontSize: 20,
       fontWeight: 600,
       marginTop: 0,
-      lineHeight: "35px",
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
-        fontSize: 18,
-        lineHeight: "15px",
-      },
+      lineHeight: "15px",
     },
     subLink: {
       lineHeight: 1.2,
@@ -78,7 +73,8 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       // backgroundColor: palette.additional["navLink"][1],
       backgroundColor: "white",
       "&.active": {
-        color: "black !important",
+        color: "white !important",
+        backgroundColor: "#424242",
       },
       "&.left": {
         borderTopRightRadius: 0,
@@ -86,19 +82,13 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       "&.right": {
         borderTopLeftRadius: 0,
       },
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
-        padding: 10,
-      },
     },
     contributorCredits: {
       display: "flex",
       justifyContent: "space-around",
-      maxWidth: 1024,
+      maxWidth: 570,
       padding: 10,
-      [`@media (max-width: ${constants.smallMediaSize}px)`]: {
-        flexDirection: "column",
-        alignItems: "center",
-      },
+      marginLeft: 10,
     },
     credit: {
       backgroundColor: palette.additional["gray"][4],
@@ -107,7 +97,8 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       display: "flex",
       alignItems: "center",
       textDecoration: "none",
-      fontSize: 23,
+      fontSize: 10,
+      marginRight: 8,
       "& .title": {
         color: palette.additional["gray"][6],
         marginRight: 5,
@@ -119,12 +110,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
         marginRight: 5,
       },
       "& img": {
-        height: 23,
-      },
-      [`@media (max-width: ${constants.tabletMediaSize}px)`]: {
-        padding: "5px 10px",
-        marginBottom: 5,
-        fontSize: 16,
+        height: 13,
       },
     },
   });

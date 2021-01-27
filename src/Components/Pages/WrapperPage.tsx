@@ -27,6 +27,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       ...(constants.pageRootStyles as any),
+      width: 470,
     },
     walletArea: {
       ...(constants.walletArea as any),
