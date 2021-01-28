@@ -9,7 +9,7 @@ import classNames from "classnames";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import ChainBridgeLogo from "../assets/ChainBridge.svg";
+import ChainBridgeLogo from "../assets/AEB_Red_GradientLight.svg";
 import Toggle from "../Components/Custom/Toggle";
 import useMedia from "use-media";
 

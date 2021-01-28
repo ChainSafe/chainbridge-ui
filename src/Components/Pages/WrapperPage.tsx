@@ -28,13 +28,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     root: {
       ...(constants.pageRootStyles as any),
       width: 470,
+      padding: "0px 20px 0px 20px",
     },
     walletArea: {
       ...(constants.walletArea as any),
     },
     blurb: {
       color: palette.common.black.main,
-      padding: "10px 0",
+      padding: "10px 0 20px 0",
     },
     connectButton: {
       margin: `0px 0px 38px`,
