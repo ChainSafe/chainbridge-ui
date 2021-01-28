@@ -217,7 +217,7 @@ const MainPage = () => {
       }
     | undefined
   >(undefined);
-  console.log("test to get ipfs working");
+
   const handleConnect = async () => {
     setWalletConnecting(true);
     !wallet && (await onboard?.walletSelect());

@@ -92,33 +92,6 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
   })
 );
 
-const defaultTokensToDisplay = new Set([
-  //eth tokens
-  "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-  "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-  "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
-  "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
-  "0x514910771AF9Ca656af840dff83E8264EcF986CA",
-  "0x9dEbca6eA3af87Bf422Cea9ac955618ceb56EfB4",
-  "0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e",
-  "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-  "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2",
-  // avalanche tokens
-  "0xdF3aCC3460965996FF496Cb9D0CF9E6859545a86",
-  "0x2DCA6503946d29Ca8d1C87A247ef122652B03c0e",
-  "0x217446Ce09AA183a9034f4FF20d31b9268427187",
-  "0x44fC678eb98c47b2b0564b455132c91b781a62d4",
-  "0x55212B038624D9FaB4D1A65e23f7744d5f0D014A",
-  "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
-  "0x2400EA5E0f56D6f8bF14c1c52EebAdE24b4542f3",
-  "0x3a755C20913b9bE05Da94f72A4027B9755b4fF85",
-  "0x6D3D97E8Dedc637c2AE327e4E370cc29da6111ad",
-]);
-
-function filterToDefaultTokens(option: OptionType) {
-  return defaultTokensToDisplay.has(option.value);
-}
-
 export const DropdownSelect = ({
   label,
   className,
@@ -141,9 +114,7 @@ export const DropdownSelect = ({
     label: "",
   } as any);
 
-  const [availableOptions, setAvailableOptions] = useState(
-    options.filter(filterToDefaultTokens)
-  );
+  const [availableOptions, setAvailableOptions] = useState(options);
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -166,7 +137,7 @@ export const DropdownSelect = ({
         ? options.filter((option) => {
             return option.label.toLowerCase().includes(query.toLowerCase());
           })
-        : options.filter(filterToDefaultTokens)
+        : options
     );
   }, [query]);
 
@@ -175,7 +146,7 @@ export const DropdownSelect = ({
   }, [isOpen]);
 
   useEffect(() => {
-    setAvailableOptions(options.filter(filterToDefaultTokens));
+    setAvailableOptions(options);
   }, [options]);
 
   useOnClickOutside(node, isOpen ? () => setOpenState(false) : undefined);
