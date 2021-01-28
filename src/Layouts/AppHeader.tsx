@@ -25,7 +25,6 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       alignItems: "center",
       zIndex: zIndex?.layer2,
       padding: "15px 20px 10px 20px",
-      borderBottom: "solid 1px black",
       marginBottom: 30,
     },
     left: {
@@ -71,8 +70,8 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       marginRight: "60px",
     },
     notConnectedIndicator: {
-      border: "solid 1px",
       borderRadius: "35px",
+      boxShadow: constants.dropShadowStyle as string,
       padding: "10px 15px 10px 35px",
       fontSize: "13px",
       position: "relative",
@@ -92,11 +91,12 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       [`@media (max-width: ${1000}px)`]: {
         backgroundColor: "transparent",
         border: "none",
+        boxShadow: "none",
       },
     },
     isConnectedIndicator: {
-      border: "solid 1px",
       borderRadius: 35,
+      boxShadow: constants.dropShadowStyle as string,
       padding: "10px 15px 10px 35px",
       position: "relative",
       whiteSpace: "nowrap",
@@ -115,6 +115,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       [`@media (max-width: ${1000}px)`]: {
         backgroundColor: "transparent",
         border: "none",
+        boxShadow: "none",
       },
     },
   });
@@ -149,15 +150,17 @@ const AppHeader: React.FC<IAppHeader> = () => {
         />
 
         <div className={classNames(classes.subLogo, "ava-eth-logo")}>
-          <p>Avalanche &#60;&#62; Ethereum Bridge</p>
+          <p>An Avalanche and Ethereum Bridge</p>
         </div>
       </div>
       {isLessThan1000px ? (
         <>
-          <HamburgerMenu
-            onClick={handleClick}
-            variant={"default"}
-          ></HamburgerMenu>
+          <span className="header-hamburger-menu">
+            <HamburgerMenu
+              onClick={handleClick}
+              variant={"default"}
+            ></HamburgerMenu>
+          </span>
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}

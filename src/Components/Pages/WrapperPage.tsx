@@ -367,7 +367,9 @@ const MainPage = () => {
                 handleConnect();
               }}
             >
-              Connect Metamask
+              <Typography style={{ fontSize: 20 }} component="h1">
+                Connect Metamask
+              </Typography>
             </Button>
           </>
         ) : walletConnecting ? (
@@ -455,7 +457,9 @@ const MainPage = () => {
               fullsize
               variant="primary"
             >
-              {action === "wrap" ? "Wrap Token" : "Unwrap token"}
+              <Typography style={{ fontSize: 20 }} component="h1">
+                {action === "wrap" ? "Wrap Token" : "Unwrap token"}
+              </Typography>
             </Button>
           </section>
           <section>

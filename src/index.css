@@ -38,6 +38,7 @@ input::-webkit-inner-spin-button {
 
 /* This theme is toggled in the app header component  */
 body.dark-theme {
+  background: none;
   background-color: black;
 }
 
@@ -63,4 +64,8 @@ body.dark-theme .ava-eth-logo {
 
 .basic-box-shadow {
   box-shadow: 0px 1px 20px 0px #bdbdbd5e;
+}
+
+body.dark-theme .header-hamburger-menu span {
+  background-color: white;
 }

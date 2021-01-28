@@ -26,13 +26,14 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
     },
     toggle: {
       display: "inline-block",
-      border: "solid 1px",
       width: "40px",
       minWidth: "40px",
       height: "20px",
       borderRadius: "10px",
       marginRight: "5px",
       position: "relative",
+      boxShadow: constants.dropShadowStyle as string,
+      backgroundColor: "white",
       "&:before": {
         content: "''",
         position: "absolute",
@@ -41,7 +42,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
         height: "20px",
         borderRadius: "50%",
         backgroundColor: "#BDBDBD",
-        bottom: "-1px",
+        bottom: "0px",
         left: "-1px",
       },
       "&.selected": {

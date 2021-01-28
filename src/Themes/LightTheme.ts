@@ -29,14 +29,15 @@ const networkNameStyle = {
 };
 
 const largeButtonStyle = {
-  borderRadius: 30,
-  height: 45,
+  borderRadius: inputSelectorBorderRadius,
+  height: 65,
   fontSize: 20,
   fontWeight: 700,
   border: "none",
   minHeight: 35,
   maxWidth: 400,
   minWidth: 300,
+  backgroundColor: "#E84142",
 };
 
 const pageRootStyles = {
@@ -45,10 +46,7 @@ const pageRootStyles = {
   borderRadius: "13px",
   padding: 20,
   position: "relative",
-  minWidth: 470,
-  [`@media (max-width: ${tabletMediaSize}px)`]: {
-    padding: 10,
-  },
+  minWidth: 469,
 };
 
 const walletArea = {
@@ -104,10 +102,13 @@ const currencySelector = {
 export const lightTheme = createTheme({
   globalStyling: {
     body: {
-      backgroundColor: "#F5F5F5",
+      fontFamily: "inter !important",
     },
   },
   themeConfig: {
+    typography: {
+      fontFamily: ["inter"],
+    },
     constants: {
       navItemHeight: 42,
       inputSelectorHeight,
@@ -169,6 +170,7 @@ export const lightTheme = createTheme({
         variants: {
           primary: {
             root: {
+              fontFamily: "inter !important",
               backgroundColor: "#262626",
               color: "#ffffff",
               border: `1px solid #262626`,
@@ -200,6 +202,7 @@ export const lightTheme = createTheme({
           },
           outline: {
             root: {
+              fontFamily: "inter !important",
               backgroundColor: "transparent",
               color: "#ffffff",
               border: `1px solid #ffffff`,
@@ -235,6 +238,9 @@ export const lightTheme = createTheme({
         },
       },
       Typography: {
+        root: {
+          fontFamily: "inter !important",
+        },
         body1: {
           fontWeight: 700,
         },
@@ -277,6 +283,7 @@ export const lightTheme = createTheme({
       TextInput: {
         input: {
           root: {
+            fontFamily: "inter !important",
             height: "100%",
             borderRadius: inputSelectorBorderRadius,
             border: "none",

@@ -30,6 +30,7 @@ const App: React.FC<{}> = () => {
       [bc.networkId]: bc.tokens,
     };
   }, {});
+
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (

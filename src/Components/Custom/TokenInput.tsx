@@ -2,7 +2,11 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 
 import { useField, useFormikContext } from "formik";
-import { Button, FormikTextInput } from "@chainsafe/common-components";
+import {
+  Button,
+  FormikTextInput,
+  Typography,
+} from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
@@ -87,7 +91,7 @@ const TokenInput: React.FC<ITokenInput> = ({
         variant="outline"
         type="button"
       >
-        MAX
+        <Typography>MAX</Typography>
       </Button>
     </span>
   );

@@ -46,7 +46,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
     navTabs: {
       display: "flex",
       maxWidth: 570,
-      minWidth: 470,
+      minWidth: 497,
     },
     link: {
       fontSize: 20,
@@ -74,7 +74,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       backgroundColor: "white",
       "&.active": {
         color: "white !important",
-        backgroundColor: "#424242",
+        backgroundColor: "#e84142",
       },
       "&.left": {
         borderTopRightRadius: 0,
@@ -91,7 +91,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       marginLeft: 10,
     },
     credit: {
-      backgroundColor: palette.additional["gray"][4],
+      backgroundColor: "#ffffff73",
       padding: 10,
       borderRadius: 9,
       display: "flex",

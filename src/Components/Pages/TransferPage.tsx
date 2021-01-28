@@ -92,7 +92,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       cursor: "pointer",
       height: 20,
       width: 20,
-      marginTop: constants.generalUnit * 5,
+      marginTop: 20,
       fill: `${palette.additional["transferUi"][1]} !important`,
     },
     tokenItem: {
@@ -129,7 +129,6 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     submit: {
-      backgroundColor: "#E84142",
       ...(constants.largeButtonStyle as any),
     },
     submitContainer: {
@@ -183,14 +182,6 @@ const TransferPage = () => {
     (chain) => chain.value === destinationChain?.chainId
   );
 
-  const theTokens =
-    Object.keys(tokens).map((t) => ({
-      value: t,
-      icon: tokens[t]?.imageUri,
-      alt: tokens[t]?.symbol,
-      label: tokens[t]?.symbol || "Unknown",
-    })) || [];
-  console.log(destChains, destChain, theTokens);
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: "",
     token: "",
@@ -276,7 +267,9 @@ const TransferPage = () => {
               handleConnect();
             }}
           >
-            Connect Metamask
+            <Typography style={{ fontSize: 20 }} component="h1">
+              Connect Metamask
+            </Typography>
           </Button>
         ) : walletConnecting ? (
           <section className={classes.connecting}>
@@ -414,7 +407,9 @@ const TransferPage = () => {
               fullsize
               variant="primary"
             >
-              Start transfer
+              <Typography style={{ fontSize: 20 }} component="h1">
+                Start transfer
+              </Typography>
             </Button>
           </section>
           <section>
