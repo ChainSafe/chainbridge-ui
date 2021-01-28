@@ -84,6 +84,7 @@ const LanguageProvider = ({
     }).format(date);
     return result;
   };
+
   const setLanguage = async (newLanguage: string) => {
     if (!availableLanguages.map((l) => l.id).includes(newLanguage)) {
       console.log("This locale is not available");
