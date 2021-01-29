@@ -102,12 +102,12 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
     },
     network: {},
     connectionIndicator: {
-      marginRight: "60px",
+      marginRight: "30px",
     },
     viewTutorials: {
       borderRadius: "35px",
       boxShadow: constants.dropShadowStyle as string,
-      padding: "10px 15px 10px 15px",
+      padding: "12px 15px 12px 15px",
       fontSize: "13px",
       position: "relative",
       whiteSpace: "nowrap",
@@ -115,6 +115,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       textDecoration: "none",
       textAlign: "center",
       marginRight: 30,
+      fontFamily: "Inter",
     },
     viewTutorialsMenu: {
       fontSize: "13px",
