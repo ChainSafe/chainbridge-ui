@@ -34,7 +34,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
     },
     logo: {
       marginRight: `${constants.generalUnit}px`,
-      height: 20,
+      height: 60,
       marginBottom: 5,
       whiteSpace: "nowrap",
     },
@@ -44,6 +44,8 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       whiteSpace: "nowrap",
       lineHeight: "20px",
       fontWeight: 500,
+      display: "flex",
+      alignItems: "center",
     },
     semiBold: {
       fontWeight: 500,
