@@ -27,13 +27,13 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > div": {
         height: 85,
         "& input": {
-          border: "none",
+          border: constants.borderStyle as any,
           height: "100%",
           backgroundColor: "white !important",
-          boxShadow: "0px 1px 20px 0px #bdbdbd5e",
+
           fontSize: `${constants.inputSelectorFontSize as any}px !important`,
           borderRadius: 15,
-          fontWeight: 600,
+          fontWeight: 400,
         },
       },
       "& span:last-child.error": {
@@ -41,7 +41,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     maxButton: {
-      backgroundColor: "white !important",
+      backgroundColor: "transparent !important",
       border: "none",
       position: "absolute",
       right: 0,
@@ -52,7 +52,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       color: "black",
     },
     label: {
-      fontWeight: 600,
+      fontWeight: 400,
     },
   })
 );

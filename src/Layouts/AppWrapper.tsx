@@ -4,7 +4,7 @@ import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
-import { ROUTE_LINKS } from "../Components/Routes";
+import { ROUTE_LINKS } from "../App";
 import classNames from "classnames";
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
@@ -50,7 +50,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
     },
     link: {
       fontSize: 20,
-      fontWeight: 600,
+      fontWeight: 400,
       marginTop: 0,
       lineHeight: "15px",
     },
@@ -105,7 +105,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
         whiteSpace: "nowrap",
       },
       "& .name": {
-        fontWeight: 700,
+        fontWeight: 600,
         color: palette.additional["gray"][9],
         marginRight: 5,
       },
@@ -164,7 +164,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
                 Wrap token
               </Typography>
               <Typography variant="h5" className={classes.subLink}>
-                Check the status of your transfer
+                Wrap your token as an ERC-20
               </Typography>
             </Link>
           </section>

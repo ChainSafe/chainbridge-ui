@@ -2,15 +2,22 @@ import React from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import { CssBaseline, ToasterProvider } from "@chainsafe/common-components";
-import { HashRouter } from "react-router-dom";
+import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import Routes from "./Components/Routes";
+import TransferPage from "./Components/Pages/TransferPage";
+import WrapperPage from "./Components/Pages/WrapperPage";
 import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";
+import Tutorials from "./Components/Pages/Tutorials";
+
+export const ROUTE_LINKS = {
+  Transfer: "/transfer",
+  Wrap: "/wrap",
+};
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -72,9 +79,38 @@ const App: React.FC<{}> = () => {
           >
             <ChainbridgeProvider>
               <HashRouter>
-                <AppWrapper>
-                  <Routes />
-                </AppWrapper>
+                <Switch>
+                  <Route
+                    exact
+                    path={ROUTE_LINKS.Transfer}
+                    render={() => {
+                      return (
+                        <AppWrapper>
+                          <TransferPage></TransferPage>
+                        </AppWrapper>
+                      );
+                    }}
+                  />
+                  <Route
+                    exact
+                    path={ROUTE_LINKS.Wrap}
+                    render={() => {
+                      return (
+                        <AppWrapper>
+                          <WrapperPage></WrapperPage>
+                        </AppWrapper>
+                      );
+                    }}
+                  />
+                </Switch>
+                <Route exact path={"/tutorials"} component={Tutorials} />
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    return <Redirect to={ROUTE_LINKS.Transfer} />;
+                  }}
+                ></Route>
               </HashRouter>
             </ChainbridgeProvider>
           </Web3Provider>

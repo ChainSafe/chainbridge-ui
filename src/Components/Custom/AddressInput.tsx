@@ -18,7 +18,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
     },
     label: {
       marginBottom: constants.generalUnit,
-      fontWeight: 600,
+      fontWeight: 400,
     },
     checkboxContainer: {
       marginTop: constants.generalUnit * 3,

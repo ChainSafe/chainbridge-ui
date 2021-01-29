@@ -20,7 +20,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
       display: "none",
     },
     label: {
-      fontWeight: 700,
+      fontWeight: 400,
       fontSize: "16px",
       whiteSpace: "nowrap",
     },

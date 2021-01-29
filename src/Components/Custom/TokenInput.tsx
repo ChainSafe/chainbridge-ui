@@ -20,13 +20,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > div": {
         height: 85,
         "& input": {
-          border: "none",
           height: "100%",
           backgroundColor: "white !important",
-          boxShadow: "0px 1px 20px 0px #bdbdbd5e",
+          border: constants.borderStyle as string,
           fontSize: `${constants.inputSelectorFontSize as any}px !important`,
           borderRadius: 15,
-          fontWeight: 600,
+          fontWeight: 400,
         },
       },
       "& span:last-child.error": {
@@ -45,7 +44,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       color: "black",
     },
     formLabel: {
-      fontWeight: 600,
+      fontWeight: 400,
     },
   })
 );

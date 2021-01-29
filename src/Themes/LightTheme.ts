@@ -5,11 +5,12 @@ const inputSelectorHeight = 45;
 const inputSelectorFontSize = 16;
 const inputSelectorBorderRadius = 15;
 const dropShadowStyle = "0px 1px 20px 0px #bdbdbd5e";
+const borderStyle = "solid 1px #e0e0e0";
 const tabletMediaSize = 1200;
 const smallMediaSize = 720;
 
 const headerTitleStyle = {
-  fontWeight: 600,
+  fontWeight: 400,
   fontSize: 12,
 };
 
@@ -19,12 +20,13 @@ const networkNameStyle = {
   color: "#212121",
   marginTop: 8,
   marginBottom: 20,
-  fontWeight: 600,
+  fontWeight: 400,
   height: inputSelectorHeight,
+  border: borderStyle,
   textTransform: "uppercase",
   alignItems: "center",
   display: "flex",
-  boxShadow: dropShadowStyle,
+  // boxShadow: dropShadowStyle,
   fontSize: inputSelectorFontSize,
 };
 
@@ -32,7 +34,7 @@ const largeButtonStyle = {
   borderRadius: inputSelectorBorderRadius,
   height: 65,
   fontSize: 20,
-  fontWeight: 700,
+  fontWeight: 400,
   border: "none",
   minHeight: 35,
   maxWidth: 400,
@@ -126,6 +128,7 @@ export const lightTheme = createTheme({
       tokenInputArea,
       currencySection,
       currencySelector,
+      borderStyle,
     },
     palette: {
       additional: {
@@ -242,19 +245,19 @@ export const lightTheme = createTheme({
           fontFamily: "inter !important",
         },
         body1: {
-          fontWeight: 700,
+          fontWeight: 400,
         },
       },
       SelectInput: {
         label: {
-          fontWeight: 700,
+          fontWeight: 400,
         },
         container: {
           borderRadius: inputSelectorBorderRadius,
           height: inputSelectorHeight,
           display: "flex",
           justifyContent: "center",
-          boxShadow: dropShadowStyle,
+          // boxShadow: dropShadowStyle,
           backgroundColor: "white",
           borderColor: "transparent",
         },
@@ -286,7 +289,8 @@ export const lightTheme = createTheme({
             fontFamily: "inter !important",
             height: "100%",
             borderRadius: inputSelectorBorderRadius,
-            border: "none",
+            border: borderStyle,
+            fontWeight: 400,
           },
         },
         inputArea: {
@@ -294,7 +298,7 @@ export const lightTheme = createTheme({
             medium: {
               borderRadius: inputSelectorBorderRadius,
               backgroundColor: "transparent",
-              boxShadow: dropShadowStyle,
+              // boxShadow: dropShadowStyle,
               height: inputSelectorHeight,
             },
           },

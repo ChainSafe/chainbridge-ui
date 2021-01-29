@@ -3,6 +3,7 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
+import { NavLink as Link } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -18,7 +19,7 @@ import PreflightModalWrap from "../../Modules/PreflightModalWrap";
 import WrapActiveModal from "../../Modules/WrapActiveModal";
 import { parseUnits } from "ethers/lib/utils";
 import { forwardTo } from "../../Utils/History";
-import { ROUTE_LINKS } from "../Routes";
+import { ROUTE_LINKS } from "../../App";
 import { BigNumber, utils } from "ethers";
 import SimpleTokenInput from "../Custom/SimpleTokenInput";
 import TokenSelectInput from "../Custom/TokenSelectInput";
@@ -38,8 +39,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       padding: "10px 0 20px 0",
     },
     connectButton: {
-      margin: `0px 0px 38px`,
       ...(constants.largeButtonStyle as any),
+      marginBottom: 10,
+    },
+    connectButtonContainer: {
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      padding: "0 0 10px 0",
     },
     connecting: {
       textAlign: "center",
@@ -356,11 +363,12 @@ const MainPage = () => {
         {!isReady ? (
           <>
             <Typography className={classes.blurb} component="p" variant="h5">
-              To convert a token that needs to be wrapped, please connect to the
-              network that the token exists natively for. For example, to
-              convert ETH into wrapped ETH (WETH), your wallet must be connected
-              to an Ethereum network.
+              Convert a token to its wrapped version. For example, convert ETH
+              into wrapped ETH (WETH) or AVAX into wrapped AVAX (WAVAX). To
+              convert, please connect to the token's native network. Need help
+              still? <Link to={"/tutorials"}>Click here.</Link>
             </Typography>
+
             <Button
               className={classes.connectButton}
               fullsize
