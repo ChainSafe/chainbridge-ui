@@ -204,6 +204,7 @@ const MainPage = () => {
     unwrapToken,
     destinationChain,
   } = useChainbridge();
+
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -328,12 +329,21 @@ const MainPage = () => {
   });
 
   const options = [
-    {
-      imageUri: "./avax_logo.svg",
-      symbol: "AVAX",
-      label: "AVAX",
-      value: "wrap",
-    },
+    homeChain?.chainId === 1
+      ? {
+          imageUri:
+            "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xf20d962a6c8f70c731bd838a3a388D7d48fA6e15/logo.png",
+          symbol: "Ethereum",
+          label: "Ethereum",
+          value: "wrap",
+        }
+      : {
+          imageUri:
+            "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/ethereum-tokens/0x9dEbca6eA3af87Bf422Cea9ac955618ceb56EfB4/logo.png",
+          symbol: "AVAX",
+          label: "AVAX",
+          value: "wrap",
+        },
     {
       imageUri: wrapTokenConfig?.imageUri,
       symbol: wrapTokenConfig?.symbol || "wETH",

@@ -55,6 +55,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
             "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xf20d962a6c8f70c731bd838a3a388D7d48fA6e15/logo.png",
           resourceId:
             "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201",
+          isNativeWrappedToken: true,
         },
         {
           address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
