@@ -140,7 +140,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
   return (
     <section className={classes.root}>
       <section className={classes.inner}>
-        <AppHeader />
+        <AppHeader showViewTransfer={false} />
         <section className={classes.content}>
           <section className={classes.navTabs}>
             <Link

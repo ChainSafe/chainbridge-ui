@@ -9,11 +9,44 @@ import classNames from "classnames";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
+import { NavLink as Link } from "react-router-dom";
 import ChainBridgeLogo from "../assets/AEB_Red_GradientLight.svg";
 import Toggle from "../Components/Custom/Toggle";
 import useMedia from "use-media";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
+  const getConnectionStyles = (color: string) => ({
+    borderRadius: 35,
+    boxShadow: constants.dropShadowStyle as string,
+    padding: "10px 15px 10px 35px",
+    fontSize: "13px",
+    position: "relative",
+    whiteSpace: "nowrap",
+    backgroundColor: "white",
+    "&:before": {
+      content: "''",
+      position: "absolute",
+      top: "8px",
+      left: "10px",
+      width: "18px",
+      height: "18px",
+      display: "block",
+      backgroundColor: color,
+      borderRadius: "50%",
+    },
+    [`@media (max-width: ${1000}px)`]: {
+      backgroundColor: "transparent",
+      border: "none",
+      boxShadow: "none",
+      padding: "10px 15px 10px 45px",
+      "&:before": {
+        left: "-1px",
+        width: 20,
+        height: 20,
+      },
+    },
+  });
+
   return createStyles({
     root: {
       display: "flex",
@@ -71,61 +104,41 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
     connectionIndicator: {
       marginRight: "60px",
     },
-    notConnectedIndicator: {
+    viewTutorials: {
       borderRadius: "35px",
       boxShadow: constants.dropShadowStyle as string,
-      padding: "10px 15px 10px 35px",
+      padding: "10px 15px 10px 15px",
       fontSize: "13px",
       position: "relative",
       whiteSpace: "nowrap",
       backgroundColor: "white",
-      "&:before": {
-        content: "''",
-        position: "absolute",
-        top: "8px",
-        left: "10px",
-        width: "18px",
-        height: "18px",
-        display: "block",
-        backgroundColor: palette.additional["red"][6],
-        borderRadius: "50%",
-      },
-      [`@media (max-width: ${1000}px)`]: {
-        backgroundColor: "transparent",
-        border: "none",
-        boxShadow: "none",
-      },
+      textDecoration: "none",
+      textAlign: "center",
+      marginRight: 30,
+    },
+    viewTutorialsMenu: {
+      fontSize: "13px",
+      textDecoration: "none",
+      marginLeft: 46,
+      fontFamily: "Inter",
+    },
+    toggleLabel: {
+      fontSize: 13,
+    },
+    notConnectedIndicator: {
+      ...(getConnectionStyles(palette.additional["red"][6]) as any),
     },
     isConnectedIndicator: {
-      borderRadius: 35,
-      boxShadow: constants.dropShadowStyle as string,
-      padding: "10px 15px 10px 35px",
-      position: "relative",
-      whiteSpace: "nowrap",
-      backgroundColor: "white",
-      "&:before": {
-        content: "''",
-        position: "absolute",
-        top: 10,
-        left: 10,
-        width: 18,
-        height: 18,
-        display: "block",
-        backgroundColor: palette.additional.indicatorGreen[1],
-        borderRadius: "50%",
-      },
-      [`@media (max-width: ${1000}px)`]: {
-        backgroundColor: "transparent",
-        border: "none",
-        boxShadow: "none",
-      },
+      ...(getConnectionStyles(palette.additional.indicatorGreen[1]) as any),
     },
   });
 });
 
-interface IAppHeader {}
+interface IAppHeader {
+  showViewTransfer: boolean;
+}
 
-const AppHeader: React.FC<IAppHeader> = () => {
+const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
   const classes = useStyles();
   const { isReady, address } = useWeb3();
   const { homeChain } = useChainbridge();
@@ -152,7 +165,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
         />
 
         <div className={classNames(classes.subLogo, "ava-eth-logo")}>
-          <p>An Avalanche and Ethereum Bridge</p>
+          <p>AEB | Avalanche - Ethereum Bridge</p>
         </div>
       </div>
       {isLessThan1000px ? (
@@ -199,7 +212,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
             </MenuItem>
             <MenuItem>
               <Toggle
-                className=""
+                labelClassName={classes.toggleLabel}
                 label="Night Mode"
                 value={isDarkTeme}
                 onChange={() => {
@@ -209,10 +222,30 @@ const AppHeader: React.FC<IAppHeader> = () => {
                 }}
               />
             </MenuItem>
+            <MenuItem>
+              {!showViewTransfer ? (
+                <Link className={classes.viewTutorialsMenu} to={"/tutorials"}>
+                  View Tutorials
+                </Link>
+              ) : (
+                <Link className={classes.viewTutorialsMenu} to={"/transfer"}>
+                  View App
+                </Link>
+              )}
+            </MenuItem>
           </Menu>
         </>
       ) : (
         <section className={classes.state}>
+          {!showViewTransfer ? (
+            <Link className={classes.viewTutorials} to={"/tutorials"}>
+              View Tutorials
+            </Link>
+          ) : (
+            <Link className={classes.viewTutorials} to={"/transfer"}>
+              View App
+            </Link>
+          )}
           <span
             className={classNames(
               classes.connectionIndicator,
@@ -239,7 +272,6 @@ const AppHeader: React.FC<IAppHeader> = () => {
             )}
           </span>
           <Toggle
-            className=""
             label="Night Mode"
             value={isDarkTeme}
             onChange={() => {

@@ -4,7 +4,8 @@ import classNames from "classnames";
 
 interface ICustomToggleProps {
   label: string;
-  className: string;
+  labelClassName?: string;
+  toggleClassName?: string;
   value: boolean;
   onChange(val: boolean): void;
 }
@@ -57,7 +58,8 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
 
 export const Toggle = ({
   label,
-  className,
+  labelClassName,
+  toggleClassName,
   value,
   onChange,
   ...rest
@@ -67,9 +69,16 @@ export const Toggle = ({
   return (
     <label className={classNames(classes.container, "container")}>
       <span
-        className={classNames(classes.toggle, "toggle", { selected: value })}
+        className={classNames(
+          classes.toggle,
+          "toggle",
+          { selected: value },
+          toggleClassName
+        )}
       ></span>
-      <span className={classNames(classes.label, "label")}>{label}</span>
+      <span className={classNames(classes.label, "label", labelClassName)}>
+        {label}
+      </span>
 
       <input
         className={classes.input}
