@@ -3,8 +3,11 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import { Button, ProgressBar, Typography } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
+import { useHistory } from "react-router-dom";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { TokenConfig } from "../chainbridgeConfig";
+
+import { ROUTE_LINKS } from "../App";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -147,6 +150,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
 }: IWrapActiveModalProps) => {
   const classes = useStyles();
   const { homeChain } = useChainbridge();
+  const history = useHistory();
 
   return (
     <CustomModal
@@ -201,7 +205,10 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
                 size="small"
                 className={classes.button}
                 variant="outline"
-                onClick={() => close()}
+                onClick={() => {
+                  history.push(ROUTE_LINKS.Transfer);
+                  close();
+                }}
               >
                 Start a transfer
               </Button>

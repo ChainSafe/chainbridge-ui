@@ -8,8 +8,6 @@ import { shortenAddress } from "../Utils/Helpers";
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
-      zIndex: zIndex?.blocker,
-      position: "absolute",
       "& li": {
         position: "relative",
         padding: `${constants.generalUnit}px 0 ${constants.generalUnit}px ${
@@ -40,10 +38,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       color: palette.additional["preflight"][2],
       marginBottom: constants.generalUnit * 2,
     },
-    backdrop: {
-      position: "absolute",
-      zIndex: zIndex?.layer4,
-    },
+    backdrop: {},
   })
 );
 
