@@ -242,10 +242,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
             case 3:
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
+              resetDeposit();
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
+              resetDeposit();
               break;
           }
         }
