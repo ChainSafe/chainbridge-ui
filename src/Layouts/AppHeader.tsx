@@ -272,7 +272,7 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
               </span>
             )}
           </span>
-          <Toggle
+          {/* <Toggle
             label="Night Mode"
             value={isDarkTeme}
             onChange={() => {
@@ -280,7 +280,7 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
               document.body.className = isDark ? `dark-theme` : ``;
               setDarkTheme(isDark);
             }}
-          />
+          /> */}
         </section>
       )}
     </header>
