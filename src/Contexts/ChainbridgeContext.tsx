@@ -357,7 +357,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           )
         ).wait(1);
       }
-
       homeBridge.once(
         homeBridge.filters.Deposit(
           destinationChain.chainId,

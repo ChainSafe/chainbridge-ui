@@ -34,6 +34,10 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       flexDirection: "column",
       alignItems: "center",
     },
+    container: {
+      display: "flex",
+      flexDirection: "column",
+    },
     pageArea: {
       height: "100%",
       // overflow: "hidden",
@@ -45,8 +49,6 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
     },
     navTabs: {
       display: "flex",
-      maxWidth: 570,
-      minWidth: 497,
     },
     link: {
       fontSize: 20,
@@ -142,48 +144,50 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       <section className={classes.inner}>
         <AppHeader showViewTransfer={false} />
         <section className={classes.content}>
-          <section className={classes.navTabs}>
-            <Link
-              // activeClassName="active"
-              className={classNames(classes.navLink, "left")}
-              to={ROUTE_LINKS.Transfer}
-            >
-              <Typography variant="h3" className={classes.link}>
-                Transfer
-              </Typography>
-              <Typography variant="h5" className={classes.subLink}>
-                Move coins between Avalanche and Ethereum.
-              </Typography>
-            </Link>
-            <Link
-              // activeClassName="active"
-              className={classNames(classes.navLink, "right")}
-              to={ROUTE_LINKS.Wrap}
-            >
-              <Typography variant="h3" className={classes.link}>
-                Wrap token
-              </Typography>
-              <Typography variant="h5" className={classes.subLink}>
-                Wrap your token as an ERC-20
-              </Typography>
-            </Link>
-          </section>
-
-          <div className={classNames(classes.pageArea, "basic-box-shadow")}>
-            {children}
-          </div>
-          <div className={classes.contributorCredits}>
-            {contributionCredits.map((credit) => (
-              <a
-                className={classNames(classes.credit, "credit")}
-                key={credit.name}
+          <section className={classes.container}>
+            <section className={classes.navTabs}>
+              <Link
+                // activeClassName="active"
+                className={classNames(classes.navLink, "left")}
+                to={ROUTE_LINKS.Transfer}
               >
-                <span className="title">{credit.title}</span>
-                <span className="name">{credit.name}</span>
-                <img src={credit.logoURI} />
-              </a>
-            ))}
-          </div>
+                <Typography variant="h3" className={classes.link}>
+                  Transfer
+                </Typography>
+                <Typography variant="h5" className={classes.subLink}>
+                  Move coins between Avalanche and Ethereum.
+                </Typography>
+              </Link>
+              <Link
+                // activeClassName="active"
+                className={classNames(classes.navLink, "right")}
+                to={ROUTE_LINKS.Wrap}
+              >
+                <Typography variant="h3" className={classes.link}>
+                  Wrap token
+                </Typography>
+                <Typography variant="h5" className={classes.subLink}>
+                  Wrap your token as an ERC-20
+                </Typography>
+              </Link>
+            </section>
+
+            <div className={classNames(classes.pageArea, "basic-box-shadow")}>
+              {children}
+            </div>
+            <div className={classes.contributorCredits}>
+              {contributionCredits.map((credit) => (
+                <a
+                  className={classNames(classes.credit, "credit")}
+                  key={credit.name}
+                >
+                  <span className="title">{credit.title}</span>
+                  <span className="name">{credit.name}</span>
+                  <img src={credit.logoURI} />
+                </a>
+              ))}
+            </div>
+          </section>
         </section>
 
         {/* Put CTA here */}
