@@ -10,6 +10,7 @@ import image5 from "../../assets/tutorial_images/image5.png";
 import image6 from "../../assets/tutorial_images/image6.png";
 import image7 from "../../assets/tutorial_images/image7.png";
 import image8 from "../../assets/tutorial_images/image8.png";
+import logo from "../../assets/AEB_Red_GradientLight.svg";
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ const Title = styled.h1`
 
 const SubTitle = styled.h3`
   font-weight: 400;
-  font-size: 20px;
+  font-size: 18px;
   margin: 10px 0;
 `;
 
@@ -30,17 +31,20 @@ const Instruction = styled.h3`
   font-weight: 400;
   margin: 20px 0;
   color: #424242;
+  line-height: 23px;
 `;
 
 const Step = styled.h2`
   font-weight: 700;
   margin: 20px 0;
+  font-size: 20px;
 `;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 250px;
 `;
 
 const Section = styled.section`
@@ -59,6 +63,16 @@ const List = styled.ul`
 `;
 const ListItem = styled.li`
   margin: 10px 0;
+  line-height: 23px;
+`;
+
+const GroupHorizontal = styled.div`
+  display: flex;
+`;
+
+const GroupVertical = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 function Tutorials() {
@@ -110,29 +124,35 @@ function Tutorials() {
           <Instruction>
             Click the drop-down menu and select “Custom RPC.”{" "}
           </Instruction>
-          <Image src={image4}></Image>
-          <Instruction>
-            Enter the following settings into the respective fields:
-          </Instruction>
-          <List style={{ listStyle: "disc" }}>
-            <ListItem>
-              <strong>Network Name:</strong> Avalanche Mainnet
-            </ListItem>
-            <ListItem>
-              <strong>New RPC URL:</strong>{" "}
-              <Anchor>https://api.avax.network/ext/bc/C/rpc</Anchor>
-            </ListItem>
-            <ListItem>
-              <strong>ChainID:</strong> 0xa86a
-            </ListItem>
-            <ListItem>
-              <strong>Symbol:</strong> AVAX
-            </ListItem>
-            <ListItem>
-              <strong>Explorer:</strong>{" "}
-              <Anchor>https://cchain.explorer.avax.network/</Anchor>
-            </ListItem>
-          </List>
+          <GroupHorizontal>
+            <Image src={image4}></Image>
+            <GroupVertical style={{ marginLeft: "10px" }}>
+              <Instruction>
+                <strong>
+                  Enter the following settings into the respective fields:
+                </strong>
+              </Instruction>
+              <List style={{ listStyle: "disc" }}>
+                <ListItem>
+                  <strong>Network Name:</strong> Avalanche Mainnet
+                </ListItem>
+                <ListItem>
+                  <strong>New RPC URL:</strong>{" "}
+                  <Anchor>https://api.avax.network/ext/bc/C/rpc</Anchor>
+                </ListItem>
+                <ListItem>
+                  <strong>ChainID:</strong> 0xa86a
+                </ListItem>
+                <ListItem>
+                  <strong>Symbol:</strong> AVAX
+                </ListItem>
+                <ListItem>
+                  <strong>Explorer:</strong>{" "}
+                  <Anchor>https://cchain.explorer.avax.network/</Anchor>
+                </ListItem>
+              </List>
+            </GroupVertical>
+          </GroupHorizontal>
 
           <Title>
             Use the Avalanche-Ethereum Bridge to Fund Your Avalanche Address
@@ -154,14 +174,14 @@ function Tutorials() {
               <Anchor href="https://aeb.xyz/#/transfer">here</Anchor>
             </ListItem>
             <ListItem>Select “Wrap Token”</ListItem>
-            <Image src={image5}></Image>
+            <Image style={{ margin: "20px 0" }} src={image5}></Image>
             <ListItem>
               Select “Connect Metamask” and sign into your wallet
             </ListItem>
             <ListItem>
               Select the “Ethereum Mainnet” network on your MetaMask wallet
             </ListItem>
-            <Image src={image2}></Image>
+            <Image style={{ margin: "20px 0" }} src={image2}></Image>
             <ListItem>
               Select Ethereum, enter the amount you would like to wrap and then
               select “Wrap Token”.{" "}
@@ -171,9 +191,9 @@ function Tutorials() {
               </Anchor>
               .
             </ListItem>
-            <Image src={image1}></Image>
+            <Image style={{ margin: "20px 0" }} src={image1}></Image>
             <ListItem>Select “Transfer”</ListItem>
-            <Image src={image3}></Image>
+            <Image style={{ margin: "20px 0" }} src={image3}></Image>
             <ListItem>Select the Destination Network as “Avalanche”</ListItem>
             <ListItem>
               Select WETH as the token you want to transfer to Avalanche
@@ -184,7 +204,7 @@ function Tutorials() {
               wallet. If you want to send the funds to your current wallet, you
               may click “I want to send funds to my address”.
             </ListItem>
-            <Image src={image6}></Image>
+            <Image style={{ margin: "20px 0" }} src={image6}></Image>
             <ListItem>Select “Start Transfer”</ListItem>
           </List>
           <Instruction>
@@ -199,14 +219,14 @@ function Tutorials() {
               <Anchor href="https://aeb.xyz/#/transfer">here</Anchor>
             </ListItem>
             <ListItem>Select “Transfer”</ListItem>
-            <Image src={image3}></Image>
+            <Image style={{ margin: "20px 0" }} src={image3}></Image>
             <ListItem>
               Select “Connect Metamask” and sign into your wallet
             </ListItem>
             <ListItem>
               Select “Ethereum Mainnet” network on your Metamask wallet
             </ListItem>
-            <Image src={image2}></Image>
+            <Image style={{ margin: "20px 0" }} src={image2}></Image>
             <ListItem>Select the Destination Network as “Avalanche”</ListItem>
             <ListItem>
               Select the ERC-20 token that you would like to transfer
@@ -217,7 +237,7 @@ function Tutorials() {
               Avalanche wallet. If you want to send the funds to your current
               wallet, you may click “I want to send funds to my address”.
             </ListItem>
-            <Image src={image8}></Image>
+            <Image style={{ margin: "20px 0" }} src={image8}></Image>
             <ListItem>Select “Start Transfer”</ListItem>
           </List>
           <Instruction>
