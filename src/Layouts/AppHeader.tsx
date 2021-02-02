@@ -11,7 +11,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { NavLink as Link } from "react-router-dom";
 import ChainBridgeLogo from "../assets/AEB_Red_GradientLight.svg";
-import Toggle from "../Components/Custom/Toggle";
 import useMedia from "use-media";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
@@ -211,18 +210,7 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
                 )}
               </span>
             </MenuItem>
-            <MenuItem>
-              <Toggle
-                labelClassName={classes.toggleLabel}
-                label="Night Mode"
-                value={isDarkTeme}
-                onChange={() => {
-                  const isDark = !isDarkTeme;
-                  document.body.className = isDark ? `dark-theme` : ``;
-                  setDarkTheme(isDark);
-                }}
-              />
-            </MenuItem>
+
             <MenuItem>
               {!showViewTransfer ? (
                 <Link className={classes.viewTutorialsMenu} to={"/tutorials"}>
