@@ -15,6 +15,7 @@ import logo from "../../assets/AEB_Red_GradientLight.svg";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  background-color: white;
 `;
 
 const Title = styled.h1`

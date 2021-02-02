@@ -320,13 +320,16 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDepositAmount(amount);
     setSelectedToken(tokenAddress);
     const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
+    const decimals = await erc20.decimals();
 
     const data =
       "0x" +
       utils
         .hexZeroPad(
           // TODO Wire up dynamic token decimals
-          BigNumber.from(utils.parseUnits(amount.toString(), 18)).toHexString(),
+          BigNumber.from(
+            utils.parseUnits(amount.toString(), decimals)
+          ).toHexString(),
           32
         )
         .substr(2) + // Deposit Amount (32 bytes)
@@ -345,7 +348,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         await (
           await erc20.approve(
             homeChain.erc20HandlerAddress,
-            BigNumber.from(utils.parseUnits(amount.toString(), 18)),
+            BigNumber.from(utils.parseUnits(amount.toString(), decimals)),
             {
               gasPrice: BigNumber.from(
                 utils.parseUnits(
@@ -379,7 +382,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
-            value: utils.parseUnits((bridgeFee || 0).toString(), 18),
+            value: utils.parseUnits((bridgeFee || 0).toString(), decimals),
           }
         )
       ).wait();
