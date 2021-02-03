@@ -242,12 +242,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
             case 3:
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
-              resetDeposit();
+              setDepositNonce(undefined);
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
-              resetDeposit();
+              setDepositNonce(undefined);
               break;
           }
         }
@@ -263,6 +263,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         async (originChainId, depositNonce, status, resourceId, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
           if (txReceipt.status === 1) {
+            console.log("Setting deposit votes");
             setDepositVotes(depositVotes + 1);
           }
           tokensDispatch({
