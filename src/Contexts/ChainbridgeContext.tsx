@@ -242,10 +242,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
             case 3:
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
+              setDepositNonce(undefined);
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
+              setDepositNonce(undefined);
               break;
           }
         }
@@ -261,6 +263,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         async (originChainId, depositNonce, status, resourceId, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
           if (txReceipt.status === 1) {
+            console.log("Setting deposit votes");
             setDepositVotes(depositVotes + 1);
           }
           tokensDispatch({
@@ -382,7 +385,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
-            value: utils.parseUnits((bridgeFee || 0).toString(), decimals),
+            value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           }
         )
       ).wait();

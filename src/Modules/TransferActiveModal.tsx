@@ -215,7 +215,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               } else {
                 return (
                   <Typography className={classes.vote} component="p" key={i}>
-                    <span>Vote casted by {m.address}</span>
+                    <span>Vote cast by {m.address}</span>
                     <span>{m.signed}</span>
                   </Typography>
                 );
