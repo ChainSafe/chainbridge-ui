@@ -49,14 +49,13 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
     root: {
       display: "flex",
-      justifyContent: "space-between",
+      flexDirection: "column",
       width: "100%",
       top: 0,
       left: 0,
       color: palette.additional["header"][2],
       alignItems: "center",
       zIndex: zIndex?.layer2,
-      padding: "15px 20px 10px 20px",
       marginBottom: 30,
     },
     left: {
@@ -131,6 +130,20 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
     isConnectedIndicator: {
       ...(getConnectionStyles(palette.additional.indicatorGreen[1]) as any),
     },
+    banner: {
+      backgroundColor: "#E84142",
+      width: "100%",
+      padding: 6,
+      color: "white",
+      display: "flex",
+      justifyContent: "center",
+    },
+    headerContent: {
+      display: "flex",
+      justifyContent: "space-between",
+      width: "100%",
+      padding: "15px 20px 10px 20px",
+    },
   });
 });
 
@@ -156,110 +169,117 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
 
   return (
     <header className={clsx(classes.root)}>
-      <div className={classes.left}>
-        <img
-          src={ChainBridgeLogo}
-          alt={"Chainbridge Logo"}
-          className={classes.logo}
-        />
-
-        <div className={classNames(classes.subLogo, "ava-eth-logo")}>
-          <p>AEB | Avalanche - Ethereum Bridge</p>
-        </div>
+      <div className={clsx(classes.banner)}>
+        &#9888; Experimental App: Any funds sent through the bridge may be lost,
+        and non-standard token behaviour will not be supported on the non-native
+        chain.
       </div>
-      {isLessThan1000px ? (
-        <>
-          <span className="header-hamburger-menu">
-            <HamburgerMenu
-              onClick={handleClick}
-              variant={"default"}
-            ></HamburgerMenu>
-          </span>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem>
-              <span
-                className={classNames(
-                  classes.connectionIndicator,
-                  "connected-indicator"
-                )}
-              >
-                {!isReady ? (
-                  <Typography
-                    className={classes.notConnectedIndicator}
-                    variant="h5"
-                  >
-                    No wallet connected
-                  </Typography>
-                ) : (
-                  <span className={classes.isConnectedIndicator}>
-                    {/* <div className={classes.indicator}></div> */}
-                    <Typography variant="h5" className={classes.address}>
-                      {address && shortenAddress(address)}
-                    </Typography>
-                    <Typography variant="h5" className={classes.address}>
-                      connected to <strong>{homeChain?.name}</strong>
-                    </Typography>
-                  </span>
-                )}
-              </span>
-            </MenuItem>
 
-            <MenuItem>
-              {!showViewTransfer ? (
-                <Link className={classes.viewTutorialsMenu} to={"/tutorials"}>
-                  View Tutorials
-                </Link>
-              ) : (
-                <Link className={classes.viewTutorialsMenu} to={"/transfer"}>
-                  View App
-                </Link>
-              )}
-            </MenuItem>
-          </Menu>
-        </>
-      ) : (
-        <section className={classes.state}>
-          {!showViewTransfer ? (
-            <Link className={classes.viewTutorials} to={"/tutorials"}>
-              View Tutorials
-            </Link>
-          ) : (
-            <Link className={classes.viewTutorials} to={"/transfer"}>
-              View App
-            </Link>
-          )}
-          <span
-            className={classNames(
-              classes.connectionIndicator,
-              "connected-indicator"
-            )}
-          >
-            {!isReady ? (
-              <Typography
-                className={classes.notConnectedIndicator}
-                variant="h5"
-              >
-                No wallet connected
-              </Typography>
+      <div className={clsx(classes.headerContent)}>
+        <div className={classes.left}>
+          <img
+            src={ChainBridgeLogo}
+            alt={"Chainbridge Logo"}
+            className={classes.logo}
+          />
+
+          <div className={classNames(classes.subLogo, "ava-eth-logo")}>
+            <p>AEB | Avalanche - Ethereum Bridge</p>
+          </div>
+        </div>
+        {isLessThan1000px ? (
+          <>
+            <span className="header-hamburger-menu">
+              <HamburgerMenu
+                onClick={handleClick}
+                variant={"default"}
+              ></HamburgerMenu>
+            </span>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem>
+                <span
+                  className={classNames(
+                    classes.connectionIndicator,
+                    "connected-indicator"
+                  )}
+                >
+                  {!isReady ? (
+                    <Typography
+                      className={classes.notConnectedIndicator}
+                      variant="h5"
+                    >
+                      No wallet connected
+                    </Typography>
+                  ) : (
+                    <span className={classes.isConnectedIndicator}>
+                      {/* <div className={classes.indicator}></div> */}
+                      <Typography variant="h5" className={classes.address}>
+                        {address && shortenAddress(address)}
+                      </Typography>
+                      <Typography variant="h5" className={classes.address}>
+                        connected to <strong>{homeChain?.name}</strong>
+                      </Typography>
+                    </span>
+                  )}
+                </span>
+              </MenuItem>
+
+              <MenuItem>
+                {!showViewTransfer ? (
+                  <Link className={classes.viewTutorialsMenu} to={"/tutorials"}>
+                    View Tutorials
+                  </Link>
+                ) : (
+                  <Link className={classes.viewTutorialsMenu} to={"/transfer"}>
+                    View App
+                  </Link>
+                )}
+              </MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <section className={classes.state}>
+            {!showViewTransfer ? (
+              <Link className={classes.viewTutorials} to={"/tutorials"}>
+                View Tutorials
+              </Link>
             ) : (
-              <span className={classes.isConnectedIndicator}>
-                {/* <div className={classes.indicator}></div> */}
-                <Typography variant="h5" className={classes.address}>
-                  {address && shortenAddress(address)}
-                </Typography>
-                <Typography variant="h5" className={classes.address}>
-                  connected to <strong>{homeChain?.name}</strong>
-                </Typography>
-              </span>
+              <Link className={classes.viewTutorials} to={"/transfer"}>
+                View App
+              </Link>
             )}
-          </span>
-          {/* <Toggle
+            <span
+              className={classNames(
+                classes.connectionIndicator,
+                "connected-indicator"
+              )}
+            >
+              {!isReady ? (
+                <Typography
+                  className={classes.notConnectedIndicator}
+                  variant="h5"
+                >
+                  No wallet connected
+                </Typography>
+              ) : (
+                <span className={classes.isConnectedIndicator}>
+                  {/* <div className={classes.indicator}></div> */}
+                  <Typography variant="h5" className={classes.address}>
+                    {address && shortenAddress(address)}
+                  </Typography>
+                  <Typography variant="h5" className={classes.address}>
+                    connected to <strong>{homeChain?.name}</strong>
+                  </Typography>
+                </span>
+              )}
+            </span>
+            {/* <Toggle
             label="Night Mode"
             value={isDarkTeme}
             onChange={() => {
@@ -268,8 +288,9 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
               setDarkTheme(isDark);
             }}
           /> */}
-        </section>
-      )}
+          </section>
+        )}
+      </div>
     </header>
   );
 };
