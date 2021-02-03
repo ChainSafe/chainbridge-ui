@@ -384,7 +384,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
-            value: utils.parseUnits((bridgeFee || 0).toString(), decimals),
+            value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           }
         )
       ).wait();
