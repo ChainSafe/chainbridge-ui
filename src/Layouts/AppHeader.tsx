@@ -144,6 +144,10 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       width: "100%",
       padding: "15px 20px 10px 20px",
     },
+    link: {
+      textDecoration: "none",
+      color: "grey",
+    },
   });
 });
 
@@ -170,9 +174,11 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
   return (
     <header className={clsx(classes.root)}>
       <div className={clsx(classes.banner)}>
-        &#9888; Experimental App: Any funds sent through the bridge may be lost,
-        and non-standard token behaviour will not be supported on the non-native
-        chain.
+        &#9888; The bridge and relayers are described in the documentation{" "}
+        <a className={clsx(classes.link)} href="">
+          here
+        </a>
+        . Use at your own risk.
       </div>
 
       <div className={clsx(classes.headerContent)}>
