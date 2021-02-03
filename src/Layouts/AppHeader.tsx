@@ -1,5 +1,5 @@
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
 import { Typography, HamburgerMenu } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
@@ -142,7 +142,6 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
   const classes = useStyles();
   const { isReady, address } = useWeb3();
   const { homeChain } = useChainbridge();
-  const [isDarkTeme, setDarkTheme] = useState(false);
   const isLessThan1000px = useMedia({ maxWidth: "1000px" });
 
   const [anchorEl, setAnchorEl] = React.useState(null);

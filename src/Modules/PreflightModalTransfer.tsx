@@ -8,6 +8,7 @@ import { shortenAddress } from "../Utils/Helpers";
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
+      overflow: "scroll",
       "& li": {
         position: "relative",
         padding: `${constants.generalUnit}px 0 ${constants.generalUnit}px ${
