@@ -33,7 +33,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       name: "Ethereum",
       bridgeAddress: "0x96B845aBE346b49135B865E5CeDD735FC448C3aD",
       erc20HandlerAddress: "0xdAC7Bb7Ce4fF441A235F08408e632FA1D799A147",
-      rpcUrl: "https://mainnet.infura.io/v3/9a76dde18da0480b96fe5fc0caf20bb0",
+      rpcUrl:
+        "wss://eth-mainnet.ws.alchemyapi.io/v2/_fDQvapBN8NpXuyLk_aQgXTsnnTDzjaS",
       type: "Ethereum",
       blockExplorer: "https://etherscan.io/tx",
       nativeTokenSymbol: "ETH",
@@ -956,7 +957,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       name: "Avalanche",
       bridgeAddress: "0x6460777cDa22AD67bBb97536FFC446D65761197E",
       erc20HandlerAddress: "0x6147F5a1a4eEa5C529e2F375Bd86f8F58F8Bc990",
-      rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
+      rpcUrl: "wss://node.aeb.xyz/ws",
       type: "Ethereum",
       blockExplorer: "https://cchain.explorer.avax.network/tx",
       nativeTokenSymbol: "AVAX",

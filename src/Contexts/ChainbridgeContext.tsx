@@ -132,14 +132,39 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
   useEffect(() => {
     if (destinationChain) {
-      const provider = new ethers.providers.JsonRpcProvider(
-        destinationChain?.rpcUrl
-      );
-      const bridge = BridgeFactory.connect(
-        destinationChain?.bridgeAddress,
-        provider
-      );
-      setDestinationBridge(bridge);
+      let provider;
+      if (destinationChain?.rpcUrl.startsWith("wss")) {
+        if (destinationChain.rpcUrl.includes("infura")) {
+          const parts = destinationChain.rpcUrl.split("/");
+          provider = new ethers.providers.InfuraWebSocketProvider(
+            destinationChain.networkId,
+            parts[parts.length - 1]
+          );
+        }
+        if (destinationChain.rpcUrl.includes("alchemyapi")) {
+          const parts = destinationChain.rpcUrl.split("/");
+          provider = new ethers.providers.AlchemyWebSocketProvider(
+            destinationChain.networkId,
+            parts[parts.length - 1]
+          );
+        } else {
+          provider = new ethers.providers.WebSocketProvider(
+            destinationChain.rpcUrl,
+            destinationChain.networkId
+          );
+        }
+      } else {
+        provider = new ethers.providers.JsonRpcProvider(
+          destinationChain?.rpcUrl
+        );
+      }
+      if (provider) {
+        const bridge = BridgeFactory.connect(
+          destinationChain?.bridgeAddress,
+          provider
+        );
+        setDestinationBridge(bridge);
+      }
     }
   }, [destinationChain]);
 
