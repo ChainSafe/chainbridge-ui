@@ -9,7 +9,8 @@ import classNames from "classnames";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import { NavLink as Link } from "react-router-dom";
+import { NavLink as Link, useHistory } from "react-router-dom";
+import { ROUTE_LINKS } from "../App";
 import ChainBridgeLogo from "../assets/AEB_Red_GradientLight.svg";
 import useMedia from "use-media";
 
@@ -163,7 +164,7 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
   const isLessThan1000px = useMedia({ maxWidth: "1000px" });
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const history = useHistory();
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -191,10 +192,13 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
             src={ChainBridgeLogo}
             alt={"Chainbridge Logo"}
             className={classes.logo}
+            onClick={() => {
+              history.push(ROUTE_LINKS.Transfer);
+            }}
           />
 
           <div className={classNames(classes.subLogo, "ava-eth-logo")}>
-            <p>AEB | Avalanche - Ethereum Bridge</p>
+            <p>Avalanche-Ethereum Bridge</p>
           </div>
         </div>
         {isLessThan1000px ? (
