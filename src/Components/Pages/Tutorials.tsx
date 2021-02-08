@@ -10,6 +10,10 @@ import image5 from "../../assets/tutorial_images/image5.png";
 import image6 from "../../assets/tutorial_images/image6.png";
 import image7 from "../../assets/tutorial_images/image7.png";
 import image8 from "../../assets/tutorial_images/image8.png";
+import image11 from "../../assets/tutorial_images/image11.png";
+import image12 from "../../assets/tutorial_images/image12.png";
+import image10 from "../../assets/tutorial_images/image10.png";
+import image13 from "../../assets/tutorial_images/image13.png";
 import logo from "../../assets/AEB_Red_GradientLight.svg";
 
 const Container = styled.div`
@@ -82,13 +86,43 @@ function Tutorials() {
       <AppHeader showViewTransfer={true} />
       <Content>
         <Section>
+          <Title>Considerations</Title>
+          <SubTitle>
+            <strong>Fees</strong>
+          </SubTitle>
+          <Instruction>
+            MetaMask displays the gas fee dollar amount in ETH equivalent on
+            Avalanche, however, the token used for gas is AVAX when using the
+            Avalanche network. To calculate the true dollar equivalent, you will
+            have to multiply the units of AVAX used * the current market price
+            of AVAX.
+          </Instruction>
+          <SubTitle>
+            <strong>Bridge</strong>
+          </SubTitle>
+          <Instruction>
+            You must have AVAX in your Avalanche wallet to make a transaction
+            after you transfer any asset from Ethereum.
+          </Instruction>
+          <SubTitle>
+            <strong>Wallet</strong>
+          </SubTitle>
+          <Instruction>
+            You can use the same wallet address on Ethereum with Avalanche.
+          </Instruction>
           <Title>Getting Started: Set up your MetaMask wallet</Title>
           <SubTitle>
             Setting Up and Funding Your Avalanche Wallet with AVAX
           </SubTitle>
+          <SubTitle>
+            <strong>
+              Reminder: in order to use MetaMask on Avalanche, you will need
+              AVAX to cover gas fees to execute transactions
+            </strong>
+          </SubTitle>
           <Instruction>
             If you already have an Avalanche Wallet and AVAX tokens, skip this
-            step and move to “Setting Up Metamask with Avalanche”.
+            step and move to <strong>Set Up MetaMask with Avalanche</strong>.
           </Instruction>
           <Step>Step 1 - Create an Avalanche Wallet </Step>
           <Instruction>
@@ -96,12 +130,12 @@ function Tutorials() {
             <Anchor href="https://wallet.avax.network/">
               https://wallet.avax.network/
             </Anchor>
-            , clicking on “Create New Wallet”, and following the subsequent
+            , selecting “Create New Wallet”, and following the subsequent
             instructions.
           </Instruction>
           <Step>Step 2 - Get AVAX</Step>
           <Instruction>
-            You can get AVAX from any of the support exchanges found on{" "}
+            You can get AVAX from any of the supported exchanges found on{" "}
             <Anchor href="https://coinmarketcap.com/currencies/avalanche/markets/">
               CoinMarketCap
             </Anchor>
@@ -111,19 +145,34 @@ function Tutorials() {
           <Instruction>
             Once you have AVAX, send AVAX to your Avalanche Wallet that was
             created in Step 1. Find your wallet address that starts with
-            “x-avax1” on your Avalanche Wallet. Now that you have AVAX, you may
-            proceed to Setting up Metamask and Funding your Avalanche Address.
+            “x-avax1” on your Avalanche Wallet.
           </Instruction>
-          <SubTitle>Setting Up MetaMask with Avalanche</SubTitle>
+          <Instruction>
+            Now that you have AVAX, you can proceed to Set up MetaMask with
+            Avalanche.
+          </Instruction>
+          <Title>Setting Up MetaMask with Avalanche</Title>
+          <Step>Step 1 - Download Metamask</Step>
           <Anchor href="https://metamask.io/">Download MetaMask</Anchor>
-          <Step>Step 1 - Open up your MetaMask Wallet</Step>
           <Instruction>
-            We will use MetaMask to connect to the bridge. Open the extension
-            and login (or register if you’re a new user).
+            Install MetaMask as an extension to your browser. Note that the
+            following browsers are supported: Chrome, FireFox, Brave, and Edge.
           </Instruction>
-          <Step>Step 2 - Connect Metamask to Avalanche</Step>
+          <Step>Step 2 - Create a Wallet or Import an Existing Wallet</Step>
           <Instruction>
-            Click the drop-down menu and select “Custom RPC.”{" "}
+            This is where you have to create or import an existing Ethereum
+            wallet. If you don’t have an existing Ethereum wallet, please select
+            “Create a Wallet”. Always keep your Mnemonic and password to
+            yourself and make sure to write it down.{" "}
+            <strong>
+              Note: This is the wallet that will be used to conduct transactions
+              on Avalanche
+            </strong>
+            .
+          </Instruction>
+          <Step>Step 3 - Connect MetaMask to Avalanche</Step>
+          <Instruction>
+            Select the drop-down menu and select “Custom RPC.”
           </Instruction>
           <GroupHorizontal>
             <Image src={image4}></Image>
@@ -154,16 +203,61 @@ function Tutorials() {
               </List>
             </GroupVertical>
           </GroupHorizontal>
-
+          <Title>Fund Your MetaMask Connected to Avalanche </Title>
+          <SubTitle>
+            Send AVAX to Your MetaMask Wallet Connected to Avalanche
+          </SubTitle>
+          <Step>
+            Step 1: Go to{" "}
+            <Anchor href="https://wallet.avax.network/">
+              https://wallet.avax.network/
+            </Anchor>
+            , and access your Avalanche Wallet.
+          </Step>
+          <Step>
+            Step 2: On the left, there is a list of options. Select
+            “Cross-Chain”
+          </Step>
+          <Image src={image11}></Image>
+          <Step>
+            Step 3: Select the “C Chain (Contract)” as the destination chain
+          </Step>
+          <Image src={image10}></Image>
+          <Step>
+            Step 4: Enter the amount you would like to transfer, and then select
+            confirm
+          </Step>
+          <Step>
+            Step 5: Send the AVAX from your Avalanche wallet to your MetaMask
+            wallet.
+          </Step>
+          <List style={{ listStyle: "decimal" }}>
+            <ListItem>Select "send"</ListItem>
+            <Image src={image11}></Image>
+            <ListItem>Select “C Contract” as the Source Chain"</ListItem>
+            <Image src={image12}></Image>
+            <ListItem>
+              Enter your MetaMask wallet address by copying and pasting it into
+              the “To Address” field on your Avalanche wallet.
+            </ListItem>
+            <Image src={image13}></Image>
+            <ListItem>Confirm and finalize the transaction.</ListItem>
+          </List>
+          <Instruction>
+            <strong>
+              Congratulations! You now have AVAX on your MetaMask wallet and can
+              start using Avalanche.
+            </strong>
+          </Instruction>
           <Title>
             Use the Avalanche-Ethereum Bridge to Fund Your Avalanche Address
             From Ethereum
           </Title>
           <Instruction>
-            If you have Ethereum or Ethereum ERC-20 tokens, you can use the
-            Avalanche-Ethereum bridge to bring them to Avalanche. The bridge
-            allows you to transfer assets between both blockchain networks,
-            which can be seen in the figure below.
+            If you have Ethereum (ETH) or Ethereum ERC-20 tokens, you can use
+            the Avalanche-Ethereum bridge to bring them to Avalanche. The
+            diagram below illustrates how ETH and ERC-20 tokens are bridged
+            between Avalanche and Ethereum to use Dapps.
           </Instruction>
           <Image style={{ maxWidth: "720px" }} src={image7}></Image>
           <Instruction>
@@ -201,9 +295,9 @@ function Tutorials() {
             </ListItem>
             <ListItem>Enter the amount of WETH you want to transfer</ListItem>
             <ListItem>
-              Enter the destination address, which can be found in your MetaMask
-              wallet. If you want to send the funds to your current wallet, you
-              may click “I want to send funds to my address”.
+              Enter the destination address, which can be found on your MetaMask
+              wallet or you may select the checkbox “I want to send funds to my
+              address”. <strong>Note that the address starts with “0x”</strong>.
             </ListItem>
             <Image style={{ margin: "20px 0" }} src={image6}></Image>
             <ListItem>Select “Start Transfer”</ListItem>
@@ -216,10 +310,10 @@ function Tutorials() {
           <Title>Transferring Ethereum ERC-20s to Avalanche</Title>
           <List style={{ listStyle: "decimal" }}>
             <ListItem>
-              Access the bridge portal:{" "}
+              Access the bridge portal{" "}
               <Anchor href="https://aeb.xyz/#/transfer">here</Anchor>
             </ListItem>
-            <ListItem>Select “Transfer”</ListItem>
+            <ListItem>Make sure you are on the “Transfer” tab</ListItem>
             <Image style={{ margin: "20px 0" }} src={image3}></Image>
             <ListItem>
               Select “Connect Metamask” and sign into your wallet
@@ -236,7 +330,8 @@ function Tutorials() {
             <ListItem>
               Enter the destination address, which can be found in your
               Avalanche wallet. If you want to send the funds to your current
-              wallet, you may click “I want to send funds to my address”.
+              wallet, you may select “I want to send funds to my address”.{" "}
+              <strong>Note that the address starts with “0x”</strong>.
             </ListItem>
             <Image style={{ margin: "20px 0" }} src={image8}></Image>
             <ListItem>Select “Start Transfer”</ListItem>
