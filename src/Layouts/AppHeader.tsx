@@ -145,8 +145,9 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       padding: "15px 20px 10px 20px",
     },
     link: {
+      marginLeft: 3,
       textDecoration: "none",
-      color: "grey",
+      color: "#212121",
     },
   });
 });
@@ -175,7 +176,10 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
     <header className={clsx(classes.root)}>
       <div className={clsx(classes.banner)}>
         &#9888; The bridge and relayers are described in the documentation{" "}
-        <a className={clsx(classes.link)} href="">
+        <a
+          className={clsx(classes.link)}
+          href="https://chainsafe.github.io/ChainBridge/"
+        >
           here
         </a>
         . Use at your own risk.
