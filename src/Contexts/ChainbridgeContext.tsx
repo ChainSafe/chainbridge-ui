@@ -372,7 +372,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         homeChain.erc20HandlerAddress
       );
 
-      if (Number(utils.formatUnits(currentAllowance)) < amount) {
+      if (Number(utils.formatUnits(currentAllowance, decimals)) < amount) {
         await (
           await erc20.approve(
             homeChain.erc20HandlerAddress,
