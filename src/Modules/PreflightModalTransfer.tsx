@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
@@ -40,9 +41,21 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginBottom: constants.generalUnit * 2,
     },
     backdrop: {},
+    understandButtonContainer: {
+      display: "flex",
+      justifyContent: "center",
+    },
+    understandButton: {
+      backgroundColor: "red",
+      border: "none",
+      height: 30,
+      borderRadius: 10,
+      color: "white",
+      width: "50%",
+    },
   })
 );
-
+const understandsKey = "understands-confirmation";
 interface IPreflightModalTransferProps {
   open: boolean;
   close: () => void;
@@ -67,6 +80,12 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
   start,
 }: IPreflightModalTransferProps) => {
   const classes = useStyles();
+  const isUnderstood = Boolean(localStorage.getItem(understandsKey)) || false;
+  const [understands, setUnderstands] = useState(isUnderstood);
+
+  useEffect(() => {
+    localStorage.setItem(understandsKey, understands.toString());
+  }, [understands]);
 
   return (
     <CustomDrawer
@@ -108,9 +127,25 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         </li>
         <li>
           <Typography variant="h5">
-            The transaction fee may be higher than expected
+            Please note that you may face high fees due to the high cost of the
+            Ethereum network. These fees are not going to the bridge relayers,
+            but to Ethereum miners.
           </Typography>
         </li>
+        {!understands ? (
+          <div className={classes.understandButtonContainer}>
+            <button
+              className={classes.understandButton}
+              onClick={() => {
+                setUnderstands(true);
+              }}
+            >
+              I understand
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </ul>
 
       <Typography className={classes.subtitle} variant="h5" component="p">
@@ -129,7 +164,12 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         <strong>{shortenAddress(receiver)}</strong> on{" "}
         <strong>{targetNetwork}</strong>.
       </Typography>
-      <Button onClick={start} className={classes.startButton} fullsize>
+      <Button
+        disabled={!understands}
+        onClick={start}
+        className={classes.startButton}
+        fullsize
+      >
         Start Transfer
       </Button>
       <Button onClick={close}>Back</Button>

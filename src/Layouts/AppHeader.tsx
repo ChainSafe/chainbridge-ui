@@ -180,6 +180,7 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
         <a
           className={clsx(classes.link)}
           href="https://chainsafe.github.io/ChainBridge/"
+          target="_blank"
         >
           here
         </a>
