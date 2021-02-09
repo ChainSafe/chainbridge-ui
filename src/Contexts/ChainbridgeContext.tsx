@@ -29,6 +29,11 @@ export type Vote = {
   signed: "Confirmed" | "Rejected";
 };
 
+const resetAllowanceLogicFor = [
+  "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
+  //Add other offending tokens here
+];
+
 type ChainbridgeContext = {
   homeChain?: BridgeConfig;
   destinationChain?: BridgeConfig;
@@ -373,6 +378,27 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       if (Number(utils.formatUnits(currentAllowance, decimals)) < amount) {
+        if (
+          Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
+          resetAllowanceLogicFor.includes(tokenAddress)
+        ) {
+          //We need to reset the user's allowance to 0 before we give them a new allowance
+          //TODO Should we alert the user this is happening here?
+          await (
+            await erc20.approve(
+              homeChain.erc20HandlerAddress,
+              BigNumber.from(utils.parseUnits("0", decimals)),
+              {
+                gasPrice: BigNumber.from(
+                  utils.parseUnits(
+                    (homeChain.defaultGasPrice || gasPrice).toString(),
+                    9
+                  )
+                ).toString(),
+              }
+            )
+          ).wait(1);
+        }
         await (
           await erc20.approve(
             homeChain.erc20HandlerAddress,
