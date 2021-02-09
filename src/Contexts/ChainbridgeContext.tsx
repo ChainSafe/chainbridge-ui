@@ -378,6 +378,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       if (Number(utils.formatUnits(currentAllowance, decimals)) < amount) {
+        let val = BigNumber.from(utils.parseUnits(amount.toString(), decimals));
+        console.log("AAAAA: " + val);
+
         if (
           Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
           resetAllowanceLogicFor.includes(tokenAddress)
@@ -389,12 +392,16 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               homeChain.erc20HandlerAddress,
               BigNumber.from(utils.parseUnits("0", decimals)),
               {
+                /*
+                estimate gas doesn't like a custom gas price
+                so we either need to give a gasLimit and gasPrice or neither
                 gasPrice: BigNumber.from(
                   utils.parseUnits(
                     (homeChain.defaultGasPrice || gasPrice).toString(),
                     9
                   )
                 ).toString(),
+                */
               }
             )
           ).wait(1);
@@ -404,12 +411,16 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
             homeChain.erc20HandlerAddress,
             BigNumber.from(utils.parseUnits(amount.toString(), decimals)),
             {
+              /*
+              estimate gas doesn't like a custom gas price
+              so we either need to give a gasLimit and gasPrice or neither
               gasPrice: BigNumber.from(
                 utils.parseUnits(
                   (homeChain.defaultGasPrice || gasPrice).toString(),
                   9
                 )
               ).toString(),
+              */
             }
           )
         ).wait(1);
@@ -432,11 +443,15 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           token.resourceId,
           data,
           {
+            /*
+            estimate gas doesn't like a custom gas price
+            so we either need to give a gasLimit and gasPrice or neither
             gasPrice: utils.parseUnits(
               (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
+            */
           }
         )
       ).wait();
