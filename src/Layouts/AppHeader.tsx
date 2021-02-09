@@ -13,6 +13,7 @@ import { NavLink as Link, useHistory } from "react-router-dom";
 import { ROUTE_LINKS } from "../App";
 import ChainBridgeLogo from "../assets/AEB_Red_GradientLight.svg";
 import useMedia from "use-media";
+import telegramLogo from "../assets/telegram.svg";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   const getConnectionStyles = (color: string) => ({
@@ -138,6 +139,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       color: "white",
       display: "flex",
       justifyContent: "center",
+      whiteSpace: "nowrap",
     },
     headerContent: {
       display: "flex",
@@ -149,6 +151,19 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       marginLeft: 3,
       textDecoration: "none",
       color: "#212121",
+    },
+    telegram: {
+      height: 30,
+      marginRight: 15,
+    },
+    telegramMenuItem: {
+      height: 22,
+      marginRight: 24,
+    },
+    telegramMenuItemContainer: {
+      fontSize: 14,
+      textDecoration: "none",
+      display: "flex",
     },
   });
 });
@@ -256,10 +271,25 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
                   </Link>
                 )}
               </MenuItem>
+              <MenuItem>
+                <a
+                  className={classes.telegramMenuItemContainer}
+                  href="https://t.me/aebtechnicalsupport"
+                >
+                  <img
+                    className={classes.telegramMenuItem}
+                    src={telegramLogo}
+                  ></img>
+                  Telegram
+                </a>
+              </MenuItem>
             </Menu>
           </>
         ) : (
           <section className={classes.state}>
+            <a href="https://t.me/aebtechnicalsupport">
+              <img className={classes.telegram} src={telegramLogo}></img>
+            </a>
             {!showViewTransfer ? (
               <Link className={classes.viewTutorials} to={"/tutorials"}>
                 View Tutorials
