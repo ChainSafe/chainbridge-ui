@@ -66,6 +66,7 @@ type ChainbridgeContext = {
       ) => Promise<ContractTransaction>)
     | undefined;
   wrapTokenConfig: TokenConfig | undefined;
+  transactionStatusReason: string | undefined;
 };
 
 type TransactionStatus =
@@ -101,6 +102,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   >(undefined);
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
+  >(undefined);
+  const [transactionStatusReason, setTransactionStatusReason] = useState<
+    string | undefined
   >(undefined);
   const [depositNonce, setDepositNonce] = useState<string | undefined>(
     undefined
@@ -377,14 +381,37 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         homeChain.erc20HandlerAddress
       );
 
-      if (Number(utils.formatUnits(currentAllowance, decimals)) < amount) {
-        let val = BigNumber.from(utils.parseUnits(amount.toString(), decimals));
-        console.log("AAAAA: " + val);
+      const signerBalance = await signer.getBalance();
+      const estimatedApprove = BigNumber.from("50000");
+      const estimatedDeposit = BigNumber.from("400000");
+      const needsApproval =
+        Number(utils.formatUnits(currentAllowance, decimals)) < amount;
+      const needsResetApproval =
+        Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
+        resetAllowanceLogicFor.includes(tokenAddress);
+      const currentGasPrice = BigNumber.from(
+        utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
+      );
 
-        if (
-          Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
-          resetAllowanceLogicFor.includes(tokenAddress)
-        ) {
+      //Check if the user can afford the two transactions
+      let price = estimatedDeposit.mul(currentGasPrice);
+      if (needsApproval) {
+        price = price.add(estimatedDeposit.mul(currentGasPrice));
+        if (needsResetApproval) {
+          price = price.add(estimatedDeposit.mul(currentGasPrice));
+        }
+      }
+
+      if (signerBalance.lt(price)) {
+        setTransactionStatus("Transfer Aborted");
+        setTransactionStatusReason(
+          "You don't have enough funds to execute the transfer"
+        );
+        return Promise.reject();
+      }
+
+      if (needsApproval) {
+        if (needsResetApproval) {
           //We need to reset the user's allowance to 0 before we give them a new allowance
           //TODO Should we alert the user this is happening here?
           await (
@@ -392,16 +419,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               homeChain.erc20HandlerAddress,
               BigNumber.from(utils.parseUnits("0", decimals)),
               {
-                /*
-                estimate gas doesn't like a custom gas price
-                so we either need to give a gasLimit and gasPrice or neither
                 gasPrice: BigNumber.from(
                   utils.parseUnits(
                     (homeChain.defaultGasPrice || gasPrice).toString(),
                     9
                   )
                 ).toString(),
-                */
               }
             )
           ).wait(1);
@@ -411,16 +434,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
             homeChain.erc20HandlerAddress,
             BigNumber.from(utils.parseUnits(amount.toString(), decimals)),
             {
-              /*
-              estimate gas doesn't like a custom gas price
-              so we either need to give a gasLimit and gasPrice or neither
               gasPrice: BigNumber.from(
                 utils.parseUnits(
                   (homeChain.defaultGasPrice || gasPrice).toString(),
                   9
                 )
               ).toString(),
-              */
             }
           )
         ).wait(1);
@@ -443,15 +462,11 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           token.resourceId,
           data,
           {
-            /*
-            estimate gas doesn't like a custom gas price
-            so we either need to give a gasLimit and gasPrice or neither
             gasPrice: utils.parseUnits(
               (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
-            */
           }
         )
       ).wait();
@@ -459,6 +474,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     } catch (error) {
       console.log(error);
       setTransactionStatus("Transfer Aborted");
+      setTransactionStatusReason(
+        "Something went wrong and we could not complete your transfer.\nError: " +
+          error
+      );
       return Promise.reject();
     }
   };
@@ -487,6 +506,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         wrapToken: wrapper?.deposit,
         wrapTokenConfig,
         unwrapToken: wrapper?.withdraw,
+        transactionStatusReason,
       }}
     >
       {children}

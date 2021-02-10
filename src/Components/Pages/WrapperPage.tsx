@@ -245,16 +245,12 @@ const MainPage = () => {
       });
       const tx = await wrapToken({
         value: parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
-        /*
-        estimate gas doesn't like a custom gas price
-        so we either need to give a gasLimit and gasPrice or neither
         gasPrice: BigNumber.from(
           utils.parseUnits(
             (homeChain.defaultGasPrice || gasPrice).toString(),
             9
           )
         ).toString(),
-        */
       });
 
       await tx?.wait();
@@ -283,13 +279,9 @@ const MainPage = () => {
       const tx = await unwrapToken(
         parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
         {
-          /*
-          estimate gas doesn't like a custom gas price
-          so we either need to give a gasLimit and gasPrice or neither
           gasPrice: utils
             .parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
             .toString(),
-          */
         }
       );
 
