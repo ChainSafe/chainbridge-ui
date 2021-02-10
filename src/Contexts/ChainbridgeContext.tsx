@@ -382,10 +382,15 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       const signerBalance = await signer.getBalance();
-      const estimatedApprove = await erc20.estimateGas.approve(
-        homeChain.erc20HandlerAddress,
-        BigNumber.from(utils.parseUnits(amount.toString(), decimals))
-      );
+      let estimatedApprove = BigNumber.from("47000");
+      try {
+        estimatedApprove = await erc20.estimateGas.approve(
+          homeChain.erc20HandlerAddress,
+          BigNumber.from(utils.parseUnits(amount.toString(), decimals))
+        );
+      } catch (e) {
+        console.log(e);
+      }
       const estimatedDeposit = BigNumber.from("260000");
       const needsApproval =
         Number(utils.formatUnits(currentAllowance, decimals)) < amount;
