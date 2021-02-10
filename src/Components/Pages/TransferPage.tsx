@@ -91,7 +91,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     faqButton: {
       cursor: "pointer",
       height: 20,
-      width: 20,
+      width: 60,
       marginTop: 20,
       fill: `${palette.additional["transferUi"][1]} !important`,
     },
@@ -134,6 +134,13 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     submitContainer: {
       display: "flex",
       justifyContent: "center",
+    },
+    understandsContainer: {
+      padding: 10,
+      lineHeight: "22px",
+    },
+    footer: {
+      display: "flex",
     },
   })
 );
@@ -412,11 +419,16 @@ const TransferPage = () => {
               </Typography>
             </Button>
           </section>
-          <section>
+          <section className={classes.footer}>
             <QuestionCircleSvg
               onClick={() => setAboutOpen(true)}
               className={classes.faqButton}
             />
+            <div className={classes.understandsContainer}>
+              Please note that you may face high fees due to the high cost of
+              the Ethereum network. These fees are not going to the bridge
+              relayers, but to Ethereum miners.
+            </div>
           </section>
         </Form>
       </Formik>
