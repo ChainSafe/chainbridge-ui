@@ -299,7 +299,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </Button>
               <a
                 rel="noopener noreferrer"
-                href="https://discord.com/invite/n2U6x9c"
+                href="https://t.me/avalancheavax"
                 target="_blank"
               >
                 <Button
@@ -307,7 +307,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                   className={classes.button}
                   variant="outline"
                 >
-                  Ask a question on Discord
+                  Ask a question on Telegram
                 </Button>
               </a>
             </section>
