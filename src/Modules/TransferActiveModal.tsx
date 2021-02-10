@@ -153,6 +153,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     depositAmount,
     transferTxHash,
     selectedToken,
+    transactionStatusReason,
   } = useChainbridge();
   const { tokens } = useWeb3();
 
@@ -270,7 +271,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         ) : (
           <>
             <Typography className={classes.receipt} component="p">
-              Something went wrong and we could not complete your transfer.
+              {transactionStatusReason}
             </Typography>
             {homeChain && homeChain.blockExplorer && transferTxHash && (
               <Button

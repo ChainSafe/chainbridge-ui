@@ -66,6 +66,7 @@ type ChainbridgeContext = {
       ) => Promise<ContractTransaction>)
     | undefined;
   wrapTokenConfig: TokenConfig | undefined;
+  transactionStatusReason: string | undefined;
 };
 
 type TransactionStatus =
@@ -101,6 +102,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   >(undefined);
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
+  >(undefined);
+  const [transactionStatusReason, setTransactionStatusReason] = useState<
+    string | undefined
   >(undefined);
   const [depositNonce, setDepositNonce] = useState<string | undefined>(
     undefined
@@ -377,11 +381,40 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         homeChain.erc20HandlerAddress
       );
 
-      if (Number(utils.formatUnits(currentAllowance, decimals)) < amount) {
-        if (
-          Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
-          resetAllowanceLogicFor.includes(tokenAddress)
-        ) {
+      const signerBalance = await signer.getBalance();
+      const estimatedApprove = await erc20.estimateGas.approve(
+        homeChain.erc20HandlerAddress,
+        BigNumber.from(utils.parseUnits(amount.toString(), decimals))
+      );
+      const estimatedDeposit = BigNumber.from("260000");
+      const needsApproval =
+        Number(utils.formatUnits(currentAllowance, decimals)) < amount;
+      const needsResetApproval =
+        Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
+        resetAllowanceLogicFor.includes(tokenAddress);
+      const currentGasPrice = BigNumber.from(
+        utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
+      );
+
+      //Check if the user can afford the two transactions
+      let price = estimatedDeposit.mul(currentGasPrice);
+      if (needsApproval) {
+        price = price.add(estimatedApprove.mul(currentGasPrice));
+        if (needsResetApproval) {
+          price = price.add(estimatedApprove.mul(currentGasPrice));
+        }
+      }
+
+      if (signerBalance.lt(price)) {
+        setTransactionStatus("Transfer Aborted");
+        setTransactionStatusReason(
+          "You don't have enough funds to execute the transfer"
+        );
+        return Promise.reject();
+      }
+
+      if (needsApproval) {
+        if (needsResetApproval) {
           //We need to reset the user's allowance to 0 before we give them a new allowance
           //TODO Should we alert the user this is happening here?
           await (
@@ -444,6 +477,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     } catch (error) {
       console.log(error);
       setTransactionStatus("Transfer Aborted");
+      setTransactionStatusReason(
+        "Something went wrong and we could not complete your transfer."
+      );
       return Promise.reject();
     }
   };
@@ -472,6 +508,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         wrapToken: wrapper?.deposit,
         wrapTokenConfig,
         unwrapToken: wrapper?.withdraw,
+        transactionStatusReason,
       }}
     >
       {children}
