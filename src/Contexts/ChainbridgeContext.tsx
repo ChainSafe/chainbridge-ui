@@ -382,8 +382,11 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       const signerBalance = await signer.getBalance();
-      const estimatedApprove = BigNumber.from("50000");
-      const estimatedDeposit = BigNumber.from("400000");
+      const estimatedApprove = await erc20.estimateGas.approve(
+        homeChain.erc20HandlerAddress,
+        BigNumber.from(utils.parseUnits(amount.toString(), decimals))
+      );
+      const estimatedDeposit = BigNumber.from("260000");
       const needsApproval =
         Number(utils.formatUnits(currentAllowance, decimals)) < amount;
       const needsResetApproval =
@@ -396,9 +399,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       //Check if the user can afford the two transactions
       let price = estimatedDeposit.mul(currentGasPrice);
       if (needsApproval) {
-        price = price.add(estimatedDeposit.mul(currentGasPrice));
+        price = price.add(estimatedApprove.mul(currentGasPrice));
         if (needsResetApproval) {
-          price = price.add(estimatedDeposit.mul(currentGasPrice));
+          price = price.add(estimatedApprove.mul(currentGasPrice));
         }
       }
 
@@ -475,8 +478,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       console.log(error);
       setTransactionStatus("Transfer Aborted");
       setTransactionStatusReason(
-        "Something went wrong and we could not complete your transfer.\nError: " +
-          error
+        "Something went wrong and we could not complete your transfer."
       );
       return Promise.reject();
     }
