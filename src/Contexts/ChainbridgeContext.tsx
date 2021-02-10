@@ -67,6 +67,7 @@ type ChainbridgeContext = {
     | undefined;
   wrapTokenConfig: TokenConfig | undefined;
   transactionStatusReason: string | undefined;
+  networkFee(tokenAddress: string, amount: number): Promise<BigNumber>;
 };
 
 type TransactionStatus =
@@ -323,6 +324,57 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     inTransitMessages,
   ]);
 
+  const networkFee = async (tokenAddress: string, amount: number) => {
+    if (!homeChain) {
+      console.log("Home chain contract is not instantiated");
+      return BigNumber.from("0");
+    }
+
+    const signer = provider?.getSigner();
+    if (!address || !signer) {
+      console.log("NF: No signer");
+      return BigNumber.from("0");
+    }
+
+    const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
+    const decimals = await erc20.decimals();
+
+    let estimatedApprove = BigNumber.from("47000");
+    try {
+      estimatedApprove = await erc20.estimateGas.approve(
+        homeChain.erc20HandlerAddress,
+        BigNumber.from(utils.parseUnits(amount.toString(), decimals))
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    const currentAllowance = await erc20.allowance(
+      address,
+      homeChain.erc20HandlerAddress
+    );
+
+    const estimatedDeposit = BigNumber.from("260000");
+    const needsApproval =
+      Number(utils.formatUnits(currentAllowance, decimals)) < amount;
+    const needsResetApproval =
+      Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
+      resetAllowanceLogicFor.includes(tokenAddress);
+    const currentGasPrice = BigNumber.from(
+      utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
+    );
+
+    //Check if the user can afford the two transactions
+    let price = estimatedDeposit.mul(currentGasPrice);
+    if (needsApproval) {
+      price = price.add(estimatedApprove.mul(currentGasPrice));
+      if (needsResetApproval) {
+        price = price.add(estimatedApprove.mul(currentGasPrice));
+      }
+    }
+
+    return price;
+  };
+
   const deposit = async (
     amount: number,
     recipient: string,
@@ -382,35 +434,14 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
 
       const signerBalance = await signer.getBalance();
-      let estimatedApprove = BigNumber.from("47000");
-      try {
-        estimatedApprove = await erc20.estimateGas.approve(
-          homeChain.erc20HandlerAddress,
-          BigNumber.from(utils.parseUnits(amount.toString(), decimals))
-        );
-      } catch (e) {
-        console.log(e);
-      }
-      const estimatedDeposit = BigNumber.from("260000");
+      let fee = await networkFee(tokenAddress, amount);
       const needsApproval =
         Number(utils.formatUnits(currentAllowance, decimals)) < amount;
       const needsResetApproval =
         Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
         resetAllowanceLogicFor.includes(tokenAddress);
-      const currentGasPrice = BigNumber.from(
-        utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
-      );
 
-      //Check if the user can afford the two transactions
-      let price = estimatedDeposit.mul(currentGasPrice);
-      if (needsApproval) {
-        price = price.add(estimatedApprove.mul(currentGasPrice));
-        if (needsResetApproval) {
-          price = price.add(estimatedApprove.mul(currentGasPrice));
-        }
-      }
-
-      if (signerBalance.lt(price)) {
+      if (signerBalance.lt(fee)) {
         setTransactionStatus("Transfer Aborted");
         setTransactionStatusReason(
           "You don't have enough funds to execute the transfer"
@@ -514,6 +545,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         wrapTokenConfig,
         unwrapToken: wrapper?.withdraw,
         transactionStatusReason,
+        networkFee,
       }}
     >
       {children}

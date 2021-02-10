@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
@@ -173,12 +173,14 @@ const TransferPage = () => {
     transactionStatus,
     resetDeposit,
     bridgeFee,
+    networkFee,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
+  const [currentNetworkFee, setCurrentNetworkFee] = useState<number>(0);
 
   const destChains = destinationChains.map((dc) => ({
     label: dc.name,
@@ -202,6 +204,25 @@ const TransferPage = () => {
     await checkIsReady();
     setWalletConnecting(false);
   };
+
+  const updateNetworkFee = async () => {
+    const currentFee = Number(
+      utils.formatUnits(
+        await networkFee(
+          preflightDetails?.token,
+          preflightDetails?.tokenAmount
+        ),
+        18
+      )
+    );
+    if (currentFee == 0) return;
+    setCurrentNetworkFee(currentFee);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(updateNetworkFee, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const DECIMALS =
     preflightDetails && tokens[preflightDetails.token]
@@ -322,6 +343,7 @@ const TransferPage = () => {
             ...values,
             tokenSymbol: tokens[values.token].symbol || "",
           });
+          updateNetworkFee();
           setPreflightModalOpen(true);
         }}
       >
@@ -335,9 +357,10 @@ const TransferPage = () => {
               label="Destination Network"
               disabled={!homeChain}
               options={destChains}
-              onChange={(option: OptionType) =>
-                setDestinationChain(option.value)
-              }
+              onChange={(option: OptionType) => {
+                setDestinationChain(option.value);
+                updateNetworkFee();
+              }}
               value={destChain}
             />
           </section>
@@ -371,6 +394,7 @@ const TransferPage = () => {
                     tokenAmount: 0,
                     tokenSymbol: "",
                   });
+                  updateNetworkFee();
                 }}
                 options={
                   Object.keys(tokens).map((t) => ({
@@ -401,6 +425,8 @@ const TransferPage = () => {
             className={classes.fees}
             fee={bridgeFee}
             feeSymbol={homeChain?.nativeTokenSymbol}
+            networkFee={currentNetworkFee}
+            networkFeeSymbol={homeChain?.nativeTokenSymbol}
             symbol={
               preflightDetails && tokens[preflightDetails.token]
                 ? tokens[preflightDetails.token].symbol
