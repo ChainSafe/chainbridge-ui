@@ -68,10 +68,10 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         </Button>
         <a
           rel="noopener noreferrer"
-          href="https://discord.com/invite/n2U6x9c"
+          href="https://t.me/avalancheavax"
           target="_blank"
         >
-          <Button variant="outline">Ask a question on Discord</Button>
+          <Button variant="outline">Ask a question on Telegram</Button>
         </a>
       </section>
     </CustomDrawer>
