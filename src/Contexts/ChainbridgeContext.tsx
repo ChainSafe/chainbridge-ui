@@ -540,9 +540,12 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     } catch (error) {
       console.log(error);
       setTransactionStatus("Transfer Aborted");
-      setTransactionStatusReason(
-        "Something went wrong and we could not complete your transfer."
-      );
+      let reason =
+        "Something went wrong and we could not complete your transfer.";
+      if (error.code == 4001) {
+        reason = "User rejected transaction";
+      }
+      setTransactionStatusReason(reason);
       return Promise.reject();
     }
   };
