@@ -30,7 +30,7 @@ export type Vote = {
 };
 
 const resetAllowanceLogicFor = [
-  "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
+  "0xdac17f958d2ee523a2206206994597c13d831ec7".toLowerCase(), //USDT
   //Add other offending tokens here
 ];
 
@@ -350,7 +350,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         Number(utils.formatUnits(currentAllowance, decimals)) < amount;
       const needsResetApproval =
         Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
-        resetAllowanceLogicFor.includes(tokenAddress);
+        resetAllowanceLogicFor.includes(tokenAddress.toLowerCase());
       const currentGasPrice = BigNumber.from(
         utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
       );
@@ -389,7 +389,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       );
       const estimatedDeposit = BigNumber.from("260000");
       const estimatedApprove = BigNumber.from("47000");
-      const needsResetApproval = resetAllowanceLogicFor.includes(tokenAddress);
+      const needsResetApproval = resetAllowanceLogicFor.includes(
+        tokenAddress.toLowerCase()
+      );
       let price = estimatedDeposit.mul(currentGasPrice);
       price = price.add(estimatedApprove.mul(currentGasPrice));
       if (needsResetApproval) {
@@ -464,7 +466,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         Number(utils.formatUnits(currentAllowance, decimals)) < amount;
       const needsResetApproval =
         Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
-        resetAllowanceLogicFor.includes(tokenAddress);
+        resetAllowanceLogicFor.includes(tokenAddress.toLowerCase());
 
       if (signerBalance.lt(fee)) {
         setTransactionStatus("Transfer Aborted");
