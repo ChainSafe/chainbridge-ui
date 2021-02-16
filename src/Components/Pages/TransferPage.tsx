@@ -451,8 +451,8 @@ const TransferPage = () => {
               className={classes.faqButton}
             />
             <div className={classes.understandsContainer}>
-              These fees are not going to the bridge relayers, but to Ethereum
-              miners.
+              Please note that you may face high fees due to the high cost of 
+              the Ethereum network.
             </div>
           </section>
         </Form>
