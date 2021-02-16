@@ -127,9 +127,8 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         </li>
         <li>
           <Typography variant="h5">
-            Please note that you may face high fees due to the high cost of the
-            Ethereum network. These fees are not going to the bridge relayers,
-            but to Ethereum miners.
+            These fees are not going to the bridge relayers, but to Ethereum
+            miners.
           </Typography>
         </li>
         {!understands ? (
