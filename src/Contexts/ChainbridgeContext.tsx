@@ -336,46 +336,68 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return BigNumber.from("0");
     }
 
-    const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
-    const decimals = await erc20.decimals();
+    try {
+      const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
+      const decimals = await erc20.decimals();
 
-    const currentAllowance = await erc20.allowance(
-      address,
-      homeChain.erc20HandlerAddress
-    );
+      const currentAllowance = await erc20.allowance(
+        address,
+        homeChain.erc20HandlerAddress
+      );
 
-    const estimatedDeposit = BigNumber.from("260000");
-    const needsApproval =
-      Number(utils.formatUnits(currentAllowance, decimals)) < amount;
-    const needsResetApproval =
-      Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
-      resetAllowanceLogicFor.includes(tokenAddress);
-    const currentGasPrice = BigNumber.from(
-      utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
-    );
+      const estimatedDeposit = BigNumber.from("260000");
+      const needsApproval =
+        Number(utils.formatUnits(currentAllowance, decimals)) < amount;
+      const needsResetApproval =
+        Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
+        resetAllowanceLogicFor.includes(tokenAddress);
+      const currentGasPrice = BigNumber.from(
+        utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
+      );
 
-    //Check if the user can afford the two transactions
-    let price = estimatedDeposit.mul(currentGasPrice);
-    if (needsApproval) {
-      let estimatedApprove = BigNumber.from("47000");
-      try {
-        estimatedApprove = await erc20.estimateGas.approve(
-          homeChain.erc20HandlerAddress,
-          BigNumber.from(utils.parseUnits(amount.toString(), decimals))
-        );
-      } catch (e) {
-        console.log(
-          "Couldn't determine approval gas amount, falling back to 47000\n" + e
-        );
-        console.log(e);
+      //Check if the user can afford the two transactions
+      let price = estimatedDeposit.mul(currentGasPrice);
+      if (needsApproval) {
+        let estimatedApprove = BigNumber.from("47000");
+        try {
+          estimatedApprove = await erc20.estimateGas.approve(
+            homeChain.erc20HandlerAddress,
+            BigNumber.from(utils.parseUnits(amount.toString(), decimals))
+          );
+        } catch (e) {
+          console.log(
+            "Couldn't determine approval gas amount, falling back to 47000\n" +
+              e
+          );
+          console.log(e);
+        }
+        price = price.add(estimatedApprove.mul(currentGasPrice));
+        if (needsResetApproval) {
+          price = price.add(estimatedApprove.mul(currentGasPrice));
+        }
       }
+
+      return price;
+    } catch (error) {
+      console.log(
+        "Got error while calculating price, using miniumum calculation"
+      );
+      console.log(error);
+
+      const currentGasPrice = BigNumber.from(
+        utils.parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
+      );
+      const estimatedDeposit = BigNumber.from("260000");
+      const estimatedApprove = BigNumber.from("47000");
+      const needsResetApproval = resetAllowanceLogicFor.includes(tokenAddress);
+      let price = estimatedDeposit.mul(currentGasPrice);
       price = price.add(estimatedApprove.mul(currentGasPrice));
       if (needsResetApproval) {
         price = price.add(estimatedApprove.mul(currentGasPrice));
       }
-    }
 
-    return price;
+      return price;
+    }
   };
 
   const deposit = async (
