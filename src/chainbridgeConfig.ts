@@ -36,8 +36,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
   chains: [
     {
       chainId: 2,
-      networkId: 1,
-      name: "Expanse - Mainnet",
+      networkId: 2,
+      name: "Expanse",
       bridgeAddress: "0xfDcDD3eE5D5d99EEDB2fCb38927378199E51a4Cc",
       erc20HandlerAddress: "0xD1A05D56876f78ef99cf7D726ADEbaDC4409911f",
       rpcUrl: "https://node.expanse.tech",
