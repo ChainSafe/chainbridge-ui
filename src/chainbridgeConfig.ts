@@ -1,5 +1,7 @@
 import ETHIcon from "./media/tokens/eth.svg";
-import WETHIcon from "./media/tokens/weth.svg";
+//import WETHIcon from "./media/tokens/weth.svg";
+import WEXPIcon from "./media/tokens/wexp.png";
+import EGGIcon from "./media/tokens/eggs.png";
 
 export type TokenConfig = {
   address: string;
@@ -33,52 +35,52 @@ export const chainbridgeConfig: ChainbridgeConfig = {
   // Goerli - Kotti Bridge
   chains: [
     {
-      chainId: 1,
-      networkId: 5,
-      name: "Ethereum - Goerli",
-      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "https://goerli.prylabs.net",
+      chainId: 2,
+      networkId: 1,
+      name: "Expanse - Mainnet",
+      bridgeAddress: "0xfDcDD3eE5D5d99EEDB2fCb38927378199E51a4Cc",
+      erc20HandlerAddress: "0xD1A05D56876f78ef99cf7D726ADEbaDC4409911f",
+      rpcUrl: "https://node.expanse.tech",
       type: "Ethereum",
-      blockExplorer: "https://goerli.etherscan.io/tx",
-      nativeTokenSymbol: "ETH",
+      blockExplorer: "https://explorer.expanse.tech/tx",
+      nativeTokenSymbol: "EXP",
       tokens: [
         {
-          address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
-          name: "Wrapped ETC",
-          symbol: "wETC",
-          imageUri: WETHIcon,
+          address: "0x331631B4bb93b9B8962faE15860BD538a389395A",
+          name: "Wrapped EXP",
+          symbol: "wEXP",
+          imageUri: WEXPIcon,
           resourceId:
-            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+            "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
         },
         {
-          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "An ERC20",
-          symbol: "ERC20",
-          imageUri: ETHIcon,
+          address: "0xd1365a5Af713cde10C6ac3fB9EDBB2bBbd4B2Ba2",
+          name: "Eggswap",
+          symbol: "EGG",
+          imageUri: EGGIcon,
           resourceId:
-            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
+            "0x0000000000000000000000d1365a5Af713cde10C6ac3fB9EDBB2bBbd4B2Ba202",
         },
       ],
     },
     {
-      chainId: 2,
-      networkId: 6,
-      name: "Ethereum Classic - Kotti",
-      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "https://www.ethercluster.com/kotti",
+      chainId: 4,
+      networkId: 4,
+      name: "Ethereum - Rinkeby",
+      bridgeAddress: "0xC78c8dBF31fC3fB34F3bDb3Ac7f6C056De4CDa87",
+      erc20HandlerAddress: "0x33AeE33E7c7E12f27D4B155E9728f69B483cc93A",
+      rpcUrl: "https://rinkeby-light.eth.linkpool.io",
       type: "Ethereum",
-      blockExplorer: "https://blockscout.com/etc/kotti/tx",
-      nativeTokenSymbol: "ETC",
+      blockExplorer: "https://rinkeby.etherscan.io/tx",
+      nativeTokenSymbol: "ETH",
       tokens: [
         {
-          address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
-          name: "Wrapped ETC",
-          symbol: "wETC",
-          imageUri: WETHIcon,
+          address: "0x78b797BEd95463E946df884F2B470449ec60bF39",
+          name: "Wrapped EXP",
+          symbol: "rEXP",
+          imageUri: WEXPIcon,
           resourceId:
-            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+            "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
           isNativeWrappedToken: true,
         },
         {

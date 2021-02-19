@@ -56,6 +56,8 @@ const networkName = (id: any) => {
   switch (Number(id)) {
     case 1:
       return "Mainnet";
+    case 2:
+        return "Expanse";
     case 3:
       return "Ropsten";
     case 4:
