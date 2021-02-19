@@ -52,6 +52,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WEXPIcon,
           resourceId:
             "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
+          isNativeWrappedToken: true,
         },
         {
           address: "0xd1365a5Af713cde10C6ac3fB9EDBB2bBbd4B2Ba2",
@@ -81,15 +82,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WEXPIcon,
           resourceId:
             "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
-          isNativeWrappedToken: true,
-        },
-        {
-          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "An ERC20",
-          symbol: "ERC20",
-          imageUri: ETHIcon,
-          resourceId:
-            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
+          isNativeWrappedToken: false,
         },
       ],
     },
