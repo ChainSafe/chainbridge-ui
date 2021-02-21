@@ -70,6 +70,8 @@ const networkName = (id: any) => {
       return "Kovan";
     case 61:
       return "Ethereum Classic - Mainnet";
+    case 137:
+      return "Matic";
     default:
       return "Other";
   }
