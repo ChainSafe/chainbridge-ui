@@ -84,6 +84,36 @@ export const chainbridgeConfig: ChainbridgeConfig = {
             "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
           isNativeWrappedToken: false,
         },
+        {
+          address: "0xb9FEf156CA20C966c651f3eA1a7EA262cdC07b74",
+          name: "Rinkeby EggSwap",
+          symbol: "rEGG",
+          imageUri: EGGIcon,
+          resourceId:
+            "0x0000000000000000000000d1365a5Af713cde10C6ac3fB9EDBB2bBbd4B2Ba202",
+        },
+      ],
+    },
+    {
+      chainId: 137,
+      networkId: 137,
+      name: "Matic",
+      bridgeAddress: "0x31f08a521E697FaC0f2aF43C1Fc633B26be91Ddc",
+      erc20HandlerAddress: "0xc982ae8247C152f0b4d27f22479E15c66FbF3D44",
+      rpcUrl: "https://rpc-mainnet.matic.network",
+      type: "Ethereum",
+      blockExplorer: "https://explorer.matic.network/tx",
+      nativeTokenSymbol: "MATIC",
+      tokens: [
+        {
+          address: "0x27D83D722D601Ec204aDf5465890b442349e6C3C",
+          name: "Wrapped EXP",
+          symbol: "WEXP",
+          imageUri: WEXPIcon,
+          resourceId:
+            "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
+          isNativeWrappedToken: false,
+        },
       ],
     },
   ],
