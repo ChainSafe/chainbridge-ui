@@ -194,7 +194,7 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
         &#9888; The bridge and relayers are described in the documentation{" "}
         <a
           className={clsx(classes.link)}
-          href="https://chainsafe.github.io/ChainBridge/"
+          href="https://chainbridge.chainsafe.io/"
           target="_blank"
         >
           here
@@ -271,6 +271,15 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
                   </Link>
                 )}
               </MenuItem>
+
+              {!showViewTransfer ? (
+                <MenuItem>
+                  <Link className={classes.viewTutorialsMenu} to={"/faq"}>
+                    View FAQ
+                  </Link>
+                </MenuItem>
+              ) : null}
+
               <MenuItem>
                 <a
                   className={classes.telegramMenuItemContainer}
@@ -291,9 +300,14 @@ const AppHeader: React.FC<IAppHeader> = ({ showViewTransfer = false }) => {
               <img className={classes.telegram} src={telegramLogo}></img>
             </a>
             {!showViewTransfer ? (
-              <Link className={classes.viewTutorials} to={"/tutorials"}>
-                View Tutorials
-              </Link>
+              <span>
+                <Link className={classes.viewTutorials} to={"/tutorials"}>
+                  View Tutorials
+                </Link>
+                <Link className={classes.viewTutorials} to={"/faq"}>
+                  View FAQ
+                </Link>
+              </span>
             ) : (
               <Link className={classes.viewTutorials} to={"/transfer"}>
                 View App
