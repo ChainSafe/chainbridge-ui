@@ -116,6 +116,28 @@ export const chainbridgeConfig: ChainbridgeConfig = {
         },
       ],
     },
+    {
+      chainId: 8,
+      networkId: 8,
+      name: "Ubiq",
+      bridgeAddress: "0x41B59fC827180608d80fAd8fEA6E75A4bbEdb4fE",
+      erc20HandlerAddress: "0x1e44681E763E54e770ADFf4B26ea60Fb57625B14",
+      rpcUrl: "https://node.expanse.tech/ubiqrpc",
+      type: "Ethereum",
+      blockExplorer: "https://ubiqscan.io/tx",
+      nativeTokenSymbol: "UBQ",
+      tokens: [
+        {
+          address: "0x068adbc25efa195f13e70812904761100046059c",
+          name: "Wrapped EXP",
+          symbol: "WEXP",
+          imageUri: WEXPIcon,
+          resourceId:
+            "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
+          isNativeWrappedToken: false,
+        },
+      ],
+    },
   ],
 
   // DEVNET
