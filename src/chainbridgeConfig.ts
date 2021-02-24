@@ -138,6 +138,28 @@ export const chainbridgeConfig: ChainbridgeConfig = {
         },
       ],
     },
+    {
+      chainId: 56,
+      networkId: 56,
+      name: "BSC",
+      bridgeAddress: "0xb907Fa09a51CF0ae5a806128a39774BdD0dFa02d",
+      erc20HandlerAddress: "0x41B59fC827180608d80fAd8fEA6E75A4bbEdb4fE",
+      rpcUrl: "https://bsc-dataseed.binance.org",
+      type: "Ethereum",
+      blockExplorer: "https://bscscan.com/tx",
+      nativeTokenSymbol: "BNB",
+      tokens: [
+        {
+          address: "0x1e44681E763E54e770ADFf4B26ea60Fb57625B14",
+          name: "Wrapped EXP",
+          symbol: "WEXP",
+          imageUri: WEXPIcon,
+          resourceId:
+            "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
+          isNativeWrappedToken: false,
+        },
+      ],
+    },
   ],
 
   // DEVNET
