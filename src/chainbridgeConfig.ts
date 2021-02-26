@@ -173,8 +173,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
         {
           address: "0x1fa6a37c64804c0d797ba6bc1955e50068fbf362",
           name: "Wrapped Ubiq",
-          symbol: "UBIQ",
-          imageUri: UBIQIcon,
+          symbol: "UBQ",
+          imageUri: UBQIcon,
           resourceId:
             "0x00000000000000000000001fa6a37c64804c0d797ba6bc1955e50068fbf36208",
           isNativeWrappedToken: true,
