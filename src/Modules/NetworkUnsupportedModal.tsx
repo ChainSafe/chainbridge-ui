@@ -55,9 +55,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
 const networkName = (id: any) => {
   switch (Number(id)) {
     case 1:
-      return "Mainnet";
+      return "Ethereum";
     case 2:
-        return "Expanse";
+      return "Expanse";
     case 3:
       return "Ropsten";
     case 4:
@@ -66,10 +66,14 @@ const networkName = (id: any) => {
       return "Goerli";
     case 6:
       return "Kotti";
+    case 8:
+      return "Ubiq";
     case 42:
       return "Kovan";
+    case 56:
+      return "Binance Smart Chain";
     case 61:
-      return "Ethereum Classic - Mainnet";
+      return "Ethereum Classic";
     case 137:
       return "Matic";
     default:

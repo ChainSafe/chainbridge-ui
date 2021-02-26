@@ -2,6 +2,9 @@ import ETHIcon from "./media/tokens/eth.svg";
 //import WETHIcon from "./media/tokens/weth.svg";
 import WEXPIcon from "./media/tokens/wexp.png";
 import EGGIcon from "./media/tokens/eggs.png";
+import ETCIcon from "./media/tokens/etc.png";
+import UBQIcon from "./media/tokens/ubiq.png";
+import MATICIcon from "./media/tokens/matic.png";
 
 export type TokenConfig = {
   address: string;
@@ -34,6 +37,28 @@ export type ChainbridgeConfig = {
 export const chainbridgeConfig: ChainbridgeConfig = {
   // Goerli - Kotti Bridge
   chains: [
+    {
+      chainId: 1,
+      networkId: 1,
+      name: "Ethereum",
+      bridgeAddress: "0x31f08a521e697fac0f2af43c1fc633b26be91ddc",
+      erc20HandlerAddress: "0xc982ae8247C152f0b4d27f22479E15c66FbF3D44",
+      rpcUrl: "https://node.expanse.tech",
+      type: "Ethereum",
+      blockExplorer: "https://explorer.expanse.tech/tx",
+      nativeTokenSymbol: "EXP",
+      tokens: [
+        {
+          address: "0x27D83D722D601Ec204aDf5465890b442349e6C3C",
+          name: "Wrapped EXP",
+          symbol: "wEXP",
+          imageUri: WEXPIcon,
+          resourceId:
+            "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
+          isNativeWrappedToken: false,
+        },
+      ],
+    },
     {
       chainId: 2,
       networkId: 2,
@@ -114,6 +139,15 @@ export const chainbridgeConfig: ChainbridgeConfig = {
             "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
           isNativeWrappedToken: false,
         },
+        {
+          address: "0xC90E93200bCb89E82782f346FD28373b95f6F93E",
+          name: "Matic",
+          symbol: "MATIC",
+          imageUri: MATICIcon,
+          resourceId:
+            "0x0000000000000000000000000000000000000000000000000000000000101089",
+          isNativeWrappedToken: false,
+        },
       ],
     },
     {
@@ -135,6 +169,15 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           resourceId:
             "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
           isNativeWrappedToken: false,
+        },
+        {
+          address: "0x1fa6a37c64804c0d797ba6bc1955e50068fbf362",
+          name: "Wrapped Ubiq",
+          symbol: "UBIQ",
+          imageUri: UBIQIcon,
+          resourceId:
+            "0x00000000000000000000001fa6a37c64804c0d797ba6bc1955e50068fbf36208",
+          isNativeWrappedToken: true,
         },
       ],
     },
