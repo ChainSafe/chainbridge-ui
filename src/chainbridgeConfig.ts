@@ -103,7 +103,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WETHIcon,
           resourceId:
             "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201",
-          isNativeWrappedToken: flase,
+          isNativeWrappedToken: false,
         },
         {
           address: "0xC90E93200bCb89E82782f346FD28373b95f6F93E",
