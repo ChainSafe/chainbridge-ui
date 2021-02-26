@@ -46,7 +46,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       rpcUrl: "https://node.expanse.tech",
       type: "Ethereum",
       blockExplorer: "https://explorer.expanse.tech/tx",
-      nativeTokenSymbol: "EXP",
+      nativeTokenSymbol: "ETH",
       tokens: [
         {
           address: "0x27D83D722D601Ec204aDf5465890b442349e6C3C",
@@ -56,6 +56,15 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           resourceId:
             "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
           isNativeWrappedToken: false,
+        },
+        {
+          address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          name: "Wrapped ETH",
+          symbol: "wETH",
+          imageUri: WETHIcon,
+          resourceId:
+            "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201",
+          isNativeWrappedToken: true,
         },
       ],
     },
@@ -86,6 +95,33 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: EGGIcon,
           resourceId:
             "0x0000000000000000000000d1365a5Af713cde10C6ac3fB9EDBB2bBbd4B2Ba202",
+        },
+        {
+          address: "0x69D050EfFA61306e7e7A8a6338Ca2d3921495801",
+          name: "Wrapped ETH",
+          symbol: "wETH",
+          imageUri: WETHIcon,
+          resourceId:
+            "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201",
+          isNativeWrappedToken: false,
+        },
+        {
+          address: "0xC90E93200bCb89E82782f346FD28373b95f6F93E",
+          name: "Matic",
+          symbol: "MATIC",
+          imageUri: MATICIcon,
+          resourceId:
+            "0x0000000000000000000000000000000000000000000000000000000000101089",
+          isNativeWrappedToken: false,
+        },
+        {
+          address: "0xD13C89Ad0686A974afe911EbfC11C48a72F57390",
+          name: "Wrapped Ubiq",
+          symbol: "UBQ",
+          imageUri: UBQIcon,
+          resourceId:
+            "0x00000000000000000000001fa6a37c64804c0d797ba6bc1955e50068fbf36208",
+          isNativeWrappedToken: false,
         },
       ],
     },
@@ -140,7 +176,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           isNativeWrappedToken: false,
         },
         {
-          address: "0xC90E93200bCb89E82782f346FD28373b95f6F93E",
+          address: "0x0000000000000000000000000000000000001010",
           name: "Matic",
           symbol: "MATIC",
           imageUri: MATICIcon,
