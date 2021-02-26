@@ -1,5 +1,5 @@
 import ETHIcon from "./media/tokens/eth.svg";
-//import WETHIcon from "./media/tokens/weth.svg";
+import WETHIcon from "./media/tokens/weth.svg";
 import WEXPIcon from "./media/tokens/wexp.png";
 import EGGIcon from "./media/tokens/eggs.png";
 import ETCIcon from "./media/tokens/etc.png";
@@ -103,7 +103,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WETHIcon,
           resourceId:
             "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201",
-          isNativeWrappedToken: false,
+          isNativeWrappedToken: flase,
         },
         {
           address: "0xC90E93200bCb89E82782f346FD28373b95f6F93E",
