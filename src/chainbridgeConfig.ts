@@ -74,7 +74,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       name: "Expanse",
       bridgeAddress: "0xfDcDD3eE5D5d99EEDB2fCb38927378199E51a4Cc",
       erc20HandlerAddress: "0xD1A05D56876f78ef99cf7D726ADEbaDC4409911f",
-      rpcUrl: "https://node.expanse.tech",
+      rpcUrl: "https://node.eggs.cool",
       type: "Ethereum",
       blockExplorer: "https://explorer.expanse.tech/tx",
       nativeTokenSymbol: "EXP",
@@ -103,15 +103,6 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WETHIcon,
           resourceId:
             "0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201",
-          isNativeWrappedToken: false,
-        },
-        {
-          address: "0xC90E93200bCb89E82782f346FD28373b95f6F93E",
-          name: "Matic",
-          symbol: "MATIC",
-          imageUri: MATICIcon,
-          resourceId:
-            "0x0000000000000000000000000000000000000000000000000000000000101089",
           isNativeWrappedToken: false,
         },
         {
@@ -173,15 +164,6 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: WEXPIcon,
           resourceId:
             "0x0000000000000000000000331631B4bb93b9B8962faE15860BD538a389395A02",
-          isNativeWrappedToken: false,
-        },
-        {
-          address: "0x0000000000000000000000000000000000001010",
-          name: "Matic",
-          symbol: "MATIC",
-          imageUri: MATICIcon,
-          resourceId:
-            "0x0000000000000000000000000000000000000000000000000000000000101089",
           isNativeWrappedToken: false,
         },
       ],
