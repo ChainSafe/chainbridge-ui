@@ -24,6 +24,9 @@
 yarn install
 ```
 
+Create a `.env` file based on the `.env.example` file in the root of the project.
+Get a Blocknative DAPP ID (here)[https://explorer.blocknative.com/account] and populate the respective field in the `.env` file
+
 ## Usage
 
 ### Development

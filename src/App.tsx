@@ -59,6 +59,7 @@ const App: React.FC<{}> = () => {
           <Web3Provider
             tokensToWatch={tokens}
             onboardConfig={{
+              dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
               walletSelect: {
                 wallets: [{ walletName: "metamask", preferred: true }],
               },
