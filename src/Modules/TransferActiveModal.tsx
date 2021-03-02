@@ -299,15 +299,11 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </Button>
               <a
                 rel="noopener noreferrer"
-                href="https://discord.com/invite/n2U6x9c"
+                href={process.env.REACT_APP_SUPPORT_URL}
                 target="_blank"
               >
-                <Button
-                  size="small"
-                  className={classes.button}
-                  variant="outline"
-                >
-                  Ask a question on Discord
+                <Button variant="outline">
+                  Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
                 </Button>
               </a>
             </section>
