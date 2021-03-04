@@ -342,7 +342,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       console.log("Invalid token selected");
       return;
     }
-
     setTransactionStatus("Initializing Transfer");
     setDepositAmount(amount);
     setSelectedToken(tokenAddress);
@@ -392,24 +391,21 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               }
             )
           ).wait(1);
-
-          await (
-            await erc20.approve(
-              homeChain.erc20HandlerAddress,
-              BigNumber.from(
-                utils.parseUnits(amount.toString(), erc20Decimals)
-              ),
-              {
-                gasPrice: BigNumber.from(
-                  utils.parseUnits(
-                    (homeChain.defaultGasPrice || gasPrice).toString(),
-                    9
-                  )
-                ).toString(),
-              }
-            )
-          ).wait(1);
         }
+        await (
+          await erc20.approve(
+            homeChain.erc20HandlerAddress,
+            BigNumber.from(utils.parseUnits(amount.toString(), erc20Decimals)),
+            {
+              gasPrice: BigNumber.from(
+                utils.parseUnits(
+                  (homeChain.defaultGasPrice || gasPrice).toString(),
+                  9
+                )
+              ).toString(),
+            }
+          )
+        ).wait(1);
       }
 
       homeBridge.once(
