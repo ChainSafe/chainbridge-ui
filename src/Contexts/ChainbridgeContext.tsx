@@ -432,6 +432,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       return;
     }
 
+    //TODO Fix decimal bug
+    amount = parseFloat(amount.toFixed(4));
+
     setTransactionStatus("Initializing Transfer");
     setDepositAmount(amount);
     setSelectedToken(tokenAddress);
