@@ -532,7 +532,6 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
               (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
-            gasLimit: BigNumber.from("300,000"),
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           }
         )
