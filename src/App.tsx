@@ -13,6 +13,7 @@ import { Web3Provider } from "@chainsafe/web3-context";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";
 import Tutorials from "./Components/Pages/Tutorials";
+import FAQ from "./Components/Pages/FAQ";
 
 export const ROUTE_LINKS = {
   Transfer: "/transfer",
@@ -104,6 +105,7 @@ const App: React.FC<{}> = () => {
                   />
                 </Switch>
                 <Route exact path={"/tutorials"} component={Tutorials} />
+                <Route exact path={"/faq"} component={FAQ} />
                 <Route
                   exact
                   path="/"
