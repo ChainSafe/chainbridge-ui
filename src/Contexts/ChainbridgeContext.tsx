@@ -467,8 +467,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       const needsResetApproval =
         Number(utils.formatUnits(currentAllowance, decimals)) > 0 &&
         resetAllowanceLogicFor.includes(tokenAddress.toLowerCase());
+      let weiBridgeFee = utils.parseUnits((bridgeFee || 0).toString(), 18);
 
-      if (signerBalance.lt(fee)) {
+      if (signerBalance.lt(fee.add(weiBridgeFee))) {
         setTransactionStatus("Transfer Aborted");
         setTransactionStatusReason(
           "You don't have enough funds to execute the transfer"
