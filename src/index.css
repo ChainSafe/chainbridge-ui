@@ -35,3 +35,111 @@ input::-webkit-inner-spin-button {
 /* input[type="number"] {
   -moz-appearance: textfield;
 } */
+
+.css-1agnb1w-container {
+  border-radius: 15px 15px 15px 15px !important;
+  height: 50px !important;
+  border: 1px solid black !important;
+  padding: 5px !important;
+}
+.makeStyles-inputArea-67 {
+  height: 50px !important;
+  border-radius: 15px 15px 15px 15px !important;
+}
+.makeStyles-root-58.disabled input {
+  height: 50px !important;
+  width: 110px !important;
+  border-radius: 15px 0px 0px 15px !important;
+  border: 1px solid black !important;
+}
+.makeStyles-root-47.medium {
+  height: 50px !important;
+  border-radius: 24px !important;
+}
+.makeStyles-currencySelector-39 {
+  width: 160px;
+}
+
+.makeStyles-formArea-34 .makeStyles-faqButton-44 {
+  display: block;
+  margin: 20px 0 0 auto;
+}
+
+.makeStyles-inputArea-67.medium input {
+  height: 50px !important;
+  border-radius: 15px 15px 15px 15px !important;
+  border: 1px solid black !important;
+}
+
+.makeStyles-root-27 .makeStyles-root-47.medium.makeStyles-maxButton-38 {
+  /* border-radius: 0 24px 24px 0; */
+  border-radius: 0 24px 24px 0 !important;
+}
+.makeStyles-root-47.medium .makeStyles-maxButton-154 {
+  border-radius: 0 24px 24px 0 !important;
+}
+
+.makeStyles-content-4 .makeStyles-navTabs-6 > a {
+  border: none;
+}
+
+.makeStyles-content-4 .makeStyles-navTabs-6 {
+  padding: 0 0 0 20px;
+}
+
+.makeStyles-content-4 .makeStyles-navTabs-6 > a.active {
+  text-decoration: none;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+}
+
+.makeStyles-content-4 .makeStyles-pageArea-5 {
+  background-color: #fff;
+  border: none;
+  border-radius: 24px;
+}
+
+.makeStyles-pageArea-5 .makeStyles-root-47.medium.makeStyles-primary-48,
+.makeStyles-formArea-34 .makeStyles-primary-48 {
+  background-color: #28344f;
+  border-color: #28344f;
+  border-radius: 24px;
+}
+
+.makeStyles-pageArea-5 .makeStyles-root-47.medium.makeStyles-primary-48:hover,
+.makeStyles-formArea-34 .makeStyles-primary-48:hover {
+  background-color: #fff;
+  border-radius: 24px;
+}
+
+.makeStyles-formArea-34 .makeStyles-inputArea-67.medium input {
+  border-radius: 24px !important;
+}
+
+.makeStyles-formArea-34 .css-1agnb1w-container {
+  border-radius: 24px !important;
+}
+
+/* .makeStyles-formArea-34 .makeStyles-root-58 input {
+  border-radius: 24px 0 0 24px !important;
+} */
+
+.makeStyles-formArea-34
+  .makeStyles-tokenInput-37
+  > div.makeStyles-inputArea-67.medium
+  input {
+  border-radius: 24px 0 0 24px !important;
+}
+
+.makeStyles-inputArea-63.medium input {
+  border-radius: 24px 0 0 24px;
+}
+
+.makeStyles-tokenInputArea-37 .makeStyles-maxButton-39 {
+  border-radius: 0 24px 24px 0;
+}
+
+.css-1r22k66-container,
+.css-dou5a3-control {
+  border-radius: 24px !important;
+}
