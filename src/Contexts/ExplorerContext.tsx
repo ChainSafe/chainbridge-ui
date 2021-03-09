@@ -1,8 +1,11 @@
 import React, { useContext, useEffect, useReducer } from "react";
-import { BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { providers } from "ethers";
+import {
+  BridgeFactory,
+  Erc20HandlerFactory,
+} from "@chainsafe/chainbridge-contracts";
+import { BigNumber, providers } from "ethers";
 import { chainbridgeConfig } from "../chainbridgeConfig";
-import { ProposalStatus, transferReducer } from "./Reducers/TransferReducer";
+import { transfersReducer } from "./Reducers/TransfersReducer";
 
 interface IExplorerContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -15,11 +18,12 @@ const ExplorerContext = React.createContext<ExplorerContext | undefined>(
 );
 
 const ExplorerProvider = ({ children }: IExplorerContextProps) => {
-  const [transfers, transfersDispatch] = useReducer(transferReducer, {});
-
+  const [transfers, transfersDispatch] = useReducer(transfersReducer, {});
   useEffect(() => {
     const handler = () => {
       chainbridgeConfig.chains.forEach(async (bridge) => {
+        console.log(`Checking all events for ${bridge.name}`);
+
         const provider = new providers.JsonRpcProvider(
           bridge.rpcUrl,
           bridge.networkId
@@ -28,15 +32,26 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           bridge.bridgeAddress,
           provider
         );
+        const erc20HandlerContract = Erc20HandlerFactory.connect(
+          bridge.erc20HandlerAddress,
+          provider
+        );
         const depositFilter = bridgeContract.filters.Deposit(null, null, null);
+        console.log(depositFilter);
         const depositLogs = await provider.getLogs(depositFilter);
         depositLogs.forEach(async (dl) => {
           const parsedLog = bridgeContract.interface.parseLog(dl);
+          const depositRecord = await erc20HandlerContract.getDepositRecord(
+            parsedLog.args.depositNonce,
+            parsedLog.args.destinationChainID
+          );
+
           transfersDispatch({
             type: "addTransfer",
             payload: {
               depositNonce: parsedLog.args.depositNonce.toNumber(),
               transferDetails: {
+                fromAddress: depositRecord._depositer,
                 depositBlockNumber: dl.blockNumber,
                 depositTransactionHash: dl.transactionHash,
                 fromChainId: bridge.chainId,
@@ -47,12 +62,15 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   chainbridgeConfig.chains.find(
                     (c) => c.chainId === parsedLog.args.destinationChainID
                   )?.name || "",
+                toAddress: depositRecord._destinationRecipientAddress,
+                tokenAddress: depositRecord._tokenAddress,
+                amount: depositRecord._amount,
                 resourceId: parsedLog.args.resourceID,
               },
             },
           });
         });
-        console.log(`Added ${depositLogs.length} deposits`);
+        console.log(`Added ${bridge.name} ${depositLogs.length} deposits`);
 
         const proposalEventFilter = bridgeContract.filters.ProposalEvent(
           null,
@@ -89,7 +107,9 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
             },
           });
         });
-        console.log(`Added ${proposalEventLogs.length} proposal events`);
+        console.log(
+          `Added ${bridge.name} ${proposalEventLogs.length} proposal events`
+        );
 
         const proposalVoteFilter = bridgeContract.filters.ProposalVote(
           null,
@@ -126,7 +146,9 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
             },
           });
         });
-        console.log(`Added ${proposalVoteLogs.length} proposal votes`);
+        console.log(
+          `Added ${bridge.name} ${proposalVoteLogs.length} proposal votes`
+        );
       });
     };
 

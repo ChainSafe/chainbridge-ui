@@ -1159,10 +1159,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@chainsafe/chainbridge-contracts@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-contracts/-/chainbridge-contracts-1.0.3.tgz#ff979ef9afd94a5fc00acef4a571813003138c5f"
-  integrity sha512-2EZ73GaO7Ple5RoxpxpIBG17d0AeaDGvXyXhoCqaeCJqHjBLO67roLCsH2u4HeqGrXdoixCatXUNwo78FkaT/w==
+"@chainsafe/chainbridge-contracts@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-contracts/-/chainbridge-contracts-1.0.5.tgz#9565b6f43a0024dc135f59e5ed90ab6f46a6a3d8"
+  integrity sha512-NDowQNB+V71eIPFxO5oIVRcVxUbgpv0PoVkL5lbNXShT9cxsTFGhQ7umswBBccNSX9sMwOlOY7o322wiNtN28g==
 
 "@chainsafe/common-components@1.0.26":
   version "1.0.26"
