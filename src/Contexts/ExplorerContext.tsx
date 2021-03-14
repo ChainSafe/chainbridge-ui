@@ -3,7 +3,7 @@ import {
   BridgeFactory,
   Erc20HandlerFactory,
 } from "@chainsafe/chainbridge-contracts";
-import { BigNumber, providers } from "ethers";
+import { providers } from "ethers";
 import { chainbridgeConfig } from "../chainbridgeConfig";
 import { transfersReducer } from "./Reducers/TransfersReducer";
 
