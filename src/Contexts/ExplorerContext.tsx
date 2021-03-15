@@ -5,13 +5,15 @@ import {
 } from "@chainsafe/chainbridge-contracts";
 import { providers } from "ethers";
 import { chainbridgeConfig } from "../chainbridgeConfig";
-import { transfersReducer } from "./Reducers/TransfersReducer";
+import { Transfers, transfersReducer } from "./Reducers/TransfersReducer";
 
 interface IExplorerContextProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-type ExplorerContext = {};
+type ExplorerContext = {
+  transfers: Transfers;
+};
 
 const ExplorerContext = React.createContext<ExplorerContext | undefined>(
   undefined
@@ -169,7 +171,13 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
   }, []);
 
   return (
-    <ExplorerContext.Provider value={{}}>{children}</ExplorerContext.Provider>
+    <ExplorerContext.Provider
+      value={{
+        transfers,
+      }}
+    >
+      {children}
+    </ExplorerContext.Provider>
   );
 };
 
