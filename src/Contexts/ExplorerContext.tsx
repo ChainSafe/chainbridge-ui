@@ -38,7 +38,10 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
         );
         const depositFilter = bridgeContract.filters.Deposit(null, null, null);
         console.log(depositFilter);
-        const depositLogs = await provider.getLogs(depositFilter);
+        const depositLogs = await provider.getLogs({
+          ...depositFilter,
+          fromBlock: bridge.deployedBlockNumber,
+        });
         depositLogs.forEach(async (dl) => {
           const parsedLog = bridgeContract.interface.parseLog(dl);
           const depositRecord = await erc20HandlerContract.getDepositRecord(
@@ -80,7 +83,10 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           null
         );
 
-        const proposalEventLogs = await provider.getLogs(proposalEventFilter);
+        const proposalEventLogs = await provider.getLogs({
+          ...proposalEventFilter,
+          fromBlock: bridge.deployedBlockNumber,
+        });
         proposalEventLogs.forEach(async (pel) => {
           const parsedLog = bridgeContract.interface.parseLog(pel);
           transfersDispatch({
@@ -118,7 +124,10 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           null
         );
 
-        const proposalVoteLogs = await provider.getLogs(proposalVoteFilter);
+        const proposalVoteLogs = await provider.getLogs({
+          ...proposalVoteFilter,
+          fromBlock: bridge.deployedBlockNumber,
+        });
         proposalVoteLogs.forEach(async (pvl) => {
           const parsedLog = bridgeContract.interface.parseLog(pvl);
 

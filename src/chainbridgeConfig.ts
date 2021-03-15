@@ -23,6 +23,7 @@ export type BridgeConfig = {
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
   defaultGasPrice?: number;
+  deployedBlockNumber?: number;
 };
 
 export type ChainbridgeConfig = {
@@ -42,6 +43,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       type: "Ethereum",
       blockExplorer: "https://goerli.etherscan.io/tx",
       nativeTokenSymbol: "ETH",
+      deployedBlockNumber: 3554182,
       tokens: [
         {
           address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
@@ -71,6 +73,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       type: "Ethereum",
       blockExplorer: "https://blockscout.com/etc/kotti/tx",
       nativeTokenSymbol: "ETC",
+      deployedBlockNumber: 0,
       tokens: [
         {
           address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
