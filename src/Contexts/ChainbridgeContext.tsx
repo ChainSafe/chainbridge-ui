@@ -549,6 +549,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
       if (error.code == 4001) {
         reason = "User rejected transaction";
       }
+      if (error.reason !== null && error.reason !== undefined) {
+        reason = error.reason;
+      }
       setTransactionStatusReason(reason);
       return Promise.reject();
     }
