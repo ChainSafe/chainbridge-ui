@@ -39,7 +39,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       name: "Ethereum - Goerli",
       bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
       erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "https://goerli.prylabs.net",
+      rpcUrl: "https://eth-goerli.alchemyapi.io/v2/QJM4XmySzHMf8oLE5SuZMBSkcp2wLzui",
       type: "Ethereum",
       blockExplorer: "https://goerli.etherscan.io/tx",
       nativeTokenSymbol: "ETH",

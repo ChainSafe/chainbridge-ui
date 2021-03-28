@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useReducer } from "react";
 import {
+  Bridge,
   BridgeFactory,
   Erc20HandlerFactory,
 } from "@chainsafe/chainbridge-contracts";
-import { providers } from "ethers";
+import { BigNumber, ethers, Event, providers } from "ethers";
 import { chainbridgeConfig } from "../chainbridgeConfig";
 import { Transfers, transfersReducer } from "./Reducers/TransfersReducer";
 
@@ -21,10 +22,11 @@ const ExplorerContext = React.createContext<ExplorerContext | undefined>(
 
 const ExplorerProvider = ({ children }: IExplorerContextProps) => {
   const [transfers, transfersDispatch] = useReducer(transfersReducer, {});
-  useEffect(() => {
-    const handler = () => {
-      chainbridgeConfig.chains.forEach(async (bridge) => {
-        console.log(`Checking all events for ${bridge.name}`);
+
+  const fetchTransfersAndListen = async () => {
+    const bridges = await Promise.all(
+      chainbridgeConfig.chains.map(async (bridge) => {
+        console.log(`Checking events for ${bridge.name}`);
 
         const provider = new providers.JsonRpcProvider(
           bridge.rpcUrl,
@@ -39,7 +41,6 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           provider
         );
         const depositFilter = bridgeContract.filters.Deposit(null, null, null);
-        console.log(depositFilter);
         const depositLogs = await provider.getLogs({
           ...depositFilter,
           fromBlock: bridge.deployedBlockNumber,
@@ -76,7 +77,45 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           });
         });
         console.log(`Added ${bridge.name} ${depositLogs.length} deposits`);
+        bridgeContract.on(
+          depositFilter,
+          async (
+            destChainId: number,
+            resourceId: string,
+            depositNonce: ethers.BigNumber,
+            tx: Event
+          ) => {
+            const depositRecord = await erc20HandlerContract.getDepositRecord(
+              depositNonce,
+              destChainId
+            );
 
+            transfersDispatch({
+              type: "addTransfer",
+              payload: {
+                depositNonce: depositNonce.toNumber(),
+                transferDetails: {
+                  fromAddress: depositRecord._depositer,
+                  depositBlockNumber: tx.blockNumber,
+                  depositTransactionHash: tx.transactionHash,
+                  fromChainId: bridge.chainId,
+                  fromNetworkName: bridge.name,
+                  timestamp: (await provider.getBlock(tx.blockNumber))
+                    .timestamp,
+                  toChainId: destChainId,
+                  toNetworkName:
+                    chainbridgeConfig.chains.find(
+                      (c) => c.chainId === destChainId
+                    )?.name || "",
+                  toAddress: depositRecord._destinationRecipientAddress,
+                  tokenAddress: depositRecord._tokenAddress,
+                  amount: depositRecord._amount,
+                  resourceId: resourceId,
+                },
+              },
+            });
+          }
+        );
         const proposalEventFilter = bridgeContract.filters.ProposalEvent(
           null,
           null,
@@ -118,7 +157,42 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
         console.log(
           `Added ${bridge.name} ${proposalEventLogs.length} proposal events`
         );
-
+        bridgeContract.on(
+          proposalEventFilter,
+          async (
+            originChainId: number,
+            depositNonce: BigNumber,
+            status: number,
+            resourceId: string,
+            dataHash: string,
+            tx: Event
+          ) => {
+            transfersDispatch({
+              type: "addProposalEvent",
+              payload: {
+                depositNonce: depositNonce.toNumber(),
+                transferDetails: {
+                  resourceId: resourceId,
+                  fromChainId: originChainId,
+                  fromNetworkName:
+                    chainbridgeConfig.chains.find(
+                      (c) => c.chainId === originChainId
+                    )?.name || "",
+                  toChainId: bridge.chainId,
+                  toNetworkName: bridge.name,
+                },
+                proposalEventDetails: {
+                  proposalEventBlockNumber: tx.blockNumber,
+                  proposalEventTransactionHash: tx.transactionHash,
+                  dataHash: dataHash,
+                  timestamp: (await provider.getBlock(tx.blockNumber))
+                    .timestamp,
+                  proposalStatus: status,
+                },
+              },
+            });
+          }
+        );
         const proposalVoteFilter = bridgeContract.filters.ProposalVote(
           null,
           null,
@@ -160,13 +234,63 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
         console.log(
           `Added ${bridge.name} ${proposalVoteLogs.length} proposal votes`
         );
-      });
+        bridgeContract.on(
+          proposalVoteFilter,
+          async (
+            originChainId: number,
+            depositNonce: BigNumber,
+            status: number, // TODO: Confirm wether this is actually being used
+            resourceId: string,
+            tx: Event
+          ) => {
+            transfersDispatch({
+              type: "addVote",
+              payload: {
+                depositNonce: depositNonce.toNumber(),
+                transferDetails: {
+                  resourceId: resourceId,
+                  fromChainId: originChainId,
+                  fromNetworkName:
+                    chainbridgeConfig.chains.find(
+                      (c) => c.chainId === originChainId
+                    )?.name || "",
+                  toChainId: bridge.chainId,
+                  toNetworkName: bridge.name,
+                },
+                voteDetails: {
+                  voteBlockNumber: tx.blockNumber,
+                  voteTransactionHash: tx.transactionHash,
+                  dataHash: "", // TODO: Confirm whether this is available
+                  timestamp: (await provider.getBlock(tx.blockNumber))
+                    .timestamp,
+                  voteStatus: status === 1 ? true : false, // TODO: Confirm whether this is the correct status
+                },
+              },
+            });
+          }
+        );
+        return bridgeContract;
+      })
+    );
+    return bridges;
+  };
+
+  useEffect(() => {
+    let bridgeContracts: Bridge[] = [];
+
+    const handler = async () => {
+      bridgeContracts = await fetchTransfersAndListen();
     };
 
     handler();
 
     return () => {
-      //Remove all listeners
+      if (bridgeContracts.length > 0) {
+        bridgeContracts.forEach((bc) => {
+          // @ts-ignore
+          bc.removeAllListeners();
+        });
+      }
     };
   }, []);
 
