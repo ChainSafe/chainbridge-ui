@@ -476,7 +476,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 const useChainbridge = () => {
   const context = useContext(ChainbridgeContext);
   if (context === undefined) {
-    throw new Error("useChainbridge must be called within a DriveProvider");
+    throw new Error(
+      "useChainbridge must be called within a ChainbridgeProvider"
+    );
   }
   return context;
 };
