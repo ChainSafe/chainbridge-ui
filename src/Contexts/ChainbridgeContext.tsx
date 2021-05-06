@@ -19,6 +19,11 @@ import {
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
 import { Weth } from "../Contracts/Weth";
 import { WethFactory } from "../Contracts/WethFactory";
+import {
+  DestinationChainAdaptor,
+  HomeChainAdaptor,
+} from "./Adaptors/interfaces";
+import { EVMAdaptorFactory } from "./Adaptors/EVMAdaptors";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -35,8 +40,8 @@ const resetAllowanceLogicFor = [
 ];
 
 type ChainbridgeContext = {
-  homeChain?: BridgeConfig;
-  destinationChain?: BridgeConfig;
+  homeChain?: HomeChainAdaptor;
+  destinationChain?: DestinationChainAdaptor;
   destinationChains: Array<{ chainId: number; name: string }>;
   setDestinationChain(chainId: number): void;
   deposit(
@@ -80,16 +85,19 @@ const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const { isReady, network, provider, gasPrice, address, tokens } = useWeb3();
-  const [homeChain, setHomeChain] = useState<BridgeConfig | undefined>();
+  const [homeChain, setHomeChain] = useState<
+    DestinationChainAdaptor | undefined
+  >();
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
   );
   const [destinationChain, setDestinationChain] = useState<
-    BridgeConfig | undefined
+    DestinationChainAdaptor | undefined
   >();
   const [destinationChains, setDestinationChains] = useState<BridgeConfig[]>(
     []
   );
+
   // Contracts
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
   const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
@@ -132,7 +140,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     if (!chain) {
       throw new Error("Invalid destination chain selected");
     }
-    setDestinationChain(chain);
+    if (chain.type == "Ethereum") {
+      const newHomeChain = EVMAdaptorFactory(chain);
+      setDestinationChain(newHomeChain);
+    }
   };
 
   useEffect(() => {
