@@ -254,7 +254,7 @@ const MainPage = () => {
         value: parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
         gasPrice: BigNumber.from(
           utils.parseUnits(
-            (homeChain.defaultGasPrice || gasPrice).toString(),
+            (homeChain.chainConfig.defaultGasPrice || gasPrice).toString(),
             9
           )
         ).toString(),
@@ -287,7 +287,10 @@ const MainPage = () => {
         parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
         {
           gasPrice: utils
-            .parseUnits((homeChain.defaultGasPrice || gasPrice).toString(), 9)
+            .parseUnits(
+              (homeChain.chainConfig.defaultGasPrice || gasPrice).toString(),
+              9
+            )
             .toString(),
         }
       );
@@ -380,7 +383,7 @@ const MainPage = () => {
               variant="h2"
               className={classes.networkName}
             >
-              {homeChain?.name}
+              {homeChain?.chainConfig.name}
             </Typography>
           </section>
         )}
@@ -499,17 +502,17 @@ const MainPage = () => {
             setPreflightModalOpen(false);
           }
         }}
-        sourceNetwork={homeChain?.name || ""}
+        sourceNetwork={homeChain?.chainConfig.name || ""}
         tokenSymbol={
           action === "wrap"
-            ? homeChain?.nativeTokenSymbol || "ETH"
+            ? homeChain?.chainConfig.nativeTokenSymbol || "ETH"
             : wrapTokenConfig?.symbol || "wETH"
         }
         value={preflightDetails?.tokenAmount || 0}
         wrappedTitle={
           action === "wrap"
             ? `${wrapTokenConfig?.name} (${wrapTokenConfig?.symbol})`
-            : homeChain?.nativeTokenSymbol || "ETH"
+            : homeChain?.chainConfig.nativeTokenSymbol || "ETH"
         }
         action={action}
       />

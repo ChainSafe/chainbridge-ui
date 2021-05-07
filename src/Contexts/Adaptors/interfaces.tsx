@@ -1,22 +1,31 @@
-import { BridgeConfig } from "../../chainbridgeConfig";
+import { BridgeConfig, TokenConfig } from "../../chainbridgeConfig";
+import { Weth } from "../../Contracts/Weth";
 
 export interface HomeChainAdaptor {
   chainConfig: BridgeConfig;
   deposit(
     amount: number,
     recipient: string,
-    tokenAddress: string
+    tokenAddress: string,
+    destinationChainId: number
   ): Promise<void>;
-  connect: () => void;
-  nonce: number;
-  setNonce: (nextNonce: number) => void;
-  getRelayerThreshold: () => Promise<number>;
-  getFee: () => Promise<number>;
+
+  relayerThreshold: number | undefined;
+
+  setDepositAmount: (input: number | undefined) => void;
+  depositAmount: number | undefined;
+
+  setTransferTxHash: (txHash: string) => void;
+
+  setSelectedToken: (tokenAddress: string) => void;
+  selectedToken: string;
+
+  bridgeFee: number | undefined;
+
+  wrapTokenConfig: TokenConfig | undefined;
+  wrapper: Weth | undefined;
 }
 
 export interface DestinationChainAdaptor {
   chain: BridgeConfig;
-  awaitDepositNonce: (nonce: string) => Promise<void>;
-  depositNonce: string;
-  setDepositNonce: (nonce: string) => void;
 }

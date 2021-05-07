@@ -1,29 +1,31 @@
-import { useWeb3 } from "@chainsafe/web3-context";
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import {
-  BigNumber,
   BigNumberish,
   ContractTransaction,
-  ethers,
   Overrides,
   PayableOverrides,
-  utils,
 } from "ethers";
-import { Erc20DetailedFactory } from "../Contracts/Erc20DetailedFactory";
 import {
   BridgeConfig,
   chainbridgeConfig,
+  ChainType,
   TokenConfig,
 } from "../chainbridgeConfig";
 import { transitMessageReducer } from "./Reducers/TransitMessageReducer";
-import { Weth } from "../Contracts/Weth";
-import { WethFactory } from "../Contracts/WethFactory";
 import {
   DestinationChainAdaptor,
   HomeChainAdaptor,
 } from "./Adaptors/interfaces";
-import { EVMAdaptorFactory } from "./Adaptors/EVMAdaptors";
+import {
+  EVMDestinationAdaptorFactory,
+  EVMHomeAdaptorFactory,
+} from "./Adaptors/EVMAdaptors";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -34,16 +36,12 @@ export type Vote = {
   signed: "Confirmed" | "Rejected";
 };
 
-const resetAllowanceLogicFor = [
-  "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
-  //Add other offending tokens here
-];
-
 type ChainbridgeContext = {
   homeChain?: HomeChainAdaptor;
+  handleSetHomeChain: (chainId: number) => void;
   destinationChain?: DestinationChainAdaptor;
   destinationChains: Array<{ chainId: number; name: string }>;
-  setDestinationChain(chainId: number): void;
+  setDestinationChain: (chainId: number) => void;
   deposit(
     amount: number,
     recipient: string,
@@ -59,6 +57,7 @@ type ChainbridgeContext = {
   bridgeFee?: number;
   transferTxHash?: string;
   selectedToken?: string;
+  setWalletType: (walletType: WalletType) => void;
   wrapToken:
     | ((
         overrides?: PayableOverrides | undefined
@@ -73,7 +72,9 @@ type ChainbridgeContext = {
   wrapTokenConfig: TokenConfig | undefined;
 };
 
-type TransactionStatus =
+export type WalletType = ChainType | "unset";
+
+export type TransactionStatus =
   | "Initializing Transfer"
   | "In Transit"
   | "Transfer Completed"
@@ -84,13 +85,9 @@ const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
 );
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
-  const { isReady, network, provider, gasPrice, address, tokens } = useWeb3();
-  const [homeChain, setHomeChain] = useState<
-    DestinationChainAdaptor | undefined
-  >();
-  const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
-    undefined
-  );
+  const [walletType, setWalletType] = useState<WalletType>("unset");
+  const [homeChain, setHomeChain] = useState<HomeChainAdaptor | undefined>();
+  const [homeChains, setHomeChains] = useState<BridgeConfig[]>([]);
   const [destinationChain, setDestinationChain] = useState<
     DestinationChainAdaptor | undefined
   >();
@@ -98,15 +95,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     []
   );
 
-  // Contracts
-  const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
-  const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
-  const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
-    undefined
-  );
-  const [destinationBridge, setDestinationBridge] = useState<
-    Bridge | undefined
-  >(undefined);
+  const [transferTxHash, setTransferTxHash] = useState<string>("");
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
   >(undefined);
@@ -118,344 +107,97 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     transitMessageReducer,
     []
   );
-  const [depositAmount, setDepositAmount] = useState<number | undefined>();
-  const [bridgeFee, setBridgeFee] = useState<number | undefined>();
-  const [transferTxHash, setTransferTxHash] = useState<string>("");
-  const [selectedToken, setSelectedToken] = useState<string>("");
 
   const resetDeposit = () => {
     chainbridgeConfig.chains.length > 2 && setDestinationChain(undefined);
     setTransactionStatus(undefined);
     setDepositNonce(undefined);
     setDepositVotes(0);
-    setDepositAmount(undefined);
+    homeChain?.setDepositAmount(undefined);
     tokensDispatch({
       type: "resetMessages",
     });
-    setSelectedToken("");
+    homeChain?.setSelectedToken("");
   };
 
-  const handleSetDestination = (chainId: number) => {
-    const chain = destinationChains.find((c) => c.chainId === chainId);
-    if (!chain) {
-      throw new Error("Invalid destination chain selected");
+  const handleSetHomeChain = useCallback((chainId: number) => {
+    const chain = homeChains.find((c) => c.chainId === chainId);
+
+    if (chain) {
+      if (chain.type === "Ethereum") {
+        setHomeChain(
+          EVMHomeAdaptorFactory(
+            chain,
+            setTransactionStatus,
+            setDepositNonce,
+            setTransferTxHash
+          )
+        );
+        setDestinationChains(
+          chainbridgeConfig.chains.filter(
+            (bridgeConfig: BridgeConfig) =>
+              bridgeConfig.chainId === chain.chainId
+          )
+        );
+      }
     }
-    if (chain.type == "Ethereum") {
-      const newHomeChain = EVMAdaptorFactory(chain);
-      setDestinationChain(newHomeChain);
-    }
-  };
+  }, []);
 
   useEffect(() => {
-    if (destinationChain) {
-      let provider;
-      if (destinationChain?.rpcUrl.startsWith("wss")) {
-        if (destinationChain.rpcUrl.includes("infura")) {
-          const parts = destinationChain.rpcUrl.split("/");
-
-          provider = new ethers.providers.InfuraWebSocketProvider(
-            destinationChain.networkId,
-            parts[parts.length - 1]
-          );
-        }
-        if (destinationChain.rpcUrl.includes("alchemyapi")) {
-          const parts = destinationChain.rpcUrl.split("/");
-
-          provider = new ethers.providers.AlchemyWebSocketProvider(
-            destinationChain.networkId,
-            parts[parts.length - 1]
-          );
-        }
-      } else {
-        provider = new ethers.providers.JsonRpcProvider(
-          destinationChain?.rpcUrl
-        );
-      }
-      if (provider) {
-        const bridge = BridgeFactory.connect(
-          destinationChain?.bridgeAddress,
-          provider
-        );
-        setDestinationBridge(bridge);
-      }
+    if (walletType !== "unset") {
+      setHomeChains(
+        chainbridgeConfig.chains.filter(
+          (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType
+        )
+      );
+    } else {
+      setHomeChains([]);
     }
-  }, [destinationChain]);
+  }, [walletType]);
 
-  useEffect(() => {
-    if (network && isReady) {
-      const home = chainbridgeConfig.chains.find(
-        (c) => c.networkId === network
-      );
-      if (!home) {
-        setHomeChain(undefined);
-        setHomeBridge(undefined);
-        setWrapperConfig(undefined);
-        setWrapper(undefined);
-        return;
+  const handleSetDestination = useCallback((chainId: number) => {
+    if (homeChain && depositNonce) {
+      const chain = destinationChains.find((c) => c.chainId === chainId);
+      if (!chain) {
+        throw new Error("Invalid destination chain selected");
       }
-      setHomeChain(home);
-
-      const signer = provider?.getSigner();
-      if (!signer) {
-        console.log("No signer");
-        return;
-      }
-
-      const bridge = BridgeFactory.connect(home.bridgeAddress, signer);
-      setHomeBridge(bridge);
-      setDestinationChains(
-        chainbridgeConfig.chains.filter((c) => c.networkId !== network)
-      );
-      if (chainbridgeConfig.chains.length === 2) {
-        const destChain = chainbridgeConfig.chains.find(
-          (c) => c.networkId !== network
+      if (chain.type == "Ethereum") {
+        const newDestinationChain = EVMDestinationAdaptorFactory(
+          chain,
+          homeChain.chainConfig.chainId,
+          depositNonce,
+          depositVotes,
+          setDepositVotes,
+          tokensDispatch,
+          setTransactionStatus,
+          setTransferTxHash
         );
-
-        destChain && setDestinationChain(destChain);
-      }
-
-      const wrapperToken = home.tokens.find(
-        (token) => token.isNativeWrappedToken
-      );
-
-      if (!wrapperToken) {
-        setWrapperConfig(undefined);
-        setWrapper(undefined);
-      } else {
-        setWrapperConfig(wrapperToken);
-        const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
-        setWrapper(connectedWeth);
+        setDestinationChain(newDestinationChain);
       }
     } else {
-      setHomeChain(undefined);
-      setWrapperConfig(undefined);
-      setWrapper(undefined);
+      throw new Error("Home chain not selected");
     }
-    resetDeposit();
-  }, [isReady, network, provider]);
+  }, []);
 
-  useEffect(() => {
-    const getRelayerThreshold = async () => {
-      if (homeBridge) {
-        const threshold = BigNumber.from(
-          await homeBridge._relayerThreshold()
-        ).toNumber();
-        setRelayerThreshold(threshold);
+  const deposit = useCallback(
+    async (amount: number, recipient: string, tokenAddress: string) => {
+      if (homeChain && destinationChain) {
+        return await homeChain?.deposit(
+          amount,
+          recipient,
+          tokenAddress,
+          destinationChain.chain.chainId
+        );
       }
-    };
-    const getBridgeFee = async () => {
-      if (homeBridge) {
-        const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
-        setBridgeFee(bridgeFee);
-      }
-    };
-    getRelayerThreshold();
-    getBridgeFee();
-  }, [homeBridge]);
-
-  useEffect(() => {
-    if (homeChain && destinationBridge && depositNonce) {
-      destinationBridge.on(
-        destinationBridge.filters.ProposalEvent(
-          homeChain.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null,
-          null
-        ),
-        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-          switch (BigNumber.from(status).toNumber()) {
-            case 1:
-              tokensDispatch({
-                type: "addMessage",
-                payload: `Proposal created on ${destinationChain?.name}`,
-              });
-              break;
-            case 2:
-              tokensDispatch({
-                type: "addMessage",
-                payload: `Proposal has passed. Executing...`,
-              });
-              break;
-            case 3:
-              setTransactionStatus("Transfer Completed");
-              setTransferTxHash(tx.transactionHash);
-              break;
-            case 4:
-              setTransactionStatus("Transfer Aborted");
-              setTransferTxHash(tx.transactionHash);
-              break;
-          }
-        }
-      );
-
-      destinationBridge.on(
-        destinationBridge.filters.ProposalVote(
-          homeChain.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null
-        ),
-        async (originChainId, depositNonce, status, resourceId, tx) => {
-          const txReceipt = await tx.getTransactionReceipt();
-          if (txReceipt.status === 1) {
-            setDepositVotes(depositVotes + 1);
-          }
-          tokensDispatch({
-            type: "addMessage",
-            payload: {
-              address: String(txReceipt.from),
-              signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
-            },
-          });
-        }
-      );
-    }
-    return () => {
-      //@ts-ignore
-      destinationBridge?.removeAllListeners();
-    };
-  }, [
-    depositNonce,
-    homeChain,
-    destinationBridge,
-    depositVotes,
-    destinationChain,
-    inTransitMessages,
-  ]);
-
-  const deposit = async (
-    amount: number,
-    recipient: string,
-    tokenAddress: string
-  ) => {
-    if (!homeBridge || !homeChain) {
-      console.log("Home bridge contract is not instantiated");
-      return;
-    }
-
-    if (!destinationChain || !destinationBridge) {
-      console.log("Destination bridge contract is not instantiated");
-      return;
-    }
-
-    const signer = provider?.getSigner();
-    if (!address || !signer) {
-      console.log("No signer");
-      return;
-    }
-
-    const token = homeChain.tokens.find(
-      (token) => token.address === tokenAddress
-    );
-
-    if (!token) {
-      console.log("Invalid token selected");
-      return;
-    }
-    setTransactionStatus("Initializing Transfer");
-    setDepositAmount(amount);
-    setSelectedToken(tokenAddress);
-    const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
-    const erc20Decimals = tokens[tokenAddress].decimals;
-
-    const data =
-      "0x" +
-      utils
-        .hexZeroPad(
-          // TODO Wire up dynamic token decimals
-          BigNumber.from(
-            utils.parseUnits(amount.toString(), erc20Decimals)
-          ).toHexString(),
-          32
-        )
-        .substr(2) + // Deposit Amount (32 bytes)
-      utils
-        .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
-        .substr(2) + // len(recipientAddress) (32 bytes)
-      recipient.substr(2); // recipientAddress (?? bytes)
-
-    try {
-      const currentAllowance = await erc20.allowance(
-        address,
-        homeChain.erc20HandlerAddress
-      );
-
-      if (Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount) {
-        if (
-          Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
-          resetAllowanceLogicFor.includes(tokenAddress)
-        ) {
-          //We need to reset the user's allowance to 0 before we give them a new allowance
-          //TODO Should we alert the user this is happening here?
-          await (
-            await erc20.approve(
-              homeChain.erc20HandlerAddress,
-              BigNumber.from(utils.parseUnits("0", erc20Decimals)),
-              {
-                gasPrice: BigNumber.from(
-                  utils.parseUnits(
-                    (homeChain.defaultGasPrice || gasPrice).toString(),
-                    9
-                  )
-                ).toString(),
-              }
-            )
-          ).wait(1);
-        }
-        await (
-          await erc20.approve(
-            homeChain.erc20HandlerAddress,
-            BigNumber.from(utils.parseUnits(amount.toString(), erc20Decimals)),
-            {
-              gasPrice: BigNumber.from(
-                utils.parseUnits(
-                  (homeChain.defaultGasPrice || gasPrice).toString(),
-                  9
-                )
-              ).toString(),
-            }
-          )
-        ).wait(1);
-      }
-
-      homeBridge.once(
-        homeBridge.filters.Deposit(
-          destinationChain.chainId,
-          token.resourceId,
-          null
-        ),
-        (destChainId, resourceId, depositNonce) => {
-          setDepositNonce(`${depositNonce.toString()}`);
-          setTransactionStatus("In Transit");
-        }
-      );
-
-      await (
-        await homeBridge.deposit(
-          destinationChain.chainId,
-          token.resourceId,
-          data,
-          {
-            gasPrice: utils.parseUnits(
-              (homeChain.defaultGasPrice || gasPrice).toString(),
-              9
-            ),
-            value: utils.parseUnits((bridgeFee || 0).toString(), 18),
-          }
-        )
-      ).wait();
-      return Promise.resolve();
-    } catch (error) {
-      console.log(error);
-      setTransactionStatus("Transfer Aborted");
-      return Promise.reject();
-    }
-  };
+    },
+    [homeChain, destinationChain]
+  );
 
   return (
     <ChainbridgeContext.Provider
       value={{
+        setWalletType,
+        handleSetHomeChain,
         homeChain: homeChain,
         destinationChain: destinationChain,
         destinationChains: destinationChains.map((c) => ({
@@ -463,20 +205,21 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           name: c.name,
         })),
         setDestinationChain: handleSetDestination,
-        deposit,
         resetDeposit,
+        deposit,
         depositVotes,
-        relayerThreshold: relayerThreshold,
+        relayerThreshold: homeChain?.relayerThreshold,
         depositNonce,
-        bridgeFee,
+        bridgeFee: homeChain?.bridgeFee,
         transactionStatus,
         inTransitMessages,
-        depositAmount,
-        transferTxHash,
-        selectedToken,
-        wrapToken: wrapper?.deposit,
-        wrapTokenConfig,
-        unwrapToken: wrapper?.withdraw,
+        depositAmount: homeChain?.depositAmount,
+        transferTxHash: transferTxHash,
+        selectedToken: homeChain?.selectedToken,
+        // TODO: Confirm if EVM specific
+        wrapToken: homeChain?.wrapper?.deposit,
+        wrapTokenConfig: homeChain?.wrapTokenConfig,
+        unwrapToken: homeChain?.wrapper?.withdraw,
       }}
     >
       {children}

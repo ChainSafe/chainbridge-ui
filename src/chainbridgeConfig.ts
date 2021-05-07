@@ -10,6 +10,8 @@ export type TokenConfig = {
   isNativeWrappedToken?: boolean;
 };
 
+export type ChainType = "Ethereum" | "Substrate";
+
 export type BridgeConfig = {
   chainId: number;
   networkId: number;
@@ -17,7 +19,7 @@ export type BridgeConfig = {
   bridgeAddress: string;
   erc20HandlerAddress: string;
   rpcUrl: string;
-  type: "Ethereum" | "Substrate";
+  type: ChainType;
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
