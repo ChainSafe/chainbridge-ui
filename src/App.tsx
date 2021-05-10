@@ -14,6 +14,7 @@ import AppWrapper from "./Layouts/AppWrapper";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
+import { NetworkManagerProvider } from "./Contexts/NetworkManagerContext";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -74,13 +75,15 @@ const App: React.FC<{}> = () => {
             gasPricePollingInterval={120}
             gasPriceSetting="fast"
           >
-            <ChainbridgeProvider>
-              <Router>
-                <AppWrapper>
-                  <Routes />
-                </AppWrapper>
-              </Router>
-            </ChainbridgeProvider>
+            <NetworkManagerProvider>
+              <ChainbridgeProvider>
+                <Router>
+                  <AppWrapper>
+                    <Routes />
+                  </AppWrapper>
+                </Router>
+              </ChainbridgeProvider>
+            </NetworkManagerProvider>
           </Web3Provider>
         </ToasterProvider>
       </ThemeSwitcher>
