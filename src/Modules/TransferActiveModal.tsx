@@ -9,7 +9,6 @@ import {
 } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { useWeb3 } from "@chainsafe/web3-context";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -153,8 +152,8 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     depositAmount,
     transferTxHash,
     selectedToken,
+    tokens,
   } = useChainbridge();
-  const { tokens } = useWeb3();
 
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
   return (

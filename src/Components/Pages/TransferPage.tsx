@@ -14,7 +14,6 @@ import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import clsx from "clsx";
 import TransferActiveModal from "../../Modules/TransferActiveModal";
-import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
@@ -185,15 +184,7 @@ type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const {
-    isReady,
-    checkIsReady,
-    wallet,
-    onboard,
-    tokens,
-    address,
-    network,
-  } = useWeb3();
+
   const {
     homeChain,
     destinationChains,
@@ -203,6 +194,9 @@ const TransferPage = () => {
     transactionStatus,
     resetDeposit,
     bridgeFee,
+    tokens,
+    wallet,
+    isReady,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);

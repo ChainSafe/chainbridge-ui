@@ -1,8 +1,13 @@
+import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BridgeConfig, TokenConfig } from "../../chainbridgeConfig";
 import { Weth } from "../../Contracts/Weth";
 
-export interface HomeChainAdaptor {
-  chainConfig: BridgeConfig;
+export interface IHomeBridgeProviderProps {
+  children: React.ReactNode | React.ReactNode[];
+}
+
+export interface HomeChainAdaptorContext {
+  chainConfig: BridgeConfig | undefined;
   deposit(
     amount: number,
     recipient: string,
@@ -15,8 +20,6 @@ export interface HomeChainAdaptor {
   setDepositAmount: (input: number | undefined) => void;
   depositAmount: number | undefined;
 
-  setTransferTxHash: (txHash: string) => void;
-
   setSelectedToken: (tokenAddress: string) => void;
   selectedToken: string;
 
@@ -24,6 +27,13 @@ export interface HomeChainAdaptor {
 
   wrapTokenConfig: TokenConfig | undefined;
   wrapper: Weth | undefined;
+
+  isReady: boolean;
+  address: string | undefined;
+
+  nativeTokenBalance: number | undefined;
+
+  tokens: Tokens;
 }
 
 export interface DestinationChainAdaptor {

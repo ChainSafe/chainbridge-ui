@@ -3,7 +3,6 @@ import React from "react";
 import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
-import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
@@ -60,8 +59,7 @@ interface IAppHeader {}
 
 const AppHeader: React.FC<IAppHeader> = () => {
   const classes = useStyles();
-  const { isReady, address } = useWeb3();
-  const { homeChain } = useChainbridge();
+  const { homeChain, isReady, address } = useChainbridge();
   return (
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
