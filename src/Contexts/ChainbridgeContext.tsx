@@ -5,7 +5,11 @@ import {
   Overrides,
   PayableOverrides,
 } from "ethers";
-import { chainbridgeConfig, TokenConfig } from "../chainbridgeConfig";
+import {
+  BridgeConfig,
+  chainbridgeConfig,
+  TokenConfig,
+} from "../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import {
   TransactionStatus,
@@ -13,15 +17,19 @@ import {
   Vote,
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
+import { DestinationChainAdaptor } from "./Adaptors/interfaces";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
 type ChainbridgeContext = {
+  homeConfig: BridgeConfig | undefined;
   connect: () => Promise<void>;
   handleSetHomeChain: (chainId: number) => void;
   setDestinationChain: (chainId: number | undefined) => void;
+  destinationChains: Array<{ chainId: number; name: string }>;
+  destinationChain?: DestinationChainAdaptor;
   deposit(
     amount: number,
     recipient: string,
@@ -53,6 +61,7 @@ type ChainbridgeContext = {
   nativeTokenBalance: number | undefined;
   isReady: boolean | undefined;
   address: string | undefined;
+  chainId?: number;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
@@ -73,6 +82,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     transactionStatus,
     depositNonce,
     depositVotes,
+    homeChainConfig,
+    destinationChains,
+    chainId,
   } = useNetworkManager();
 
   const {
@@ -116,17 +128,20 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         );
       }
     },
-    [deposit, destinationChain]
+    [deposit, destinationChain, chainConfig]
   );
 
   return (
     <ChainbridgeContext.Provider
       value={{
+        homeConfig: homeChainConfig,
         connect,
+        destinationChains,
         handleSetHomeChain,
         setDestinationChain,
         resetDeposit,
         deposit: handleDeposit,
+        destinationChain,
         depositVotes,
         relayerThreshold,
         depositNonce,
@@ -144,6 +159,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         nativeTokenBalance: nativeTokenBalance,
         tokens,
         address,
+        chainId,
       }}
     >
       {children}

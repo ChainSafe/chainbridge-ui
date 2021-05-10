@@ -45,6 +45,8 @@ interface NetworkManagerContext {
   walletType: WalletType;
   setWalletType: (walletType: WalletType) => void;
 
+  chainId?: number;
+
   homeChainConfig: BridgeConfig | undefined;
 
   destinationChain?: DestinationChainAdaptor;
@@ -165,6 +167,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   return (
     <NetworkManagerContext.Provider
       value={{
+        chainId: homeChainConfig?.chainId,
         homeChainConfig,
         setWalletType,
         walletType,

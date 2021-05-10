@@ -147,7 +147,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     depositVotes,
     relayerThreshold,
     inTransitMessages,
-    homeChain,
+    homeConfig,
     destinationChain,
     depositAmount,
     transferTxHash,
@@ -235,7 +235,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               Successfully transferred{" "}
               <strong>
                 {depositAmount} {tokenSymbol}
-                <br /> from {homeChain?.chainConfig.name} to{" "}
+                <br /> from {homeConfig?.name} to{" "}
                 {destinationChain?.chainConfig.name}.
               </strong>
             </Typography>
@@ -276,24 +276,22 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {homeChain &&
-              homeChain.chainConfig.blockExplorer &&
-              transferTxHash && (
-                <Button
-                  onClick={() =>
-                    window.open(
-                      `${homeChain.chainConfig.blockExplorer}/${transferTxHash}`,
-                      "_blank"
-                    )
-                  }
-                  size="small"
-                  className={classes.button}
-                  variant="outline"
-                  disabled
-                >
-                  View transaction
-                </Button>
-              )}
+            {homeConfig && homeConfig.blockExplorer && transferTxHash && (
+              <Button
+                onClick={() =>
+                  window.open(
+                    `${homeConfig.blockExplorer}/${transferTxHash}`,
+                    "_blank"
+                  )
+                }
+                size="small"
+                className={classes.button}
+                variant="outline"
+                disabled
+              >
+                View transaction
+              </Button>
+            )}
             <section className={classes.buttons}>
               <Button
                 size="small"

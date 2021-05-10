@@ -208,11 +208,12 @@ const MainPage = () => {
     gasPrice,
   } = useWeb3();
   const {
-    homeChain,
     wrapTokenConfig,
     wrapToken,
     unwrapToken,
+    homeConfig,
   } = useChainbridge();
+
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -241,7 +242,7 @@ const MainPage = () => {
   };
 
   const handleWrapToken = async () => {
-    if (!wrapTokenConfig || !wrapToken || !homeChain) return;
+    if (!wrapTokenConfig || !wrapToken || !homeConfig) return;
 
     try {
       setTxDetails({
@@ -254,7 +255,7 @@ const MainPage = () => {
         value: parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
         gasPrice: BigNumber.from(
           utils.parseUnits(
-            (homeChain.chainConfig.defaultGasPrice || gasPrice).toString(),
+            (homeConfig.defaultGasPrice || gasPrice).toString(),
             9
           )
         ).toString(),
@@ -274,7 +275,7 @@ const MainPage = () => {
   };
 
   const handleUnwrapToken = async () => {
-    if (!wrapTokenConfig || !unwrapToken || !homeChain) return;
+    if (!wrapTokenConfig || !unwrapToken || !homeConfig) return;
 
     try {
       setTxDetails({
@@ -287,10 +288,7 @@ const MainPage = () => {
         parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
         {
           gasPrice: utils
-            .parseUnits(
-              (homeChain.chainConfig.defaultGasPrice || gasPrice).toString(),
-              9
-            )
+            .parseUnits((homeConfig.defaultGasPrice || gasPrice).toString(), 9)
             .toString(),
         }
       );
@@ -383,7 +381,7 @@ const MainPage = () => {
               variant="h2"
               className={classes.networkName}
             >
-              {homeChain?.chainConfig.name}
+              {homeConfig?.name}
             </Typography>
           </section>
         )}
@@ -403,7 +401,7 @@ const MainPage = () => {
       >
         <Form
           className={clsx(classes.formArea, {
-            disabled: !homeChain,
+            disabled: !homeConfig,
           })}
         >
           <section className={classes.currencySection}>
@@ -502,17 +500,17 @@ const MainPage = () => {
             setPreflightModalOpen(false);
           }
         }}
-        sourceNetwork={homeChain?.chainConfig.name || ""}
+        sourceNetwork={homeConfig?.name || ""}
         tokenSymbol={
           action === "wrap"
-            ? homeChain?.chainConfig.nativeTokenSymbol || "ETH"
+            ? homeConfig?.nativeTokenSymbol || "ETH"
             : wrapTokenConfig?.symbol || "wETH"
         }
         value={preflightDetails?.tokenAmount || 0}
         wrappedTitle={
           action === "wrap"
             ? `${wrapTokenConfig?.name} (${wrapTokenConfig?.symbol})`
-            : homeChain?.chainConfig.nativeTokenSymbol || "ETH"
+            : homeConfig?.nativeTokenSymbol || "ETH"
         }
         action={action}
       />

@@ -59,7 +59,7 @@ interface IAppHeader {}
 
 const AppHeader: React.FC<IAppHeader> = () => {
   const classes = useStyles();
-  const { homeChain, isReady, address } = useChainbridge();
+  const { homeConfig, isReady, address } = useChainbridge();
   return (
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
@@ -79,7 +79,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
               {address && shortenAddress(address)}
             </Typography>
             <Typography variant="h5" className={classes.address}>
-              connected to <strong>{homeChain?.chainConfig.name}</strong>
+              connected to <strong>{homeConfig?.name}</strong>
             </Typography>
           </>
         )}

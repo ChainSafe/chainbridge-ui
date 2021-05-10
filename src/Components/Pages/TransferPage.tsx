@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
@@ -21,6 +21,7 @@ import { object, string } from "yup";
 import { utils } from "ethers";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
 import FeesFormikWrapped from "./FormikContextElements/Fees";
+import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -184,19 +185,21 @@ type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
+  const { walletType, setWalletType } = useNetworkManager();
 
   const {
-    homeChain,
-    destinationChains,
-    destinationChain,
     deposit,
     setDestinationChain,
     transactionStatus,
     resetDeposit,
     bridgeFee,
     tokens,
-    wallet,
     isReady,
+    homeConfig,
+    destinationChain,
+    destinationChains,
+    address,
+    chainId,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -211,12 +214,13 @@ const TransferPage = () => {
     tokenSymbol: "",
   });
 
-  const handleConnect = async () => {
-    setWalletConnecting(true);
-    !wallet && (await onboard?.walletSelect());
-    await checkIsReady();
-    setWalletConnecting(false);
-  };
+  useEffect(() => {
+    if (walletType !== "select" && walletConnecting === true) {
+      setWalletConnecting(false);
+    } else if (walletType === "select") {
+      setWalletConnecting(true);
+    }
+  }, [walletType, walletConnecting]);
 
   const DECIMALS =
     preflightDetails && tokens[preflightDetails.token]
@@ -286,10 +290,10 @@ const TransferPage = () => {
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              handleConnect();
+              setWalletType("select");
             }}
           >
-            Connect Metamask
+            Connect
           </Button>
         ) : walletConnecting ? (
           <section className={classes.connecting}>
@@ -315,7 +319,7 @@ const TransferPage = () => {
               variant="h2"
               className={classes.networkName}
             >
-              {homeChain?.chainConfig.name}
+              {homeConfig?.name}
             </Typography>
           </section>
         )}
@@ -338,14 +342,14 @@ const TransferPage = () => {
       >
         <Form
           className={clsx(classes.formArea, {
-            disabled: !homeChain,
+            disabled: !homeConfig,
           })}
         >
           <section>
             <SelectInput
               label="Destination Network"
               className={classes.generalInput}
-              disabled={!homeChain}
+              disabled={!homeConfig}
               options={destinationChains.map((dc) => ({
                 label: dc.name,
                 value: dc.chainId,
@@ -353,6 +357,7 @@ const TransferPage = () => {
               onChange={(value) => setDestinationChain(value)}
               value={destinationChain?.chainConfig.chainId}
             />
+            homeConfig
           </section>
           <section className={classes.currencySection}>
             <section>
@@ -429,7 +434,7 @@ const TransferPage = () => {
             amountFormikName="tokenAmount"
             className={classes.fees}
             fee={bridgeFee}
-            feeSymbol={homeChain?.chainConfig.nativeTokenSymbol}
+            feeSymbol={homeConfig?.nativeTokenSymbol}
             symbol={
               preflightDetails && tokens[preflightDetails.token]
                 ? tokens[preflightDetails.token].symbol
@@ -455,8 +460,10 @@ const TransferPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <NetworkUnsupportedModal
-        open={!homeChain && isReady}
-        network={network}
+        // open={!homeConfig && !!isReady}
+        // TODO: Need expicit way to do this
+        open={false}
+        network={chainId}
         supportedNetworks={chainbridgeConfig.chains.map((bc) => bc.networkId)}
       />
       <PreflightModalTransfer
@@ -473,7 +480,7 @@ const TransferPage = () => {
               preflightDetails.token
             );
         }}
-        sourceNetwork={homeChain?.chainConfig.name || ""}
+        sourceNetwork={homeConfig?.name || ""}
         targetNetwork={destinationChain?.chainConfig.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}

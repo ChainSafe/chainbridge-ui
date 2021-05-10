@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import clsx from "clsx";
 import {
   useNetworkManager,
   WalletType,
@@ -19,14 +18,17 @@ const NetworkSelectModal = () => {
   const { isReady, connect } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();
 
-  const handleConnect = useCallback(async (target: WalletType) => {
-    setWalletType("Ethereum");
-    await connect();
-  }, []);
+  const handleConnect = useCallback(
+    async (target: WalletType) => {
+      setWalletType(target);
+      await connect();
+    },
+    [connect, setWalletType]
+  );
 
   return (
     <Modal
-      active={walletType != "unset" && !isReady}
+      active={walletType !== "unset" && !isReady}
       closePosition="right"
       className={classes.root}
     >

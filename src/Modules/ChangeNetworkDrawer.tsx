@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
-import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import { useNetworkManager } from "../Contexts/NetworkManagerContext";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
@@ -35,12 +35,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { isReady, setWalletType, walletType } = useChainbridge();
-
-  const handleConnect = async () => {
-    // await onboard?.walletSelect();
-    // await checkIsReady();
-  };
+  const { setWalletType } = useNetworkManager();
 
   return (
     <CustomDrawer open={open} className={classes.root}>
@@ -60,7 +55,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         </Button>
         <Button
           onClick={() => {
-            handleConnect();
+            setWalletType("select");
           }}
           variant="outline"
         >

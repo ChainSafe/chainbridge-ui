@@ -110,7 +110,7 @@ export const EVMHomeAdaptorProvider = ({
     if (wallet && wallet.connect) {
       await wallet.connect();
     }
-  }, []);
+  }, [wallet]);
 
   const deposit = useCallback(
     async (
