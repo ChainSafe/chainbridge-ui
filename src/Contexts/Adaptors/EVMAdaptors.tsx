@@ -36,6 +36,7 @@ export const EVMHomeAdaptorProvider = ({
     wallet,
     ethBalance,
   } = useWeb3();
+
   const {
     homeChainConfig,
     setTransactionStatus,
@@ -104,6 +105,12 @@ export const EVMHomeAdaptorProvider = ({
     getRelayerThreshold();
     getBridgeFee();
   }, [homeBridge]);
+
+  const handleConnect = useCallback(async () => {
+    if (wallet && wallet.connect) {
+      await wallet.connect();
+    }
+  }, []);
 
   const deposit = useCallback(
     async (
@@ -240,6 +247,7 @@ export const EVMHomeAdaptorProvider = ({
   return (
     <HomeBridgeContext.Provider
       value={{
+        connect: handleConnect,
         bridgeFee,
         deposit,
         depositAmount,

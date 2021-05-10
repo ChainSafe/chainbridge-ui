@@ -8,6 +8,9 @@ export interface IHomeBridgeProviderProps {
 
 export interface HomeChainAdaptorContext {
   chainConfig: BridgeConfig | undefined;
+
+  connect: () => Promise<void>;
+
   deposit(
     amount: number,
     recipient: string,

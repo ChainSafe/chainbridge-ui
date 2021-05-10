@@ -28,7 +28,7 @@ interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-export type WalletType = ChainType | "unset";
+export type WalletType = ChainType | "select" | "unset";
 
 export type Vote = {
   address: string;

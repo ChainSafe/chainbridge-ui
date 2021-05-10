@@ -19,6 +19,7 @@ interface IChainbridgeContextProps {
 }
 
 type ChainbridgeContext = {
+  connect: () => Promise<void>;
   handleSetHomeChain: (chainId: number) => void;
   setDestinationChain: (chainId: number | undefined) => void;
   deposit(
@@ -75,6 +76,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   } = useNetworkManager();
 
   const {
+    connect,
     setDepositAmount,
     setSelectedToken,
     chainConfig,
@@ -120,6 +122,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   return (
     <ChainbridgeContext.Provider
       value={{
+        connect,
         handleSetHomeChain,
         setDestinationChain,
         resetDeposit,
