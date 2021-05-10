@@ -189,7 +189,11 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
           {transactionStatus === "Initializing Transfer"
             ? "Initializing Transfer"
             : transactionStatus === "In Transit"
-            ? `In Transit (${depositVotes}/${relayerThreshold} signatures needed)`
+            ? `In Transit (${
+                depositVotes < (relayerThreshold || 0)
+                  ? `${depositVotes}/${relayerThreshold} signatures needed`
+                  : "Executing proposal"
+              })`
             : transactionStatus === "Transfer Completed"
             ? "Transfer completed"
             : "Transfer aborted"}
