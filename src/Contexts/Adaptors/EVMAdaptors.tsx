@@ -24,7 +24,7 @@ export const EVMHomeAdaptorFactory = (
   setDepositNonce: (nonce: string) => void,
   setTransferTxHash: (txHash: string) => void
 ): HomeChainAdaptor => {
-  // const [homeChain, setHomeChain] = useState(chainConfig)
+  const [homeChain] = useState(chainConfig);
   const { isReady, network, provider, gasPrice, address, tokens } = useWeb3();
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
@@ -42,6 +42,7 @@ export const EVMHomeAdaptorFactory = (
   );
 
   useEffect(() => {
+    debugger;
     if (network && isReady) {
       const signer = provider?.getSigner();
       if (!signer) {
@@ -49,10 +50,10 @@ export const EVMHomeAdaptorFactory = (
         return;
       }
 
-      const bridge = BridgeFactory.connect(chainConfig.bridgeAddress, signer);
+      const bridge = BridgeFactory.connect(homeChain.bridgeAddress, signer);
       setHomeBridge(bridge);
 
-      const wrapperToken = chainConfig.tokens.find(
+      const wrapperToken = homeChain.tokens.find(
         (token) => token.isNativeWrappedToken
       );
 
@@ -65,7 +66,7 @@ export const EVMHomeAdaptorFactory = (
         setWrapper(connectedWeth);
       }
     }
-  }, [chainConfig, network, isReady, provider]);
+  }, [homeChain, network, isReady, provider]);
 
   useEffect(() => {
     const getRelayerThreshold = async () => {
@@ -103,7 +104,7 @@ export const EVMHomeAdaptorFactory = (
         return;
       }
 
-      const token = chainConfig.tokens.find(
+      const token = homeChain.tokens.find(
         (token) => token.address === tokenAddress
       );
 
@@ -136,7 +137,7 @@ export const EVMHomeAdaptorFactory = (
       try {
         const currentAllowance = await erc20.allowance(
           address,
-          chainConfig.erc20HandlerAddress
+          homeChain.erc20HandlerAddress
         );
 
         if (
@@ -150,12 +151,12 @@ export const EVMHomeAdaptorFactory = (
             //TODO Should we alert the user this is happening here?
             await (
               await erc20.approve(
-                chainConfig.erc20HandlerAddress,
+                homeChain.erc20HandlerAddress,
                 BigNumber.from(utils.parseUnits("0", erc20Decimals)),
                 {
                   gasPrice: BigNumber.from(
                     utils.parseUnits(
-                      (chainConfig.defaultGasPrice || gasPrice).toString(),
+                      (homeChain.defaultGasPrice || gasPrice).toString(),
                       9
                     )
                   ).toString(),
@@ -165,14 +166,14 @@ export const EVMHomeAdaptorFactory = (
           }
           await (
             await erc20.approve(
-              chainConfig.erc20HandlerAddress,
+              homeChain.erc20HandlerAddress,
               BigNumber.from(
                 utils.parseUnits(amount.toString(), erc20Decimals)
               ),
               {
                 gasPrice: BigNumber.from(
                   utils.parseUnits(
-                    (chainConfig.defaultGasPrice || gasPrice).toString(),
+                    (homeChain.defaultGasPrice || gasPrice).toString(),
                     9
                   )
                 ).toString(),
@@ -196,7 +197,7 @@ export const EVMHomeAdaptorFactory = (
         await (
           await homeBridge.deposit(destinationChainId, token.resourceId, data, {
             gasPrice: utils.parseUnits(
-              (chainConfig.defaultGasPrice || gasPrice).toString(),
+              (homeChain.defaultGasPrice || gasPrice).toString(),
               9
             ),
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
@@ -209,7 +210,7 @@ export const EVMHomeAdaptorFactory = (
       homeBridge,
       address,
       bridgeFee,
-      chainConfig,
+      homeChain,
       gasPrice,
       provider,
       setDepositNonce,
@@ -219,7 +220,7 @@ export const EVMHomeAdaptorFactory = (
   );
 
   return {
-    chainConfig,
+    chainConfig: homeChain,
     bridgeFee,
     deposit,
     depositAmount,
