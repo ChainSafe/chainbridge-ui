@@ -120,28 +120,31 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     homeChain?.setSelectedToken("");
   };
 
-  const handleSetHomeChain = useCallback((chainId: number) => {
-    const chain = homeChains.find((c) => c.chainId === chainId);
+  const handleSetHomeChain = useCallback(
+    (chainId: number) => {
+      const chain = homeChains.find((c) => c.chainId === chainId);
 
-    if (chain) {
-      if (chain.type === "Ethereum") {
-        setHomeChain(
-          EVMHomeAdaptorFactory(
-            chain,
-            setTransactionStatus,
-            setDepositNonce,
-            setTransferTxHash
-          )
-        );
-        setDestinationChains(
-          chainbridgeConfig.chains.filter(
-            (bridgeConfig: BridgeConfig) =>
-              bridgeConfig.chainId === chain.chainId
-          )
-        );
+      if (chain) {
+        if (chain.type === "Ethereum") {
+          setHomeChain(
+            EVMHomeAdaptorFactory(
+              chain,
+              setTransactionStatus,
+              setDepositNonce,
+              setTransferTxHash
+            )
+          );
+          setDestinationChains(
+            chainbridgeConfig.chains.filter(
+              (bridgeConfig: BridgeConfig) =>
+                bridgeConfig.chainId === chain.chainId
+            )
+          );
+        }
       }
-    }
-  }, []);
+    },
+    [homeChains]
+  );
 
   useEffect(() => {
     if (walletType !== "unset") {
@@ -155,29 +158,32 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     }
   }, [walletType]);
 
-  const handleSetDestination = useCallback((chainId: number) => {
-    if (homeChain && depositNonce) {
-      const chain = destinationChains.find((c) => c.chainId === chainId);
-      if (!chain) {
-        throw new Error("Invalid destination chain selected");
+  const handleSetDestination = useCallback(
+    (chainId: number) => {
+      if (homeChain && depositNonce) {
+        const chain = destinationChains.find((c) => c.chainId === chainId);
+        if (!chain) {
+          throw new Error("Invalid destination chain selected");
+        }
+        if (chain.type === "Ethereum") {
+          const newDestinationChain = EVMDestinationAdaptorFactory(
+            chain,
+            homeChain.chainConfig.chainId,
+            depositNonce,
+            depositVotes,
+            setDepositVotes,
+            tokensDispatch,
+            setTransactionStatus,
+            setTransferTxHash
+          );
+          setDestinationChain(newDestinationChain);
+        }
+      } else {
+        throw new Error("Home chain not selected");
       }
-      if (chain.type == "Ethereum") {
-        const newDestinationChain = EVMDestinationAdaptorFactory(
-          chain,
-          homeChain.chainConfig.chainId,
-          depositNonce,
-          depositVotes,
-          setDepositVotes,
-          tokensDispatch,
-          setTransactionStatus,
-          setTransferTxHash
-        );
-        setDestinationChain(newDestinationChain);
-      }
-    } else {
-      throw new Error("Home chain not selected");
-    }
-  }, []);
+    },
+    [depositNonce, depositVotes, destinationChains, homeChain]
+  );
 
   const deposit = useCallback(
     async (amount: number, recipient: string, tokenAddress: string) => {
@@ -186,7 +192,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           amount,
           recipient,
           tokenAddress,
-          destinationChain.chain.chainId
+          destinationChain.chainConfig.chainId
         );
       }
     },

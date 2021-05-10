@@ -65,7 +65,7 @@ export const EVMHomeAdaptorFactory = (
         setWrapper(connectedWeth);
       }
     }
-  }, [chainConfig, network, isReady]);
+  }, [chainConfig, network, isReady, provider]);
 
   useEffect(() => {
     const getRelayerThreshold = async () => {
@@ -205,7 +205,17 @@ export const EVMHomeAdaptorFactory = (
         return Promise.resolve();
       } catch (error) {}
     },
-    [homeBridge]
+    [
+      homeBridge,
+      address,
+      bridgeFee,
+      chainConfig,
+      gasPrice,
+      provider,
+      setDepositNonce,
+      setTransactionStatus,
+      tokens,
+    ]
   );
 
   return {
@@ -330,9 +340,19 @@ export const EVMDestinationAdaptorFactory = (
       //@ts-ignore
       destinationBridge?.removeAllListeners();
     };
-  }, [depositNonce, homeChainId, destinationBridge, depositVotes, chainConfig]);
+  }, [
+    depositNonce,
+    homeChainId,
+    destinationBridge,
+    depositVotes,
+    chainConfig,
+    setDepositVotes,
+    setTransactionStatus,
+    setTransferTxHash,
+    tokensDispatch,
+  ]);
 
   return {
-    chain: chainConfig,
+    chainConfig: chainConfig,
   };
 };

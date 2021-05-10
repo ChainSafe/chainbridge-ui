@@ -171,7 +171,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
         <Typography className={classes.heading} variant="h3" component="h3">
           {txState === "inProgress"
             ? action === "wrap"
-              ? `Wrapping ${value} ${homeChain?.nativeTokenSymbol}`
+              ? `Wrapping ${value} ${homeChain?.chainConfig.nativeTokenSymbol}`
               : `Unwrapping ${value} ${tokenInfo.symbol}`
             : action === "wrap"
             ? "Token wrapped"
@@ -181,15 +181,15 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
           <>
             <Typography className={classes.receipt} component="p">
               {action === "wrap"
-                ? `Successfully wrapped ${homeChain?.nativeTokenSymbol} to ${tokenInfo.symbol}`
-                : `Successfully unwrapped ${tokenInfo.symbol} to ${homeChain?.nativeTokenSymbol}`}
-              {homeChain && homeChain.blockExplorer && txHash && (
+                ? `Successfully wrapped ${homeChain?.chainConfig.nativeTokenSymbol} to ${tokenInfo.symbol}`
+                : `Successfully unwrapped ${tokenInfo.symbol} to ${homeChain?.chainConfig.nativeTokenSymbol}`}
+              {homeChain && homeChain.chainConfig.blockExplorer && txHash && (
                 <>
                   <br />
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href={`${homeChain.blockExplorer}/${txHash}`}
+                    href={`${homeChain.chainConfig.blockExplorer}/${txHash}`}
                   >
                     View Transaction
                   </a>

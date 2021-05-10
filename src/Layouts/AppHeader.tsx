@@ -81,7 +81,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
               {address && shortenAddress(address)}
             </Typography>
             <Typography variant="h5" className={classes.address}>
-              connected to <strong>{homeChain?.name}</strong>
+              connected to <strong>{homeChain?.chainConfig.name}</strong>
             </Typography>
           </>
         )}

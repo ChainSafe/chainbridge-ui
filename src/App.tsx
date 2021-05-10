@@ -12,7 +12,6 @@ import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
 import { chainbridgeConfig } from "./chainbridgeConfig";
-import { NetworkProvider } from "./Contexts/NetworkContext";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
 

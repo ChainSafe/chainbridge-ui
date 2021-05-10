@@ -232,17 +232,18 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               Successfully transferred{" "}
               <strong>
                 {depositAmount} {tokenSymbol}
-                <br /> from {homeChain?.name} to {destinationChain?.name}.
+                <br /> from {homeChain?.chainConfig.name} to{" "}
+                {destinationChain?.chainConfig.name}.
               </strong>
             </Typography>
             <section className={classes.buttons}>
               <Button
                 onClick={() =>
                   destinationChain &&
-                  destinationChain.blockExplorer &&
+                  destinationChain.chainConfig.blockExplorer &&
                   transferTxHash &&
                   window.open(
-                    `${destinationChain.blockExplorer}/${transferTxHash}`,
+                    `${destinationChain.chainConfig.blockExplorer}/${transferTxHash}`,
                     "_blank"
                   )
                 }
@@ -272,22 +273,24 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {homeChain && homeChain.blockExplorer && transferTxHash && (
-              <Button
-                onClick={() =>
-                  window.open(
-                    `${homeChain?.blockExplorer}/${transferTxHash}`,
-                    "_blank"
-                  )
-                }
-                size="small"
-                className={classes.button}
-                variant="outline"
-                disabled
-              >
-                View transaction
-              </Button>
-            )}
+            {homeChain &&
+              homeChain.chainConfig.blockExplorer &&
+              transferTxHash && (
+                <Button
+                  onClick={() =>
+                    window.open(
+                      `${homeChain.chainConfig.blockExplorer}/${transferTxHash}`,
+                      "_blank"
+                    )
+                  }
+                  size="small"
+                  className={classes.button}
+                  variant="outline"
+                  disabled
+                >
+                  View transaction
+                </Button>
+              )}
             <section className={classes.buttons}>
               <Button
                 size="small"

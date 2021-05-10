@@ -27,5 +27,5 @@ export interface HomeChainAdaptor {
 }
 
 export interface DestinationChainAdaptor {
-  chain: BridgeConfig;
+  chainConfig: BridgeConfig;
 }

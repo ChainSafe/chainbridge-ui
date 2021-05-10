@@ -321,7 +321,7 @@ const TransferPage = () => {
               variant="h2"
               className={classes.networkName}
             >
-              {homeChain?.name}
+              {homeChain?.chainConfig.name}
             </Typography>
           </section>
         )}
@@ -357,7 +357,7 @@ const TransferPage = () => {
                 value: dc.chainId,
               }))}
               onChange={(value) => setDestinationChain(value)}
-              value={destinationChain?.chainId}
+              value={destinationChain?.chainConfig.chainId}
             />
           </section>
           <section className={classes.currencySection}>
@@ -435,7 +435,7 @@ const TransferPage = () => {
             amountFormikName="tokenAmount"
             className={classes.fees}
             fee={bridgeFee}
-            feeSymbol={homeChain?.nativeTokenSymbol}
+            feeSymbol={homeChain?.chainConfig.nativeTokenSymbol}
             symbol={
               preflightDetails && tokens[preflightDetails.token]
                 ? tokens[preflightDetails.token].symbol
@@ -479,8 +479,8 @@ const TransferPage = () => {
               preflightDetails.token
             );
         }}
-        sourceNetwork={homeChain?.name || ""}
-        targetNetwork={destinationChain?.name || ""}
+        sourceNetwork={homeChain?.chainConfig.name || ""}
+        targetNetwork={destinationChain?.chainConfig.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
