@@ -357,7 +357,6 @@ const TransferPage = () => {
               onChange={(value) => setDestinationChain(value)}
               value={destinationChain?.chainConfig.chainId}
             />
-            homeConfig
           </section>
           <section className={classes.currencySection}>
             <section>

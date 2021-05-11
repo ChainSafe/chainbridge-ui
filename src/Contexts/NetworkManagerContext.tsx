@@ -140,6 +140,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
   const handleSetDestination = useCallback(
     (chainId: number | undefined) => {
+      debugger;
       if (!chainId) {
         setDestinationChain(undefined);
       } else if (homeChainConfig && depositNonce) {
