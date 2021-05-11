@@ -34,6 +34,7 @@ export const EVMHomeAdaptorProvider = ({
     address,
     tokens,
     wallet,
+    checkIsReady,
     ethBalance,
   } = useWeb3();
 
@@ -41,6 +42,8 @@ export const EVMHomeAdaptorProvider = ({
     homeChainConfig,
     setTransactionStatus,
     setDepositNonce,
+    handleSetHomeChain,
+    homeChains,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -59,33 +62,57 @@ export const EVMHomeAdaptorProvider = ({
   );
 
   useEffect(() => {
-    if (homeChainConfig && network && isReady) {
+    checkIsReady();
+    if (provider) {
       const signer = provider?.getSigner();
       if (!signer) {
         console.log("No signer");
         return;
       }
 
-      const bridge = BridgeFactory.connect(
-        homeChainConfig.bridgeAddress,
-        signer
-      );
-      setHomeBridge(bridge);
+      if (network && !homeChainConfig) {
+        const chain = homeChains.find(
+          (chain: BridgeConfig) => chain.networkId === network
+        );
+        if (chain) {
+          handleSetHomeChain(chain.chainId);
+        }
+      }
 
-      const wrapperToken = homeChainConfig.tokens.find(
-        (token) => token.isNativeWrappedToken
-      );
+      if (homeChainConfig && network && isReady) {
+        const bridge = BridgeFactory.connect(
+          homeChainConfig.bridgeAddress,
+          signer
+        );
+        setHomeBridge(bridge);
 
-      if (!wrapperToken) {
-        setWrapperConfig(undefined);
-        setWrapper(undefined);
-      } else {
-        setWrapperConfig(wrapperToken);
-        const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
-        setWrapper(connectedWeth);
+        const wrapperToken = homeChainConfig.tokens.find(
+          (token) => token.isNativeWrappedToken
+        );
+
+        if (!wrapperToken) {
+          setWrapperConfig(undefined);
+          setWrapper(undefined);
+        } else {
+          setWrapperConfig(wrapperToken);
+          const connectedWeth = WethFactory.connect(
+            wrapperToken.address,
+            signer
+          );
+          setWrapper(connectedWeth);
+        }
       }
     }
-  }, [homeChainConfig, network, isReady, provider]);
+  }, [
+    homeChainConfig,
+    handleSetHomeChain,
+    wallet,
+    homeChains,
+    network,
+    isReady,
+    provider,
+    checkIsReady,
+  ]);
 
   useEffect(() => {
     const getRelayerThreshold = async () => {
@@ -107,10 +134,10 @@ export const EVMHomeAdaptorProvider = ({
   }, [homeBridge]);
 
   const handleConnect = useCallback(async () => {
-    if (wallet && wallet.connect) {
+    if (wallet && wallet.connect && network) {
       await wallet.connect();
     }
-  }, [wallet]);
+  }, [wallet, network]);
 
   const deposit = useCallback(
     async (

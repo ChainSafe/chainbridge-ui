@@ -50,6 +50,7 @@ interface NetworkManagerContext {
 
   destinationChain?: DestinationChainAdaptor;
   destinationChains: Array<{ chainId: number; name: string }>;
+  homeChains: BridgeConfig[];
   handleSetHomeChain: (chainId: number | undefined) => void;
   setDestinationChain: (chainId: number | undefined) => void;
 
@@ -109,26 +110,29 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       const chain = homeChains.find((c) => c.chainId === chainId);
 
       if (chain) {
-        if (chain.type === "Ethereum") {
-          setDestinationChains(
-            chainbridgeConfig.chains.filter(
-              (bridgeConfig: BridgeConfig) =>
-                bridgeConfig.chainId === chain.chainId
-            )
-          );
-        }
+        setHomeChainConfig(chain);
+        setDestinationChains(
+          chainbridgeConfig.chains.filter(
+            (bridgeConfig: BridgeConfig) =>
+              bridgeConfig.chainId === chain.chainId
+          )
+        );
       }
     },
-    [homeChains]
+    [homeChains, setHomeChainConfig]
   );
 
   useEffect(() => {
     if (walletType !== "unset") {
-      setHomeChains(
-        chainbridgeConfig.chains.filter(
-          (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType
-        )
-      );
+      if (walletType === "select") {
+        setHomeChains(chainbridgeConfig.chains);
+      } else {
+        setHomeChains(
+          chainbridgeConfig.chains.filter(
+            (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType
+          )
+        );
+      }
     } else {
       setHomeChains([]);
     }
@@ -170,6 +174,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         homeChainConfig,
         setWalletType,
         walletType,
+        homeChains: homeChains,
         destinationChains,
         inTransitMessages,
         handleSetHomeChain,

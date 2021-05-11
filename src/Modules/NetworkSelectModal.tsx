@@ -1,10 +1,7 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import {
-  useNetworkManager,
-  WalletType,
-} from "../Contexts/NetworkManagerContext";
+import { useNetworkManager } from "../Contexts/NetworkManagerContext";
 import { Button, Modal } from "@chainsafe/common-components";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
@@ -18,26 +15,25 @@ const NetworkSelectModal = () => {
   const { isReady, connect } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();
 
-  const handleConnect = useCallback(
-    async (target: WalletType) => {
-      setWalletType(target);
-      await connect();
-    },
-    [connect, setWalletType]
-  );
-
   return (
     <Modal
       active={walletType !== "unset" && !isReady}
       closePosition="right"
       className={classes.root}
     >
-      <article>
-        <Button onClick={() => handleConnect("Ethereum")}>
-          Connect to Ethereum
-        </Button>
-        <Button>Connect to Substrate</Button>
-      </article>
+      {walletType === "select" && (
+        <article>
+          <Button onClick={() => setWalletType("Ethereum")}>
+            Use Ethereum wallet
+          </Button>
+          <Button>Use Substrate wallet</Button>
+        </article>
+      )}
+      {walletType === "Ethereum" && (
+        <article>
+          <Button onClick={() => connect()}>Connect</Button>
+        </article>
+      )}
       {/* {
         walletType === "select" && (
           <article>
