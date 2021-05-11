@@ -299,7 +299,7 @@ export const EVMHomeAdaptorProvider = ({
 export const EVMDestinationAdaptorFactory = (
   chainConfig: BridgeConfig,
   homeChainId: number,
-  depositNonce: string,
+  depositNonce: string | undefined,
   depositVotes: number,
   setDepositVotes: (votes: number) => void,
   tokensDispatch: (action: AddMessageAction | ResetAction) => void,

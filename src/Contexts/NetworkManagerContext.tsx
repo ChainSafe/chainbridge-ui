@@ -143,7 +143,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       debugger;
       if (!chainId) {
         setDestinationChain(undefined);
-      } else if (homeChainConfig && depositNonce) {
+      } else if (homeChainConfig && !depositNonce) {
         const chain = destinationChains.find((c) => c.chainId === chainId);
         if (!chain) {
           throw new Error("Invalid destination chain selected");
