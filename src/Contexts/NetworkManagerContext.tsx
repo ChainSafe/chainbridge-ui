@@ -11,7 +11,6 @@ import {
   chainbridgeConfig,
   ChainType,
 } from "../chainbridgeConfig";
-import NetworkSelectModal from "../Modules/NetworkSelectModal";
 import {
   EVMDestinationAdaptorFactory,
   EVMHomeAdaptorProvider,
@@ -192,11 +191,33 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       ) : walletType === "Substrate" ? (
         <EVMHomeAdaptorProvider>{children}</EVMHomeAdaptorProvider>
       ) : (
-        <HomeBridgeContext.Provider value={undefined}>
+        <HomeBridgeContext.Provider
+          value={{
+            connect: async () => undefined,
+            isReady: false,
+            selectedToken: "",
+            deposit: async (
+              amount: number,
+              recipient: string,
+              tokenAddress: string,
+              destinationChainId: number
+            ) => undefined,
+            setDepositAmount: () => undefined,
+            tokens: {},
+            setSelectedToken: (input: string) => undefined,
+            address: undefined,
+            bridgeFee: undefined,
+            chainConfig: undefined,
+            depositAmount: undefined,
+            nativeTokenBalance: undefined,
+            relayerThreshold: undefined,
+            wrapTokenConfig: undefined,
+            wrapper: undefined,
+          }}
+        >
           {children}
         </HomeBridgeContext.Provider>
       )}
-      <NetworkSelectModal />
     </NetworkManagerContext.Provider>
   );
 };

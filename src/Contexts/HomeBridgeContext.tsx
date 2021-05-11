@@ -8,9 +8,7 @@ const HomeBridgeContext = React.createContext<
 const useHomeBridge = () => {
   const context = useContext(HomeBridgeContext);
   if (context === undefined) {
-    throw new Error(
-      "useHomeNetwork must be called within a HomeNetworkProvider"
-    );
+    throw new Error("useHomeBridge must be called within a HomeBridgeProvider");
   }
   return context;
 };

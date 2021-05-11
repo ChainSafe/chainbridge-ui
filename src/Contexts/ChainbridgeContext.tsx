@@ -18,6 +18,7 @@ import {
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
 import { DestinationChainAdaptor } from "./Adaptors/interfaces";
+import NetworkSelectModal from "../Modules/NetworkSelectModal";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -162,6 +163,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         chainId,
       }}
     >
+      <NetworkSelectModal />
       {children}
     </ChainbridgeContext.Provider>
   );
