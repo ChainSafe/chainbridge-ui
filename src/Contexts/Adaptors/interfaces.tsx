@@ -6,6 +6,10 @@ export interface IHomeBridgeProviderProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
+export interface IDestinationBridgeProviderProps {
+  children: React.ReactNode | React.ReactNode[];
+}
+
 export interface HomeChainAdaptorContext {
   chainConfig: BridgeConfig | undefined;
 
@@ -39,6 +43,4 @@ export interface HomeChainAdaptorContext {
   tokens: Tokens;
 }
 
-export interface DestinationChainAdaptor {
-  chainConfig: BridgeConfig;
-}
+export interface DestinationChainContext {}

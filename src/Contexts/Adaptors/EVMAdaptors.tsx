@@ -13,10 +13,11 @@ import {
   ResetAction,
 } from "../Reducers/TransitMessageReducer";
 import {
-  DestinationChainAdaptor,
+  IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
 } from "./interfaces";
 import { HomeBridgeContext } from "../HomeBridgeContext";
+import { DestinationBridgeContext } from "../DestinationBridgeContext";
 
 const resetAllowanceLogicFor = [
   "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
@@ -296,56 +297,67 @@ export const EVMHomeAdaptorProvider = ({
   );
 };
 
-export const EVMDestinationAdaptorFactory = (
-  chainConfig: BridgeConfig,
-  homeChainId: number,
-  depositNonce: string | undefined,
-  depositVotes: number,
-  setDepositVotes: (votes: number) => void,
-  tokensDispatch: (action: AddMessageAction | ResetAction) => void,
-  setTransactionStatus: (message: TransactionStatus) => void,
-  setTransferTxHash: (txHash: string) => void
-): DestinationChainAdaptor => {
+export const EVMDestinationAdaptorProvider = ({
+  children,
+}: IDestinationBridgeProviderProps) => {
+  const {
+    depositNonce,
+    destinationChainConfig,
+    homeChainConfig,
+    tokensDispatch,
+    setTransactionStatus,
+    setTransferTxHash,
+    setDepositVotes,
+    depositVotes,
+  } = useNetworkManager();
+
   const [destinationBridge, setDestinationBridge] = useState<
     Bridge | undefined
   >(undefined);
 
   useEffect(() => {
     let provider;
-    if (chainConfig?.rpcUrl.startsWith("wss")) {
-      if (chainConfig.rpcUrl.includes("infura")) {
-        const parts = chainConfig.rpcUrl.split("/");
+    if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
+      if (destinationChainConfig.rpcUrl.includes("infura")) {
+        const parts = destinationChainConfig.rpcUrl.split("/");
 
         provider = new ethers.providers.InfuraWebSocketProvider(
-          chainConfig.networkId,
+          destinationChainConfig.networkId,
           parts[parts.length - 1]
         );
       }
-      if (chainConfig.rpcUrl.includes("alchemyapi")) {
-        const parts = chainConfig.rpcUrl.split("/");
+      if (destinationChainConfig.rpcUrl.includes("alchemyapi")) {
+        const parts = destinationChainConfig.rpcUrl.split("/");
 
         provider = new ethers.providers.AlchemyWebSocketProvider(
-          chainConfig.networkId,
+          destinationChainConfig.networkId,
           parts[parts.length - 1]
         );
       }
     } else {
-      provider = new ethers.providers.JsonRpcProvider(chainConfig?.rpcUrl);
+      provider = new ethers.providers.JsonRpcProvider(
+        destinationChainConfig?.rpcUrl
+      );
     }
-    if (provider) {
+    if (destinationChainConfig && provider) {
       const bridge = BridgeFactory.connect(
-        chainConfig?.bridgeAddress,
+        destinationChainConfig.bridgeAddress,
         provider
       );
       setDestinationBridge(bridge);
     }
-  }, [chainConfig]);
+  }, [destinationChainConfig]);
 
   useEffect(() => {
-    if (homeChainId && destinationBridge && depositNonce) {
+    if (
+      destinationChainConfig &&
+      homeChainConfig?.chainId &&
+      destinationBridge &&
+      depositNonce
+    ) {
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(
-          homeChainId,
+          homeChainConfig.chainId,
           BigNumber.from(depositNonce),
           null,
           null,
@@ -356,7 +368,7 @@ export const EVMDestinationAdaptorFactory = (
             case 1:
               tokensDispatch({
                 type: "addMessage",
-                payload: `Proposal created on ${chainConfig.name}`,
+                payload: `Proposal created on ${destinationChainConfig.name}`,
               });
               break;
             case 2:
@@ -379,7 +391,7 @@ export const EVMDestinationAdaptorFactory = (
 
       destinationBridge.on(
         destinationBridge.filters.ProposalVote(
-          homeChainId,
+          homeChainConfig.chainId,
           BigNumber.from(depositNonce),
           null,
           null
@@ -405,17 +417,19 @@ export const EVMDestinationAdaptorFactory = (
     };
   }, [
     depositNonce,
-    homeChainId,
+    homeChainConfig,
     destinationBridge,
     depositVotes,
-    chainConfig,
+    destinationChainConfig,
     setDepositVotes,
     setTransactionStatus,
     setTransferTxHash,
     tokensDispatch,
   ]);
 
-  return {
-    chainConfig: chainConfig,
-  };
+  return (
+    <DestinationBridgeContext.Provider value={{}}>
+      {children}
+    </DestinationBridgeContext.Provider>
+  );
 };

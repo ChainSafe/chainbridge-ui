@@ -12,10 +12,11 @@ import {
   ChainType,
 } from "../chainbridgeConfig";
 import {
-  EVMDestinationAdaptorFactory,
+  EVMDestinationAdaptorProvider,
   EVMHomeAdaptorProvider,
 } from "./Adaptors/EVMAdaptors";
-import { DestinationChainAdaptor } from "./Adaptors/interfaces";
+import { IDestinationBridgeProviderProps } from "./Adaptors/interfaces";
+import { DestinationBridgeContext } from "./DestinationBridgeContext";
 import { HomeBridgeContext } from "./HomeBridgeContext";
 import {
   AddMessageAction,
@@ -47,8 +48,8 @@ interface NetworkManagerContext {
   chainId?: number;
 
   homeChainConfig: BridgeConfig | undefined;
+  destinationChainConfig: BridgeConfig | undefined;
 
-  destinationChain?: DestinationChainAdaptor;
   destinationChains: Array<{ chainId: number; name: string }>;
   homeChains: BridgeConfig[];
   handleSetHomeChain: (chainId: number | undefined) => void;
@@ -81,8 +82,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     BridgeConfig | undefined
   >();
   const [homeChains, setHomeChains] = useState<BridgeConfig[]>([]);
-  const [destinationChain, setDestinationChain] = useState<
-    DestinationChainAdaptor | undefined
+  const [destinationChainConfig, setDestinationChain] = useState<
+    BridgeConfig | undefined
   >();
   const [destinationChains, setDestinationChains] = useState<BridgeConfig[]>(
     []
@@ -148,25 +149,31 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         if (!chain) {
           throw new Error("Invalid destination chain selected");
         }
-        if (chain.type === "Ethereum") {
-          const newDestinationChain = EVMDestinationAdaptorFactory(
-            chain,
-            homeChainConfig.chainId,
-            depositNonce,
-            depositVotes,
-            setDepositVotes,
-            tokensDispatch,
-            setTransactionStatus,
-            setTransferTxHash
-          );
-          setDestinationChain(newDestinationChain);
-        }
+        setDestinationChain(chain);
       } else {
         throw new Error("Home chain not selected");
       }
     },
     [depositNonce, depositVotes, destinationChains, homeChainConfig]
   );
+
+  const DestinationProvider = ({
+    children,
+  }: IDestinationBridgeProviderProps) => {
+    if (destinationChainConfig && destinationChainConfig.type === "Ethereum") {
+      return (
+        <EVMDestinationAdaptorProvider>
+          {children}
+        </EVMDestinationAdaptorProvider>
+      );
+    } else {
+      return (
+        <DestinationBridgeContext.Provider value={{}}>
+          {children}
+        </DestinationBridgeContext.Provider>
+      );
+    }
+  };
 
   return (
     <NetworkManagerContext.Provider
@@ -180,7 +187,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         inTransitMessages,
         handleSetHomeChain,
         setDestinationChain: handleSetDestination,
-        destinationChain,
+        destinationChainConfig,
         transactionStatus,
         setTransactionStatus,
         depositNonce,
@@ -193,9 +200,13 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       }}
     >
       {walletType === "Ethereum" ? (
-        <EVMHomeAdaptorProvider>{children}</EVMHomeAdaptorProvider>
+        <EVMHomeAdaptorProvider>
+          <DestinationProvider>{children}</DestinationProvider>
+        </EVMHomeAdaptorProvider>
       ) : walletType === "Substrate" ? (
-        <EVMHomeAdaptorProvider>{children}</EVMHomeAdaptorProvider>
+        <EVMHomeAdaptorProvider>
+          <DestinationProvider>{children}</DestinationProvider>
+        </EVMHomeAdaptorProvider>
       ) : (
         <HomeBridgeContext.Provider
           value={{
@@ -221,7 +232,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
             wrapper: undefined,
           }}
         >
-          {children}
+          <DestinationProvider>{children}</DestinationProvider>
         </HomeBridgeContext.Provider>
       )}
     </NetworkManagerContext.Provider>
