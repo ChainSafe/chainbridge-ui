@@ -7,11 +7,7 @@ import { BridgeConfig, TokenConfig } from "../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../Contracts/Erc20DetailedFactory";
 import { Weth } from "../../Contracts/Weth";
 import { WethFactory } from "../../Contracts/WethFactory";
-import { TransactionStatus, useNetworkManager } from "../NetworkManagerContext";
-import {
-  AddMessageAction,
-  ResetAction,
-} from "../Reducers/TransitMessageReducer";
+import { useNetworkManager } from "../NetworkManagerContext";
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,

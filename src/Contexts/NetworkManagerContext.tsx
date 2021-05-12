@@ -154,7 +154,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         throw new Error("Home chain not selected");
       }
     },
-    [depositNonce, depositVotes, destinationChains, homeChainConfig]
+    [depositNonce, destinationChains, homeChainConfig]
   );
 
   const DestinationProvider = ({

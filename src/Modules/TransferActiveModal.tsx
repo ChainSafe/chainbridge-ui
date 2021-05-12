@@ -148,7 +148,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     relayerThreshold,
     inTransitMessages,
     homeConfig,
-    destinationChain,
+    destinationChainConfig,
     depositAmount,
     transferTxHash,
     selectedToken,
@@ -235,18 +235,18 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               Successfully transferred{" "}
               <strong>
                 {depositAmount} {tokenSymbol}
-                <br /> from {homeConfig?.name} to{" "}
-                {destinationChain?.chainConfig.name}.
+                <br /> from {homeConfig?.name} to {destinationChainConfig?.name}
+                .
               </strong>
             </Typography>
             <section className={classes.buttons}>
               <Button
                 onClick={() =>
-                  destinationChain &&
-                  destinationChain.chainConfig.blockExplorer &&
+                  destinationChainConfig &&
+                  destinationChainConfig.blockExplorer &&
                   transferTxHash &&
                   window.open(
-                    `${destinationChain.chainConfig.blockExplorer}/${transferTxHash}`,
+                    `${destinationChainConfig.blockExplorer}/${transferTxHash}`,
                     "_blank"
                   )
                 }

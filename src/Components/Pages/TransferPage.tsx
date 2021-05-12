@@ -196,7 +196,7 @@ const TransferPage = () => {
     tokens,
     isReady,
     homeConfig,
-    destinationChain,
+    destinationChainConfig,
     destinationChains,
     address,
     chainId,
@@ -355,7 +355,7 @@ const TransferPage = () => {
                 value: dc.chainId,
               }))}
               onChange={(value) => setDestinationChain(value)}
-              value={destinationChain?.chainConfig.chainId}
+              value={destinationChainConfig?.chainId}
             />
           </section>
           <section className={classes.currencySection}>
@@ -371,7 +371,7 @@ const TransferPage = () => {
                   tokenSelectorKey="token"
                   tokens={tokens}
                   disabled={
-                    !destinationChain ||
+                    !destinationChainConfig ||
                     !preflightDetails.token ||
                     preflightDetails.token === ""
                   }
@@ -384,7 +384,7 @@ const TransferPage = () => {
               <TokenSelectInput
                 tokens={tokens}
                 name="token"
-                disabled={!destinationChain}
+                disabled={!destinationChainConfig}
                 label={`Balance: `}
                 className={classes.generalInput}
                 placeholder=""
@@ -418,7 +418,7 @@ const TransferPage = () => {
           </section>
           <section>
             <AddressInput
-              disabled={!destinationChain}
+              disabled={!destinationChainConfig}
               name="receiver"
               label="Destination Address"
               placeholder="Please enter the receiving address"
@@ -480,7 +480,7 @@ const TransferPage = () => {
             );
         }}
         sourceNetwork={homeConfig?.name || ""}
-        targetNetwork={destinationChain?.chainConfig.name || ""}
+        targetNetwork={destinationChainConfig?.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />

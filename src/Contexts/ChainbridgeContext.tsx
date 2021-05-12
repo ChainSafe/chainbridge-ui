@@ -17,7 +17,6 @@ import {
   Vote,
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
-import { DestinationChainAdaptor } from "./Adaptors/interfaces";
 import NetworkSelectModal from "../Modules/NetworkSelectModal";
 
 interface IChainbridgeContextProps {
@@ -30,7 +29,7 @@ type ChainbridgeContext = {
   handleSetHomeChain: (chainId: number) => void;
   setDestinationChain: (chainId: number | undefined) => void;
   destinationChains: Array<{ chainId: number; name: string }>;
-  destinationChain?: DestinationChainAdaptor;
+  destinationChainConfig?: BridgeConfig;
   deposit(
     amount: number,
     recipient: string,
@@ -72,7 +71,7 @@ const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const {
     handleSetHomeChain,
-    destinationChain,
+    destinationChainConfig,
     setTransactionStatus,
     setDestinationChain,
     setDepositNonce,
@@ -120,16 +119,16 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
 
   const handleDeposit = useCallback(
     async (amount: number, recipient: string, tokenAddress: string) => {
-      if (chainConfig && destinationChain) {
+      if (chainConfig && destinationChainConfig) {
         return await deposit(
           amount,
           recipient,
           tokenAddress,
-          destinationChain.chainConfig.chainId
+          destinationChainConfig.chainId
         );
       }
     },
-    [deposit, destinationChain, chainConfig]
+    [deposit, destinationChainConfig, chainConfig]
   );
 
   return (
@@ -142,7 +141,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         setDestinationChain,
         resetDeposit,
         deposit: handleDeposit,
-        destinationChain,
+        destinationChainConfig,
         depositVotes,
         relayerThreshold,
         depositNonce,
