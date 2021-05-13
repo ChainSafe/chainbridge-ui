@@ -13,6 +13,8 @@ export interface IDestinationBridgeProviderProps {
 export interface HomeChainAdaptorContext {
   chainConfig: BridgeConfig | undefined;
 
+  getNetworkName: (id: any) => string;
+
   connect: () => Promise<void>;
 
   deposit(
@@ -34,6 +36,9 @@ export interface HomeChainAdaptorContext {
 
   wrapTokenConfig: TokenConfig | undefined;
   wrapper: Weth | undefined;
+
+  wrapToken: (value: number) => Promise<string>;
+  unwrapToken: (value: number) => Promise<string>;
 
   isReady: boolean;
   address: string | undefined;

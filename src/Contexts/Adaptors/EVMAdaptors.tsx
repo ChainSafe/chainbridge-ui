@@ -14,6 +14,7 @@ import {
 } from "./interfaces";
 import { HomeBridgeContext } from "../HomeBridgeContext";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
+import { parseUnits } from "ethers/lib/utils";
 
 const resetAllowanceLogicFor = [
   "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
@@ -35,12 +36,34 @@ export const EVMHomeAdaptorProvider = ({
     ethBalance,
   } = useWeb3();
 
+  const getNetworkName = (id: any) => {
+    switch (Number(id)) {
+      case 1:
+        return "Mainnet";
+      case 3:
+        return "Ropsten";
+      case 4:
+        return "Rinkeby";
+      case 5:
+        return "Goerli";
+      case 6:
+        return "Kotti";
+      case 42:
+        return "Kovan";
+      case 61:
+        return "Ethereum Classic - Mainnet";
+      default:
+        return "Other";
+    }
+  };
+
   const {
     homeChainConfig,
     setTransactionStatus,
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
+    setNetworkId,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -71,6 +94,7 @@ export const EVMHomeAdaptorProvider = ({
         const chain = homeChains.find(
           (chain: BridgeConfig) => chain.networkId === network
         );
+        setNetworkId(network);
         if (chain) {
           handleSetHomeChain(chain.chainId);
         }
@@ -109,6 +133,7 @@ export const EVMHomeAdaptorProvider = ({
     isReady,
     provider,
     checkIsReady,
+    setNetworkId,
   ]);
 
   useEffect(() => {
@@ -268,10 +293,65 @@ export const EVMHomeAdaptorProvider = ({
     ]
   );
 
+  const wrapToken = async (value: number): Promise<string> => {
+    if (!wrapTokenConfig || !wrapper?.deposit || !homeChainConfig)
+      return "not ready";
+
+    try {
+      const tx = await wrapper.deposit({
+        value: parseUnits(`${value}`, homeChainConfig.decimals),
+        gasPrice: BigNumber.from(
+          utils.parseUnits(
+            (homeChainConfig?.defaultGasPrice || gasPrice).toString(),
+            9
+          )
+        ).toString(),
+      });
+
+      await tx?.wait();
+      if (tx?.hash) {
+        return tx?.hash;
+      } else {
+        return "";
+      }
+    } catch (error) {
+      console.error(error);
+      return "";
+    }
+  };
+
+  const unwrapToken = async (value: number): Promise<string> => {
+    if (!wrapTokenConfig || !wrapper?.withdraw || !homeChainConfig)
+      return "not ready";
+
+    try {
+      const tx = await wrapper.deposit({
+        value: parseUnits(`${value}`, homeChainConfig.decimals),
+        gasPrice: BigNumber.from(
+          utils.parseUnits(
+            (homeChainConfig?.defaultGasPrice || gasPrice).toString(),
+            9
+          )
+        ).toString(),
+      });
+
+      await tx?.wait();
+      if (tx?.hash) {
+        return tx?.hash;
+      } else {
+        return "";
+      }
+    } catch (error) {
+      console.error(error);
+      return "";
+    }
+  };
+
   return (
     <HomeBridgeContext.Provider
       value={{
         connect: handleConnect,
+        getNetworkName,
         bridgeFee,
         deposit,
         depositAmount,
@@ -282,6 +362,8 @@ export const EVMHomeAdaptorProvider = ({
         relayerThreshold,
         wrapTokenConfig,
         wrapper,
+        wrapToken,
+        unwrapToken,
         isReady,
         chainConfig: homeChainConfig,
         address,

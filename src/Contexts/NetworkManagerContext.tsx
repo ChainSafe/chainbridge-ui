@@ -45,6 +45,9 @@ interface NetworkManagerContext {
   walletType: WalletType;
   setWalletType: (walletType: WalletType) => void;
 
+  networkId: number;
+  setNetworkId: (id: number) => void;
+
   chainId?: number;
 
   homeChainConfig: BridgeConfig | undefined;
@@ -77,6 +80,8 @@ const NetworkManagerContext = React.createContext<
 
 const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   const [walletType, setWalletType] = useState<WalletType>("unset");
+
+  const [networkId, setNetworkId] = useState(0);
 
   const [homeChainConfig, setHomeChainConfig] = useState<
     BridgeConfig | undefined
@@ -112,6 +117,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
       if (chain) {
         setHomeChainConfig(chain);
+        console.log(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter(
             (bridgeConfig: BridgeConfig) =>
@@ -141,7 +147,6 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
   const handleSetDestination = useCallback(
     (chainId: number | undefined) => {
-      debugger;
       if (!chainId) {
         setDestinationChain(undefined);
       } else if (homeChainConfig && !depositNonce) {
@@ -179,6 +184,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     <NetworkManagerContext.Provider
       value={{
         chainId: homeChainConfig?.chainId,
+        networkId,
+        setNetworkId,
         homeChainConfig,
         setWalletType,
         walletType,
@@ -211,6 +218,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         <HomeBridgeContext.Provider
           value={{
             connect: async () => undefined,
+            getNetworkName: (id: any) => "",
             isReady: false,
             selectedToken: "",
             deposit: async (
@@ -230,6 +238,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
             relayerThreshold: undefined,
             wrapTokenConfig: undefined,
             wrapper: undefined,
+            wrapToken: async (value: number) => "",
+            unwrapToken: async (value: number) => "",
           }}
         >
           <DestinationProvider>{children}</DestinationProvider>

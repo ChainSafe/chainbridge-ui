@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
-import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import {
   Button,
   Typography,
@@ -11,18 +10,17 @@ import {
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import clsx from "clsx";
-import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import { object, string } from "yup";
 import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
-import { chainbridgeConfig, TokenConfig } from "../../chainbridgeConfig";
+import { TokenConfig } from "../../chainbridgeConfig";
 import PreflightModalWrap from "../../Modules/PreflightModalWrap";
 import WrapActiveModal from "../../Modules/WrapActiveModal";
-import { parseUnits } from "ethers/lib/utils";
 import { forwardTo } from "../../Utils/History";
 import { ROUTE_LINKS } from "../Routes";
-import { BigNumber, utils } from "ethers";
 import SimpleTokenInput from "../Custom/SimpleTokenInput";
+import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
+import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -196,22 +194,16 @@ type PreflightDetails = {
 
 const MainPage = () => {
   const classes = useStyles();
-  const {
-    isReady,
-    checkIsReady,
-    wallet,
-    onboard,
-    tokens,
-    ethBalance,
-    network,
-    address,
-    gasPrice,
-  } = useWeb3();
+  const { walletType, setWalletType, homeChainConfig } = useNetworkManager();
   const {
     wrapTokenConfig,
     wrapToken,
     unwrapToken,
     homeConfig,
+    isReady,
+    tokens,
+    nativeTokenBalance,
+    address,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -234,12 +226,13 @@ const MainPage = () => {
     | undefined
   >(undefined);
 
-  const handleConnect = async () => {
-    setWalletConnecting(true);
-    !wallet && (await onboard?.walletSelect());
-    await checkIsReady();
-    setWalletConnecting(false);
-  };
+  useEffect(() => {
+    if (walletType !== "select" && walletConnecting === true) {
+      setWalletConnecting(false);
+    } else if (walletType === "select") {
+      setWalletConnecting(true);
+    }
+  }, [walletType, walletConnecting]);
 
   const handleWrapToken = async () => {
     if (!wrapTokenConfig || !wrapToken || !homeConfig) return;
@@ -251,21 +244,17 @@ const MainPage = () => {
         txState: "inProgress",
         action: action,
       });
-      const tx = await wrapToken({
-        value: parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
-        gasPrice: BigNumber.from(
-          utils.parseUnits(
-            (homeConfig.defaultGasPrice || gasPrice).toString(),
-            9
-          )
-        ).toString(),
-      });
+      const txHash = await wrapToken(preflightDetails.tokenAmount);
 
-      await tx?.wait();
+      if (txHash === "") {
+        setTxDetails(undefined);
+        throw Error("Wrap Transaction failed");
+      }
+
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
-        txHash: tx?.hash,
+        txHash: txHash,
         txState: "done",
         action: action,
       });
@@ -284,20 +273,18 @@ const MainPage = () => {
         txState: "inProgress",
         action: action,
       });
-      const tx = await unwrapToken(
-        parseUnits(`${preflightDetails.tokenAmount}`, DECIMALS),
-        {
-          gasPrice: utils
-            .parseUnits((homeConfig.defaultGasPrice || gasPrice).toString(), 9)
-            .toString(),
-        }
-      );
 
-      await tx?.wait();
+      const txHash = await unwrapToken(preflightDetails.tokenAmount);
+
+      if (txHash === "") {
+        setTxDetails(undefined);
+        throw Error("Unwrap Transaction failed");
+      }
+
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
-        txHash: tx?.hash,
+        txHash: txHash,
         txState: "done",
         action: action,
       });
@@ -306,10 +293,9 @@ const MainPage = () => {
     }
   };
 
-  const DECIMALS = 18;
   const REGEX =
-    DECIMALS > 0
-      ? new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`)
+    homeChainConfig?.decimals && homeChainConfig.decimals > 0
+      ? new RegExp(`^[0-9]{1,18}(.[0-9]{1,${homeChainConfig.decimals}})?$`)
       : new RegExp(`^[0-9]{1,18}?$`);
 
   const wrapSchema = object().shape({
@@ -323,7 +309,9 @@ const MainPage = () => {
       })
       .test("Max", "Insufficent funds", (value) => {
         return action === "wrap"
-          ? ethBalance && value && parseFloat(value) <= ethBalance
+          ? nativeTokenBalance &&
+            value &&
+            parseFloat(value) <= nativeTokenBalance
             ? true
             : false
           : tokens[wrapTokenConfig?.address || "0x"].balance &&
@@ -351,7 +339,7 @@ const MainPage = () => {
               className={classes.connectButton}
               fullsize
               onClick={() => {
-                handleConnect();
+                setWalletType("select");
               }}
             >
               Connect Metamask
@@ -418,7 +406,7 @@ const MainPage = () => {
                   label="I want to convert"
                   max={
                     action === "wrap"
-                      ? ethBalance
+                      ? nativeTokenBalance
                       : tokens[wrapTokenConfig?.address || "0x"]?.balance
                   }
                 />
@@ -428,8 +416,8 @@ const MainPage = () => {
               <Typography component="p">
                 Balance:{" "}
                 {action === "wrap"
-                  ? ethBalance
-                    ? ethBalance.toFixed(2)
+                  ? nativeTokenBalance
+                    ? nativeTokenBalance.toFixed(2)
                     : 0.0
                   : tokens[wrapTokenConfig?.address || "0x"].balance}
               </Typography>
@@ -480,13 +468,6 @@ const MainPage = () => {
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}
       />
-      <NetworkUnsupportedModal
-        open={!wrapTokenConfig && isReady}
-        network={network}
-        supportedNetworks={chainbridgeConfig.chains
-          .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))
-          .map((bc) => bc.networkId)}
-      />
       <PreflightModalWrap
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
@@ -523,6 +504,8 @@ const MainPage = () => {
           }}
         />
       )}
+      {/* This is here due to requiring router */}
+      <NetworkUnsupportedModal />
     </article>
   );
 };

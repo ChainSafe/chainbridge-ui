@@ -22,6 +22,7 @@ export type BridgeConfig = {
   type: ChainType;
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
+  decimals: number;
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
   defaultGasPrice?: number;
@@ -39,6 +40,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       chainId: 1,
       networkId: 5,
       name: "Ethereum - Goerli",
+      decimals: 18,
       bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
       erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
       rpcUrl: "https://goerli.prylabs.net",
@@ -69,6 +71,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       chainId: 2,
       networkId: 6,
       name: "Ethereum Classic - Kotti",
+      decimals: 18,
       bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
       erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
       rpcUrl: "https://www.ethercluster.com/kotti",

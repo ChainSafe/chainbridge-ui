@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
-import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import PreflightModalTransfer from "../../Modules/PreflightModalTransfer";
 import {
   Button,
@@ -19,9 +18,9 @@ import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
 import { object, string } from "yup";
 import { utils } from "ethers";
-import { chainbridgeConfig } from "../../chainbridgeConfig";
 import FeesFormikWrapped from "./FormikContextElements/Fees";
 import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
+import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -199,7 +198,6 @@ const TransferPage = () => {
     destinationChainConfig,
     destinationChains,
     address,
-    chainId,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -458,13 +456,6 @@ const TransferPage = () => {
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}
       />
-      <NetworkUnsupportedModal
-        // open={!homeConfig && !!isReady}
-        // TODO: Need expicit way to do this
-        open={false}
-        network={chainId}
-        supportedNetworks={chainbridgeConfig.chains.map((bc) => bc.networkId)}
-      />
       <PreflightModalTransfer
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
@@ -485,6 +476,8 @@ const TransferPage = () => {
         value={preflightDetails?.tokenAmount || 0}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
+      {/* This is here due to requiring router */}
+      <NetworkUnsupportedModal />
     </article>
   );
 };

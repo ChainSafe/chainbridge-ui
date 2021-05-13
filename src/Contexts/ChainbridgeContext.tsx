@@ -1,11 +1,5 @@
 import React, { useCallback, useContext } from "react";
 import {
-  BigNumberish,
-  ContractTransaction,
-  Overrides,
-  PayableOverrides,
-} from "ethers";
-import {
   BridgeConfig,
   chainbridgeConfig,
   TokenConfig,
@@ -45,17 +39,8 @@ type ChainbridgeContext = {
   transferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
-  wrapToken:
-    | ((
-        overrides?: PayableOverrides | undefined
-      ) => Promise<ContractTransaction>)
-    | undefined;
-  unwrapToken:
-    | ((
-        wad: BigNumberish,
-        overrides?: Overrides | undefined
-      ) => Promise<ContractTransaction>)
-    | undefined;
+  wrapToken: (value: number) => Promise<string>;
+  unwrapToken: (value: number) => Promise<string>;
   wrapTokenConfig: TokenConfig | undefined;
   tokens: Tokens;
   nativeTokenBalance: number | undefined;
@@ -102,7 +87,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     isReady,
     wrapTokenConfig,
     tokens,
-    wrapper,
+    wrapToken,
+    unwrapToken,
   } = useHomeBridge();
 
   const resetDeposit = () => {
@@ -152,9 +138,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         transferTxHash: transferTxHash,
         selectedToken: selectedToken,
         // TODO: Confirm if EVM specific
-        wrapToken: wrapper?.deposit,
+        wrapToken,
         wrapTokenConfig: wrapTokenConfig,
-        unwrapToken: wrapper?.withdraw,
+        unwrapToken,
         isReady: isReady,
         nativeTokenBalance: nativeTokenBalance,
         tokens,
