@@ -99,6 +99,24 @@ export const chainbridgeConfig: ChainbridgeConfig = {
         },
       ],
     },
+    {
+      chainId: 5,
+      networkId: 0,
+      name: "Substrate - Local",
+      decimals: 18,
+      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
+      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
+      rpcUrl: "wss://dev-node.substrate.dev:9944",
+      // const WS_PROVIDER = 'wss://dev-node.substrate.dev:9944';
+      // const WS_PROVIDER = 'wss://kusama-rpc.polkadot.io';
+      // const WS_PROVIDER = 'wss://westend-rpc.polkadot.io';
+      type: "Substrate",
+      nativeTokenSymbol: "DOT",
+      deployedBlockNumber: 0,
+      tokens: [
+        // TODO: get token data
+      ],
+    },
   ],
 
   // DEVNET
