@@ -166,7 +166,7 @@ export const SubstrateHomeAdaptorProvider = ({
   );
 };
 
-export const EVMDestinationAdaptorProvider = ({
+export const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
   const {

@@ -16,6 +16,10 @@ import {
   EVMHomeAdaptorProvider,
 } from "./Adaptors/EVMAdaptors";
 import { IDestinationBridgeProviderProps } from "./Adaptors/interfaces";
+import {
+  SubstrateDestinationAdaptorProvider,
+  SubstrateHomeAdaptorProvider,
+} from "./Adaptors/SubstrateAdaptors";
 import { DestinationBridgeContext } from "./DestinationBridgeContext";
 import { HomeBridgeContext } from "./HomeBridgeContext";
 import {
@@ -165,11 +169,17 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   const DestinationProvider = ({
     children,
   }: IDestinationBridgeProviderProps) => {
-    if (destinationChainConfig && destinationChainConfig.type === "Ethereum") {
+    if (destinationChainConfig?.type === "Ethereum") {
       return (
         <EVMDestinationAdaptorProvider>
           {children}
         </EVMDestinationAdaptorProvider>
+      );
+    } else if (destinationChainConfig?.type === "Substrate") {
+      return (
+        <SubstrateDestinationAdaptorProvider>
+          {children}
+        </SubstrateDestinationAdaptorProvider>
       );
     } else {
       return (
@@ -211,9 +221,9 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
           <DestinationProvider>{children}</DestinationProvider>
         </EVMHomeAdaptorProvider>
       ) : walletType === "Substrate" ? (
-        <EVMHomeAdaptorProvider>
+        <SubstrateHomeAdaptorProvider>
           <DestinationProvider>{children}</DestinationProvider>
-        </EVMHomeAdaptorProvider>
+        </SubstrateHomeAdaptorProvider>
       ) : (
         <HomeBridgeContext.Provider
           value={{
