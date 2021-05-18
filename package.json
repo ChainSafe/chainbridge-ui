@@ -17,7 +17,7 @@
     "@polkadot/ui-identicon": "^0.41.1",
     "@polkadot/ui-keyring": "0.75.1",
     "@polkadot/util": "^6.3.1",
-    "@polkadot/util-crypto": "6.3.1",
+    "@polkadot/util-crypto": "^6.3.1",
     "@sentry/react": "^5.26.0",
     "@types/history": "^4.7.8",
     "bnc-onboard": "1.19.2",
