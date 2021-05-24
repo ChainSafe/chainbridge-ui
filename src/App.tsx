@@ -14,6 +14,7 @@ import AppWrapper from "./Layouts/AppWrapper";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";
+import "@chainsafe/common-theme/dist/font-faces.css";
 
 if (
   process.env.NODE_ENV === "production" &&
