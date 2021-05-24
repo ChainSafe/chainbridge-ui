@@ -1,4 +1,4 @@
-import { Vote } from "../ChainbridgeContext";
+import { Vote } from "../NetworkManagerContext";
 
 export type AddMessageAction = { type: "addMessage"; payload: string | Vote };
 export type ResetAction = { type: "resetMessages" };

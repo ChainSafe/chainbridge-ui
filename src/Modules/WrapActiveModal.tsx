@@ -146,7 +146,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
   action,
 }: IWrapActiveModalProps) => {
   const classes = useStyles();
-  const { homeChain } = useChainbridge();
+  const { homeConfig } = useChainbridge();
 
   return (
     <CustomModal
@@ -171,7 +171,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
         <Typography className={classes.heading} variant="h3" component="h3">
           {txState === "inProgress"
             ? action === "wrap"
-              ? `Wrapping ${value} ${homeChain?.chainConfig.nativeTokenSymbol}`
+              ? `Wrapping ${value} ${homeConfig?.nativeTokenSymbol}`
               : `Unwrapping ${value} ${tokenInfo.symbol}`
             : action === "wrap"
             ? "Token wrapped"
@@ -181,15 +181,15 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
           <>
             <Typography className={classes.receipt} component="p">
               {action === "wrap"
-                ? `Successfully wrapped ${homeChain?.chainConfig.nativeTokenSymbol} to ${tokenInfo.symbol}`
-                : `Successfully unwrapped ${tokenInfo.symbol} to ${homeChain?.chainConfig.nativeTokenSymbol}`}
-              {homeChain && homeChain.chainConfig.blockExplorer && txHash && (
+                ? `Successfully wrapped ${homeConfig?.nativeTokenSymbol} to ${tokenInfo.symbol}`
+                : `Successfully unwrapped ${tokenInfo.symbol} to ${homeConfig?.nativeTokenSymbol}`}
+              {homeConfig && homeConfig.blockExplorer && txHash && (
                 <>
                   <br />
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href={`${homeChain.chainConfig.blockExplorer}/${txHash}`}
+                    href={`${homeConfig.blockExplorer}/${txHash}`}
                   >
                     View Transaction
                   </a>

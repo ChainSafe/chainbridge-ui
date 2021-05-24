@@ -9,7 +9,6 @@ import {
 } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { useWeb3 } from "@chainsafe/web3-context";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -148,13 +147,13 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     depositVotes,
     relayerThreshold,
     inTransitMessages,
-    homeChain,
-    destinationChain,
+    homeConfig,
+    destinationChainConfig,
     depositAmount,
     transferTxHash,
     selectedToken,
+    tokens,
   } = useChainbridge();
-  const { tokens } = useWeb3();
 
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
   return (
@@ -236,18 +235,18 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               Successfully transferred{" "}
               <strong>
                 {depositAmount} {tokenSymbol}
-                <br /> from {homeChain?.chainConfig.name} to{" "}
-                {destinationChain?.chainConfig.name}.
+                <br /> from {homeConfig?.name} to {destinationChainConfig?.name}
+                .
               </strong>
             </Typography>
             <section className={classes.buttons}>
               <Button
                 onClick={() =>
-                  destinationChain &&
-                  destinationChain.chainConfig.blockExplorer &&
+                  destinationChainConfig &&
+                  destinationChainConfig.blockExplorer &&
                   transferTxHash &&
                   window.open(
-                    `${destinationChain.chainConfig.blockExplorer}/${transferTxHash}`,
+                    `${destinationChainConfig.blockExplorer}/${transferTxHash}`,
                     "_blank"
                   )
                 }
@@ -277,24 +276,22 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {homeChain &&
-              homeChain.chainConfig.blockExplorer &&
-              transferTxHash && (
-                <Button
-                  onClick={() =>
-                    window.open(
-                      `${homeChain.chainConfig.blockExplorer}/${transferTxHash}`,
-                      "_blank"
-                    )
-                  }
-                  size="small"
-                  className={classes.button}
-                  variant="outline"
-                  disabled
-                >
-                  View transaction
-                </Button>
-              )}
+            {homeConfig && homeConfig.blockExplorer && transferTxHash && (
+              <Button
+                onClick={() =>
+                  window.open(
+                    `${homeConfig.blockExplorer}/${transferTxHash}`,
+                    "_blank"
+                  )
+                }
+                size="small"
+                className={classes.button}
+                variant="outline"
+                disabled
+              >
+                View transaction
+              </Button>
+            )}
             <section className={classes.buttons}>
               <Button
                 size="small"

@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import AboutDrawer from "../../Modules/AboutDrawer";
 import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
-import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import PreflightModalTransfer from "../../Modules/PreflightModalTransfer";
 import {
   Button,
@@ -14,14 +13,14 @@ import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
 import clsx from "clsx";
 import TransferActiveModal from "../../Modules/TransferActiveModal";
-import { useWeb3 } from "@chainsafe/web3-context";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import TokenSelectInput from "../Custom/TokenSelectInput";
 import TokenInput from "../Custom/TokenInput";
 import { object, string } from "yup";
 import { utils } from "ethers";
-import { chainbridgeConfig } from "../../chainbridgeConfig";
 import FeesFormikWrapped from "./FormikContextElements/Fees";
+import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
+import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -185,24 +184,20 @@ type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
+  const { walletType, setWalletType } = useNetworkManager();
+
   const {
-    isReady,
-    checkIsReady,
-    wallet,
-    onboard,
-    tokens,
-    address,
-    network,
-  } = useWeb3();
-  const {
-    homeChain,
-    destinationChains,
-    destinationChain,
     deposit,
     setDestinationChain,
     transactionStatus,
     resetDeposit,
     bridgeFee,
+    tokens,
+    isReady,
+    homeConfig,
+    destinationChainConfig,
+    destinationChains,
+    address,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -217,12 +212,13 @@ const TransferPage = () => {
     tokenSymbol: "",
   });
 
-  const handleConnect = async () => {
-    setWalletConnecting(true);
-    !wallet && (await onboard?.walletSelect());
-    await checkIsReady();
-    setWalletConnecting(false);
-  };
+  useEffect(() => {
+    if (walletType !== "select" && walletConnecting === true) {
+      setWalletConnecting(false);
+    } else if (walletType === "select") {
+      setWalletConnecting(true);
+    }
+  }, [walletType, walletConnecting]);
 
   const DECIMALS =
     preflightDetails && tokens[preflightDetails.token]
@@ -292,10 +288,10 @@ const TransferPage = () => {
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              handleConnect();
+              setWalletType("select");
             }}
           >
-            Connect Metamask
+            Connect
           </Button>
         ) : walletConnecting ? (
           <section className={classes.connecting}>
@@ -321,7 +317,7 @@ const TransferPage = () => {
               variant="h2"
               className={classes.networkName}
             >
-              {homeChain?.chainConfig.name}
+              {homeConfig?.name}
             </Typography>
           </section>
         )}
@@ -344,20 +340,20 @@ const TransferPage = () => {
       >
         <Form
           className={clsx(classes.formArea, {
-            disabled: !homeChain,
+            disabled: !homeConfig,
           })}
         >
           <section>
             <SelectInput
               label="Destination Network"
               className={classes.generalInput}
-              disabled={!homeChain}
+              disabled={!homeConfig}
               options={destinationChains.map((dc) => ({
                 label: dc.name,
                 value: dc.chainId,
               }))}
               onChange={(value) => setDestinationChain(value)}
-              value={destinationChain?.chainConfig.chainId}
+              value={destinationChainConfig?.chainId}
             />
           </section>
           <section className={classes.currencySection}>
@@ -373,7 +369,7 @@ const TransferPage = () => {
                   tokenSelectorKey="token"
                   tokens={tokens}
                   disabled={
-                    !destinationChain ||
+                    !destinationChainConfig ||
                     !preflightDetails.token ||
                     preflightDetails.token === ""
                   }
@@ -386,7 +382,7 @@ const TransferPage = () => {
               <TokenSelectInput
                 tokens={tokens}
                 name="token"
-                disabled={!destinationChain}
+                disabled={!destinationChainConfig}
                 label={`Balance: `}
                 className={classes.generalInput}
                 placeholder=""
@@ -420,7 +416,7 @@ const TransferPage = () => {
           </section>
           <section>
             <AddressInput
-              disabled={!destinationChain}
+              disabled={!destinationChainConfig}
               name="receiver"
               label="Destination Address"
               placeholder="Please enter the receiving address"
@@ -435,7 +431,7 @@ const TransferPage = () => {
             amountFormikName="tokenAmount"
             className={classes.fees}
             fee={bridgeFee}
-            feeSymbol={homeChain?.chainConfig.nativeTokenSymbol}
+            feeSymbol={homeConfig?.nativeTokenSymbol}
             symbol={
               preflightDetails && tokens[preflightDetails.token]
                 ? tokens[preflightDetails.token].symbol
@@ -460,11 +456,6 @@ const TransferPage = () => {
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}
       />
-      <NetworkUnsupportedModal
-        open={!homeChain && isReady}
-        network={network}
-        supportedNetworks={chainbridgeConfig.chains.map((bc) => bc.networkId)}
-      />
       <PreflightModalTransfer
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
@@ -479,12 +470,14 @@ const TransferPage = () => {
               preflightDetails.token
             );
         }}
-        sourceNetwork={homeChain?.chainConfig.name || ""}
-        targetNetwork={destinationChain?.chainConfig.name || ""}
+        sourceNetwork={homeConfig?.name || ""}
+        targetNetwork={destinationChainConfig?.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
+      {/* This is here due to requiring router */}
+      <NetworkUnsupportedModal />
     </article>
   );
 };

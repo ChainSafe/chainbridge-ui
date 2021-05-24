@@ -6,10 +6,18 @@
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
     "@chainsafe/chainbridge-contracts": "1.0.5",
-    "@chainsafe/web3-context": "1.2.0",
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.6",
+    "@chainsafe/web3-context": "1.2.0",
     "@material-ui/styles": "4.10.0",
+    "@polkadot/api": "^4.9.2",
+    "@polkadot/extension-dapp": "^0.37.2",
+    "@polkadot/keyring": "^6.3.1",
+    "@polkadot/react-identicon": "^0.75.1",
+    "@polkadot/ui-identicon": "^0.41.1",
+    "@polkadot/ui-keyring": "0.75.1",
+    "@polkadot/util": "^6.3.1",
+    "@polkadot/util-crypto": "^6.3.1",
     "@sentry/react": "^5.26.0",
     "@types/history": "^4.7.8",
     "bnc-onboard": "1.19.2",
@@ -25,6 +33,7 @@
     "yup": "^0.29.3"
   },
   "devDependencies": {
+    "@polkadot/typegen": "^4.11.2",
     "@sentry/cli": "1.58.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
@@ -52,7 +61,8 @@
     "clean:dist": "rm -rf ./*/**/dist && rm -rf ./*/**/build && rm -rf ./*/**/storybook-static",
     "clean": "yarn clean:dependencies && yarn clean:dist",
     "prettier": "prettier --config .prettierrc 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --write",
-    "start:tunnel": "./ngrok http https://localhost:3000"
+    "start:tunnel": "./ngrok http https://localhost:3000",
+    "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V"
   },
   "eslintConfig": {
     "extends": "react-app"
