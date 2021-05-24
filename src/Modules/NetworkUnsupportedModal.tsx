@@ -72,6 +72,7 @@ const NetworkUnsupportedModal = () => {
       setSupportedNetworks(chainbridgeConfig.chains.map((bc) => bc.networkId));
     } else if (pathname === ROUTE_LINKS.Wrap) {
       setOpen(!wrapTokenConfig && !!isReady);
+      debugger;
       setSupportedNetworks(
         chainbridgeConfig.chains
           .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))

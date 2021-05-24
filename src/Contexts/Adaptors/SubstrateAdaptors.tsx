@@ -27,9 +27,11 @@ export const SubstrateHomeAdaptorProvider = ({
 }: IHomeBridgeProviderProps) => {
   const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
-  const [isRead, setIsReady] = useState(false);
-  const [accountLoaded, setaccountLoaded] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
+  const [address, setAddress] = useState<string | undefined>(undefined);
+
+  // Need different logic
   const getNetworkName = (id: any) => {
     switch (Number(id)) {
       case 1:
@@ -64,17 +66,21 @@ export const SubstrateHomeAdaptorProvider = ({
     if (!homeChainConfig) return;
 
     const provider = new WsProvider(homeChainConfig.rpcUrl);
-
     ApiPromise.create({ provider, types })
       .then((api) => {
         types && registry.register(types);
         setApi(api);
       })
       .catch(console.error);
-  }, [homeChainConfig]);
+  }, [homeChainConfig, address]);
 
   useEffect(() => {
     // Get thresholds & bridge fee
+    if (api) {
+      const chainInfo = api.registry?.getChainProperties();
+      console.log(chainInfo);
+      debugger;
+    }
   }, [api]);
 
   const handleConnect = useCallback(async () => {
@@ -95,6 +101,9 @@ export const SubstrateHomeAdaptorProvider = ({
           })
           .then((injectedAccounts) => {
             loadAccounts(injectedAccounts);
+            handleSetHomeChain(
+              homeChains.find((item) => item.type === "Substrate")?.chainId
+            );
           })
           .catch(console.error);
       })
@@ -105,9 +114,11 @@ export const SubstrateHomeAdaptorProvider = ({
     api?.isReady.then(() => setIsReady(true));
   }, [api?.isReady, setIsReady]);
 
-  const loadAccounts = (injectedAccounts: injectedAccountType[] = []): void => {
+  const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
     keyring.loadAll({ isDevelopment: true }, injectedAccounts);
-    setaccountLoaded(true);
+    debugger;
+
+    setAddress(injectedAccounts[0].address);
   };
 
   useEffect(() => {
@@ -155,9 +166,9 @@ export const SubstrateHomeAdaptorProvider = ({
         wrapper: undefined, // Not implemented
         wrapToken, // Not implemented
         unwrapToken, // Not implemented
-        isReady: false,
+        isReady: isReady,
         chainConfig: homeChainConfig,
-        address: "0xcoffee",
+        address: address,
         nativeTokenBalance: 0,
       }}
     >

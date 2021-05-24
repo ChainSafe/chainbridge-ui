@@ -2,7 +2,12 @@ import React from "react";
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { useNetworkManager } from "../Contexts/NetworkManagerContext";
-import { Button, Modal } from "@chainsafe/common-components";
+import {
+  Button,
+  Modal,
+  ProgressBar,
+  Typography,
+} from "@chainsafe/common-components";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -26,12 +31,22 @@ const NetworkSelectModal = () => {
           <Button onClick={() => setWalletType("Ethereum")}>
             Use Ethereum wallet
           </Button>
-          <Button>Use Substrate wallet</Button>
+          <Button onClick={() => setWalletType("Substrate")}>
+            Use Substrate wallet
+          </Button>
         </article>
       )}
       {walletType === "Ethereum" && (
         <article>
           <Button onClick={() => connect()}>Connect</Button>
+        </article>
+      )}
+      {walletType === "Substrate" && (
+        <article>
+          <Typography variant="h2" component="h2">
+            Connecting to node
+          </Typography>
+          <ProgressBar size="small" variant="primary" />
         </article>
       )}
       {/* {

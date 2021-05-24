@@ -100,13 +100,43 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       ],
     },
     {
+      chainId: 0,
+      networkId: 5,
+      name: "Ethereum - Local",
+      decimals: 18,
+      bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
+      erc20HandlerAddress: "0x3167776db165D8eA0f51790CA2bbf44Db5105ADF",
+      rpcUrl: "http://localhost:8545",
+      type: "Ethereum",
+      nativeTokenSymbol: "ETH",
+      tokens: [
+        {
+          address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
+          name: "Wrapped ETC",
+          symbol: "wETC",
+          imageUri: WETHIcon,
+          resourceId:
+            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+        },
+        {
+          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
+          name: "An ERC20",
+          symbol: "ERC20",
+          imageUri: ETHIcon,
+          resourceId:
+            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
+        },
+      ],
+    },
+    {
       chainId: 5,
       networkId: 0,
       name: "Substrate - Local",
       decimals: 18,
       bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
       erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "wss://dev-node.substrate.dev:9944",
+      rpcUrl: "ws://localhost:9944",
+      // rpcUrl: "wss://dev-node.substrate.dev:9944",
       // const WS_PROVIDER = 'wss://dev-node.substrate.dev:9944';
       // const WS_PROVIDER = 'wss://kusama-rpc.polkadot.io';
       // const WS_PROVIDER = 'wss://westend-rpc.polkadot.io';
