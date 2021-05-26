@@ -62,7 +62,12 @@ export const SubstrateHomeAdaptorProvider = ({
   const [selectedToken, setSelectedToken] = useState<string>("");
 
   useEffect(() => {
-    // Set up provider & api
+    // Attempt connect on load
+    handleConnect();
+  }, []);
+
+  useEffect(() => {
+    // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
     if (!homeChainConfig) return;
 
     const provider = new WsProvider(homeChainConfig.rpcUrl);
@@ -75,16 +80,15 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [homeChainConfig, address]);
 
   useEffect(() => {
-    // Get thresholds & bridge fee
+    // For all constants & essential values like:
+    // Relayer Threshold, resources IDs & Bridge Fees
+    // It is recommended to collect state at this point
     if (api) {
-      const chainInfo = api.registry?.getChainProperties();
-      console.log(chainInfo);
-      debugger;
     }
   }, [api]);
 
   const handleConnect = useCallback(async () => {
-    // Connect wallet
+    // Requests permission to inject the wallet
     web3Enable("chainbridge-ui")
       .then(() => {
         // web3Account resolves with the injected accounts
@@ -100,6 +104,9 @@ export const SubstrateHomeAdaptorProvider = ({
             }));
           })
           .then((injectedAccounts) => {
+            // This is where the correct chain configuration is set to the network context
+            // Any operations before presenting the accounts to the UI or providing the config
+            // to the rest of the dapp should be done here
             loadAccounts(injectedAccounts);
             handleSetHomeChain(
               homeChains.find((item) => item.type === "Substrate")?.chainId
@@ -111,19 +118,16 @@ export const SubstrateHomeAdaptorProvider = ({
   }, []);
 
   useEffect(() => {
+    // This is a simple check
+    // The reason for having a isReady is that the UI can lazy load data from this point
     api?.isReady.then(() => setIsReady(true));
   }, [api?.isReady, setIsReady]);
 
   const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
     keyring.loadAll({ isDevelopment: true }, injectedAccounts);
-    debugger;
 
     setAddress(injectedAccounts[0].address);
   };
-
-  useEffect(() => {
-    handleConnect();
-  }, []);
 
   const deposit = useCallback(
     async (
@@ -141,10 +145,12 @@ export const SubstrateHomeAdaptorProvider = ({
     ]
   );
 
+  // Required for adaptor however not needed for substrate
   const wrapToken = async (value: number): Promise<string> => {
     return "Not implemented";
   };
 
+  // Required for adaptor however not needed for substrate
   const unwrapToken = async (value: number): Promise<string> => {
     return "Not implemented";
   };
