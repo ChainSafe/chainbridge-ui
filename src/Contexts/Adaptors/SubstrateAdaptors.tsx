@@ -259,6 +259,29 @@ export const SubstrateHomeAdaptorProvider = ({
     return "Not implemented";
   };
 
+  // useEffect(() => {
+  //   if (api) {
+  //     // Wire up event listeners
+  //     // Subscribe to system events via storage
+  //     api.query.system.events((events) => {
+  //       console.log('----- Received ' + events.length + ' event(s): -----');
+  //       // loop through the Vec<EventRecord>
+  //       events.forEach((record) => {
+  //       // extract the phase, event and the event types
+  //         const { event, phase } = record;
+  //         const types = event.typeDef;
+  //         // show what we are busy with
+  //         console.log(event.section + ':' + event.method + '::' + 'phase=' + phase.toString());
+  //         console.log(event.meta.documentation.toString());
+  //         // loop through each of the parameters, displaying the type and data
+  //         event.data.forEach((data, index) => {
+  //           console.log(types[index].type + ';' + data.toString());
+  //         });
+  //       });
+  //     });
+  //   }
+  // }, [api]);
+
   return (
     <HomeBridgeContext.Provider
       value={{
@@ -301,34 +324,54 @@ export const SubstrateDestinationAdaptorProvider = ({
     depositVotes,
   } = useNetworkManager();
 
+  const registry = new TypeRegistry();
+  const [api, setApi] = useState<ApiPromise | undefined>();
+
+  useEffect(() => {
+    // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
+    if (!destinationChainConfig) return;
+
+    const provider = new WsProvider(destinationChainConfig.rpcUrl);
+    ApiPromise.create({ provider, types })
+      .then((api) => {
+        types && registry.register(types);
+        setApi(api);
+      })
+      .catch(console.error);
+  }, [destinationChainConfig]);
   const [destinationBridge, setDestinationBridge] = useState<
     Bridge | undefined
   >(undefined);
 
   useEffect(() => {
-    // Set up adaptor
-  }, [destinationChainConfig]);
-
-  useEffect(() => {
-    // Wire up event listeners
-    // Subscribe to system events via storage
-    // api.query.system.events((events) => {
-    //   console.log('----- Received ' + events.length + ' event(s): -----');
-    //   // loop through the Vec<EventRecord>
-    //   events.forEach((record) => {
-    //   // extract the phase, event and the event types
-    //     const { event, phase } = record;
-    //     const types = event.typeDef;
-    //     // show what we are busy with
-    //     console.log(event.section + ':' + event.method + '::' + 'phase=' + phase.toString());
-    //     console.log(event.meta.documentation.toString());
-    //     // loop through each of the parameters, displaying the type and data
-    //     event.data.forEach((data, index) => {
-    //       console.log(types[index].type + ';' + data.toString());
-    //     });
-    //   });
-    // });
-  }, []);
+    if (api) {
+      // Wire up event listeners
+      // Subscribe to system events via storage
+      api.query.system.events((events) => {
+        console.log("----- Received " + events.length + " event(s): -----");
+        // loop through the Vec<EventRecord>
+        events.forEach((record) => {
+          // extract the phase, event and the event types
+          const { event, phase } = record;
+          const types = event.typeDef;
+          // show what we are busy with
+          console.log(
+            event.section +
+              ":" +
+              event.method +
+              "::" +
+              "phase=" +
+              phase.toString()
+          );
+          console.log(event.meta.documentation.toString());
+          // loop through each of the parameters, displaying the type and data
+          event.data.forEach((data, index) => {
+            console.log(types[index].type + ";" + data.toString());
+          });
+        });
+      });
+    }
+  }, [api]);
 
   return (
     <DestinationBridgeContext.Provider value={{}}>
