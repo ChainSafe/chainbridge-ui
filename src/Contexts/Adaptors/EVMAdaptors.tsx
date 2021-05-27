@@ -24,6 +24,7 @@ const resetAllowanceLogicFor = [
 export const EVMHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
+  console.log("EVM home loaded");
   const {
     isReady,
     network,
@@ -378,6 +379,7 @@ export const EVMHomeAdaptorProvider = ({
 export const EVMDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
+  console.log("EVM destination loaded");
   const {
     depositNonce,
     destinationChainConfig,
@@ -442,6 +444,7 @@ export const EVMDestinationAdaptorProvider = ({
           null
         ),
         (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+          debugger;
           switch (BigNumber.from(status).toNumber()) {
             case 1:
               tokensDispatch({
@@ -475,6 +478,7 @@ export const EVMDestinationAdaptorProvider = ({
           null
         ),
         async (originChainId, depositNonce, status, resourceId, tx) => {
+          debugger;
           const txReceipt = await tx.getTransactionReceipt();
           if (txReceipt.status === 1) {
             setDepositVotes(depositVotes + 1);

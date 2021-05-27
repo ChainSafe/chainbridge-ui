@@ -9,14 +9,15 @@ import {
 } from "./interfaces";
 
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromSource,
+} from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
 import types from "../../bridgeTypes.json";
 import { TypeRegistry } from "@polkadot/types";
-import {
-  TokenInfo,
-  Tokens,
-} from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise } from "@polkadot/api/types";
 
@@ -155,8 +156,6 @@ export const SubstrateHomeAdaptorProvider = ({
     return () => {};
   }, [api]);
 
-  console.log(tokens);
-
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
     web3Enable("chainbridge-ui")
@@ -205,14 +204,49 @@ export const SubstrateHomeAdaptorProvider = ({
       recipient: string,
       tokenAddress: string,
       destinationChainId: number
-    ) => {},
-    [
-      homeBridge,
-      bridgeFee,
-      homeChainConfig,
-      setDepositNonce,
-      setTransactionStatus,
-    ]
+    ) => {
+      if (api && address) {
+        const allAccounts = await web3Accounts();
+        const targetAccount = allAccounts.find(
+          (item) => item.address === address
+        );
+        if (targetAccount) {
+          const transferExtrinsic = api.tx.example.transferNative(
+            amount,
+            recipient,
+            destinationChainId
+          );
+          const injector = await web3FromSource(targetAccount.meta.source);
+          setTransactionStatus("Initializing Transfer");
+          setDepositAmount(amount);
+          // setSelectedToken(tokenAddress);
+          transferExtrinsic
+            .signAndSend(address, { signer: injector.signer }, ({ status }) => {
+              // Need to set the deposit nonce & Tx Status
+              if (status.isInBlock) {
+                console.log(
+                  `Completed at block hash #${status.asInBlock.toString()}`
+                );
+                api.query.chainBridge
+                  .chainNonces(destinationChainId)
+                  .then((response) => {
+                    setTransactionStatus("In Transit");
+                    setDepositNonce(`${response.toJSON()}`);
+                  })
+                  .catch((error: any) => {});
+              } else {
+                console.log(`Current status: ${status.type}`);
+              }
+            })
+            .catch((error: any) => {
+              debugger;
+              setTransactionStatus("Transfer Aborted");
+              console.log(":( transaction failed", error);
+            });
+        }
+      }
+    },
+    [api, homeChainConfig, setDepositNonce, setTransactionStatus]
   );
 
   // Required for adaptor however not needed for substrate

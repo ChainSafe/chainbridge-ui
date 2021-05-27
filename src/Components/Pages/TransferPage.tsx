@@ -426,6 +426,9 @@ const TransferPage = () => {
                 input: classes.addressInput,
               }}
               senderAddress={`${address}`}
+              sendToSameAccountHelper={
+                destinationChainConfig?.type === homeConfig?.type
+              }
             />
           </section>
           <FeesFormikWrapped

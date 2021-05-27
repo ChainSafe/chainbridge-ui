@@ -19,13 +19,14 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   sync,
   ...rest
 }: ITokenSelectInput) => {
-  const [field] = useField(name);
+  const [field, , helpers] = useField(name);
   const labelParsed = tokens[field.value]
     ? `${label} ${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
     : "Please select token";
 
   const [synced, setSynced] = useState();
   useEffect(() => {
+    console.log("field.value", field.value);
     if (sync && field.value !== synced) {
       setSynced(field.value);
       if (field.value !== "") {
@@ -34,6 +35,13 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
     }
     // eslint-disable-next-line
   }, [field]);
+
+  useEffect(() => {
+    // If there is only one token, auto select
+    if (Object.keys(tokens).length === 1 && field.value === "") {
+      helpers.setValue(Object.keys(tokens)[0]);
+    }
+  }, [tokens, helpers.setValue]);
 
   return (
     <FormikSelectInput

@@ -30,6 +30,7 @@ interface IAddressInput extends FormikTextInputProps {
   classNames?: {
     input?: string;
   };
+  sendToSameAccountHelper?: boolean;
 }
 
 const AddressInput: React.FC<IAddressInput> = ({
@@ -44,6 +45,7 @@ const AddressInput: React.FC<IAddressInput> = ({
   label,
   labelClassName,
   captionMessage,
+  sendToSameAccountHelper = false,
   ...rest
 }: IAddressInput) => {
   const classes = useStyles();
@@ -83,13 +85,15 @@ const AddressInput: React.FC<IAddressInput> = ({
           disabled={stored !== undefined}
         />
       </div>
-      <div className={classes.checkbox}>
-        <CheckboxInput
-          label="I want to send funds to my address"
-          value={stored !== undefined}
-          onChange={() => toggleReceiver()}
-        />
-      </div>
+      {sendToSameAccountHelper && (
+        <div className={classes.checkbox}>
+          <CheckboxInput
+            label="I want to send funds to my address"
+            value={stored !== undefined}
+            onChange={() => toggleReceiver()}
+          />
+        </div>
+      )}
     </section>
   );
 };
