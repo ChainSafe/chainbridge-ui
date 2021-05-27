@@ -38,6 +38,16 @@ module.exports = {
           }),
         ],
       },
+      module: {
+        rules: [
+          ...webpackConfig.module.rules,
+          {
+            test: /\.mjs$/,
+            include: /node_modules/,
+            type: "javascript/auto",
+          },
+        ],
+      },
       devtool: "source-map",
     }),
   },

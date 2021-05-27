@@ -36,69 +36,69 @@ export type ChainbridgeConfig = {
 export const chainbridgeConfig: ChainbridgeConfig = {
   // Goerli - Kotti Bridge
   chains: [
-    {
-      chainId: 1,
-      networkId: 5,
-      name: "Ethereum - Goerli",
-      decimals: 18,
-      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "https://goerli.prylabs.net",
-      type: "Ethereum",
-      blockExplorer: "https://goerli.etherscan.io/tx",
-      nativeTokenSymbol: "ETH",
-      deployedBlockNumber: 3554182,
-      tokens: [
-        {
-          address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
-          name: "Wrapped ETC",
-          symbol: "wETC",
-          imageUri: WETHIcon,
-          resourceId:
-            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
-        },
-        {
-          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "An ERC20",
-          symbol: "ERC20",
-          imageUri: ETHIcon,
-          resourceId:
-            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
-        },
-      ],
-    },
-    {
-      chainId: 2,
-      networkId: 6,
-      name: "Ethereum Classic - Kotti",
-      decimals: 18,
-      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
-      rpcUrl: "https://www.ethercluster.com/kotti",
-      type: "Ethereum",
-      blockExplorer: "https://blockscout.com/etc/kotti/tx",
-      nativeTokenSymbol: "ETC",
-      deployedBlockNumber: 0,
-      tokens: [
-        {
-          address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
-          name: "Wrapped ETC",
-          symbol: "wETC",
-          imageUri: WETHIcon,
-          resourceId:
-            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
-          isNativeWrappedToken: true,
-        },
-        {
-          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "An ERC20",
-          symbol: "ERC20",
-          imageUri: ETHIcon,
-          resourceId:
-            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
-        },
-      ],
-    },
+    // {
+    //   chainId: 1,
+    //   networkId: 5,
+    //   name: "Ethereum - Goerli",
+    //   decimals: 18,
+    //   bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
+    //   erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
+    //   rpcUrl: "https://goerli.prylabs.net",
+    //   type: "Ethereum",
+    //   blockExplorer: "https://goerli.etherscan.io/tx",
+    //   nativeTokenSymbol: "ETH",
+    //   deployedBlockNumber: 3554182,
+    //   tokens: [
+    //     {
+    //       address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
+    //       name: "Wrapped ETC",
+    //       symbol: "wETC",
+    //       imageUri: WETHIcon,
+    //       resourceId:
+    //         "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+    //     },
+    //     {
+    //       address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
+    //       name: "An ERC20",
+    //       symbol: "ERC20",
+    //       imageUri: ETHIcon,
+    //       resourceId:
+    //         "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
+    //     },
+    //   ],
+    // },
+    // {
+    //   chainId: 2,
+    //   networkId: 6,
+    //   name: "Ethereum Classic - Kotti",
+    //   decimals: 18,
+    //   bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
+    //   erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
+    //   rpcUrl: "https://www.ethercluster.com/kotti",
+    //   type: "Ethereum",
+    //   blockExplorer: "https://blockscout.com/etc/kotti/tx",
+    //   nativeTokenSymbol: "ETC",
+    //   deployedBlockNumber: 0,
+    //   tokens: [
+    //     {
+    //       address: "0x23A9FD05ef0c5fb9dDE964C4d4191A169Fd221f8",
+    //       name: "Wrapped ETC",
+    //       symbol: "wETC",
+    //       imageUri: WETHIcon,
+    //       resourceId:
+    //         "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+    //       isNativeWrappedToken: true,
+    //     },
+    //     {
+    //       address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
+    //       name: "An ERC20",
+    //       symbol: "ERC20",
+    //       imageUri: ETHIcon,
+    //       resourceId:
+    //         "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
+    //     },
+    //   ],
+    // },
     {
       chainId: 0,
       networkId: 5,
@@ -129,7 +129,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       ],
     },
     {
-      chainId: 5,
+      chainId: 1,
       networkId: 0,
       name: "Substrate - Local",
       decimals: 18,

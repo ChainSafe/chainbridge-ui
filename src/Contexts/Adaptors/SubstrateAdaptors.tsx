@@ -13,6 +13,12 @@ import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 import keyring from "@polkadot/ui-keyring";
 import types from "../../bridgeTypes.json";
 import { TypeRegistry } from "@polkadot/types";
+import {
+  TokenInfo,
+  Tokens,
+} from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { BigNumber as BN } from "bignumber.js";
+import { UnsubscribePromise } from "@polkadot/api/types";
 
 type injectedAccountType = {
   address: string;
@@ -46,7 +52,9 @@ export const SubstrateHomeAdaptorProvider = ({
   const [bridgeFee, setBridgeFee] = useState<number>(0);
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
-  const [selectedToken, setSelectedToken] = useState<string>("");
+  const [selectedToken, setSelectedToken] = useState<string>("CSS");
+
+  const [tokens, setTokens] = useState<Tokens>({});
 
   useEffect(() => {
     // Attempt connect on load
@@ -72,49 +80,82 @@ export const SubstrateHomeAdaptorProvider = ({
     // It is recommended to collect state at this point
     if (api) {
       getRelayerThreshold();
-      subscribeToBalance();
       confirmChainID();
     }
   }, [api]);
 
-  const getChainNonces = useCallback(async (chainId: number) => {
-    if (api) {
-      return await api.query.chainBridge.chainNonces(chainId);
-    } else {
-      throw "Api not connected";
-    }
-  }, []);
+  const getChainNonces = useCallback(
+    async (chainId: number) => {
+      if (api) {
+        return await api.query.chainBridge.chainNonces(chainId);
+      } else {
+        throw "Api not connected";
+      }
+    },
+    [api]
+  );
 
   const getRelayerThreshold = useCallback(async () => {
     if (api) {
-      const relayerThreshold = await api.query.chainBridge.relayerThreshold;
-      debugger;
-      // if (homeChainConfig?.chainId != current.toHuman()) {
-      //   homeChains.find((item) => item.type === "Substrate")?.chainId
-
-      // }
+      const relayerThreshold = await api.query.chainBridge.relayerThreshold();
+      setRelayerThreshold(Number(relayerThreshold.toHuman()));
     }
-  }, []);
+  }, [api]);
 
   const confirmChainID = useCallback(async () => {
     if (api) {
-      const current = api.consts.chainBridge.chainIdentity;
-      debugger;
-      // if (homeChainConfig?.chainId != current.toHuman()) {
-      //   homeChains.find((item) => item.type === "Substrate")?.chainId
-
-      // }
+      const currentId = Number(api.consts.chainBridge.chainIdentity.toHuman());
+      if (homeChainConfig?.chainId != currentId) {
+        const correctConfig = homeChains.find(
+          (item) => item.chainId === currentId
+        );
+        if (correctConfig) {
+          handleSetHomeChain(currentId);
+        }
+      }
     }
-  }, []);
+  }, [api]);
 
-  const subscribeToBalance = useCallback(async () => {
+  // const subscribeToBalance = useCallback(async () => {
+  //   if (api) {
+  //     api.query.system.account(address, (result) => {
+  //       const { data: { free: balance }} = (result.toHuman()) as any
+  //       setTokens({
+  //         "CSS": {
+  //           balance: balance,
+  //           balanceBN: new BN(balance),
+  //           decimals: 15,
+  //           name: "Chainbridge",
+  //           symbol: "CSS",
+  //         }
+  //       })
+  //     });
+  //   }
+  // }, [api]);
+
+  useEffect(() => {
+    let subscription: UnsubscribePromise;
     if (api) {
-      api.query.balances.account(address, (result) => {
-        debugger;
-        console.log(result);
+      subscription = api.query.system.account(address, (result) => {
+        const {
+          data: { free: balance },
+        } = result.toJSON() as any;
+        setTokens({
+          CSS: {
+            balance: balance,
+            balanceBN: new BN(balance),
+            decimals: 15,
+            name: "Chainbridge",
+            symbol: "CSS",
+          },
+        });
       });
     }
-  }, []);
+    // TODO unsubscribe
+    return () => {};
+  }, [api]);
+
+  console.log(tokens);
 
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
@@ -195,7 +236,7 @@ export const SubstrateHomeAdaptorProvider = ({
         selectedToken,
         setDepositAmount,
         setSelectedToken,
-        tokens: {},
+        tokens: tokens,
         relayerThreshold,
         wrapTokenConfig: undefined, // Not implemented
         wrapper: undefined, // Not implemented
@@ -236,6 +277,23 @@ export const SubstrateDestinationAdaptorProvider = ({
 
   useEffect(() => {
     // Wire up event listeners
+    // Subscribe to system events via storage
+    // api.query.system.events((events) => {
+    //   console.log('----- Received ' + events.length + ' event(s): -----');
+    //   // loop through the Vec<EventRecord>
+    //   events.forEach((record) => {
+    //   // extract the phase, event and the event types
+    //     const { event, phase } = record;
+    //     const types = event.typeDef;
+    //     // show what we are busy with
+    //     console.log(event.section + ':' + event.method + '::' + 'phase=' + phase.toString());
+    //     console.log(event.meta.documentation.toString());
+    //     // loop through each of the parameters, displaying the type and data
+    //     event.data.forEach((data, index) => {
+    //       console.log(types[index].type + ';' + data.toString());
+    //     });
+    //   });
+    // });
   }, []);
 
   return (
