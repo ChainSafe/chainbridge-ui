@@ -151,7 +151,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
   const handleSetDestination = useCallback(
     (chainId: number | undefined) => {
-      if (!chainId) {
+      if (chainId === undefined) {
         setDestinationChain(undefined);
       } else if (homeChainConfig && !depositNonce) {
         const chain = destinationChains.find((c) => c.chainId === chainId);
