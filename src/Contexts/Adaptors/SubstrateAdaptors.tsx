@@ -31,32 +31,19 @@ export const SubstrateHomeAdaptorProvider = ({
 
   const [address, setAddress] = useState<string | undefined>(undefined);
 
-  // Need different logic
-  const getNetworkName = (id: any) => {
-    switch (Number(id)) {
-      case 1:
-        return "Mainnet";
-      case 0:
-        return "Localhost";
-      default:
-        return "Other";
-    }
-  };
-
   const {
     homeChainConfig,
     setTransactionStatus,
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
-    setNetworkId,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
   );
-  const [bridgeFee, setBridgeFee] = useState<number | undefined>();
+  const [bridgeFee, setBridgeFee] = useState<number>(0);
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("");
@@ -84,8 +71,50 @@ export const SubstrateHomeAdaptorProvider = ({
     // Relayer Threshold, resources IDs & Bridge Fees
     // It is recommended to collect state at this point
     if (api) {
+      getRelayerThreshold();
+      subscribeToBalance();
+      confirmChainID();
     }
   }, [api]);
+
+  const getChainNonces = useCallback(async (chainId: number) => {
+    if (api) {
+      return await api.query.chainBridge.chainNonces(chainId);
+    } else {
+      throw "Api not connected";
+    }
+  }, []);
+
+  const getRelayerThreshold = useCallback(async () => {
+    if (api) {
+      const relayerThreshold = await api.query.chainBridge.relayerThreshold;
+      debugger;
+      // if (homeChainConfig?.chainId != current.toHuman()) {
+      //   homeChains.find((item) => item.type === "Substrate")?.chainId
+
+      // }
+    }
+  }, []);
+
+  const confirmChainID = useCallback(async () => {
+    if (api) {
+      const current = api.consts.chainBridge.chainIdentity;
+      debugger;
+      // if (homeChainConfig?.chainId != current.toHuman()) {
+      //   homeChains.find((item) => item.type === "Substrate")?.chainId
+
+      // }
+    }
+  }, []);
+
+  const subscribeToBalance = useCallback(async () => {
+    if (api) {
+      api.query.balances.account(address, (result) => {
+        debugger;
+        console.log(result);
+      });
+    }
+  }, []);
 
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
@@ -159,7 +188,7 @@ export const SubstrateHomeAdaptorProvider = ({
     <HomeBridgeContext.Provider
       value={{
         connect: handleConnect,
-        getNetworkName,
+        getNetworkName: () => "substrate-example",
         bridgeFee,
         deposit,
         depositAmount,
