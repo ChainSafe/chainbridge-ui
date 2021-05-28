@@ -1,5 +1,3 @@
-import { Web3Provider } from "@chainsafe/web3-context";
-import { utils } from "ethers";
 import React, {
   Dispatch,
   useCallback,
@@ -17,10 +15,7 @@ import {
   EVMDestinationAdaptorProvider,
   EVMHomeAdaptorProvider,
 } from "./Adaptors/EVMAdaptors";
-import {
-  IDestinationBridgeProviderProps,
-  IWeb3ProviderWrapper,
-} from "./Adaptors/interfaces";
+import { IDestinationBridgeProviderProps } from "./Adaptors/interfaces";
 import {
   SubstrateDestinationAdaptorProvider,
   SubstrateHomeAdaptorProvider,
@@ -126,6 +121,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
       if (chain) {
         setHomeChainConfig(chain);
+        console.log(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter(
             (bridgeConfig: BridgeConfig) =>
@@ -140,11 +136,6 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   useEffect(() => {
     if (walletType !== "unset") {
       if (walletType === "select") {
-        setDestinationChain(undefined);
-        setHomeChainConfig(undefined);
-        setDepositNonce(undefined);
-        setDepositVotes(0);
-        setDepositNonce(undefined);
         setHomeChains(chainbridgeConfig.chains);
       } else {
         setHomeChains(
@@ -175,65 +166,15 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     [depositNonce, destinationChains, homeChainConfig]
   );
 
-  const Web3ProviderWrapper = ({ children }: IWeb3ProviderWrapper) => {
-    const { homeChainConfig } = useNetworkManager();
-    const tokens = homeChainConfig?.networkId
-      ? chainbridgeConfig.chains
-          .filter((chain) => chain.networkId !== undefined)
-          .reduce((tca, bc) => {
-            return bc.networkId
-              ? {
-                  ...tca,
-                  [bc.networkId]: bc.tokens,
-                }
-              : tca;
-          })
-      : {};
-
-    console.log("Injecting provider", Date.now());
-
-    return (
-      <Web3Provider
-        tokensToWatch={tokens}
-        onboardConfig={{
-          dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
-          walletSelect: {
-            wallets: [{ walletName: "metamask", preferred: true }],
-          },
-          subscriptions: {
-            network: (network) => console.log("chainId: ", network),
-            balance: (amount) =>
-              console.log("balance: ", utils.formatEther(amount)),
-          },
-        }}
-        checkNetwork={false}
-        gasPricePollingInterval={120}
-        gasPriceSetting="fast"
-      >
-        {children}
-      </Web3Provider>
-    );
-  };
-
   const DestinationProvider = ({
     children,
   }: IDestinationBridgeProviderProps) => {
     if (destinationChainConfig?.type === "Ethereum") {
-      if (walletType === "Substrate") {
-        return (
-          <Web3ProviderWrapper>
-            <EVMDestinationAdaptorProvider>
-              {children}
-            </EVMDestinationAdaptorProvider>
-          </Web3ProviderWrapper>
-        );
-      } else {
-        return (
-          <EVMDestinationAdaptorProvider>
-            {children}
-          </EVMDestinationAdaptorProvider>
-        );
-      }
+      return (
+        <EVMDestinationAdaptorProvider>
+          {children}
+        </EVMDestinationAdaptorProvider>
+      );
     } else if (destinationChainConfig?.type === "Substrate") {
       return (
         <SubstrateDestinationAdaptorProvider>
@@ -276,11 +217,9 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       }}
     >
       {walletType === "Ethereum" ? (
-        <Web3ProviderWrapper>
-          <EVMHomeAdaptorProvider>
-            <DestinationProvider>{children}</DestinationProvider>
-          </EVMHomeAdaptorProvider>
-        </Web3ProviderWrapper>
+        <EVMHomeAdaptorProvider>
+          <DestinationProvider>{children}</DestinationProvider>
+        </EVMHomeAdaptorProvider>
       ) : walletType === "Substrate" ? (
         <SubstrateHomeAdaptorProvider>
           <DestinationProvider>{children}</DestinationProvider>
