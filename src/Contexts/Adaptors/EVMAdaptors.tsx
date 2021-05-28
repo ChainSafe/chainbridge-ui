@@ -35,6 +35,7 @@ export const EVMHomeAdaptorProvider = ({
     wallet,
     checkIsReady,
     ethBalance,
+    onboard,
   } = useWeb3();
 
   const getNetworkName = (id: any) => {
@@ -84,7 +85,20 @@ export const EVMHomeAdaptorProvider = ({
     undefined
   );
 
+  // const [initialised, setInitialised] = useState<"init" | "fetching" | "done">("init")
+  // useEffect(() => {
+  //   if (initialised === "init") {
+  //     setInitialised("fetching")
+  //     onboard?.walletSelect("metamask").then((success) => {
+  //       debugger
+  //       setInitialised("done")
+  //     })
+  //   }
+  // }, [initialised])
+
   useEffect(() => {
+    // if (initialised !== "done") return
+    // debugger
     checkIsReady();
     if (provider) {
       const signer = provider?.getSigner();
