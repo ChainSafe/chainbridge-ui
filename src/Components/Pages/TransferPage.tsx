@@ -83,7 +83,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: "row",
       alignItems: "flex-end",
       justifyContent: "space-around",
-      paddingRight: constants.generalUnit,
+    },
+    tokenInputSection: {
+      width: "60%",
     },
     tokenInput: {
       margin: 0,
@@ -117,7 +119,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySelector: {
-      width: 120,
+      width: "40%",
+      paddingRight: constants.generalUnit,
       "& *": {
         cursor: "pointer",
       },
@@ -361,27 +364,6 @@ const TransferPage = () => {
             />
           </section>
           <section className={classes.currencySection}>
-            <section>
-              <div
-                className={clsx(classes.tokenInputArea, classes.generalInput)}
-              >
-                <TokenInput
-                  classNames={{
-                    input: clsx(classes.tokenInput, classes.generalInput),
-                    button: classes.maxButton,
-                  }}
-                  tokenSelectorKey="token"
-                  tokens={tokens}
-                  disabled={
-                    !destinationChain ||
-                    !preflightDetails.token ||
-                    preflightDetails.token === ""
-                  }
-                  name="tokenAmount"
-                  label="I want to send"
-                />
-              </div>
-            </section>
             <section className={classes.currencySelector}>
               <TokenSelectInput
                 tokens={tokens}
@@ -416,6 +398,27 @@ const TransferPage = () => {
                   })) || []
                 }
               />
+            </section>
+            <section className={classes.tokenInputSection}>
+              <div
+                className={clsx(classes.tokenInputArea, classes.generalInput)}
+              >
+                <TokenInput
+                  classNames={{
+                    input: clsx(classes.tokenInput, classes.generalInput),
+                    button: classes.maxButton,
+                  }}
+                  tokenSelectorKey="token"
+                  tokens={tokens}
+                  disabled={
+                    !destinationChain ||
+                    !preflightDetails.token ||
+                    preflightDetails.token === ""
+                  }
+                  name="tokenAmount"
+                  label="I want to send"
+                />
+              </div>
             </section>
           </section>
           <section>
