@@ -24,7 +24,6 @@ const resetAllowanceLogicFor = [
 export const EVMHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
-  console.log("EVM home loaded");
   const {
     isReady,
     network,
@@ -34,11 +33,14 @@ export const EVMHomeAdaptorProvider = ({
     tokens,
     wallet,
     checkIsReady,
+    onboard,
     ethBalance,
   } = useWeb3();
 
   const getNetworkName = (id: any) => {
     switch (Number(id)) {
+      case 1337:
+        return "Localhost";
       case 1:
         return "Mainnet";
       case 3:
@@ -82,48 +84,71 @@ export const EVMHomeAdaptorProvider = ({
     undefined
   );
 
+  const [initialised, setInitialised] = useState<"start" | "select" | "ready">(
+    "start"
+  );
   useEffect(() => {
-    checkIsReady();
-    if (provider) {
-      const signer = provider?.getSigner();
-      if (!signer) {
-        console.log("No signer");
-        return;
-      }
-
-      if (network && !homeChainConfig) {
-        const chain = homeChains.find(
-          (chain: BridgeConfig) => chain.networkId === network
-        );
-        setNetworkId(network);
-        if (chain) {
-          handleSetHomeChain(chain.chainId);
+    if (initialised === "start") {
+      onboard?.walletSelect("metamask").then((success) => {
+        if (success) {
+          setInitialised("select");
         }
-      }
+      });
+    } else if (initialised === "select") {
+      checkIsReady().then((success) => {
+        if (success) {
+          setInitialised("ready");
+        }
+      });
+    }
+  }, [provider, initialised, onboard, checkIsReady]);
 
-      if (homeChainConfig && network && isReady) {
-        const bridge = BridgeFactory.connect(
-          homeChainConfig.bridgeAddress,
-          signer
-        );
-        setHomeBridge(bridge);
+  useEffect(() => {
+    if (initialised !== "ready") return;
+    try {
+      if (provider) {
+        const signer = provider?.getSigner();
+        if (!signer) {
+          console.log("No signer");
+          return;
+        }
 
-        const wrapperToken = homeChainConfig.tokens.find(
-          (token) => token.isNativeWrappedToken
-        );
+        if (network && !homeChainConfig) {
+          const chain = homeChains.find(
+            (chain: BridgeConfig) => chain.networkId === network
+          );
+          setNetworkId(network);
+          if (chain) {
+            handleSetHomeChain(chain.chainId);
+          }
+        }
 
-        if (!wrapperToken) {
-          setWrapperConfig(undefined);
-          setWrapper(undefined);
-        } else {
-          setWrapperConfig(wrapperToken);
-          const connectedWeth = WethFactory.connect(
-            wrapperToken.address,
+        if (homeChainConfig && network && isReady) {
+          const bridge = BridgeFactory.connect(
+            homeChainConfig.bridgeAddress,
             signer
           );
-          setWrapper(connectedWeth);
+          setHomeBridge(bridge);
+
+          const wrapperToken = homeChainConfig.tokens.find(
+            (token) => token.isNativeWrappedToken
+          );
+
+          if (!wrapperToken) {
+            setWrapperConfig(undefined);
+            setWrapper(undefined);
+          } else {
+            setWrapperConfig(wrapperToken);
+            const connectedWeth = WethFactory.connect(
+              wrapperToken.address,
+              signer
+            );
+            setWrapper(connectedWeth);
+          }
         }
       }
+    } catch (error) {
+      console.error(error);
     }
   }, [
     homeChainConfig,
@@ -133,6 +158,7 @@ export const EVMHomeAdaptorProvider = ({
     network,
     isReady,
     provider,
+    initialised,
     checkIsReady,
     setNetworkId,
   ]);
@@ -444,7 +470,6 @@ export const EVMDestinationAdaptorProvider = ({
           null
         ),
         (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-          debugger;
           switch (BigNumber.from(status).toNumber()) {
             case 1:
               tokensDispatch({

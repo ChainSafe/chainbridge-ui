@@ -41,7 +41,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
     if (Object.keys(tokens).length === 1 && field.value === "") {
       helpers.setValue(Object.keys(tokens)[0]);
     }
-  }, [tokens, helpers.setValue]);
+  }, [tokens, helpers, field.value]);
 
   return (
     <FormikSelectInput

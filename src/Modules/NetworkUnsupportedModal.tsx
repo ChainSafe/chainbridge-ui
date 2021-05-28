@@ -66,16 +66,31 @@ const NetworkUnsupportedModal = () => {
   const [open, setOpen] = useState(false);
   const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
 
+  console.log(supportedNetworks);
+  console.log(networkId);
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
       setOpen(!homeChainConfig && !!isReady);
-      setSupportedNetworks(chainbridgeConfig.chains.map((bc) => bc.networkId));
+      if (homeChainConfig?.type === "Ethereum") {
+        setSupportedNetworks(
+          chainbridgeConfig.chains
+            .filter(
+              (chain) =>
+                chain.type === "Ethereum" && chain.networkId !== undefined
+            )
+            .map((bc) => Number(bc.networkId))
+        );
+      }
     } else if (pathname === ROUTE_LINKS.Wrap) {
       setOpen(!wrapTokenConfig && !!isReady);
       setSupportedNetworks(
         chainbridgeConfig.chains
+          .filter(
+            (chain) =>
+              chain.type === "Ethereum" && chain.networkId !== undefined
+          )
           .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))
-          .map((bc) => bc.networkId)
+          .map((bc) => Number(bc.networkId))
       );
     } else {
       setOpen(false);

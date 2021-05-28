@@ -10,6 +10,10 @@ export interface IDestinationBridgeProviderProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
+export interface IWeb3ProviderWrapper {
+  children: React.ReactNode | React.ReactNode[];
+}
+
 export interface HomeChainAdaptorContext {
   chainConfig: BridgeConfig | undefined;
 

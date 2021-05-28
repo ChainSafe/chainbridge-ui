@@ -11,9 +11,6 @@ import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
-import { chainbridgeConfig } from "./chainbridgeConfig";
-import { Web3Provider } from "@chainsafe/web3-context";
-import { utils } from "ethers";
 import { NetworkManagerProvider } from "./Contexts/NetworkManagerContext";
 
 if (
@@ -28,13 +25,6 @@ if (
 }
 
 const App: React.FC<{}> = () => {
-  const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
-    return {
-      ...tca,
-      [bc.networkId]: bc.tokens,
-    };
-  }, {});
-
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (
@@ -58,33 +48,15 @@ const App: React.FC<{}> = () => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
         <ToasterProvider autoDismiss>
-          <Web3Provider
-            tokensToWatch={tokens}
-            onboardConfig={{
-              dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
-              walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
-              },
-              subscriptions: {
-                network: (network) => console.log("chainId: ", network),
-                balance: (amount) =>
-                  console.log("balance: ", utils.formatEther(amount)),
-              },
-            }}
-            checkNetwork={false}
-            gasPricePollingInterval={120}
-            gasPriceSetting="fast"
-          >
-            <NetworkManagerProvider>
-              <ChainbridgeProvider>
-                <Router>
-                  <AppWrapper>
-                    <Routes />
-                  </AppWrapper>
-                </Router>
-              </ChainbridgeProvider>
-            </NetworkManagerProvider>
-          </Web3Provider>
+          <NetworkManagerProvider>
+            <ChainbridgeProvider>
+              <Router>
+                <AppWrapper>
+                  <Routes />
+                </AppWrapper>
+              </Router>
+            </ChainbridgeProvider>
+          </NetworkManagerProvider>
         </ToasterProvider>
       </ThemeSwitcher>
     </ErrorBoundary>

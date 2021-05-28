@@ -280,7 +280,6 @@ const TransferPage = () => {
 
   // TODO: line 467: How to pull correct HomeChain Symbol
 
-  console.log(tokens);
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>

@@ -73,24 +73,14 @@ export const SubstrateHomeAdaptorProvider = ({
         setApi(api);
       })
       .catch(console.error);
-  }, [homeChainConfig, address]);
-
-  useEffect(() => {
-    // For all constants & essential values like:
-    // Relayer Threshold, resources IDs & Bridge Fees
-    // It is recommended to collect state at this point
-    if (api) {
-      getRelayerThreshold();
-      confirmChainID();
-    }
-  }, [api]);
+  }, [homeChainConfig, registry]);
 
   const getChainNonces = useCallback(
     async (chainId: number) => {
       if (api) {
         return await api.query.chainBridge.chainNonces(chainId);
       } else {
-        throw "Api not connected";
+        throw Error("Api not connected");
       }
     },
     [api]
@@ -106,7 +96,7 @@ export const SubstrateHomeAdaptorProvider = ({
   const confirmChainID = useCallback(async () => {
     if (api) {
       const currentId = Number(api.consts.chainBridge.chainIdentity.toHuman());
-      if (homeChainConfig?.chainId != currentId) {
+      if (homeChainConfig?.chainId !== currentId) {
         const correctConfig = homeChains.find(
           (item) => item.chainId === currentId
         );
@@ -115,7 +105,17 @@ export const SubstrateHomeAdaptorProvider = ({
         }
       }
     }
-  }, [api]);
+  }, [api, handleSetHomeChain, homeChainConfig, homeChains]);
+
+  useEffect(() => {
+    // For all constants & essential values like:
+    // Relayer Threshold, resources IDs & Bridge Fees
+    // It is recommended to collect state at this point
+    if (api) {
+      getRelayerThreshold();
+      confirmChainID();
+    }
+  }, [api, getRelayerThreshold, confirmChainID]);
 
   // const subscribeToBalance = useCallback(async () => {
   //   if (api) {
@@ -135,9 +135,9 @@ export const SubstrateHomeAdaptorProvider = ({
   // }, [api]);
 
   useEffect(() => {
-    let subscription: UnsubscribePromise;
     if (api) {
-      subscription = api.query.system.account(address, (result) => {
+      // let subscription: UnsubscribePromise;
+      api.query.system.account(address, (result) => {
         const {
           data: { free: balance },
         } = result.toJSON() as any;
@@ -154,43 +154,45 @@ export const SubstrateHomeAdaptorProvider = ({
     }
     // TODO unsubscribe
     return () => {};
-  }, [api]);
+  }, [api, address]);
 
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
-    web3Enable("chainbridge-ui")
-      .then(() => {
-        // web3Account resolves with the injected accounts
-        // or an empty array
-        web3Accounts()
-          .then((accounts) => {
-            return accounts.map(({ address, meta }) => ({
-              address,
-              meta: {
-                ...meta,
-                name: `${meta.name} (${meta.source})`,
-              },
-            }));
-          })
-          .then((injectedAccounts) => {
-            // This is where the correct chain configuration is set to the network context
-            // Any operations before presenting the accounts to the UI or providing the config
-            // to the rest of the dapp should be done here
-            loadAccounts(injectedAccounts);
-            handleSetHomeChain(
-              homeChains.find((item) => item.type === "Substrate")?.chainId
-            );
-          })
-          .catch(console.error);
-      })
-      .catch(console.error);
-  }, []);
+    if (!isReady && !address) {
+      web3Enable("chainbridge-ui")
+        .then(() => {
+          // web3Account resolves with the injected accounts
+          // or an empty array
+          web3Accounts()
+            .then((accounts) => {
+              return accounts.map(({ address, meta }) => ({
+                address,
+                meta: {
+                  ...meta,
+                  name: `${meta.name} (${meta.source})`,
+                },
+              }));
+            })
+            .then((injectedAccounts) => {
+              // This is where the correct chain configuration is set to the network context
+              // Any operations before presenting the accounts to the UI or providing the config
+              // to the rest of the dapp should be done here
+              loadAccounts(injectedAccounts);
+              handleSetHomeChain(
+                homeChains.find((item) => item.type === "Substrate")?.chainId
+              );
+            })
+            .catch(console.error);
+        })
+        .catch(console.error);
+    }
+  }, [isReady, address, handleSetHomeChain, homeChains]);
 
   useEffect(() => {
     // This is a simple check
     // The reason for having a isReady is that the UI can lazy load data from this point
     api?.isReady.then(() => setIsReady(true));
-  }, [api?.isReady, setIsReady]);
+  }, [api, setIsReady]);
 
   const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
     keyring.loadAll({ isDevelopment: true }, injectedAccounts);
@@ -246,7 +248,7 @@ export const SubstrateHomeAdaptorProvider = ({
         }
       }
     },
-    [api, homeChainConfig, setDepositNonce, setTransactionStatus]
+    [api, setDepositNonce, setTransactionStatus, address]
   );
 
   // Required for adaptor however not needed for substrate
@@ -338,7 +340,8 @@ export const SubstrateDestinationAdaptorProvider = ({
         setApi(api);
       })
       .catch(console.error);
-  }, [destinationChainConfig]);
+  }, [destinationChainConfig, registry]);
+
   const [destinationBridge, setDestinationBridge] = useState<
     Bridge | undefined
   >(undefined);

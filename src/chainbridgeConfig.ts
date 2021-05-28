@@ -14,7 +14,7 @@ export type ChainType = "Ethereum" | "Substrate";
 
 export type BridgeConfig = {
   chainId: number;
-  networkId: number;
+  networkId?: number;
   name: string;
   bridgeAddress: string;
   erc20HandlerAddress: string;
@@ -101,7 +101,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
     // },
     {
       chainId: 0,
-      networkId: 5,
+      networkId: 1337,
       name: "Ethereum - Local",
       decimals: 18,
       bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",
@@ -130,7 +130,6 @@ export const chainbridgeConfig: ChainbridgeConfig = {
     },
     {
       chainId: 1,
-      networkId: 0,
       name: "Substrate - Local",
       decimals: 18,
       bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
