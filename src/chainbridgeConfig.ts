@@ -110,21 +110,21 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       type: "Ethereum",
       nativeTokenSymbol: "ETH",
       tokens: [
+        // {
+        //   address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
+        //   name: "Wrapped ETC",
+        //   symbol: "wETC",
+        //   imageUri: WETHIcon,
+        //   resourceId:
+        //     "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
+        // },
         {
-          address: "0x735B895bCb37cBba5812154f4F34480EcE1B672C",
-          name: "Wrapped ETC",
-          symbol: "wETC",
-          imageUri: WETHIcon,
-          resourceId:
-            "0x000000000000000000000023A9FD05ef0c5fb9dDE964C4d4191A169Fd221f802",
-        },
-        {
-          address: "0x14dD060dB55c0E7cc072BD3ab4709d55583119c0",
-          name: "An ERC20",
-          symbol: "ERC20",
+          address: "0x21605f71845f372A9ed84253d2D024B7B10999f4",
+          name: "TOKEN",
+          symbol: "TOKEN",
           imageUri: ETHIcon,
           resourceId:
-            "0x000000000000000000000014dD060dB55c0E7cc072BD3ab4709d55583119c001",
+            "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
         },
       ],
     },

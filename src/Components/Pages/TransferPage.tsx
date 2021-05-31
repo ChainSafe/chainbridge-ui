@@ -273,7 +273,8 @@ const TransferPage = () => {
     token: string().required("Please select a token"),
     receiver: string()
       .test("Valid address", "Please add a valid address", (value) => {
-        return utils.isAddress(value as string);
+        // TODO: Check for valid Substrate address here
+        return utils.isAddress(value as string) || true;
       })
       .required("Please add a receiving address"),
   });

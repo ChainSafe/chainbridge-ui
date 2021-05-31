@@ -113,7 +113,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
-      if (!chainId) {
+      if (!chainId && chainId !== 0) {
         setHomeChainConfig(undefined);
         return;
       }
@@ -121,7 +121,6 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
       if (chain) {
         setHomeChainConfig(chain);
-        console.log(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter(
             (bridgeConfig: BridgeConfig) =>
