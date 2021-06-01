@@ -101,7 +101,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
     // },
     {
       chainId: 0,
-      networkId: 1337,
+      networkId: 5,
       name: "Ethereum - Local",
       decimals: 18,
       bridgeAddress: "0x62877dDCd49aD22f5eDfc6ac108e9a4b5D2bD88B",

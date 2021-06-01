@@ -40,7 +40,7 @@ export const EVMHomeAdaptorProvider = ({
 
   const getNetworkName = (id: any) => {
     switch (Number(id)) {
-      case 1337:
+      case 5:
         return "Localhost";
       case 1:
         return "Mainnet";
@@ -48,8 +48,8 @@ export const EVMHomeAdaptorProvider = ({
         return "Ropsten";
       case 4:
         return "Rinkeby";
-      case 5:
-        return "Goerli";
+      // case 5:
+      //   return "Goerli";
       case 6:
         return "Kotti";
       case 42:
