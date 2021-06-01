@@ -345,12 +345,16 @@ export const SubstrateDestinationAdaptorProvider = ({
     Bridge | undefined
   >(undefined);
 
+  const [listenerActive, setListenerActive] = useState<
+    UnsubscribePromise | undefined
+  >(undefined);
+
   useEffect(() => {
-    if (api) {
+    if (api && !listenerActive && depositNonce) {
       // Wire up event listeners
       // Subscribe to system events via storage
       console.log("Wiring up the events");
-      api.query.system.events((events) => {
+      const unsubscribe = api.query.system.events((events) => {
         console.log("----- Received " + events.length + " event(s): -----");
         // loop through the Vec<EventRecord>
         events.forEach((record) => {
@@ -373,8 +377,14 @@ export const SubstrateDestinationAdaptorProvider = ({
           });
         });
       });
+      setListenerActive(unsubscribe);
+    } else if (listenerActive && !depositNonce) {
+      const unsubscribeCall = async () => {
+        await unsubscribeCall();
+        setListenerActive(undefined);
+      };
     }
-  }, [api]);
+  }, [api, depositNonce]);
 
   return (
     <DestinationBridgeContext.Provider value={{}}>
