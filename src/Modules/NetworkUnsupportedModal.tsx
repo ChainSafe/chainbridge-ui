@@ -69,12 +69,6 @@ const NetworkUnsupportedModal = () => {
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
       setOpen(!homeChainConfig && !!isReady);
-      console.log(
-        "setting support",
-        chainbridgeConfig.chains
-          .filter((bc) => bc.networkId !== undefined)
-          .map((bc) => Number(bc.networkId))
-      );
       setSupportedNetworks(
         chainbridgeConfig.chains
           .filter((bc) => bc.networkId !== undefined)
@@ -94,9 +88,6 @@ const NetworkUnsupportedModal = () => {
     }
   }, [pathname, setOpen, homeChainConfig, isReady, wrapTokenConfig]);
 
-  console.log("supportedNetworks", supportedNetworks);
-  console.log("networkId", networkId);
-  console.log("getNetworkName(networkId)", getNetworkName(networkId));
   return (
     <CustomModal
       className={classes.root}

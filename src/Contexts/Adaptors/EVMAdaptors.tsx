@@ -103,7 +103,6 @@ export const EVMHomeAdaptorProvider = ({
       );
       setNetworkId(network);
       if (chain) {
-        debugger;
         handleSetHomeChain(chain.chainId);
       }
     }
@@ -206,8 +205,6 @@ export const EVMHomeAdaptorProvider = ({
         utils.hexlify((recipient.length - 2) / 2),
         32
       );
-
-      debugger;
 
       const data =
         "0x" +
@@ -493,7 +490,6 @@ export const EVMDestinationAdaptorProvider = ({
           null
         ),
         async (originChainId, depositNonce, status, resourceId, tx) => {
-          debugger;
           const txReceipt = await tx.getTransactionReceipt();
           if (txReceipt.status === 1) {
             setDepositVotes(depositVotes + 1);

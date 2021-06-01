@@ -241,7 +241,6 @@ export const SubstrateHomeAdaptorProvider = ({
               }
             })
             .catch((error: any) => {
-              debugger;
               setTransactionStatus("Transfer Aborted");
               console.log(":( transaction failed", error);
             });
@@ -350,6 +349,7 @@ export const SubstrateDestinationAdaptorProvider = ({
     if (api) {
       // Wire up event listeners
       // Subscribe to system events via storage
+      console.log("Wiring up the events");
       api.query.system.events((events) => {
         console.log("----- Received " + events.length + " event(s): -----");
         // loop through the Vec<EventRecord>
