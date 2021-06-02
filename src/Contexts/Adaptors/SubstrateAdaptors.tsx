@@ -232,19 +232,26 @@ export const SubstrateHomeAdaptorProvider = ({
             .signAndSend(
               address,
               { signer: injector.signer },
-              ({ status, isInBlock, isCompleted, isFinalized }) => {
+              ({ status, events, isFinalized }) => {
                 // Need to set the deposit nonce & Tx Status
                 console.log("status.isBroadcast", status.isBroadcast); // Always false
                 console.log("status.isReady", status.isReady); // Always true
                 console.log("status.isInBlock", status.isInBlock); // Always false
-                console.log("isInBlock", isInBlock);
-                console.log("isCompleted", isCompleted);
-                console.log("isFinalized", isFinalized);
+                console.log("status.isInBlock", status.isInBlock);
+                console.log("status.isFinalized", status.isFinalized);
 
-                if (status.isInBlock) {
+                if (status.isInBlock || status.isFinalized) {
                   console.log(
                     `Completed at block hash #${status.asInBlock.toString()}`
                   );
+                  events.filter(({ event }) => {
+                    console.log("event", event);
+                    console.log(
+                      "api.events.chainBridge.FungibleTransfer.is(event)",
+                      api.events.chainBridge.FungibleTransfer.is(event)
+                    );
+                    return api.events.chainBridge.FungibleTransfer.is(event);
+                  });
                   api.query.chainBridge
                     .chainNonces(destinationChainId)
                     .then((response) => {

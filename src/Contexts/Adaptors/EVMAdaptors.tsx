@@ -110,7 +110,9 @@ export const EVMHomeAdaptorProvider = ({
 
   const [initialising, setInitialising] = useState(false);
   useEffect(() => {
-    if (initialising) return;
+    console.log("starting init");
+    if (initialising || homeBridge) return;
+    console.log("init valid");
     setInitialising(true);
 
     checkIsReady()
