@@ -20,6 +20,7 @@ import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise } from "@polkadot/api/types";
+import { ExtrinsicStatus } from "@polkadot/types/interfaces";
 
 type injectedAccountType = {
   address: string;
@@ -210,41 +211,55 @@ export const SubstrateHomeAdaptorProvider = ({
       destinationChainId: number
     ) => {
       if (api && address) {
+        console.log("fetchin counts");
         const allAccounts = await web3Accounts();
         const targetAccount = allAccounts.find(
           (item) => item.address === address
         );
         if (targetAccount) {
+          console.log("target fetched");
           const transferExtrinsic = api.tx.example.transferNative(
             amount,
             recipient,
             destinationChainId
           );
           const injector = await web3FromSource(targetAccount.meta.source);
+          console.log("injector fetched ");
           setTransactionStatus("Initializing Transfer");
           setDepositAmount(amount);
           // setSelectedToken(tokenAddress);
           transferExtrinsic
-            .signAndSend(address, { signer: injector.signer }, ({ status }) => {
-              // Need to set the deposit nonce & Tx Status
-              if (status.isInBlock) {
-                console.log(
-                  `Completed at block hash #${status.asInBlock.toString()}`
-                );
-                api.query.chainBridge
-                  .chainNonces(destinationChainId)
-                  .then((response) => {
-                    setTransactionStatus("In Transit");
-                    setDepositNonce(`${response.toJSON()}`);
-                  })
-                  .catch((error: any) => {});
-              } else {
-                console.log(`Current status: ${status.type}`);
+            .signAndSend(
+              address,
+              { signer: injector.signer },
+              ({ status, isInBlock, isCompleted, isFinalized }) => {
+                // Need to set the deposit nonce & Tx Status
+                console.log("status.isBroadcast", status.isBroadcast); // Always false
+                console.log("status.isReady", status.isReady); // Always true
+                console.log("status.isInBlock", status.isInBlock); // Always false
+                console.log("isInBlock", isInBlock);
+                console.log("isCompleted", isCompleted);
+                console.log("isFinalized", isFinalized);
+
+                if (status.isInBlock) {
+                  console.log(
+                    `Completed at block hash #${status.asInBlock.toString()}`
+                  );
+                  api.query.chainBridge
+                    .chainNonces(destinationChainId)
+                    .then((response) => {
+                      setDepositNonce(`${response.toJSON()}`);
+                      setTransactionStatus("In Transit");
+                    })
+                    .catch((error: any) => {});
+                } else {
+                  console.log(`Current status: ${status.type}`);
+                }
               }
-            })
+            )
             .catch((error: any) => {
-              setTransactionStatus("Transfer Aborted");
               console.log(":( transaction failed", error);
+              setTransactionStatus("Transfer Aborted");
             });
         }
       }

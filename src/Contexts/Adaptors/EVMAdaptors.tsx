@@ -442,7 +442,7 @@ export const EVMDestinationAdaptorProvider = ({
 
   useEffect(() => {
     if (destinationBridge) return;
-
+    console.log("setting bridge");
     let provider;
     if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
       if (destinationChainConfig.rpcUrl.includes("infura")) {
@@ -476,12 +476,18 @@ export const EVMDestinationAdaptorProvider = ({
   }, [destinationChainConfig]);
 
   useEffect(() => {
+    console.log("In listener effect");
+    console.log("destinationChainConfig", destinationChainConfig);
+    console.log("homeChainConfig?.chainId", homeChainConfig?.chainId);
+    console.log("destinationBridge", destinationBridge);
+    console.log("depositNonce");
     if (
       destinationChainConfig &&
       homeChainConfig?.chainId &&
       destinationBridge &&
       depositNonce
     ) {
+      console.log("setting proposal listeners");
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(
           homeChainConfig.chainId,
