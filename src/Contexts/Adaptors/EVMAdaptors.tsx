@@ -108,36 +108,53 @@ export const EVMHomeAdaptorProvider = ({
     }
   }, [handleSetHomeChain, homeChains, network, setNetworkId]);
 
+  const [initialising, setInitialising] = useState(false);
   useEffect(() => {
-    checkIsReady();
+    if (initialising) return;
+    setInitialising(true);
 
-    if (homeChainConfig && network && isReady && provider) {
-      const signer = provider.getSigner();
-      if (!signer) {
-        console.log("No signer");
-        return;
-      }
+    checkIsReady()
+      .then((success) => {
+        if (success) {
+          if (homeChainConfig && network && isReady && provider) {
+            const signer = provider.getSigner();
+            if (!signer) {
+              console.log("No signer");
+              setInitialising(false);
+              return;
+            }
 
-      const bridge = BridgeFactory.connect(
-        homeChainConfig.bridgeAddress,
-        signer
-      );
-      setHomeBridge(bridge);
+            const bridge = BridgeFactory.connect(
+              homeChainConfig.bridgeAddress,
+              signer
+            );
+            setHomeBridge(bridge);
 
-      const wrapperToken = homeChainConfig.tokens.find(
-        (token) => token.isNativeWrappedToken
-      );
+            const wrapperToken = homeChainConfig.tokens.find(
+              (token) => token.isNativeWrappedToken
+            );
 
-      if (!wrapperToken) {
-        setWrapperConfig(undefined);
-        setWrapper(undefined);
-      } else {
-        setWrapperConfig(wrapperToken);
-        const connectedWeth = WethFactory.connect(wrapperToken.address, signer);
-        setWrapper(connectedWeth);
-      }
-    }
-  }, [homeChainConfig, isReady, provider, checkIsReady, network]);
+            if (!wrapperToken) {
+              setWrapperConfig(undefined);
+              setWrapper(undefined);
+            } else {
+              setWrapperConfig(wrapperToken);
+              const connectedWeth = WethFactory.connect(
+                wrapperToken.address,
+                signer
+              );
+              setWrapper(connectedWeth);
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setInitialising(false);
+      });
+  }, [initialising, homeChainConfig, isReady, provider, checkIsReady, network]);
 
   useEffect(() => {
     const getRelayerThreshold = async () => {
@@ -407,133 +424,135 @@ export const EVMHomeAdaptorProvider = ({
 export const EVMDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  // console.log("EVM destination loaded");
-  // const {
-  //   depositNonce,
-  //   destinationChainConfig,
-  //   homeChainConfig,
-  //   tokensDispatch,
-  //   setTransactionStatus,
-  //   setTransferTxHash,
-  //   setDepositVotes,
-  //   depositVotes,
-  // } = useNetworkManager();
+  console.log("EVM destination loaded");
+  const {
+    depositNonce,
+    destinationChainConfig,
+    homeChainConfig,
+    tokensDispatch,
+    setTransactionStatus,
+    setTransferTxHash,
+    setDepositVotes,
+    depositVotes,
+  } = useNetworkManager();
 
-  // const [destinationBridge, setDestinationBridge] = useState<
-  //   Bridge | undefined
-  // >(undefined);
+  const [destinationBridge, setDestinationBridge] = useState<
+    Bridge | undefined
+  >(undefined);
 
-  // useEffect(() => {
-  //   let provider;
-  //   if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
-  //     if (destinationChainConfig.rpcUrl.includes("infura")) {
-  //       const parts = destinationChainConfig.rpcUrl.split("/");
+  useEffect(() => {
+    if (destinationBridge) return;
 
-  //       provider = new ethers.providers.InfuraWebSocketProvider(
-  //         destinationChainConfig.networkId,
-  //         parts[parts.length - 1]
-  //       );
-  //     }
-  //     if (destinationChainConfig.rpcUrl.includes("alchemyapi")) {
-  //       const parts = destinationChainConfig.rpcUrl.split("/");
+    let provider;
+    if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
+      if (destinationChainConfig.rpcUrl.includes("infura")) {
+        const parts = destinationChainConfig.rpcUrl.split("/");
 
-  //       provider = new ethers.providers.AlchemyWebSocketProvider(
-  //         destinationChainConfig.networkId,
-  //         parts[parts.length - 1]
-  //       );
-  //     }
-  //   } else {
-  //     provider = new ethers.providers.JsonRpcProvider(
-  //       destinationChainConfig?.rpcUrl
-  //     );
-  //   }
-  //   if (destinationChainConfig && provider) {
-  //     const bridge = BridgeFactory.connect(
-  //       destinationChainConfig.bridgeAddress,
-  //       provider
-  //     );
-  //     setDestinationBridge(bridge);
-  //   }
-  // }, [destinationChainConfig]);
+        provider = new ethers.providers.InfuraWebSocketProvider(
+          destinationChainConfig.networkId,
+          parts[parts.length - 1]
+        );
+      }
+      if (destinationChainConfig.rpcUrl.includes("alchemyapi")) {
+        const parts = destinationChainConfig.rpcUrl.split("/");
 
-  // useEffect(() => {
-  //   if (
-  //     destinationChainConfig &&
-  //     homeChainConfig?.chainId &&
-  //     destinationBridge &&
-  //     depositNonce
-  //   ) {
-  //     destinationBridge.on(
-  //       destinationBridge.filters.ProposalEvent(
-  //         homeChainConfig.chainId,
-  //         BigNumber.from(depositNonce),
-  //         null,
-  //         null,
-  //         null
-  //       ),
-  //       (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-  //         switch (BigNumber.from(status).toNumber()) {
-  //           case 1:
-  //             tokensDispatch({
-  //               type: "addMessage",
-  //               payload: `Proposal created on ${destinationChainConfig.name}`,
-  //             });
-  //             break;
-  //           case 2:
-  //             tokensDispatch({
-  //               type: "addMessage",
-  //               payload: `Proposal has passed. Executing...`,
-  //             });
-  //             break;
-  //           case 3:
-  //             setTransactionStatus("Transfer Completed");
-  //             setTransferTxHash(tx.transactionHash);
-  //             break;
-  //           case 4:
-  //             setTransactionStatus("Transfer Aborted");
-  //             setTransferTxHash(tx.transactionHash);
-  //             break;
-  //         }
-  //       }
-  //     );
+        provider = new ethers.providers.AlchemyWebSocketProvider(
+          destinationChainConfig.networkId,
+          parts[parts.length - 1]
+        );
+      }
+    } else {
+      provider = new ethers.providers.JsonRpcProvider(
+        destinationChainConfig?.rpcUrl
+      );
+    }
+    if (destinationChainConfig && provider) {
+      const bridge = BridgeFactory.connect(
+        destinationChainConfig.bridgeAddress,
+        provider
+      );
+      setDestinationBridge(bridge);
+    }
+  }, [destinationChainConfig]);
 
-  //     destinationBridge.on(
-  //       destinationBridge.filters.ProposalVote(
-  //         homeChainConfig.chainId,
-  //         BigNumber.from(depositNonce),
-  //         null,
-  //         null
-  //       ),
-  //       async (originChainId, depositNonce, status, resourceId, tx) => {
-  //         const txReceipt = await tx.getTransactionReceipt();
-  //         if (txReceipt.status === 1) {
-  //           setDepositVotes(depositVotes + 1);
-  //         }
-  //         tokensDispatch({
-  //           type: "addMessage",
-  //           payload: {
-  //             address: String(txReceipt.from),
-  //             signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
-  //           },
-  //         });
-  //       }
-  //     );
-  //   }
-  //   return () => {
-  //     //@ts-ignore
-  //     destinationBridge?.removeAllListeners();
-  //   };
-  // }, [
-  //   depositNonce,
-  //   homeChainConfig,
-  //   destinationBridge,
-  //   depositVotes,
-  //   destinationChainConfig,
-  //   setDepositVotes,
-  //   setTransactionStatus,
-  //   setTransferTxHash,
-  //   tokensDispatch,
-  // ]);
+  useEffect(() => {
+    if (
+      destinationChainConfig &&
+      homeChainConfig?.chainId &&
+      destinationBridge &&
+      depositNonce
+    ) {
+      destinationBridge.on(
+        destinationBridge.filters.ProposalEvent(
+          homeChainConfig.chainId,
+          BigNumber.from(depositNonce),
+          null,
+          null,
+          null
+        ),
+        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+          switch (BigNumber.from(status).toNumber()) {
+            case 1:
+              tokensDispatch({
+                type: "addMessage",
+                payload: `Proposal created on ${destinationChainConfig.name}`,
+              });
+              break;
+            case 2:
+              tokensDispatch({
+                type: "addMessage",
+                payload: `Proposal has passed. Executing...`,
+              });
+              break;
+            case 3:
+              setTransactionStatus("Transfer Completed");
+              setTransferTxHash(tx.transactionHash);
+              break;
+            case 4:
+              setTransactionStatus("Transfer Aborted");
+              setTransferTxHash(tx.transactionHash);
+              break;
+          }
+        }
+      );
+
+      destinationBridge.on(
+        destinationBridge.filters.ProposalVote(
+          homeChainConfig.chainId,
+          BigNumber.from(depositNonce),
+          null,
+          null
+        ),
+        async (originChainId, depositNonce, status, resourceId, tx) => {
+          const txReceipt = await tx.getTransactionReceipt();
+          if (txReceipt.status === 1) {
+            setDepositVotes(depositVotes + 1);
+          }
+          tokensDispatch({
+            type: "addMessage",
+            payload: {
+              address: String(txReceipt.from),
+              signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
+            },
+          });
+        }
+      );
+    }
+    return () => {
+      //@ts-ignore
+      destinationBridge?.removeAllListeners();
+    };
+  }, [
+    depositNonce,
+    homeChainConfig,
+    destinationBridge,
+    depositVotes,
+    destinationChainConfig,
+    setDepositVotes,
+    setTransactionStatus,
+    setTransferTxHash,
+    tokensDispatch,
+  ]);
 
   return (
     <DestinationBridgeContext.Provider value={{}}>

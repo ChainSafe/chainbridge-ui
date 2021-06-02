@@ -331,15 +331,17 @@ export const SubstrateDestinationAdaptorProvider = ({
   const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
 
+  const [initiaising, setInitialising] = useState(false);
   useEffect(() => {
     // Once the chain ID has been set in the network context, the destination configuration will be automatically set thus triggering this
-    if (!destinationChainConfig) return;
-
+    if (!destinationChainConfig || initiaising || api) return;
+    setInitialising(true);
     const provider = new WsProvider(destinationChainConfig.rpcUrl);
     ApiPromise.create({ provider, types })
       .then((api) => {
         types && registry.register(types);
         setApi(api);
+        setInitialising(false);
       })
       .catch(console.error);
   }, [destinationChainConfig, registry]);
