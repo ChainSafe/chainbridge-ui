@@ -62,15 +62,17 @@ export const SubstrateHomeAdaptorProvider = ({
     handleConnect();
   }, []);
 
+  const [initiaising, setInitialising] = useState(false);
   useEffect(() => {
     // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
-    if (!homeChainConfig) return;
-
+    if (!homeChainConfig || initiaising || api) return;
+    setInitialising(true);
     const provider = new WsProvider(homeChainConfig.rpcUrl);
     ApiPromise.create({ provider, types })
       .then((api) => {
         types && registry.register(types);
         setApi(api);
+        setInitialising(false);
       })
       .catch(console.error);
   }, [homeChainConfig, registry]);
@@ -314,6 +316,7 @@ export const SubstrateHomeAdaptorProvider = ({
 export const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
+  // Comment out everything till the return statement for evm transfers to work
   const {
     depositNonce,
     destinationChainConfig,
@@ -329,7 +332,7 @@ export const SubstrateDestinationAdaptorProvider = ({
   const [api, setApi] = useState<ApiPromise | undefined>();
 
   useEffect(() => {
-    // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
+    // Once the chain ID has been set in the network context, the destination configuration will be automatically set thus triggering this
     if (!destinationChainConfig) return;
 
     const provider = new WsProvider(destinationChainConfig.rpcUrl);
@@ -379,8 +382,11 @@ export const SubstrateDestinationAdaptorProvider = ({
       });
       setListenerActive(unsubscribe);
     } else if (listenerActive && !depositNonce) {
+      console.log("Killing subscription");
       const unsubscribeCall = async () => {
+        console.log("beginning unsubscribe");
         await unsubscribeCall();
+        console.log("unsubscribe complete");
         setListenerActive(undefined);
       };
     }

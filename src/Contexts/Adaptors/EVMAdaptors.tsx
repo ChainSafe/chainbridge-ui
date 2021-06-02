@@ -227,7 +227,10 @@ export const EVMHomeAdaptorProvider = ({
           address,
           homeChainConfig.erc20HandlerAddress
         );
-
+        console.log(
+          "Number(utils.formatUnits(currentAllowance, erc20Decimals))",
+          Number(utils.formatUnits(currentAllowance, erc20Decimals))
+        );
         if (
           Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
         ) {
@@ -252,24 +255,33 @@ export const EVMHomeAdaptorProvider = ({
               )
             ).wait(1);
           }
-          await (
-            await erc20.approve(
-              homeChainConfig.erc20HandlerAddress,
-              BigNumber.from(
-                utils.parseUnits(amount.toString(), erc20Decimals)
-              ),
-              {
-                gasPrice: BigNumber.from(
-                  utils.parseUnits(
-                    (homeChainConfig.defaultGasPrice || gasPrice).toString(),
-                    9
-                  )
-                ).toString(),
-              }
-            )
-          ).wait(1);
+          console.log("Approving");
+          try {
+            await (
+              await erc20.approve(
+                homeChainConfig.erc20HandlerAddress,
+                BigNumber.from(
+                  utils.parseUnits(amount.toString(), erc20Decimals)
+                ),
+                {
+                  gasPrice: BigNumber.from(
+                    utils.parseUnits(
+                      (homeChainConfig.defaultGasPrice || gasPrice).toString(),
+                      9
+                    )
+                  ).toString(),
+                }
+              )
+            ).wait(1);
+          } catch (error) {
+            console.error(error);
+            debugger;
+          }
+
+          console.log("Approve waited");
         }
 
+        console.log("setting listener for deposit");
         homeBridge.once(
           homeBridge.filters.Deposit(
             destinationChainId,
@@ -282,6 +294,7 @@ export const EVMHomeAdaptorProvider = ({
           }
         );
 
+        console.log("Starting deposit");
         await (
           await homeBridge.deposit(destinationChainId, token.resourceId, data, {
             gasPrice: utils.parseUnits(
@@ -291,6 +304,8 @@ export const EVMHomeAdaptorProvider = ({
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
         ).wait();
+        console.log("deposit complete");
+
         return Promise.resolve();
       } catch (error) {}
     },
@@ -392,133 +407,133 @@ export const EVMHomeAdaptorProvider = ({
 export const EVMDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  console.log("EVM destination loaded");
-  const {
-    depositNonce,
-    destinationChainConfig,
-    homeChainConfig,
-    tokensDispatch,
-    setTransactionStatus,
-    setTransferTxHash,
-    setDepositVotes,
-    depositVotes,
-  } = useNetworkManager();
+  // console.log("EVM destination loaded");
+  // const {
+  //   depositNonce,
+  //   destinationChainConfig,
+  //   homeChainConfig,
+  //   tokensDispatch,
+  //   setTransactionStatus,
+  //   setTransferTxHash,
+  //   setDepositVotes,
+  //   depositVotes,
+  // } = useNetworkManager();
 
-  const [destinationBridge, setDestinationBridge] = useState<
-    Bridge | undefined
-  >(undefined);
+  // const [destinationBridge, setDestinationBridge] = useState<
+  //   Bridge | undefined
+  // >(undefined);
 
-  useEffect(() => {
-    let provider;
-    if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
-      if (destinationChainConfig.rpcUrl.includes("infura")) {
-        const parts = destinationChainConfig.rpcUrl.split("/");
+  // useEffect(() => {
+  //   let provider;
+  //   if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
+  //     if (destinationChainConfig.rpcUrl.includes("infura")) {
+  //       const parts = destinationChainConfig.rpcUrl.split("/");
 
-        provider = new ethers.providers.InfuraWebSocketProvider(
-          destinationChainConfig.networkId,
-          parts[parts.length - 1]
-        );
-      }
-      if (destinationChainConfig.rpcUrl.includes("alchemyapi")) {
-        const parts = destinationChainConfig.rpcUrl.split("/");
+  //       provider = new ethers.providers.InfuraWebSocketProvider(
+  //         destinationChainConfig.networkId,
+  //         parts[parts.length - 1]
+  //       );
+  //     }
+  //     if (destinationChainConfig.rpcUrl.includes("alchemyapi")) {
+  //       const parts = destinationChainConfig.rpcUrl.split("/");
 
-        provider = new ethers.providers.AlchemyWebSocketProvider(
-          destinationChainConfig.networkId,
-          parts[parts.length - 1]
-        );
-      }
-    } else {
-      provider = new ethers.providers.JsonRpcProvider(
-        destinationChainConfig?.rpcUrl
-      );
-    }
-    if (destinationChainConfig && provider) {
-      const bridge = BridgeFactory.connect(
-        destinationChainConfig.bridgeAddress,
-        provider
-      );
-      setDestinationBridge(bridge);
-    }
-  }, [destinationChainConfig]);
+  //       provider = new ethers.providers.AlchemyWebSocketProvider(
+  //         destinationChainConfig.networkId,
+  //         parts[parts.length - 1]
+  //       );
+  //     }
+  //   } else {
+  //     provider = new ethers.providers.JsonRpcProvider(
+  //       destinationChainConfig?.rpcUrl
+  //     );
+  //   }
+  //   if (destinationChainConfig && provider) {
+  //     const bridge = BridgeFactory.connect(
+  //       destinationChainConfig.bridgeAddress,
+  //       provider
+  //     );
+  //     setDestinationBridge(bridge);
+  //   }
+  // }, [destinationChainConfig]);
 
-  useEffect(() => {
-    if (
-      destinationChainConfig &&
-      homeChainConfig?.chainId &&
-      destinationBridge &&
-      depositNonce
-    ) {
-      destinationBridge.on(
-        destinationBridge.filters.ProposalEvent(
-          homeChainConfig.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null,
-          null
-        ),
-        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-          switch (BigNumber.from(status).toNumber()) {
-            case 1:
-              tokensDispatch({
-                type: "addMessage",
-                payload: `Proposal created on ${destinationChainConfig.name}`,
-              });
-              break;
-            case 2:
-              tokensDispatch({
-                type: "addMessage",
-                payload: `Proposal has passed. Executing...`,
-              });
-              break;
-            case 3:
-              setTransactionStatus("Transfer Completed");
-              setTransferTxHash(tx.transactionHash);
-              break;
-            case 4:
-              setTransactionStatus("Transfer Aborted");
-              setTransferTxHash(tx.transactionHash);
-              break;
-          }
-        }
-      );
+  // useEffect(() => {
+  //   if (
+  //     destinationChainConfig &&
+  //     homeChainConfig?.chainId &&
+  //     destinationBridge &&
+  //     depositNonce
+  //   ) {
+  //     destinationBridge.on(
+  //       destinationBridge.filters.ProposalEvent(
+  //         homeChainConfig.chainId,
+  //         BigNumber.from(depositNonce),
+  //         null,
+  //         null,
+  //         null
+  //       ),
+  //       (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+  //         switch (BigNumber.from(status).toNumber()) {
+  //           case 1:
+  //             tokensDispatch({
+  //               type: "addMessage",
+  //               payload: `Proposal created on ${destinationChainConfig.name}`,
+  //             });
+  //             break;
+  //           case 2:
+  //             tokensDispatch({
+  //               type: "addMessage",
+  //               payload: `Proposal has passed. Executing...`,
+  //             });
+  //             break;
+  //           case 3:
+  //             setTransactionStatus("Transfer Completed");
+  //             setTransferTxHash(tx.transactionHash);
+  //             break;
+  //           case 4:
+  //             setTransactionStatus("Transfer Aborted");
+  //             setTransferTxHash(tx.transactionHash);
+  //             break;
+  //         }
+  //       }
+  //     );
 
-      destinationBridge.on(
-        destinationBridge.filters.ProposalVote(
-          homeChainConfig.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null
-        ),
-        async (originChainId, depositNonce, status, resourceId, tx) => {
-          const txReceipt = await tx.getTransactionReceipt();
-          if (txReceipt.status === 1) {
-            setDepositVotes(depositVotes + 1);
-          }
-          tokensDispatch({
-            type: "addMessage",
-            payload: {
-              address: String(txReceipt.from),
-              signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
-            },
-          });
-        }
-      );
-    }
-    return () => {
-      //@ts-ignore
-      destinationBridge?.removeAllListeners();
-    };
-  }, [
-    depositNonce,
-    homeChainConfig,
-    destinationBridge,
-    depositVotes,
-    destinationChainConfig,
-    setDepositVotes,
-    setTransactionStatus,
-    setTransferTxHash,
-    tokensDispatch,
-  ]);
+  //     destinationBridge.on(
+  //       destinationBridge.filters.ProposalVote(
+  //         homeChainConfig.chainId,
+  //         BigNumber.from(depositNonce),
+  //         null,
+  //         null
+  //       ),
+  //       async (originChainId, depositNonce, status, resourceId, tx) => {
+  //         const txReceipt = await tx.getTransactionReceipt();
+  //         if (txReceipt.status === 1) {
+  //           setDepositVotes(depositVotes + 1);
+  //         }
+  //         tokensDispatch({
+  //           type: "addMessage",
+  //           payload: {
+  //             address: String(txReceipt.from),
+  //             signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
+  //           },
+  //         });
+  //       }
+  //     );
+  //   }
+  //   return () => {
+  //     //@ts-ignore
+  //     destinationBridge?.removeAllListeners();
+  //   };
+  // }, [
+  //   depositNonce,
+  //   homeChainConfig,
+  //   destinationBridge,
+  //   depositVotes,
+  //   destinationChainConfig,
+  //   setDepositVotes,
+  //   setTransactionStatus,
+  //   setTransferTxHash,
+  //   tokensDispatch,
+  // ]);
 
   return (
     <DestinationBridgeContext.Provider value={{}}>

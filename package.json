@@ -65,6 +65,7 @@
     "start:tunnel": "./ngrok http https://localhost:3000",
     "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V"
   },
+  "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {
     "extends": "react-app"
   },
