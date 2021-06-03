@@ -3,7 +3,11 @@ import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { BigNumber, ethers, utils } from "ethers";
 import { useCallback, useEffect, useState } from "react";
-import { BridgeConfig, TokenConfig } from "../../chainbridgeConfig";
+import {
+  BridgeConfig,
+  chainbridgeConfig,
+  TokenConfig,
+} from "../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../Contracts/Erc20DetailedFactory";
 import { Weth } from "../../Contracts/Weth";
 import { WethFactory } from "../../Contracts/WethFactory";
@@ -15,6 +19,7 @@ import {
 import { HomeBridgeContext } from "../HomeBridgeContext";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
+import { decodeAddress } from "@polkadot/util-crypto";
 
 const resetAllowanceLogicFor = [
   "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
@@ -67,6 +72,7 @@ export const EVMHomeAdaptorProvider = ({
     handleSetHomeChain,
     homeChains,
     setNetworkId,
+    destinationChains,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -187,6 +193,16 @@ export const EVMHomeAdaptorProvider = ({
         return;
       }
 
+      const destinationChain = chainbridgeConfig.chains.find(
+        (c) => c.chainId === destinationChainId
+      );
+      debugger;
+      if (destinationChain?.type === "Substrate") {
+        recipient = `0x${Buffer.from(decodeAddress(recipient)).toString(
+          "hex"
+        )}`;
+      }
+      debugger;
       const token = homeChainConfig.tokens.find(
         (token) => token.address === tokenAddress
       );
@@ -200,17 +216,6 @@ export const EVMHomeAdaptorProvider = ({
       setSelectedToken(tokenAddress);
       const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
       const erc20Decimals = tokens[tokenAddress].decimals;
-      const amountString = utils.hexZeroPad(
-        // TODO Wire up dynamic token decimals
-        BigNumber.from(
-          utils.parseUnits(amount.toString(), erc20Decimals)
-        ).toHexString(),
-        32
-      );
-      const addressLengthString = utils.hexZeroPad(
-        utils.hexlify((recipient.length - 2) / 2),
-        32
-      );
 
       const data =
         "0x" +
@@ -313,7 +318,10 @@ export const EVMHomeAdaptorProvider = ({
         console.log("deposit complete");
 
         return Promise.resolve();
-      } catch (error) {}
+      } catch (error) {
+        setTransactionStatus("Transfer Aborted");
+        setSelectedToken(tokenAddress);
+      }
     },
     [
       homeBridge,
