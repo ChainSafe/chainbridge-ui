@@ -469,7 +469,7 @@ export const EVMDestinationAdaptorProvider = ({
     console.log("destinationChainConfig", destinationChainConfig);
     console.log("homeChainConfig?.chainId", homeChainConfig?.chainId);
     console.log("destinationBridge", destinationBridge);
-    console.log("depositNonce");
+    console.log("depositNonce", depositNonce);
     if (
       destinationChainConfig &&
       homeChainConfig?.chainId &&

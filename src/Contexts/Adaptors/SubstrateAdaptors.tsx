@@ -111,7 +111,6 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [api, handleSetHomeChain, homeChainConfig, homeChains]);
 
   useEffect(() => {
-    console.log("useEffet 1");
     // For all constants & essential values like:
     // Relayer Threshold, resources IDs & Bridge Fees
     // It is recommended to collect state at this point
@@ -139,7 +138,6 @@ export const SubstrateHomeAdaptorProvider = ({
   // }, [api]);
 
   useEffect(() => {
-    console.log("useEffet 2");
     let unsubscribe: VoidFn | undefined;
     if (api) {
       api.query.system
@@ -200,7 +198,6 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [isReady, address, handleSetHomeChain, homeChains]);
 
   useEffect(() => {
-    console.log("useEffect 3");
     // This is a simple check
     // The reason for having a isReady is that the UI can lazy load data from this point
     api?.isReady.then(() => setIsReady(true));
@@ -209,12 +206,8 @@ export const SubstrateHomeAdaptorProvider = ({
   const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
     keyring.loadAll({ isDevelopment: true }, injectedAccounts);
 
-    setAddress(
-      injectedAccounts.find(
-        (acc) =>
-          acc.address === "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
-      )?.address || injectedAccounts[0].address
-    );
+    // todo there needs to be an account selection here
+    setAddress(injectedAccounts[0].address);
   };
 
   const deposit = useCallback(
@@ -265,7 +258,6 @@ export const SubstrateHomeAdaptorProvider = ({
                       "api.events.chainBridge.FungibleTransfer.is(event)",
                       api.events.chainBridge.FungibleTransfer.is(event)
                     );
-                    return api.events.chainBridge.FungibleTransfer.is(event);
                   });
                   api.query.chainBridge
                     .chainNonces(destinationChainId)
@@ -390,7 +382,6 @@ export const SubstrateDestinationAdaptorProvider = ({
       console.log("Killing subscription");
       const unsubscribeCall = async () => {
         console.log("beginning unsubscribe");
-        // I don't get how that can work invoking the function recursively sounds very dangerous
         await unsubscribeCall();
         console.log("unsubscribe complete");
         setListenerActive(undefined);
