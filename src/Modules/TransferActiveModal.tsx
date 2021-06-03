@@ -154,7 +154,6 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     selectedToken,
     tokens,
   } = useChainbridge();
-  console.log("transactionStatus", transactionStatus);
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
   return (
     <CustomModal
