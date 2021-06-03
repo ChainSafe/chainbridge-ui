@@ -316,7 +316,14 @@ export const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
   // Comment out everything till the return statement for evm transfers to work
-  const { depositNonce, destinationChainConfig } = useNetworkManager();
+  const {
+    depositNonce,
+    destinationChainConfig,
+    setDepositVotes,
+    depositVotes,
+    tokensDispatch,
+    setTransactionStatus,
+  } = useNetworkManager();
 
   const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -366,6 +373,25 @@ export const SubstrateDestinationAdaptorProvider = ({
           event.data.forEach((data, index) => {
             console.log(types[index].type + ";" + data.toString());
           });
+
+          if (event.section === "chainBridge" && event.method === "VoteFor") {
+            setDepositVotes(depositVotes + 1);
+            tokensDispatch({
+              type: "addMessage",
+              payload: {
+                address: "Substrate Relayer",
+                signed: "Confirmed",
+              },
+            });
+          }
+
+          if (
+            event.section === "chainBridge" &&
+            event.method === "ProposalApproved"
+          ) {
+            setDepositVotes(depositVotes + 1);
+            setTransactionStatus("Transfer Completed");
+          }
         });
       });
       setListenerActive(unsubscribe);
