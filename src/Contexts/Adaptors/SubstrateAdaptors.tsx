@@ -242,7 +242,7 @@ export const SubstrateHomeAdaptorProvider = ({
 
                 if (status.isInBlock || status.isFinalized) {
                   console.log(
-                    `Completed at block hash #${status.asInBlock.toString()}`
+                    `Completed at block hash #${status.isInBlock.toString()}`
                   );
                   events.filter(({ event }) => {
                     console.log("event", event);
