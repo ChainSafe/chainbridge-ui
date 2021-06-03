@@ -19,7 +19,7 @@ import types from "../../bridgeTypes.json";
 import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
-import { UnsubscribePromise } from "@polkadot/api/types";
+import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { ExtrinsicStatus } from "@polkadot/types/interfaces";
 
 type injectedAccountType = {
@@ -111,6 +111,7 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [api, handleSetHomeChain, homeChainConfig, homeChains]);
 
   useEffect(() => {
+    console.log("useEffet 1");
     // For all constants & essential values like:
     // Relayer Threshold, resources IDs & Bridge Fees
     // It is recommended to collect state at this point
@@ -138,25 +139,32 @@ export const SubstrateHomeAdaptorProvider = ({
   // }, [api]);
 
   useEffect(() => {
+    console.log("useEffet 2");
+    let unsubscribe: VoidFn | undefined;
     if (api) {
-      // let subscription: UnsubscribePromise;
-      api.query.system.account(address, (result) => {
-        const {
-          data: { free: balance },
-        } = result.toJSON() as any;
-        setTokens({
-          CSS: {
-            balance: balance,
-            balanceBN: new BN(balance),
-            decimals: 15,
-            name: "Chainbridge",
-            symbol: "CSS",
-          },
-        });
-      });
+      api.query.system
+        .account(address, (result) => {
+          const {
+            data: { free: balance },
+          } = result.toJSON() as any;
+          setTokens({
+            CSS: {
+              balance: balance,
+              balanceBN: new BN(balance),
+              decimals: 15,
+              name: "Chainbridge",
+              symbol: "CSS",
+            },
+          });
+        })
+        .then((unsub) => {
+          unsubscribe = unsub;
+        })
+        .catch(console.error);
     }
-    // TODO unsubscribe
-    return () => {};
+    return () => {
+      unsubscribe && unsubscribe();
+    };
   }, [api, address]);
 
   const handleConnect = useCallback(async () => {
@@ -192,6 +200,7 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [isReady, address, handleSetHomeChain, homeChains]);
 
   useEffect(() => {
+    console.log("useEffect 3");
     // This is a simple check
     // The reason for having a isReady is that the UI can lazy load data from this point
     api?.isReady.then(() => setIsReady(true));
@@ -200,7 +209,12 @@ export const SubstrateHomeAdaptorProvider = ({
   const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
     keyring.loadAll({ isDevelopment: true }, injectedAccounts);
 
-    setAddress(injectedAccounts[0].address);
+    setAddress(
+      injectedAccounts.find(
+        (acc) =>
+          acc.address === "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+      )?.address || injectedAccounts[0].address
+    );
   };
 
   const deposit = useCallback(
@@ -236,14 +250,15 @@ export const SubstrateHomeAdaptorProvider = ({
                 // Need to set the deposit nonce & Tx Status
                 console.log("status.isBroadcast", status.isBroadcast); // Always false
                 console.log("status.isReady", status.isReady); // Always true
-                console.log("status.isInBlock", status.isInBlock); // Always false
                 console.log("status.isInBlock", status.isInBlock);
                 console.log("status.isFinalized", status.isFinalized);
 
-                if (status.isInBlock || status.isFinalized) {
+                status.isInBlock &&
                   console.log(
                     `Completed at block hash #${status.asInBlock.toString()}`
                   );
+
+                if (status.isFinalized) {
                   events.filter(({ event }) => {
                     console.log("event", event);
                     console.log(
@@ -258,7 +273,9 @@ export const SubstrateHomeAdaptorProvider = ({
                       setDepositNonce(`${response.toJSON()}`);
                       setTransactionStatus("In Transit");
                     })
-                    .catch((error: any) => {});
+                    .catch((error) => {
+                      console.error(error);
+                    });
                 } else {
                   console.log(`Current status: ${status.type}`);
                 }
@@ -373,6 +390,7 @@ export const SubstrateDestinationAdaptorProvider = ({
       console.log("Killing subscription");
       const unsubscribeCall = async () => {
         console.log("beginning unsubscribe");
+        // I don't get how that can work invoking the function recursively sounds very dangerous
         await unsubscribeCall();
         console.log("unsubscribe complete");
         setListenerActive(undefined);
