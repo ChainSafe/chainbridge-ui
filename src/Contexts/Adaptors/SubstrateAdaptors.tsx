@@ -284,29 +284,6 @@ export const SubstrateHomeAdaptorProvider = ({
     return "Not implemented";
   };
 
-  // useEffect(() => {
-  //   if (api) {
-  //     // Wire up event listeners
-  //     // Subscribe to system events via storage
-  //     api.query.system.events((events) => {
-  //       console.log('----- Received ' + events.length + ' event(s): -----');
-  //       // loop through the Vec<EventRecord>
-  //       events.forEach((record) => {
-  //       // extract the phase, event and the event types
-  //         const { event, phase } = record;
-  //         const types = event.typeDef;
-  //         // show what we are busy with
-  //         console.log(event.section + ':' + event.method + '::' + 'phase=' + phase.toString());
-  //         console.log(event.meta.documentation.toString());
-  //         // loop through each of the parameters, displaying the type and data
-  //         event.data.forEach((data, index) => {
-  //           console.log(types[index].type + ';' + data.toString());
-  //         });
-  //       });
-  //     });
-  //   }
-  // }, [api]);
-
   return (
     <HomeBridgeContext.Provider
       value={{
@@ -339,16 +316,7 @@ export const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
   // Comment out everything till the return statement for evm transfers to work
-  const {
-    depositNonce,
-    destinationChainConfig,
-    homeChainConfig,
-    tokensDispatch,
-    setTransactionStatus,
-    setTransferTxHash,
-    setDepositVotes,
-    depositVotes,
-  } = useNetworkManager();
+  const { depositNonce, destinationChainConfig } = useNetworkManager();
 
   const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -367,10 +335,6 @@ export const SubstrateDestinationAdaptorProvider = ({
       })
       .catch(console.error);
   }, [destinationChainConfig, registry]);
-
-  const [destinationBridge, setDestinationBridge] = useState<
-    Bridge | undefined
-  >(undefined);
 
   const [listenerActive, setListenerActive] = useState<
     UnsubscribePromise | undefined

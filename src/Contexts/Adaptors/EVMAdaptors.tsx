@@ -24,7 +24,6 @@ const resetAllowanceLogicFor = [
 export const EVMHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
-  console.log("EVM home loaded");
   const {
     isReady,
     network,
@@ -85,17 +84,6 @@ export const EVMHomeAdaptorProvider = ({
     undefined
   );
 
-  // const [initialised, setInitialised] = useState<"init" | "fetching" | "done">("init")
-  // useEffect(() => {
-  //   if (initialised === "init") {
-  //     setInitialised("fetching")
-  //     onboard?.walletSelect("metamask").then((success) => {
-  //       debugger
-  //       setInitialised("done")
-  //     })
-  //   }
-  // }, [initialised])
-
   useEffect(() => {
     if (network) {
       const chain = homeChains.find(
@@ -110,9 +98,8 @@ export const EVMHomeAdaptorProvider = ({
 
   const [initialising, setInitialising] = useState(false);
   useEffect(() => {
-    console.log("starting init");
     if (initialising || homeBridge) return;
-    console.log("init valid");
+    console.log("starting init");
     setInitialising(true);
 
     checkIsReady()
@@ -313,7 +300,7 @@ export const EVMHomeAdaptorProvider = ({
           }
         );
 
-        console.log("Starting deposit");
+        console.log("Starting deposit", homeBridge);
         await (
           await homeBridge.deposit(destinationChainId, token.resourceId, data, {
             gasPrice: utils.parseUnits(
