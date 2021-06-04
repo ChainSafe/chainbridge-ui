@@ -22,7 +22,7 @@ const NetworkSelectModal = () => {
 
   return (
     <Modal
-      active={walletType !== "unset" && !isReady}
+      active={walletType !== "unset" && walletType != "Ethereum" && !isReady}
       closePosition="right"
       className={classes.root}
     >
@@ -34,11 +34,6 @@ const NetworkSelectModal = () => {
           <Button onClick={() => setWalletType("Substrate")}>
             Use Substrate wallet
           </Button>
-        </article>
-      )}
-      {walletType === "Ethereum" && (
-        <article>
-          <Button onClick={() => connect()}>Connect</Button>
         </article>
       )}
       {walletType === "Substrate" && (
