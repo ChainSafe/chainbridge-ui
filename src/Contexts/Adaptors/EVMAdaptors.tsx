@@ -196,13 +196,11 @@ export const EVMHomeAdaptorProvider = ({
       const destinationChain = chainbridgeConfig.chains.find(
         (c) => c.chainId === destinationChainId
       );
-      debugger;
       if (destinationChain?.type === "Substrate") {
         recipient = `0x${Buffer.from(decodeAddress(recipient)).toString(
           "hex"
         )}`;
       }
-      debugger;
       const token = homeChainConfig.tokens.find(
         (token) => token.address === tokenAddress
       );
@@ -238,10 +236,7 @@ export const EVMHomeAdaptorProvider = ({
           address,
           homeChainConfig.erc20HandlerAddress
         );
-        console.log(
-          "Number(utils.formatUnits(currentAllowance, erc20Decimals))",
-          Number(utils.formatUnits(currentAllowance, erc20Decimals))
-        );
+
         if (
           Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
         ) {
@@ -266,33 +261,24 @@ export const EVMHomeAdaptorProvider = ({
               )
             ).wait(1);
           }
-          console.log("Approving");
-          try {
-            await (
-              await erc20.approve(
-                homeChainConfig.erc20HandlerAddress,
-                BigNumber.from(
-                  utils.parseUnits(amount.toString(), erc20Decimals)
-                ),
-                {
-                  gasPrice: BigNumber.from(
-                    utils.parseUnits(
-                      (homeChainConfig.defaultGasPrice || gasPrice).toString(),
-                      9
-                    )
-                  ).toString(),
-                }
-              )
-            ).wait(1);
-          } catch (error) {
-            console.error(error);
-            debugger;
-          }
-
-          console.log("Approve waited");
+          await (
+            await erc20.approve(
+              homeChainConfig.erc20HandlerAddress,
+              BigNumber.from(
+                utils.parseUnits(amount.toString(), erc20Decimals)
+              ),
+              {
+                gasPrice: BigNumber.from(
+                  utils.parseUnits(
+                    (homeChainConfig.defaultGasPrice || gasPrice).toString(),
+                    9
+                  )
+                ).toString(),
+              }
+            )
+          ).wait(1);
         }
 
-        console.log("setting listener for deposit");
         homeBridge.once(
           homeBridge.filters.Deposit(
             destinationChainId,
@@ -305,7 +291,6 @@ export const EVMHomeAdaptorProvider = ({
           }
         );
 
-        console.log("Starting deposit", homeBridge);
         await (
           await homeBridge.deposit(destinationChainId, token.resourceId, data, {
             gasPrice: utils.parseUnits(
@@ -315,7 +300,6 @@ export const EVMHomeAdaptorProvider = ({
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
         ).wait();
-        console.log("deposit complete");
 
         return Promise.resolve();
       } catch (error) {
@@ -439,7 +423,6 @@ export const EVMDestinationAdaptorProvider = ({
 
   useEffect(() => {
     if (destinationBridge) return;
-    console.log("setting bridge");
     let provider;
     if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
       if (destinationChainConfig.rpcUrl.includes("infura")) {
@@ -473,18 +456,12 @@ export const EVMDestinationAdaptorProvider = ({
   }, [destinationChainConfig]);
 
   useEffect(() => {
-    console.log("In listener effect");
-    console.log("destinationChainConfig", destinationChainConfig);
-    console.log("homeChainConfig?.chainId", homeChainConfig?.chainId);
-    console.log("destinationBridge", destinationBridge);
-    console.log("depositNonce");
     if (
       destinationChainConfig &&
       homeChainConfig?.chainId &&
       destinationBridge &&
       depositNonce
     ) {
-      console.log("setting proposal listeners");
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(
           homeChainConfig.chainId,

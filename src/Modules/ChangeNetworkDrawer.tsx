@@ -55,6 +55,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         </Button>
         <Button
           onClick={() => {
+            // TODO: trigger unsubscribes & clear all state
             setWalletType("select");
           }}
           variant="outline"

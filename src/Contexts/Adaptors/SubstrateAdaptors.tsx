@@ -19,8 +19,7 @@ import types from "../../bridgeTypes.json";
 import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
-import { UnsubscribePromise } from "@polkadot/api/types";
-import { ExtrinsicStatus } from "@polkadot/types/interfaces";
+import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 
 type injectedAccountType = {
   address: string;
@@ -78,17 +77,6 @@ export const SubstrateHomeAdaptorProvider = ({
       .catch(console.error);
   }, [homeChainConfig, registry]);
 
-  const getChainNonces = useCallback(
-    async (chainId: number) => {
-      if (api) {
-        return await api.query.chainBridge.chainNonces(chainId);
-      } else {
-        throw Error("Api not connected");
-      }
-    },
-    [api]
-  );
-
   const getRelayerThreshold = useCallback(async () => {
     if (api) {
       const relayerThreshold = await api.query.chainBridge.relayerThreshold();
@@ -120,43 +108,34 @@ export const SubstrateHomeAdaptorProvider = ({
     }
   }, [api, getRelayerThreshold, confirmChainID]);
 
-  // const subscribeToBalance = useCallback(async () => {
-  //   if (api) {
-  //     api.query.system.account(address, (result) => {
-  //       const { data: { free: balance }} = (result.toHuman()) as any
-  //       setTokens({
-  //         "CSS": {
-  //           balance: balance,
-  //           balanceBN: new BN(balance),
-  //           decimals: 15,
-  //           name: "Chainbridge",
-  //           symbol: "CSS",
-  //         }
-  //       })
-  //     });
-  //   }
-  // }, [api]);
-
   useEffect(() => {
+    let unsubscribe: VoidFn | undefined;
     if (api) {
       // let subscription: UnsubscribePromise;
-      api.query.system.account(address, (result) => {
-        const {
-          data: { free: balance },
-        } = result.toJSON() as any;
-        setTokens({
-          CSS: {
-            balance: balance,
-            balanceBN: new BN(balance),
-            decimals: 15,
-            name: "Chainbridge",
-            symbol: "CSS",
-          },
-        });
-      });
+      api.query.system
+        .account(address, (result) => {
+          const {
+            data: { free: balance },
+          } = result.toJSON() as any;
+          setTokens({
+            CSS: {
+              balance: balance,
+              balanceBN: new BN(balance),
+              decimals: 15,
+              name: "Chainbridge",
+              symbol: "CSS",
+            },
+          });
+        })
+        .then((unsub) => {
+          unsubscribe = unsub;
+        })
+        .catch(console.error);
     }
     // TODO unsubscribe
-    return () => {};
+    return () => {
+      unsubscribe && unsubscribe();
+    };
   }, [api, address]);
 
   const handleConnect = useCallback(async () => {
@@ -211,45 +190,31 @@ export const SubstrateHomeAdaptorProvider = ({
       destinationChainId: number
     ) => {
       if (api && address) {
-        console.log("fetchin counts");
         const allAccounts = await web3Accounts();
         const targetAccount = allAccounts.find(
           (item) => item.address === address
         );
         if (targetAccount) {
-          console.log("target fetched");
           const transferExtrinsic = api.tx.example.transferNative(
             amount,
             recipient,
             destinationChainId
           );
           const injector = await web3FromSource(targetAccount.meta.source);
-          console.log("injector fetched ");
           setTransactionStatus("Initializing Transfer");
           setDepositAmount(amount);
-          // setSelectedToken(tokenAddress);
           transferExtrinsic
             .signAndSend(
               address,
               { signer: injector.signer },
               ({ status, events, isFinalized }) => {
                 // Need to set the deposit nonce & Tx Status
-                console.log("status.isBroadcast", status.isBroadcast); // Always false
-                console.log("status.isReady", status.isReady); // Always true
-                console.log("status.isInBlock", status.isInBlock); // Always false
-                console.log("status.isInBlock", status.isInBlock);
-                console.log("status.isFinalized", status.isFinalized);
 
                 if (status.isInBlock || status.isFinalized) {
                   console.log(
                     `Completed at block hash #${status.isInBlock.toString()}`
                   );
                   events.filter(({ event }) => {
-                    console.log("event", event);
-                    console.log(
-                      "api.events.chainBridge.FungibleTransfer.is(event)",
-                      api.events.chainBridge.FungibleTransfer.is(event)
-                    );
                     return api.events.chainBridge.FungibleTransfer.is(event);
                   });
                   api.query.chainBridge
@@ -351,7 +316,6 @@ export const SubstrateDestinationAdaptorProvider = ({
     if (api && !listenerActive && depositNonce) {
       // Wire up event listeners
       // Subscribe to system events via storage
-      console.log("Wiring up the events");
       const unsubscribe = api.query.system.events((events) => {
         console.log("----- Received " + events.length + " event(s): -----");
         // loop through the Vec<EventRecord>
@@ -396,11 +360,8 @@ export const SubstrateDestinationAdaptorProvider = ({
       });
       setListenerActive(unsubscribe);
     } else if (listenerActive && !depositNonce) {
-      console.log("Killing subscription");
       const unsubscribeCall = async () => {
-        console.log("beginning unsubscribe");
         await unsubscribeCall();
-        console.log("unsubscribe complete");
         setListenerActive(undefined);
       };
     }
