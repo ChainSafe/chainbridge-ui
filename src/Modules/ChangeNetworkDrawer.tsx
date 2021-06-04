@@ -37,7 +37,11 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { setWalletType } = useNetworkManager();
+  const {
+    setWalletType,
+    handleSetHomeChain,
+    setDestinationChain,
+  } = useNetworkManager();
   const { disconnect } = useHomeBridge();
   const destinationBridge = useDestinationBridge();
 
@@ -61,6 +65,8 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
           onClick={async () => {
             // TODO: trigger unsubscribes & clear all state
             await Promise.all([destinationBridge.disconnect(), disconnect()]);
+            handleSetHomeChain(undefined);
+            setDestinationChain(undefined);
             setWalletType("select");
           }}
           variant="outline"

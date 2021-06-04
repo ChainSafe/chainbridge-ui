@@ -71,9 +71,10 @@ const App: React.FC<{}> = () => {
                 wallets: [{ walletName: "metamask", preferred: true }],
               },
               subscriptions: {
-                network: (network) => console.log("chainId: ", network),
+                network: (network) =>
+                  network && console.log("chainId: ", network),
                 balance: (amount) =>
-                  console.log("balance: ", utils.formatEther(amount)),
+                  amount && console.log("balance: ", utils.formatEther(amount)),
               },
             }}
             checkNetwork={false}

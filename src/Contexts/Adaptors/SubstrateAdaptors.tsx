@@ -104,10 +104,12 @@ export const SubstrateHomeAdaptorProvider = ({
     // Relayer Threshold, resources IDs & Bridge Fees
     // It is recommended to collect state at this point
     if (api) {
-      getRelayerThreshold();
-      confirmChainID();
+      if (api.isConnected && homeChainConfig) {
+        getRelayerThreshold();
+        confirmChainID();
+      }
     }
-  }, [api, getRelayerThreshold, confirmChainID]);
+  }, [api, api?.isConnected, getRelayerThreshold, confirmChainID]);
 
   useEffect(() => {
     let unsubscribe: VoidFn | undefined;
@@ -178,9 +180,24 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [api, setIsReady]);
 
   const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
-    keyring.loadAll({ isDevelopment: true }, injectedAccounts);
-
-    setAddress(injectedAccounts[0].address);
+    const accounts = keyring.getAccounts();
+    if (accounts.length == 0) {
+      keyring.loadAll({ isDevelopment: true }, injectedAccounts);
+      setAddress(injectedAccounts[0].address);
+    } else {
+      const targets = injectedAccounts.filter((item) => {
+        const account = keyring.getAddress(item.address);
+        if (!account) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (targets.length > 0) {
+        keyring.loadAll({ isDevelopment: true }, targets);
+      }
+      setAddress(injectedAccounts[0].address);
+    }
   };
 
   const deposit = useCallback(
