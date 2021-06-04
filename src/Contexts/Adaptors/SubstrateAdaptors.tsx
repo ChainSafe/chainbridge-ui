@@ -14,7 +14,6 @@ import {
   web3Enable,
   web3FromSource,
 } from "@polkadot/extension-dapp";
-import keyring from "@polkadot/ui-keyring";
 import types from "../../bridgeTypes.json";
 import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
@@ -180,24 +179,7 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [api, setIsReady]);
 
   const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
-    const accounts = keyring.getAccounts();
-    if (accounts.length == 0) {
-      keyring.loadAll({ isDevelopment: true }, injectedAccounts);
-      setAddress(injectedAccounts[0].address);
-    } else {
-      const targets = injectedAccounts.filter((item) => {
-        const account = keyring.getAddress(item.address);
-        if (!account) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      if (targets.length > 0) {
-        keyring.loadAll({ isDevelopment: true }, targets);
-      }
-      setAddress(injectedAccounts[0].address);
-    }
+    setAddress(injectedAccounts[0].address);
   };
 
   const deposit = useCallback(
