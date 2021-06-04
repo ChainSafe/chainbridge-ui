@@ -20,6 +20,7 @@ import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
+import { utils } from "ethers";
 
 type injectedAccountType = {
   address: string;
@@ -119,7 +120,7 @@ export const SubstrateHomeAdaptorProvider = ({
           } = result.toJSON() as any;
           setTokens({
             CSS: {
-              balance: balance,
+              balance: parseInt(utils.formatUnits(balance, 15)),
               balanceBN: new BN(balance),
               decimals: 15,
               name: "Chainbridge",
@@ -196,7 +197,7 @@ export const SubstrateHomeAdaptorProvider = ({
         );
         if (targetAccount) {
           const transferExtrinsic = api.tx.example.transferNative(
-            amount,
+            amount * 1000000000000000,
             recipient,
             destinationChainId
           );
