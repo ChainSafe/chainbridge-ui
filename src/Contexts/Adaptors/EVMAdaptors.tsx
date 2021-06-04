@@ -40,6 +40,7 @@ export const EVMHomeAdaptorProvider = ({
     checkIsReady,
     ethBalance,
     onboard,
+    resetOnboard,
   } = useWeb3();
 
   const getNetworkName = (id: any) => {
@@ -378,6 +379,9 @@ export const EVMHomeAdaptorProvider = ({
     <HomeBridgeContext.Provider
       value={{
         connect: handleConnect,
+        disconnect: async () => {
+          await resetOnboard();
+        },
         getNetworkName,
         bridgeFee,
         deposit,
@@ -535,7 +539,11 @@ export const EVMDestinationAdaptorProvider = ({
   ]);
 
   return (
-    <DestinationBridgeContext.Provider value={{}}>
+    <DestinationBridgeContext.Provider
+      value={{
+        disconnect: async () => {},
+      }}
+    >
       {children}
     </DestinationBridgeContext.Provider>
   );

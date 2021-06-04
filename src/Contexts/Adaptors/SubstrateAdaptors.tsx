@@ -253,6 +253,9 @@ export const SubstrateHomeAdaptorProvider = ({
     <HomeBridgeContext.Provider
       value={{
         connect: handleConnect,
+        disconnect: async () => {
+          await api?.disconnect();
+        },
         getNetworkName: () => "substrate-example",
         bridgeFee,
         deposit,
@@ -368,7 +371,13 @@ export const SubstrateDestinationAdaptorProvider = ({
   }, [api, depositNonce]);
 
   return (
-    <DestinationBridgeContext.Provider value={{}}>
+    <DestinationBridgeContext.Provider
+      value={{
+        disconnect: async () => {
+          await api?.disconnect();
+        },
+      }}
+    >
       {children}
     </DestinationBridgeContext.Provider>
   );

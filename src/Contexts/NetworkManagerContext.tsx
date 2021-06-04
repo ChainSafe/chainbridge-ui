@@ -182,7 +182,11 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       );
     } else {
       return (
-        <DestinationBridgeContext.Provider value={{}}>
+        <DestinationBridgeContext.Provider
+          value={{
+            disconnect: async () => {},
+          }}
+        >
           {children}
         </DestinationBridgeContext.Provider>
       );
@@ -227,6 +231,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         <HomeBridgeContext.Provider
           value={{
             connect: async () => undefined,
+            disconnect: async () => {},
             getNetworkName: (id: any) => "",
             isReady: false,
             selectedToken: "",

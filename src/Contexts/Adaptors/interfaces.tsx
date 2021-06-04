@@ -20,6 +20,7 @@ export interface HomeChainAdaptorContext {
   getNetworkName: (id: any) => string;
 
   connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
 
   deposit(
     amount: number,
@@ -52,4 +53,6 @@ export interface HomeChainAdaptorContext {
   tokens: Tokens;
 }
 
-export interface DestinationChainContext {}
+export interface DestinationChainContext {
+  disconnect: () => Promise<void>;
+}
