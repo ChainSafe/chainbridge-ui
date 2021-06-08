@@ -12,6 +12,21 @@ import {
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
     root: {},
+    slide: {
+      borderRadius: constants.generalUnit / 2,
+      padding: `${constants.generalUnit}px ${constants.generalUnit * 2}px`,
+      "& > p": {
+        marginTop: constants.generalUnit * 2,
+        marginBottom: constants.generalUnit * 3,
+        textAlign: "center",
+      },
+    },
+    buttons: {
+      marginBottom: constants.generalUnit * 2,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-around",
+    },
   });
 });
 
@@ -25,24 +40,32 @@ const NetworkSelectModal = () => {
       active={walletType !== "unset" && walletType != "Ethereum" && !isReady}
       closePosition="right"
       className={classes.root}
+      injectedClass={{
+        inner: classes.slide,
+      }}
     >
       {walletType === "select" && (
-        <article>
-          <Button onClick={() => setWalletType("Ethereum")}>
-            Use Ethereum wallet
-          </Button>
-          <Button onClick={() => setWalletType("Substrate")}>
-            Use Substrate wallet
-          </Button>
-        </article>
+        <>
+          <Typography variant="h3" component="p">
+            Please select a wallet type
+          </Typography>
+          <section className={classes.buttons}>
+            <Button onClick={() => setWalletType("Ethereum")}>
+              Use Ethereum wallet
+            </Button>
+            <Button onClick={() => setWalletType("Substrate")}>
+              Use Substrate wallet
+            </Button>
+          </section>
+        </>
       )}
       {walletType === "Substrate" && (
-        <article>
-          <Typography variant="h2" component="h2">
+        <>
+          <Typography variant="h2" component="p">
             Connecting to node
           </Typography>
           <ProgressBar size="small" variant="primary" />
-        </article>
+        </>
       )}
       {/* {
         walletType === "select" && (

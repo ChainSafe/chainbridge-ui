@@ -19,7 +19,6 @@ import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
-import { ExtrinsicStatus } from "@polkadot/types/interfaces";
 import { utils } from "ethers";
 
 type injectedAccountType = {
@@ -114,7 +113,6 @@ export const SubstrateHomeAdaptorProvider = ({
   useEffect(() => {
     let unsubscribe: VoidFn | undefined;
     if (api) {
-
       api.query.system
         .account(address, (result) => {
           const {
