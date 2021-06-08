@@ -15,6 +15,7 @@ import { NetworkManagerProvider } from "./Contexts/NetworkManagerContext";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
+import "@chainsafe/common-theme/dist/font-faces.css";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -71,9 +72,10 @@ const App: React.FC<{}> = () => {
                 wallets: [{ walletName: "metamask", preferred: true }],
               },
               subscriptions: {
-                network: (network) => console.log("chainId: ", network),
+                network: (network) =>
+                  network && console.log("chainId: ", network),
                 balance: (amount) =>
-                  console.log("balance: ", utils.formatEther(amount)),
+                  amount && console.log("balance: ", utils.formatEther(amount)),
               },
             }}
             checkNetwork={false}

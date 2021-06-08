@@ -273,13 +273,14 @@ const TransferPage = () => {
     token: string().required("Please select a token"),
     receiver: string()
       .test("Valid address", "Please add a valid address", (value) => {
-        // TODO: Check for valid Substrate address here
-        return utils.isAddress(value as string) || true;
+        if (destinationChainConfig?.type === "Substrate") {
+          // TODO: Figure out how to validate Substrate addresses
+          return true;
+        }
+        return utils.isAddress(value as string);
       })
       .required("Please add a receiving address"),
   });
-
-  // TODO: line 467: How to pull correct HomeChain Symbol
 
   return (
     <article className={classes.root}>
