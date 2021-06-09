@@ -29,16 +29,18 @@ if (
 }
 
 const App: React.FC<{}> = () => {
-  const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
-    if (bc.networkId) {
-      return {
-        ...tca,
-        [bc.networkId]: bc.tokens,
-      };
-    } else {
-      return tca;
-    }
-  }, {});
+  const tokens = chainbridgeConfig.chains
+    .filter((c) => c.type === "Ethereum")
+    .reduce((tca, bc) => {
+      if (bc.networkId) {
+        return {
+          ...tca,
+          [bc.networkId]: bc.tokens,
+        };
+      } else {
+        return tca;
+      }
+    }, {});
 
   return (
     <ErrorBoundary

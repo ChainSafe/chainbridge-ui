@@ -111,6 +111,7 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [api, api?.isConnected, getRelayerThreshold, confirmChainID]);
 
   useEffect(() => {
+    if (!homeChainConfig) return;
     let unsubscribe: VoidFn | undefined;
     if (api) {
       api.query.system
@@ -119,12 +120,14 @@ export const SubstrateHomeAdaptorProvider = ({
             data: { free: balance },
           } = result.toJSON() as any;
           setTokens({
-            CSS: {
-              balance: parseInt(utils.formatUnits(balance, 15)),
-              balanceBN: new BN(balance),
-              decimals: 15,
-              name: "Chainbridge",
-              symbol: "CSS",
+            [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
+              decimals: homeChainConfig.decimals,
+              balance: parseInt(
+                utils.formatUnits(balance, homeChainConfig.decimals)
+              ),
+              balanceBN: new BN(balance).shiftedBy(-homeChainConfig.decimals),
+              name: homeChainConfig.tokens[0].name,
+              symbol: homeChainConfig.tokens[0].symbol,
             },
           });
         })
@@ -136,7 +139,7 @@ export const SubstrateHomeAdaptorProvider = ({
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [api, address]);
+  }, [api, address, homeChainConfig]);
 
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
@@ -283,7 +286,6 @@ export const SubstrateHomeAdaptorProvider = ({
 export const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  // Comment out everything till the return statement for evm transfers to work
   const {
     depositNonce,
     destinationChainConfig,
@@ -298,7 +300,8 @@ export const SubstrateDestinationAdaptorProvider = ({
 
   const [initiaising, setInitialising] = useState(false);
   useEffect(() => {
-    // Once the chain ID has been set in the network context, the destination configuration will be automatically set thus triggering this
+    // Once the chain ID has been set in the network context, the destination configuration will be automatically
+    // set thus triggering this
     if (!destinationChainConfig || initiaising || api) return;
     setInitialising(true);
     const provider = new WsProvider(destinationChainConfig.rpcUrl);
