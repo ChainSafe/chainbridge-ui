@@ -21,6 +21,7 @@ import { utils } from "ethers";
 import FeesFormikWrapped from "./FormikContextElements/Fees";
 import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
+import { isValidSubstrateAddress } from "../../Utils/Helpers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -274,8 +275,7 @@ const TransferPage = () => {
     receiver: string()
       .test("Valid address", "Please add a valid address", (value) => {
         if (destinationChainConfig?.type === "Substrate") {
-          // TODO: Figure out how to validate Substrate addresses
-          return true;
+          return isValidSubstrateAddress(value as string);
         }
         return utils.isAddress(value as string);
       })

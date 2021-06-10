@@ -37,6 +37,22 @@ For running a local instance use the command:
 yarn start
 ```
 
+The codebase is configured to be run against the Geth <> Substrate node that can be set up by following th guide (here)[https://chainbridge.chainsafe.io/local/].
+
+All substrate specific configuration should be adjusted in `/src/Adaptors/SubstrateAdaptor.tsx`. The substrate adaptor's functionality is divided into 2 portions. Should the Substrate chain not implement things using the exact same pallet and method names, the Substrate adaptor will need to be updated to ensure correct operation.
+
+First, update the `src/bridgeTypes.json` file with the desired Substrate Chain configuration.
+
+- Home Chain
+
+  - Get relayer threshold from Chainbridge pallet
+  - Confirming current chainId from Chainbridge pallet
+  - Retrieving user token balance
+  - Handle deposit call `example.transferNative` and listening for emitted deposit nonce `chainbridge.chainNonces`
+
+- Destination Chain
+  - Subscribe to all `system.events`, parse these and filter all events with `event.section=chainbridge` and `event.method = VoteFor` or `event.method = ProposalApproved` and fire the correct actions against the reducer.
+
 ### Build
 
 Update the configs for the bridge in `src/chainbridgeContext.ts`. There should be at least 2 chains configured for correct functioning of the bridge. Each chain accepts the following configuration parameters:
