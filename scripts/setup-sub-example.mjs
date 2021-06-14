@@ -1,5 +1,5 @@
 import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
-import types from "../src/Contexts/Adaptors/SubstrateApis/bridgeTypes.json";
+import types from "./bridgeTypes.json";
 
 const keyring = new Keyring({ type: "sr25519" });
 const wsProvider = new WsProvider("ws://127.0.0.1:9944");

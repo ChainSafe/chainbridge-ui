@@ -12,7 +12,7 @@ import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
 import { NetworkManagerProvider } from "./Contexts/NetworkManagerContext";
-import { chainbridgeConfig } from "./chainbridgeConfig";
+import { chainbridgeConfig, EvmBridgeConfig } from "./chainbridgeConfig";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
 import "@chainsafe/common-theme/dist/font-faces.css";
@@ -31,7 +31,7 @@ if (
 const App: React.FC<{}> = () => {
   const tokens = chainbridgeConfig.chains
     .filter((c) => c.type === "Ethereum")
-    .reduce((tca, bc) => {
+    .reduce((tca, bc: any) => {
       if (bc.networkId) {
         return {
           ...tca,

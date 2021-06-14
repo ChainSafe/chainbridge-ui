@@ -13,24 +13,41 @@ export type TokenConfig = {
 export type ChainType = "Ethereum" | "Substrate";
 
 export type BridgeConfig = {
-  chainId: number;
   networkId?: number;
+  chainId: number;
   name: string;
-  bridgeAddress: string;
-  erc20HandlerAddress: string;
   rpcUrl: string;
   type: ChainType;
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
   decimals: number;
+};
+
+export type EvmBridgeConfig = BridgeConfig & {
+  bridgeAddress: string;
+  erc20HandlerAddress: string;
+  type: "Ethereum";
+  nativeTokenSymbol: string;
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
   defaultGasPrice?: number;
   deployedBlockNumber?: number;
 };
 
+export type SubstrateBridgeConfig = BridgeConfig & {
+  chainId: number;
+  name: string;
+  rpcUrl: string;
+  type: "Substrate";
+  tokens: TokenConfig[];
+  nativeTokenSymbol: string;
+  chainbridgePalletName: string;
+  transferPalletName: string;
+  substrateTypes: string; // This should be the path relative to `/src` where the substrate types can be imported from
+};
+
 export type ChainbridgeConfig = {
-  chains: BridgeConfig[];
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
 export const chainbridgeConfig: ChainbridgeConfig = {
@@ -59,14 +76,15 @@ export const chainbridgeConfig: ChainbridgeConfig = {
     },
     {
       chainId: 1,
+      networkId: 2,
       name: "Substrate - Local",
-      decimals: 15,
-      bridgeAddress: "0x2524d71D163f60747630c4EBeB077a9832329646",
-      erc20HandlerAddress: "0xDc26320258ADfd806d125223Fb0F94e54D13FA51",
+      decimals: 18,
       rpcUrl: "ws://localhost:9944",
       type: "Substrate",
       nativeTokenSymbol: "DOT",
-      deployedBlockNumber: 0,
+      chainbridgePalletName: "chainBridge", // Name of the Chainbridge palette
+      transferPalletName: "example", // Name of pallet with the methods to initiate deposit
+      substrateTypes: "", //Path to substrate types definition relative to
       tokens: [
         {
           address: "substrate-native",

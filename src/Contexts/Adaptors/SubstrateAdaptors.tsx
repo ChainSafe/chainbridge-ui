@@ -2,17 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { HomeBridgeContext } from "../HomeBridgeContext";
 import { useNetworkManager } from "../NetworkManagerContext";
-import {
-  createApi,
-  submitDeposit,
-  CHAINBRIDGE_PALLET,
-} from "./SubstrateApis/example/ChainBridgeExampleAPI";
+import { createApi, submitDeposit } from "./SubstrateApis/ChainBridgeAPI";
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
 } from "./interfaces";
 
-import { ApiPromise, WsProvider } from "@polkadot/api";
+import { ApiPromise } from "@polkadot/api";
 import {
   web3Accounts,
   web3Enable,
@@ -23,6 +19,7 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
+import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
 
 type injectedAccountType = {
   address: string;
@@ -80,7 +77,7 @@ export const SubstrateHomeAdaptorProvider = ({
   const getRelayerThreshold = useCallback(async () => {
     if (api) {
       const relayerThreshold = await api.query[
-        CHAINBRIDGE_PALLET
+        (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
       ].relayerThreshold();
       setRelayerThreshold(Number(relayerThreshold.toHuman()));
     }
@@ -89,7 +86,9 @@ export const SubstrateHomeAdaptorProvider = ({
   const confirmChainID = useCallback(async () => {
     if (api) {
       const currentId = Number(
-        api.consts[CHAINBRIDGE_PALLET].chainIdentity.toHuman()
+        api.consts[
+          (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
+        ].chainIdentity.toHuman()
       );
       if (homeChainConfig?.chainId !== currentId) {
         const correctConfig = homeChains.find(
@@ -222,11 +221,16 @@ export const SubstrateHomeAdaptorProvider = ({
 
                 if (status.isFinalized) {
                   events.filter(({ event }) => {
-                    return api.events[CHAINBRIDGE_PALLET].FungibleTransfer.is(
-                      event
-                    );
+                    return api.events[
+                      (homeChainConfig as SubstrateBridgeConfig)
+                        .chainbridgePalletName
+                    ].FungibleTransfer.is(event);
                   });
-                  api.query[CHAINBRIDGE_PALLET].chainNonces(destinationChainId)
+                  api.query[
+                    (homeChainConfig as SubstrateBridgeConfig)
+                      .chainbridgePalletName
+                  ]
+                    .chainNonces(destinationChainId)
                     .then((response) => {
                       setDepositNonce(`${response.toJSON()}`);
                       setTransactionStatus("In Transit");
@@ -311,7 +315,6 @@ export const SubstrateDestinationAdaptorProvider = ({
     // set thus triggering this
     if (!destinationChainConfig || initiaising || api) return;
     setInitialising(true);
-    const provider = new WsProvider(destinationChainConfig.rpcUrl);
     createApi(destinationChainConfig.rpcUrl)
       .then((api) => {
         setApi(api);
@@ -351,7 +354,9 @@ export const SubstrateDestinationAdaptorProvider = ({
           });
 
           if (
-            event.section === CHAINBRIDGE_PALLET &&
+            event.section ===
+              (destinationChainConfig as SubstrateBridgeConfig)
+                .chainbridgePalletName &&
             event.method === "VoteFor"
           ) {
             setDepositVotes(depositVotes + 1);
@@ -365,7 +370,9 @@ export const SubstrateDestinationAdaptorProvider = ({
           }
 
           if (
-            event.section === CHAINBRIDGE_PALLET &&
+            event.section ===
+              (destinationChainConfig as SubstrateBridgeConfig)
+                .chainbridgePalletName &&
             event.method === "ProposalApproved"
           ) {
             setDepositVotes(depositVotes + 1);
