@@ -1,25 +1,25 @@
-import { Bridge } from "@chainsafe/chainbridge-contracts";
 import React, { useCallback, useEffect, useState } from "react";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { HomeBridgeContext } from "../HomeBridgeContext";
 import { useNetworkManager } from "../NetworkManagerContext";
+import { createApi, submitDeposit } from "./SubstrateApis/ChainBridgeAPI";
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
 } from "./interfaces";
 
-import { ApiPromise, WsProvider } from "@polkadot/api";
+import { ApiPromise } from "@polkadot/api";
 import {
   web3Accounts,
   web3Enable,
   web3FromSource,
 } from "@polkadot/extension-dapp";
-import types from "../../bridgeTypes.json";
 import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
+import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
 
 type injectedAccountType = {
   address: string;
@@ -46,7 +46,6 @@ export const SubstrateHomeAdaptorProvider = ({
     homeChains,
   } = useNetworkManager();
 
-  const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
   );
@@ -60,17 +59,15 @@ export const SubstrateHomeAdaptorProvider = ({
   useEffect(() => {
     // Attempt connect on load
     handleConnect();
-  }, []);
+  });
 
   const [initiaising, setInitialising] = useState(false);
   useEffect(() => {
     // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
     if (!homeChainConfig || initiaising || api) return;
     setInitialising(true);
-    const provider = new WsProvider(homeChainConfig.rpcUrl);
-    ApiPromise.create({ provider, types })
+    createApi(homeChainConfig.rpcUrl)
       .then((api) => {
-        types && registry.register(types);
         setApi(api);
         setInitialising(false);
       })
@@ -79,14 +76,20 @@ export const SubstrateHomeAdaptorProvider = ({
 
   const getRelayerThreshold = useCallback(async () => {
     if (api) {
-      const relayerThreshold = await api.query.chainBridge.relayerThreshold();
+      const relayerThreshold = await api.query[
+        (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
+      ].relayerThreshold();
       setRelayerThreshold(Number(relayerThreshold.toHuman()));
     }
   }, [api]);
 
   const confirmChainID = useCallback(async () => {
     if (api) {
-      const currentId = Number(api.consts.chainBridge.chainIdentity.toHuman());
+      const currentId = Number(
+        api.consts[
+          (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
+        ].chainIdentity.toHuman()
+      );
       if (homeChainConfig?.chainId !== currentId) {
         const correctConfig = homeChains.find(
           (item) => item.chainId === currentId
@@ -196,11 +199,13 @@ export const SubstrateHomeAdaptorProvider = ({
           (item) => item.address === address
         );
         if (targetAccount) {
-          const transferExtrinsic = api.tx.example.transferNative(
-            amount * 1000000000000000,
+          const transferExtrinsic = submitDeposit(
+            api,
+            amount,
             recipient,
             destinationChainId
           );
+
           const injector = await web3FromSource(targetAccount.meta.source);
           setTransactionStatus("Initializing Transfer");
           setDepositAmount(amount);
@@ -216,9 +221,15 @@ export const SubstrateHomeAdaptorProvider = ({
 
                 if (status.isFinalized) {
                   events.filter(({ event }) => {
-                    return api.events.chainBridge.FungibleTransfer.is(event);
+                    return api.events[
+                      (homeChainConfig as SubstrateBridgeConfig)
+                        .chainbridgePalletName
+                    ].FungibleTransfer.is(event);
                   });
-                  api.query.chainBridge
+                  api.query[
+                    (homeChainConfig as SubstrateBridgeConfig)
+                      .chainbridgePalletName
+                  ]
                     .chainNonces(destinationChainId)
                     .then((response) => {
                       setDepositNonce(`${response.toJSON()}`);
@@ -259,7 +270,7 @@ export const SubstrateHomeAdaptorProvider = ({
         disconnect: async () => {
           await api?.disconnect();
         },
-        getNetworkName: () => "substrate-example",
+        getNetworkName: () => homeChainConfig?.name || "undefined",
         bridgeFee,
         deposit,
         depositAmount,
@@ -304,10 +315,8 @@ export const SubstrateDestinationAdaptorProvider = ({
     // set thus triggering this
     if (!destinationChainConfig || initiaising || api) return;
     setInitialising(true);
-    const provider = new WsProvider(destinationChainConfig.rpcUrl);
-    ApiPromise.create({ provider, types })
+    createApi(destinationChainConfig.rpcUrl)
       .then((api) => {
-        types && registry.register(types);
         setApi(api);
         setInitialising(false);
       })
@@ -344,7 +353,12 @@ export const SubstrateDestinationAdaptorProvider = ({
             console.log(types[index].type + ";" + data.toString());
           });
 
-          if (event.section === "chainBridge" && event.method === "VoteFor") {
+          if (
+            event.section ===
+              (destinationChainConfig as SubstrateBridgeConfig)
+                .chainbridgePalletName &&
+            event.method === "VoteFor"
+          ) {
             setDepositVotes(depositVotes + 1);
             tokensDispatch({
               type: "addMessage",
@@ -356,7 +370,9 @@ export const SubstrateDestinationAdaptorProvider = ({
           }
 
           if (
-            event.section === "chainBridge" &&
+            event.section ===
+              (destinationChainConfig as SubstrateBridgeConfig)
+                .chainbridgePalletName &&
             event.method === "ProposalApproved"
           ) {
             setDepositVotes(depositVotes + 1);

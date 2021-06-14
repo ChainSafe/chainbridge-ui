@@ -9,6 +9,7 @@ import {
 } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import { EvmBridgeConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -242,10 +243,12 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               <Button
                 onClick={() =>
                   destinationChainConfig &&
-                  destinationChainConfig.blockExplorer &&
+                  (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
                   transferTxHash &&
                   window.open(
-                    `${destinationChainConfig.blockExplorer}/${transferTxHash}`,
+                    `${
+                      (destinationChainConfig as EvmBridgeConfig).blockExplorer
+                    }/${transferTxHash}`,
                     "_blank"
                   )
                 }
@@ -275,22 +278,26 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {homeConfig && homeConfig.blockExplorer && transferTxHash && (
-              <Button
-                onClick={() =>
-                  window.open(
-                    `${homeConfig.blockExplorer}/${transferTxHash}`,
-                    "_blank"
-                  )
-                }
-                size="small"
-                className={classes.button}
-                variant="outline"
-                disabled
-              >
-                View transaction
-              </Button>
-            )}
+            {homeConfig &&
+              (homeConfig as EvmBridgeConfig).blockExplorer &&
+              transferTxHash && (
+                <Button
+                  onClick={() =>
+                    window.open(
+                      `${
+                        (homeConfig as EvmBridgeConfig).blockExplorer
+                      }/${transferTxHash}`,
+                      "_blank"
+                    )
+                  }
+                  size="small"
+                  className={classes.button}
+                  variant="outline"
+                  disabled
+                >
+                  View transaction
+                </Button>
+              )}
             <section className={classes.buttons}>
               <Button
                 size="small"

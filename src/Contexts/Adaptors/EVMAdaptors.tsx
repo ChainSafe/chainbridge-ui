@@ -4,8 +4,8 @@ import { useWeb3 } from "@chainsafe/web3-context";
 import { BigNumber, ethers, utils } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import {
-  BridgeConfig,
   chainbridgeConfig,
+  EvmBridgeConfig,
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../Contracts/Erc20DetailedFactory";
@@ -73,7 +73,6 @@ export const EVMHomeAdaptorProvider = ({
     handleSetHomeChain,
     homeChains,
     setNetworkId,
-    destinationChains,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -93,9 +92,7 @@ export const EVMHomeAdaptorProvider = ({
 
   useEffect(() => {
     if (network) {
-      const chain = homeChains.find(
-        (chain: BridgeConfig) => chain.networkId === network
-      );
+      const chain = homeChains.find((chain) => chain.networkId === network);
       setNetworkId(network);
       if (chain) {
         handleSetHomeChain(chain.chainId);
@@ -127,7 +124,7 @@ export const EVMHomeAdaptorProvider = ({
                     }
 
                     const bridge = BridgeFactory.connect(
-                      homeChainConfig.bridgeAddress,
+                      (homeChainConfig as EvmBridgeConfig).bridgeAddress,
                       signer
                     );
                     setHomeBridge(bridge);
@@ -175,7 +172,7 @@ export const EVMHomeAdaptorProvider = ({
               }
 
               const bridge = BridgeFactory.connect(
-                homeChainConfig.bridgeAddress,
+                (homeChainConfig as EvmBridgeConfig).bridgeAddress,
                 signer
               );
               setHomeBridge(bridge);
@@ -291,7 +288,7 @@ export const EVMHomeAdaptorProvider = ({
       try {
         const currentAllowance = await erc20.allowance(
           address,
-          homeChainConfig.erc20HandlerAddress
+          (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
         );
 
         if (
@@ -305,12 +302,15 @@ export const EVMHomeAdaptorProvider = ({
             //TODO Should we alert the user this is happening here?
             await (
               await erc20.approve(
-                homeChainConfig.erc20HandlerAddress,
+                (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
                 BigNumber.from(utils.parseUnits("0", erc20Decimals)),
                 {
                   gasPrice: BigNumber.from(
                     utils.parseUnits(
-                      (homeChainConfig.defaultGasPrice || gasPrice).toString(),
+                      (
+                        (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
+                        gasPrice
+                      ).toString(),
                       9
                     )
                   ).toString(),
@@ -320,14 +320,17 @@ export const EVMHomeAdaptorProvider = ({
           }
           await (
             await erc20.approve(
-              homeChainConfig.erc20HandlerAddress,
+              (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
               BigNumber.from(
                 utils.parseUnits(amount.toString(), erc20Decimals)
               ),
               {
                 gasPrice: BigNumber.from(
                   utils.parseUnits(
-                    (homeChainConfig.defaultGasPrice || gasPrice).toString(),
+                    (
+                      (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
+                      gasPrice
+                    ).toString(),
                     9
                   )
                 ).toString(),
@@ -335,7 +338,6 @@ export const EVMHomeAdaptorProvider = ({
             )
           ).wait(1);
         }
-
         homeBridge.once(
           homeBridge.filters.Deposit(
             destinationChainId,
@@ -351,7 +353,9 @@ export const EVMHomeAdaptorProvider = ({
         await (
           await homeBridge.deposit(destinationChainId, token.resourceId, data, {
             gasPrice: utils.parseUnits(
-              (homeChainConfig.defaultGasPrice || gasPrice).toString(),
+              (
+                (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
+              ).toString(),
               9
             ),
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
@@ -386,7 +390,9 @@ export const EVMHomeAdaptorProvider = ({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
         gasPrice: BigNumber.from(
           utils.parseUnits(
-            (homeChainConfig?.defaultGasPrice || gasPrice).toString(),
+            (
+              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
+            ).toString(),
             9
           )
         ).toString(),
@@ -413,7 +419,9 @@ export const EVMHomeAdaptorProvider = ({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
         gasPrice: BigNumber.from(
           utils.parseUnits(
-            (homeChainConfig?.defaultGasPrice || gasPrice).toString(),
+            (
+              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
+            ).toString(),
             9
           )
         ).toString(),
@@ -508,7 +516,7 @@ export const EVMDestinationAdaptorProvider = ({
     }
     if (destinationChainConfig && provider) {
       const bridge = BridgeFactory.connect(
-        destinationChainConfig.bridgeAddress,
+        (destinationChainConfig as EvmBridgeConfig).bridgeAddress,
         provider
       );
       setDestinationBridge(bridge);

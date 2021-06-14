@@ -4,7 +4,7 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import { Button, ProgressBar, Typography } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { TokenConfig } from "../chainbridgeConfig";
+import { EvmBridgeConfig, TokenConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -183,18 +183,22 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
               {action === "wrap"
                 ? `Successfully wrapped ${homeConfig?.nativeTokenSymbol} to ${tokenInfo.symbol}`
                 : `Successfully unwrapped ${tokenInfo.symbol} to ${homeConfig?.nativeTokenSymbol}`}
-              {homeConfig && homeConfig.blockExplorer && txHash && (
-                <>
-                  <br />
-                  <a
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href={`${homeConfig.blockExplorer}/${txHash}`}
-                  >
-                    View Transaction
-                  </a>
-                </>
-              )}
+              {homeConfig &&
+                (homeConfig as EvmBridgeConfig).blockExplorer &&
+                txHash && (
+                  <>
+                    <br />
+                    <a
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      href={`${
+                        (homeConfig as EvmBridgeConfig).blockExplorer
+                      }/${txHash}`}
+                    >
+                      View Transaction
+                    </a>
+                  </>
+                )}
             </Typography>
             <section className={classes.buttons}>
               <Button

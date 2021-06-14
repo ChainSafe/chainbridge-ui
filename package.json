@@ -7,8 +7,8 @@
     "@babel/runtime": "^7.12.1",
     "@chainsafe/chainbridge-contracts": "1.0.5",
     "@chainsafe/common-components": "1.0.26",
-    "@chainsafe/web3-context": "1.2.0",
     "@chainsafe/common-theme": "1.0.10",
+    "@chainsafe/web3-context": "1.2.0",
     "@material-ui/styles": "4.10.0",
     "@polkadot/api": "3.11.1",
     "@polkadot/extension-dapp": "0.37.1",
@@ -63,7 +63,10 @@
     "clean": "yarn clean:dependencies && yarn clean:dist",
     "prettier": "prettier --config .prettierrc 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --write",
     "start:tunnel": "./ngrok http https://localhost:3000",
-    "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V"
+    "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V",
+    "start:centrifuge": "docker-compose -f ./docker-compose-centrifuge.yml up -V",
+    "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",
+    "setup:centrifuge": "./scrips/setup-eth-centrifuge.sh"
   },
   "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {
