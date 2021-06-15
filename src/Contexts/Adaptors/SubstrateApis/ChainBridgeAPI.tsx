@@ -1,5 +1,5 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import BigNumber from "bn.js";
+import BigNumber from "bignumber.js";
 import {
   chainbridgeConfig,
   SubstrateBridgeConfig,
@@ -23,7 +23,9 @@ export const submitDeposit = (
 
   return api.tx[subChainConfig.transferPalletName].transferNative(
     new BigNumber(amount)
-      .mul(new BigNumber(10).pow(new BigNumber(subChainConfig.decimals)))
+      .multipliedBy(
+        new BigNumber(10).pow(new BigNumber(subChainConfig.decimals))
+      )
       .toString(10),
     recipient,
     destinationChainId
