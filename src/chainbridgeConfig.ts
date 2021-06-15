@@ -27,7 +27,6 @@ export type EvmBridgeConfig = BridgeConfig & {
   bridgeAddress: string;
   erc20HandlerAddress: string;
   type: "Ethereum";
-  nativeTokenSymbol: string;
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
   defaultGasPrice?: number;
@@ -35,15 +34,9 @@ export type EvmBridgeConfig = BridgeConfig & {
 };
 
 export type SubstrateBridgeConfig = BridgeConfig & {
-  chainId: number;
-  name: string;
-  rpcUrl: string;
   type: "Substrate";
-  tokens: TokenConfig[];
-  nativeTokenSymbol: string;
   chainbridgePalletName: string;
   transferPalletName: string;
-  substrateTypes: string; // This should be the path relative to `/src` where the substrate types can be imported from
 };
 
 export type ChainbridgeConfig = {
@@ -82,9 +75,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       rpcUrl: "ws://localhost:9944",
       type: "Substrate",
       nativeTokenSymbol: "DOT",
-      chainbridgePalletName: "chainBridge", // Name of the Chainbridge palette
-      transferPalletName: "example", // Name of pallet with the methods to initiate deposit
-      substrateTypes: "", //Path to substrate types definition relative to
+      chainbridgePalletName: "chainBridge",
+      transferPalletName: "example",
       tokens: [
         {
           address: "substrate-native",

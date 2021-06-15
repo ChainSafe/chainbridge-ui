@@ -37,39 +37,28 @@ For running a local instance use the command:
 yarn start
 ```
 
-The codebase is configured to be run against the Geth <> Substrate node that can be set up by following th guide (here)[https://chainbridge.chainsafe.io/local/].
+The codebase is configured to be run against the Geth <> Substrate node that can be set up by following the guide (here)[https://chainbridge.chainsafe.io/local/] or executing:
 
-All substrate specific configuration should be adjusted in `/src/Adaptors/SubstrateAdaptor.tsx`. The substrate adaptor's functionality is divided into 2 portions. Should the Substrate chain not implement things using the exact same pallet and method names, the Substrate adaptor will need to be updated to ensure correct operation.
+- `yarn start:substrate` to start,
+- `yarn setup:example` to initialize
 
-First, update the `src/bridgeTypes.json` file with the desired Substrate Chain configuration.
-
-- Home Chain
-
-  - Get relayer threshold from Chainbridge pallet
-  - Confirming current chainId from Chainbridge pallet
-  - Retrieving user token balance
-  - Handle deposit call `example.transferNative` and listening for emitted deposit nonce `chainbridge.chainNonces`
-
-- Destination Chain
-  - Subscribe to all `system.events`, parse these and filter all events with `event.section=chainbridge` and `event.method = VoteFor` or `event.method = ProposalApproved` and fire the correct actions against the reducer.
+Should the substrate chain you are targetting require different type definitions, these can be updated in `ChainbridgeAPI.tsx`
 
 ### Build
 
 Update the configs for the bridge in `src/chainbridgeContext.ts`. There should be at least 2 chains configured for correct functioning of the bridge. Each chain accepts the following configuration parameters:
 
 ```
-type BridgeConfig = {
-  chainId: number // The bridge's chainId.
-  networkId: number // The networkId of this chain.
-  name: string // The human readable name of this chain.
-  bridgeAddress: string // The address on the brdige contract deployed on this chain.
-  erc20HandlerAddress: string // The ERC20 handler address.
-  rpcUrl: string // An RPC URL for this chain.
-  type: "Ethereum" | "Substrate" // The type of chain.
-  tokens: TokenConfig[] // An object to configure the tokens this bridge can transfer. See the TokenConfig object below.
-  nativeTokenSymbol: string // The native token symbol of this chain.
-  blockExplorer?: string //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
-}
+export type BridgeConfig = {
+  networkId?: number; // The networkId of this chain.
+  chainId: number; // The bridge's chainId.
+  name: string; // The human readable name of this chain.
+  rpcUrl: string; // An RPC URL for this chain.
+  type: ChainType; // The type of chain.
+  tokens: TokenConfig[]; // An object to configure the tokens (see below)
+  nativeTokenSymbol: string; // The native token symbol of this chain.
+  decimals: number;
+};
 ```
 
 ```
@@ -80,6 +69,31 @@ type TokenConfig = {
   imageUri?: string; // A URL pointing to the token logo. Can be either locally or externally hosted.
   resourceId: string; // The resourceId to be used when transferring tokens of this type.
   isNativeWrappedToken?: boolean // Flag to indicate that this is a wrapped native token (eg wETH on Ethereum). If this flag is not set for any of the tokens provided for this chain, wrapping functionality will be unavailable on that network.
+};
+```
+
+EVM Chains should additionally be configured with the following params
+
+```
+export type EvmBridgeConfig = BridgeConfig & {
+  bridgeAddress: string;
+  erc20HandlerAddress: string;
+  type: "Ethereum";
+  nativeTokenSymbol: string;
+  // This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
+  blockExplorer?: string;
+  defaultGasPrice?: number;
+  deployedBlockNumber?: number;
+};
+```
+
+Substrate chains should be configured with the following
+
+```
+export type SubstrateBridgeConfig = BridgeConfig & {
+  type: "Substrate";
+  chainbridgePalletName: string; // The name of the chainbridge palette
+  transferPalletName: string; // The name of the pallet that should initiate transfers
 };
 ```
 
