@@ -20,8 +20,11 @@ export const submitDeposit = (
   const subChainConfig = chainbridgeConfig.chains.find(
     (c) => c.chainId !== destinationChainId
   ) as SubstrateBridgeConfig;
+
   return api.tx[subChainConfig.transferPalletName].transferNative(
-    new BigNumber(amount * 10 ** subChainConfig.decimals).toString(10),
+    new BigNumber(amount)
+      .mul(new BigNumber(10).pow(new BigNumber(subChainConfig.decimals)))
+      .toString(10),
     recipient,
     destinationChainId
   );

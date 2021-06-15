@@ -21,7 +21,9 @@
       "id": "1",
       "endpoint": "ws://localhost:9944",
       "from": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "opts": {}
+      "opts": {
+        "useExtendedCall": "true"
+      }
     }
   ]
 }
