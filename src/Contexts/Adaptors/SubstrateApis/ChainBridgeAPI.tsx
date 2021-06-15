@@ -8,9 +8,6 @@ import types from "./bridgeTypes.json";
 
 export const createApi = async (rpcUrl: string) => {
   const provider = new WsProvider(rpcUrl);
-  const subChainConfig = chainbridgeConfig.chains.find(
-    (c) => c.rpcUrl === rpcUrl
-  ) as SubstrateBridgeConfig;
   return ApiPromise.create({ provider, types });
 };
 
@@ -24,7 +21,7 @@ export const submitDeposit = (
     (c) => c.chainId !== destinationChainId
   ) as SubstrateBridgeConfig;
   return api.tx[subChainConfig.transferPalletName].transferNative(
-    new BigNumber(amount * (10 ^ subChainConfig.decimals)).toString(10),
+    new BigNumber(amount * 10 ** subChainConfig.decimals).toString(10),
     recipient,
     destinationChainId
   );

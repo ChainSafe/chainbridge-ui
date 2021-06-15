@@ -37,12 +37,12 @@ For running a local instance use the command:
 yarn start
 ```
 
-The codebase is configured to be run against the Geth <> Substrate node that can be set up by following the guide (here)[https://chainbridge.chainsafe.io/local/] or executing:
+The codebase is configured to be run against the Geth <> Substrate node that can be set up by following the guide [here](https://chainbridge.chainsafe.io/local/) or executing:
 
 - `yarn start:substrate` to start,
 - `yarn setup:example` to initialize
 
-Should the substrate chain you are targetting require different type definitions, these can be updated in `ChainbridgeAPI.tsx`
+Should the substrate chain you are targetting require different type definitions, these can be updated in [ChainbridgeAPI.tsx](`src/Contexts/Adaptors/SubstrateApis/ChainbridgeAPI.tsx`)
 
 ### Build
 
