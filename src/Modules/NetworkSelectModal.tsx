@@ -32,12 +32,12 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
 
 const NetworkSelectModal = () => {
   const classes = useStyles();
-  const { isReady, connect } = useChainbridge();
+  const { isReady } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();
 
   return (
     <Modal
-      active={walletType !== "unset" && walletType != "Ethereum" && !isReady}
+      active={walletType !== "unset" && walletType !== "Ethereum" && !isReady}
       closePosition="right"
       className={classes.root}
       injectedClass={{
@@ -67,32 +67,6 @@ const NetworkSelectModal = () => {
           <ProgressBar size="small" variant="primary" />
         </>
       )}
-      {/* {
-        walletType === "select" && (
-          <article>
-            <Button onClick={() => handleConnect("Ethereum")}>
-              Connect to Ethereum
-            </Button>
-            <Button>
-              Connect to Substrate
-            </Button>
-          </article>
-        )
-      }
-      {
-        walletType === "Ethereum" && (
-          <article>
-
-          </article>
-        )
-      }
-      {
-        walletType === "Substrate" && (
-          <article>
-
-          </article>
-        )
-      } */}
     </Modal>
   );
 };

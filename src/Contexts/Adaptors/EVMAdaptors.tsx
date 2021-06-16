@@ -202,7 +202,17 @@ export const EVMHomeAdaptorProvider = ({
           setInitialising(false);
         });
     }
-  }, [initialising, homeChainConfig, isReady, provider, checkIsReady, network]);
+  }, [
+    initialising,
+    homeChainConfig,
+    isReady,
+    provider,
+    checkIsReady,
+    network,
+    homeBridge,
+    onboard,
+    walletSelected,
+  ]);
 
   useEffect(() => {
     const getRelayerThreshold = async () => {
@@ -228,7 +238,7 @@ export const EVMHomeAdaptorProvider = ({
       await onboard?.walletSelect("metamask");
       await wallet.connect();
     }
-  }, [wallet, network]);
+  }, [wallet, network, onboard]);
 
   const deposit = useCallback(
     async (
@@ -521,15 +531,9 @@ export const EVMDestinationAdaptorProvider = ({
       );
       setDestinationBridge(bridge);
     }
-  }, [destinationChainConfig]);
+  }, [destinationChainConfig, destinationBridge]);
 
   useEffect(() => {
-    console.log("In listener effect");
-    console.log("destinationChainConfig", destinationChainConfig);
-    console.log("homeChainConfig?.chainId", homeChainConfig?.chainId);
-    console.log("destinationBridge", destinationBridge);
-    console.log("depositNonce", depositNonce);
-
     if (
       destinationChainConfig &&
       homeChainConfig?.chainId &&

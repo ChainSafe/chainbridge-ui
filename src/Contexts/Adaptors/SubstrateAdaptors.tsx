@@ -49,7 +49,7 @@ export const SubstrateHomeAdaptorProvider = ({
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
   );
-  const [bridgeFee, setBridgeFee] = useState<number>(0);
+  const [bridgeFee] = useState<number>(0);
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("CSS");
@@ -72,7 +72,7 @@ export const SubstrateHomeAdaptorProvider = ({
         setInitialising(false);
       })
       .catch(console.error);
-  }, [homeChainConfig, registry]);
+  }, [homeChainConfig, registry, api, initiaising]);
 
   const getRelayerThreshold = useCallback(async () => {
     if (api) {
@@ -81,7 +81,7 @@ export const SubstrateHomeAdaptorProvider = ({
       ].relayerThreshold();
       setRelayerThreshold(Number(relayerThreshold.toHuman()));
     }
-  }, [api]);
+  }, [api, homeChainConfig]);
 
   const confirmChainID = useCallback(async () => {
     if (api) {
@@ -111,7 +111,7 @@ export const SubstrateHomeAdaptorProvider = ({
         confirmChainID();
       }
     }
-  }, [api, api?.isConnected, getRelayerThreshold, confirmChainID]);
+  }, [api, getRelayerThreshold, confirmChainID, homeChainConfig]);
 
   useEffect(() => {
     if (!homeChainConfig) return;
@@ -250,7 +250,7 @@ export const SubstrateHomeAdaptorProvider = ({
         }
       }
     },
-    [api, setDepositNonce, setTransactionStatus, address]
+    [api, setDepositNonce, setTransactionStatus, address, homeChainConfig]
   );
 
   // Required for adaptor however not needed for substrate
@@ -306,7 +306,6 @@ export const SubstrateDestinationAdaptorProvider = ({
     setTransactionStatus,
   } = useNetworkManager();
 
-  const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
 
   const [initiaising, setInitialising] = useState(false);
@@ -321,7 +320,7 @@ export const SubstrateDestinationAdaptorProvider = ({
         setInitialising(false);
       })
       .catch(console.error);
-  }, [destinationChainConfig, registry]);
+  }, [destinationChainConfig, api, initiaising]);
 
   const [listenerActive, setListenerActive] = useState<
     UnsubscribePromise | undefined
@@ -383,11 +382,20 @@ export const SubstrateDestinationAdaptorProvider = ({
       setListenerActive(unsubscribe);
     } else if (listenerActive && !depositNonce) {
       const unsubscribeCall = async () => {
-        await unsubscribeCall();
         setListenerActive(undefined);
       };
+      unsubscribeCall();
     }
-  }, [api, depositNonce]);
+  }, [
+    api,
+    depositNonce,
+    depositVotes,
+    destinationChainConfig,
+    listenerActive,
+    setDepositVotes,
+    setTransactionStatus,
+    tokensDispatch,
+  ]);
 
   return (
     <DestinationBridgeContext.Provider

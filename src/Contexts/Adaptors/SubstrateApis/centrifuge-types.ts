@@ -1,7 +1,7 @@
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable sort-keys */
+/* eslint-disable */
 
 import type { OverrideVersionedType } from "@polkadot/types/types";
 
