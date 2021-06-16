@@ -94,6 +94,7 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   type: "Substrate";
   chainbridgePalletName: string; // The name of the chainbridge palette
   transferPalletName: string; // The name of the pallet that should initiate transfers
+  typesFileName: string; // The name of the Substrate types file. The file should be located in src/Contexts/Adaptors/SubstrateApis
 };
 ```
 

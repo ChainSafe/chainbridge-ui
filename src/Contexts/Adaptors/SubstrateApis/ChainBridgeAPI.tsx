@@ -4,10 +4,13 @@ import {
   chainbridgeConfig,
   SubstrateBridgeConfig,
 } from "../../../chainbridgeConfig";
-import types from "./bridgeTypes.json";
 
 export const createApi = async (rpcUrl: string) => {
   const provider = new WsProvider(rpcUrl);
+  const subChainConfig = chainbridgeConfig.chains.find(
+    (c) => c.rpcUrl === rpcUrl
+  ) as SubstrateBridgeConfig;
+  const types = (await import(`./${subChainConfig.typesFileName}`)) as any;
   return ApiPromise.create({ provider, types });
 };
 

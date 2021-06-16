@@ -37,6 +37,7 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   type: "Substrate";
   chainbridgePalletName: string;
   transferPalletName: string;
+  typesFileName: string;
 };
 
 export type ChainbridgeConfig = {
@@ -77,6 +78,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       nativeTokenSymbol: "DOT",
       chainbridgePalletName: "chainBridge",
       transferPalletName: "example",
+      typesFileName: "bridgeTypes.json",
       tokens: [
         {
           address: "substrate-native",
