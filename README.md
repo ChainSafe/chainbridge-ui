@@ -42,7 +42,7 @@ The codebase is configured to be run against the Geth <> Substrate node that can
 - `yarn start:substrate` to start,
 - `yarn setup:example` to initialize
 
-Should the substrate chain you are targetting require different type definitions, these can be updated in [ChainbridgeAPI.tsx](`src/Contexts/Adaptors/SubstrateApis/ChainbridgeAPI.tsx`)
+Should the substrate chain you are targetting require different type definitions, thetype definitions file should be added to `src/Contexts/Adaptors/SubstrateApis/` and the file name for the types set in the substrate bridge configs.
 
 ### Build
 
