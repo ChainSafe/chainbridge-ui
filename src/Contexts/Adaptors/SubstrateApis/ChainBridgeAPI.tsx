@@ -24,7 +24,9 @@ export const submitDeposit = (
     (c) => c.chainId !== destinationChainId
   ) as SubstrateBridgeConfig;
 
-  return api.tx[subChainConfig.transferPalletName].transferNative(
+  return api.tx[subChainConfig.transferPalletName][
+    subChainConfig.transferFunctionName
+  ](
     new BigNumber(amount)
       .multipliedBy(
         new BigNumber(10).pow(new BigNumber(subChainConfig.decimals))
