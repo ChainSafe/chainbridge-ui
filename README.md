@@ -42,7 +42,7 @@ The codebase is configured to be run against the Geth <> Substrate node that can
 - `yarn start:substrate` to start,
 - `yarn setup:example` to initialize
 
-Should the substrate chain you are targetting require different type definitions, thetype definitions file should be added to `src/Contexts/Adaptors/SubstrateApis/` and the file name for the types set in the substrate bridge configs.
+Should the substrate chain you are targetting require different type definitions, the type definitions file should be added to `src/Contexts/Adaptors/SubstrateApis/` and the file name for the types set in the substrate bridge configs.
 
 ### Build
 
@@ -94,6 +94,7 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   type: "Substrate";
   chainbridgePalletName: string; // The name of the chainbridge palette
   transferPalletName: string; // The name of the pallet that should initiate transfers
+  transferFunctionName: string; // The name of the method to call to initiate a transfer
   typesFileName: string; // The name of the Substrate types file. The file should be located in `src/Contexts/Adaptors/SubstrateApis`
 };
 ```
