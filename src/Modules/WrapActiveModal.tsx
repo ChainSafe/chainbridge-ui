@@ -4,7 +4,7 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import { Button, ProgressBar, Typography } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { TokenConfig } from "../chainbridgeConfig";
+import { EvmBridgeConfig, TokenConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -146,7 +146,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
   action,
 }: IWrapActiveModalProps) => {
   const classes = useStyles();
-  const { homeChain } = useChainbridge();
+  const { homeConfig } = useChainbridge();
 
   return (
     <CustomModal
@@ -171,7 +171,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
         <Typography className={classes.heading} variant="h3" component="h3">
           {txState === "inProgress"
             ? action === "wrap"
-              ? `Wrapping ${value} ${homeChain?.nativeTokenSymbol}`
+              ? `Wrapping ${value} ${homeConfig?.nativeTokenSymbol}`
               : `Unwrapping ${value} ${tokenInfo.symbol}`
             : action === "wrap"
             ? "Token wrapped"
@@ -181,20 +181,24 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
           <>
             <Typography className={classes.receipt} component="p">
               {action === "wrap"
-                ? `Successfully wrapped ${homeChain?.nativeTokenSymbol} to ${tokenInfo.symbol}`
-                : `Successfully unwrapped ${tokenInfo.symbol} to ${homeChain?.nativeTokenSymbol}`}
-              {homeChain && homeChain.blockExplorer && txHash && (
-                <>
-                  <br />
-                  <a
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href={`${homeChain.blockExplorer}/${txHash}`}
-                  >
-                    View Transaction
-                  </a>
-                </>
-              )}
+                ? `Successfully wrapped ${homeConfig?.nativeTokenSymbol} to ${tokenInfo.symbol}`
+                : `Successfully unwrapped ${tokenInfo.symbol} to ${homeConfig?.nativeTokenSymbol}`}
+              {homeConfig &&
+                (homeConfig as EvmBridgeConfig).blockExplorer &&
+                txHash && (
+                  <>
+                    <br />
+                    <a
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      href={`${
+                        (homeConfig as EvmBridgeConfig).blockExplorer
+                      }/${txHash}`}
+                    >
+                      View Transaction
+                    </a>
+                  </>
+                )}
             </Typography>
             <section className={classes.buttons}>
               <Button

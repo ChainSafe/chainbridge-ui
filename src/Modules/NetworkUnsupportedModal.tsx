@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomModal from "../Components/Custom/CustomModal";
@@ -6,7 +6,12 @@ import {
   Button,
   ExclamationCircleInverseSvg,
   Typography,
+  useLocation,
 } from "@chainsafe/common-components";
+import { useNetworkManager } from "../Contexts/NetworkManagerContext";
+import { ROUTE_LINKS } from "../Components/Routes";
+import { useHomeBridge } from "../Contexts/HomeBridgeContext";
+import { chainbridgeConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -52,39 +57,36 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   })
 );
 
-const networkName = (id: any) => {
-  switch (Number(id)) {
-    case 1:
-      return "Mainnet";
-    case 3:
-      return "Ropsten";
-    case 4:
-      return "Rinkeby";
-    case 5:
-      return "Goerli";
-    case 6:
-      return "Kotti";
-    case 42:
-      return "Kovan";
-    case 61:
-      return "Ethereum Classic - Mainnet";
-    default:
-      return "Other";
-  }
-};
-
-interface INetworkUnsupportedModalProps {
-  open: boolean;
-  network: number | undefined;
-  supportedNetworks: number[];
-}
-
-const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
-  open,
-  network,
-  supportedNetworks,
-}) => {
+const NetworkUnsupportedModal = () => {
   const classes = useStyles();
+  const { homeChainConfig, networkId } = useNetworkManager();
+  const { getNetworkName, wrapTokenConfig, isReady } = useHomeBridge();
+  const { pathname } = useLocation();
+
+  const [open, setOpen] = useState(false);
+  const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (pathname === ROUTE_LINKS.Transfer) {
+      setOpen(!homeChainConfig && !!isReady);
+      setSupportedNetworks(
+        chainbridgeConfig.chains
+          .filter((bc) => bc.networkId !== undefined)
+          .map((bc) => Number(bc.networkId))
+      );
+    } else if (pathname === ROUTE_LINKS.Wrap) {
+      setOpen(!wrapTokenConfig && !!isReady);
+      setSupportedNetworks(
+        chainbridgeConfig.chains
+          .filter((bc) => bc.networkId !== undefined)
+          .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))
+          .map((bc) => Number(bc.networkId))
+      );
+    } else {
+      setOpen(false);
+      setSupportedNetworks([]);
+    }
+  }, [pathname, setOpen, homeChainConfig, isReady, wrapTokenConfig]);
 
   return (
     <CustomModal
@@ -103,7 +105,7 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
         </Typography>
         <Typography component="p" variant="body1">
           This app does not currently support transfers on{" "}
-          {networkName(network)}. Please change networks from within your
+          {getNetworkName(networkId)}. Please change networks from within your
           browser wallet.
         </Typography>
         <br />
@@ -111,7 +113,9 @@ const NetworkUnsupportedModal: React.FC<INetworkUnsupportedModalProps> = ({
           This app is configured to work on{" "}
           {supportedNetworks.map(
             (n, i) =>
-              `${networkName(n)}${i < supportedNetworks.length - 1 ? ", " : ""}`
+              `${getNetworkName(n)}${
+                i < supportedNetworks.length - 1 ? ", " : ""
+              }`
           )}{" "}
           networks
         </Typography>

@@ -9,7 +9,7 @@ import {
 } from "@chainsafe/common-components";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { EvmBridgeConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -148,14 +148,13 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     depositVotes,
     relayerThreshold,
     inTransitMessages,
-    homeChain,
-    destinationChain,
+    homeConfig,
+    destinationChainConfig,
     depositAmount,
     transferTxHash,
     selectedToken,
+    tokens,
   } = useChainbridge();
-  const { tokens } = useWeb3();
-
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
   return (
     <CustomModal
@@ -236,17 +235,20 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               Successfully transferred{" "}
               <strong>
                 {depositAmount} {tokenSymbol}
-                <br /> from {homeChain?.name} to {destinationChain?.name}.
+                <br /> from {homeConfig?.name} to {destinationChainConfig?.name}
+                .
               </strong>
             </Typography>
             <section className={classes.buttons}>
               <Button
                 onClick={() =>
-                  destinationChain &&
-                  destinationChain.blockExplorer &&
+                  destinationChainConfig &&
+                  (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
                   transferTxHash &&
                   window.open(
-                    `${destinationChain.blockExplorer}/${transferTxHash}`,
+                    `${
+                      (destinationChainConfig as EvmBridgeConfig).blockExplorer
+                    }/${transferTxHash}`,
                     "_blank"
                   )
                 }
@@ -276,22 +278,26 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {homeChain && homeChain.blockExplorer && transferTxHash && (
-              <Button
-                onClick={() =>
-                  window.open(
-                    `${homeChain?.blockExplorer}/${transferTxHash}`,
-                    "_blank"
-                  )
-                }
-                size="small"
-                className={classes.button}
-                variant="outline"
-                disabled
-              >
-                View transaction
-              </Button>
-            )}
+            {homeConfig &&
+              (homeConfig as EvmBridgeConfig).blockExplorer &&
+              transferTxHash && (
+                <Button
+                  onClick={() =>
+                    window.open(
+                      `${
+                        (homeConfig as EvmBridgeConfig).blockExplorer
+                      }/${transferTxHash}`,
+                      "_blank"
+                    )
+                  }
+                  size="small"
+                  className={classes.button}
+                  variant="outline"
+                  disabled
+                >
+                  View transaction
+                </Button>
+              )}
             <section className={classes.buttons}>
               <Button
                 size="small"

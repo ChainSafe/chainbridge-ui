@@ -11,8 +11,9 @@ import Routes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
-import { Web3Provider } from "@chainsafe/web3-context";
+import { NetworkManagerProvider } from "./Contexts/NetworkManagerContext";
 import { chainbridgeConfig } from "./chainbridgeConfig";
+import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
 import "@chainsafe/common-theme/dist/font-faces.css";
 
@@ -28,12 +29,19 @@ if (
 }
 
 const App: React.FC<{}> = () => {
-  const tokens = chainbridgeConfig.chains.reduce((tca, bc) => {
-    return {
-      ...tca,
-      [bc.networkId]: bc.tokens,
-    };
-  }, {});
+  const tokens = chainbridgeConfig.chains
+    .filter((c) => c.type === "Ethereum")
+    .reduce((tca, bc: any) => {
+      if (bc.networkId) {
+        return {
+          ...tca,
+          [bc.networkId]: bc.tokens,
+        };
+      } else {
+        return tca;
+      }
+    }, {});
+
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (
@@ -59,28 +67,32 @@ const App: React.FC<{}> = () => {
         <ToasterProvider autoDismiss>
           <Web3Provider
             tokensToWatch={tokens}
+            networkIds={[5]}
             onboardConfig={{
               dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
               walletSelect: {
                 wallets: [{ walletName: "metamask", preferred: true }],
               },
               subscriptions: {
-                network: (network) => console.log("chainId: ", network),
+                network: (network) =>
+                  network && console.log("chainId: ", network),
                 balance: (amount) =>
-                  console.log("balance: ", utils.formatEther(amount)),
+                  amount && console.log("balance: ", utils.formatEther(amount)),
               },
             }}
             checkNetwork={false}
             gasPricePollingInterval={120}
             gasPriceSetting="fast"
           >
-            <ChainbridgeProvider>
-              <Router>
-                <AppWrapper>
-                  <Routes />
-                </AppWrapper>
-              </Router>
-            </ChainbridgeProvider>
+            <NetworkManagerProvider>
+              <ChainbridgeProvider>
+                <Router>
+                  <AppWrapper>
+                    <Routes />
+                  </AppWrapper>
+                </Router>
+              </ChainbridgeProvider>
+            </NetworkManagerProvider>
           </Web3Provider>
         </ToasterProvider>
       </ThemeSwitcher>

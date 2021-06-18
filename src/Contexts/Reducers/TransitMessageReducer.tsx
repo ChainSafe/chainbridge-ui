@@ -1,10 +1,11 @@
-import { Vote } from "../ChainbridgeContext";
+import { Vote } from "../NetworkManagerContext";
+
+export type AddMessageAction = { type: "addMessage"; payload: string | Vote };
+export type ResetAction = { type: "resetMessages" };
 
 export function transitMessageReducer(
   transitMessage: Array<string | Vote>,
-  action:
-    | { type: "addMessage"; payload: string | Vote }
-    | { type: "resetMessages" }
+  action: AddMessageAction | ResetAction
 ) {
   switch (action.type) {
     case "addMessage":

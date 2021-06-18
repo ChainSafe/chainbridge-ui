@@ -1,0 +1,17 @@
+# Copyright 2020 ChainSafe Systems
+# SPDX-License-Identifier: LGPL-3.0-only
+
+version: "3"
+services:
+  geth1:
+    image: "chainsafe/chainbridge-geth:20200505131100-5586a65"
+    container_name: geth1
+    ports:
+      - "8545:8545"
+
+  sub-chain:
+    image: "centrifugeio/centrifuge-chain:20201204140308-0809a17"
+    container_name: sub-chain
+    command: centrifuge-chain --dev --alice --ws-external --rpc-external
+    ports:
+      - "9944:9944"

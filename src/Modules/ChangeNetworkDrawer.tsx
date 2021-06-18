@@ -3,7 +3,9 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
-import { useWeb3 } from "@chainsafe/web3-context";
+import { useNetworkManager } from "../Contexts/NetworkManagerContext";
+import { useHomeBridge } from "../Contexts/HomeBridgeContext";
+import { useDestinationBridge } from "../Contexts/DestinationBridgeContext";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
@@ -35,12 +37,13 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { checkIsReady, onboard } = useWeb3();
-
-  const handleConnect = async () => {
-    await onboard?.walletSelect();
-    await checkIsReady();
-  };
+  const {
+    setWalletType,
+    handleSetHomeChain,
+    setDestinationChain,
+  } = useNetworkManager();
+  const { disconnect } = useHomeBridge();
+  const destinationBridge = useDestinationBridge();
 
   return (
     <CustomDrawer open={open} className={classes.root}>
@@ -59,8 +62,12 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
           OK
         </Button>
         <Button
-          onClick={() => {
-            handleConnect();
+          onClick={async () => {
+            // TODO: trigger unsubscribes & clear all state
+            await Promise.all([destinationBridge.disconnect(), disconnect()]);
+            handleSetHomeChain(undefined);
+            setDestinationChain(undefined);
+            setWalletType("select");
           }}
           variant="outline"
         >
