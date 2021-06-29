@@ -212,7 +212,7 @@ export const SubstrateHomeAdaptorProvider = ({
             .signAndSend(
               address,
               { signer: injector.signer },
-              ({ status, events, isFinalized }) => {
+              ({ status, events }) => {
                 status.isInBlock &&
                   console.log(
                     `Completed at block hash #${status.isInBlock.toString()}`
