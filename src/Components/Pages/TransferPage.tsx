@@ -22,6 +22,7 @@ import FeesFormikWrapped from "./FormikContextElements/Fees";
 import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
+import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -201,6 +202,7 @@ const TransferPage = () => {
     address,
   } = useChainbridge();
 
+  const { accounts, selectAccount } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -324,6 +326,26 @@ const TransferPage = () => {
           </section>
         )}
       </div>
+      {isReady &&
+        walletType === "Substrate" &&
+        accounts &&
+        accounts.length > 0 && (
+          <div>
+            <section>
+              <SelectInput
+                label="Select account"
+                className={classes.generalInput}
+                options={accounts.map((acc, i) => ({
+                  label: acc.address,
+                  value: i,
+                }))}
+                onChange={(value) => selectAccount && selectAccount(value)}
+                value={address}
+                placeholder="Select an account"
+              />
+            </section>
+          </div>
+        )}
       <Formik
         initialValues={{
           tokenAmount: 0,
@@ -342,7 +364,7 @@ const TransferPage = () => {
       >
         <Form
           className={clsx(classes.formArea, {
-            disabled: !homeConfig,
+            disabled: !homeConfig || !address,
           })}
         >
           <section>

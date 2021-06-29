@@ -6,6 +6,7 @@ import { createApi, submitDeposit } from "./SubstrateApis/ChainBridgeAPI";
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
+  InjectedAccountType,
 } from "./interfaces";
 
 import { ApiPromise } from "@polkadot/api";
@@ -21,21 +22,13 @@ import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
 import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
 
-type injectedAccountType = {
-  address: string;
-  meta: {
-    name: string;
-    source: string;
-  };
-};
-
 export const SubstrateHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
   const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
   const [isReady, setIsReady] = useState(false);
-
+  const [accounts, setAccounts] = useState<InjectedAccountType[]>([]);
   const [address, setAddress] = useState<string | undefined>(undefined);
 
   const {
@@ -114,7 +107,7 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [api, getRelayerThreshold, confirmChainID, homeChainConfig]);
 
   useEffect(() => {
-    if (!homeChainConfig) return;
+    if (!homeChainConfig || !address) return;
     let unsubscribe: VoidFn | undefined;
     if (api) {
       api.query.system
@@ -122,6 +115,7 @@ export const SubstrateHomeAdaptorProvider = ({
           const {
             data: { free: balance },
           } = result.toJSON() as any;
+          debugger;
           setTokens({
             [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
               decimals: homeChainConfig.decimals,
@@ -146,7 +140,7 @@ export const SubstrateHomeAdaptorProvider = ({
 
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
-    if (!isReady && !address) {
+    if (!isReady) {
       web3Enable("chainbridge-ui")
         .then(() => {
           // web3Account resolves with the injected accounts
@@ -165,7 +159,7 @@ export const SubstrateHomeAdaptorProvider = ({
               // This is where the correct chain configuration is set to the network context
               // Any operations before presenting the accounts to the UI or providing the config
               // to the rest of the dapp should be done here
-              loadAccounts(injectedAccounts);
+              setAccounts(injectedAccounts);
               handleSetHomeChain(
                 homeChains.find((item) => item.type === "Substrate")?.chainId
               );
@@ -174,7 +168,7 @@ export const SubstrateHomeAdaptorProvider = ({
         })
         .catch(console.error);
     }
-  }, [isReady, address, handleSetHomeChain, homeChains]);
+  }, [isReady, handleSetHomeChain, homeChains]);
 
   useEffect(() => {
     // This is a simple check
@@ -182,9 +176,12 @@ export const SubstrateHomeAdaptorProvider = ({
     api?.isReady.then(() => setIsReady(true));
   }, [api, setIsReady]);
 
-  const loadAccounts = (injectedAccounts: injectedAccountType[] = []) => {
-    setAddress(injectedAccounts[0].address);
-  };
+  const selectAccount = useCallback(
+    (index: number) => {
+      setAddress(accounts[index].address);
+    },
+    [accounts]
+  );
 
   const deposit = useCallback(
     async (
@@ -287,6 +284,8 @@ export const SubstrateHomeAdaptorProvider = ({
         chainConfig: homeChainConfig,
         address: address,
         nativeTokenBalance: 0,
+        accounts: accounts,
+        selectAccount: selectAccount,
       }}
     >
       {children}
