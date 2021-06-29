@@ -115,7 +115,6 @@ export const SubstrateHomeAdaptorProvider = ({
           const {
             data: { free: balance },
           } = result.toJSON() as any;
-          debugger;
           setTokens({
             [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
               decimals: homeChainConfig.decimals,
@@ -160,6 +159,9 @@ export const SubstrateHomeAdaptorProvider = ({
               // Any operations before presenting the accounts to the UI or providing the config
               // to the rest of the dapp should be done here
               setAccounts(injectedAccounts);
+              if (injectedAccounts.length === 1) {
+                selectAccount(0);
+              }
               handleSetHomeChain(
                 homeChains.find((item) => item.type === "Substrate")?.chainId
               );
