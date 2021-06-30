@@ -36,6 +36,8 @@ export type EvmBridgeConfig = BridgeConfig & {
 export type SubstrateBridgeConfig = BridgeConfig & {
   type: "Substrate";
   chainbridgePalletName: string;
+  bridgeFeeFunctionName?: string; // If this value is provided, the chain value will be used will be used
+  bridgeFeeValue?: number; // If the above value is not provided, this value will be used for the fee. No scaling should be applied.
   transferPalletName: string;
   transferFunctionName: string;
   typesFileName: string;
@@ -78,6 +80,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       type: "Substrate",
       nativeTokenSymbol: "DOT",
       chainbridgePalletName: "chainBridge",
+      bridgeFeeFunctionName: "tokenTransferFee",
       transferPalletName: "example",
       transferFunctionName: "transferNative",
       typesFileName: "bridgeTypes.json",

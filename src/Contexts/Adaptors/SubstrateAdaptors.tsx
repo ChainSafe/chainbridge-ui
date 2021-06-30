@@ -42,7 +42,7 @@ export const SubstrateHomeAdaptorProvider = ({
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
   );
-  const [bridgeFee] = useState<number>(0);
+  const [bridgeFee, setBridgeFee] = useState<number | undefined>(undefined);
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("CSS");
@@ -73,6 +73,27 @@ export const SubstrateHomeAdaptorProvider = ({
         (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
       ].relayerThreshold();
       setRelayerThreshold(Number(relayerThreshold.toHuman()));
+    }
+  }, [api, homeChainConfig]);
+
+  const getBridgeFee = useCallback(async () => {
+    if (api) {
+      const config = homeChainConfig as SubstrateBridgeConfig;
+
+      const fee = config.bridgeFeeFunctionName
+        ? Number(
+            // TODO Figure out bridge fee decimals
+            (
+              await api.query[config.chainbridgePalletName][
+                config.bridgeFeeFunctionName
+              ]()
+            ).toHuman()
+          )
+        : config.bridgeFeeValue
+        ? config.bridgeFeeValue
+        : 0;
+
+      setBridgeFee(fee);
     }
   }, [api, homeChainConfig]);
 
