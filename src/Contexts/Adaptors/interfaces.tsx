@@ -14,6 +14,14 @@ export interface IWeb3ProviderWrapper {
   children: React.ReactNode | React.ReactNode[];
 }
 
+export type InjectedAccountType = {
+  address: string;
+  meta: {
+    name: string;
+    source: string;
+  };
+};
+
 export interface HomeChainAdaptorContext {
   chainConfig: BridgeConfig | undefined;
 
@@ -47,7 +55,8 @@ export interface HomeChainAdaptorContext {
 
   isReady: boolean;
   address: string | undefined;
-
+  accounts?: Array<InjectedAccountType>;
+  selectAccount?: (index: number) => void;
   nativeTokenBalance: number | undefined;
 
   tokens: Tokens;
