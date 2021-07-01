@@ -79,16 +79,18 @@ export const SubstrateHomeAdaptorProvider = ({
   const getBridgeFee = useCallback(async () => {
     if (api) {
       const config = homeChainConfig as SubstrateBridgeConfig;
+      debugger;
 
       const fee = config.bridgeFeeFunctionName
-        ? Number(
-            // TODO Figure out bridge fee decimals
-            (
-              await api.query[config.chainbridgePalletName][
+        ? new BN(
+            Number(
+              await api.query[config.transferPalletName][
                 config.bridgeFeeFunctionName
               ]()
-            ).toHuman()
+            )
           )
+            .shiftedBy(-config.decimals)
+            .toNumber()
         : config.bridgeFeeValue
         ? config.bridgeFeeValue
         : 0;
@@ -123,9 +125,10 @@ export const SubstrateHomeAdaptorProvider = ({
       if (api.isConnected && homeChainConfig) {
         getRelayerThreshold();
         confirmChainID();
+        getBridgeFee();
       }
     }
-  }, [api, getRelayerThreshold, confirmChainID, homeChainConfig]);
+  }, [api, getRelayerThreshold, getBridgeFee, confirmChainID, homeChainConfig]);
 
   useEffect(() => {
     if (!homeChainConfig || !address) return;
