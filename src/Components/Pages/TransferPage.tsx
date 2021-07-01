@@ -174,6 +174,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         },
       },
     },
+    accountSelector: {
+      marginBottom: 24,
+    },
   })
 );
 
@@ -262,7 +265,14 @@ const TransferPage = () => {
           tokens[preflightDetails.token] &&
           tokens[preflightDetails.token].balance
         ) {
-          return parseFloat(value) <= tokens[preflightDetails.token].balance;
+          if (homeConfig?.type === "Ethereum") {
+            return parseFloat(value) <= tokens[preflightDetails.token].balance;
+          } else {
+            return (
+              parseFloat(value + (bridgeFee || 0)) <=
+              tokens[preflightDetails.token].balance
+            );
+          }
         }
         return false;
       })
@@ -331,7 +341,7 @@ const TransferPage = () => {
         accounts &&
         accounts.length > 0 && (
           <div>
-            <section>
+            <section className={classes.accountSelector}>
               <SelectInput
                 label="Select account"
                 className={classes.generalInput}

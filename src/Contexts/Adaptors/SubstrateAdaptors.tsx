@@ -42,7 +42,7 @@ export const SubstrateHomeAdaptorProvider = ({
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined
   );
-  const [bridgeFee] = useState<number>(0);
+  const [bridgeFee, setBridgeFee] = useState<number | undefined>(undefined);
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("CSS");
@@ -76,6 +76,29 @@ export const SubstrateHomeAdaptorProvider = ({
     }
   }, [api, homeChainConfig]);
 
+  const getBridgeFee = useCallback(async () => {
+    if (api) {
+      const config = homeChainConfig as SubstrateBridgeConfig;
+      debugger;
+
+      const fee = config.bridgeFeeFunctionName
+        ? new BN(
+            Number(
+              await api.query[config.transferPalletName][
+                config.bridgeFeeFunctionName
+              ]()
+            )
+          )
+            .shiftedBy(-config.decimals)
+            .toNumber()
+        : config.bridgeFeeValue
+        ? config.bridgeFeeValue
+        : 0;
+
+      setBridgeFee(fee);
+    }
+  }, [api, homeChainConfig]);
+
   const confirmChainID = useCallback(async () => {
     if (api) {
       const currentId = Number(
@@ -102,9 +125,10 @@ export const SubstrateHomeAdaptorProvider = ({
       if (api.isConnected && homeChainConfig) {
         getRelayerThreshold();
         confirmChainID();
+        getBridgeFee();
       }
     }
-  }, [api, getRelayerThreshold, confirmChainID, homeChainConfig]);
+  }, [api, getRelayerThreshold, getBridgeFee, confirmChainID, homeChainConfig]);
 
   useEffect(() => {
     if (!homeChainConfig || !address) return;

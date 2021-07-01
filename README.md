@@ -94,6 +94,8 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   type: "Substrate";
   chainbridgePalletName: string; // The name of the chainbridge palette
   transferPalletName: string; // The name of the pallet that should initiate transfers
+  bridgeFeeFunctionName?: string; // The name of the function to fetch the bridge fee
+  bridgeFeeValue?: number; // The value of the bridge fee, scaled to human readable amounts. If the `bridgeFeeFunctionName` above is provided the onchain value will take preference.
   transferFunctionName: string; // The name of the method to call to initiate a transfer
   typesFileName: string; // The name of the Substrate types file. The file should be located in `src/Contexts/Adaptors/SubstrateApis`
 };
