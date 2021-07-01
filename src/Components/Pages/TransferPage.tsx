@@ -174,6 +174,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         },
       },
     },
+    accountSelector: {
+      marginBottom: 24,
+    },
   })
 );
 
@@ -338,7 +341,7 @@ const TransferPage = () => {
         accounts &&
         accounts.length > 0 && (
           <div>
-            <section>
+            <section className={classes.accountSelector}>
               <SelectInput
                 label="Select account"
                 className={classes.generalInput}
