@@ -79,7 +79,6 @@ export const SubstrateHomeAdaptorProvider = ({
   const getBridgeFee = useCallback(async () => {
     if (api) {
       const config = homeChainConfig as SubstrateBridgeConfig;
-      debugger;
 
       const fee = config.bridgeFeeFunctionName
         ? new BN(
@@ -184,7 +183,7 @@ export const SubstrateHomeAdaptorProvider = ({
               // to the rest of the dapp should be done here
               setAccounts(injectedAccounts);
               if (injectedAccounts.length === 1) {
-                selectAccount(0);
+                setAddress(injectedAccounts[0].address);
               }
               handleSetHomeChain(
                 homeChains.find((item) => item.type === "Substrate")?.chainId

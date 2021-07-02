@@ -350,7 +350,7 @@ const TransferPage = () => {
                   value: i,
                 }))}
                 onChange={(value) => selectAccount && selectAccount(value)}
-                value={address}
+                value={accounts.findIndex((v) => v.address === address)}
                 placeholder="Select an account"
               />
             </section>
