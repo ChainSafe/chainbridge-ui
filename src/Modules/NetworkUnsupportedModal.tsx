@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
-import CustomModal from '../Components/Custom/CustomModal';
 import {
   Button,
   ExclamationCircleInverseSvg,
   Typography,
   useLocation,
 } from '@chainsafe/common-components';
+import CustomModal from '../Components/Custom/CustomModal';
 import { useNetworkManager } from '../Contexts/NetworkManagerContext';
 import { ROUTE_LINKS } from '../Components/Routes';
 import { useHomeBridge } from '../Contexts/HomeBridgeContext';
@@ -34,7 +34,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       width: 20,
       marginTop: constants.generalUnit * 0.8,
       marginRight: constants.generalUnit * 2,
-      fill: palette.additional['gray'][7],
+      fill: palette.additional.gray[7],
     },
     buttons: {
       display: 'flex',
@@ -46,11 +46,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     button: {
-      borderColor: palette.additional['gray'][8],
-      color: palette.additional['gray'][8],
+      borderColor: palette.additional.gray[8],
+      color: palette.additional.gray[8],
       '&:hover': {
-        borderColor: palette.additional['gray'][8],
-        backgroundColor: palette.additional['gray'][8],
+        borderColor: palette.additional.gray[8],
+        backgroundColor: palette.additional.gray[8],
         color: palette.common.white.main,
       },
     },

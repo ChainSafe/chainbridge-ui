@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
-import AboutDrawer from '../../Modules/AboutDrawer';
-import ChangeNetworkDrawer from '../../Modules/ChangeNetworkDrawer';
-import PreflightModalTransfer from '../../Modules/PreflightModalTransfer';
 import {
   Button,
   Typography,
@@ -10,14 +7,17 @@ import {
   SelectInput,
 } from '@chainsafe/common-components';
 import { Form, Formik } from 'formik';
-import AddressInput from '../Custom/AddressInput';
 import clsx from 'clsx';
+import { object, string } from 'yup';
+import { utils } from 'ethers';
+import AboutDrawer from '../../Modules/AboutDrawer';
+import ChangeNetworkDrawer from '../../Modules/ChangeNetworkDrawer';
+import PreflightModalTransfer from '../../Modules/PreflightModalTransfer';
+import AddressInput from '../Custom/AddressInput';
 import TransferActiveModal from '../../Modules/TransferActiveModal';
 import { useChainbridge } from '../../Contexts/ChainbridgeContext';
 import TokenSelectInput from '../Custom/TokenSelectInput';
 import TokenInput from '../Custom/TokenInput';
-import { object, string } from 'yup';
-import { utils } from 'ethers';
 import FeesFormikWrapped from './FormikContextElements/Fees';
 import { useNetworkManager } from '../../Contexts/NetworkManagerContext';
 import NetworkUnsupportedModal from '../../Modules/NetworkUnsupportedModal';
@@ -61,9 +61,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       padding: `${constants.generalUnit * 2}px ${
         constants.generalUnit * 1.5
       }px`,
-      border: `1px solid ${palette.additional['gray'][6]}`,
+      border: `1px solid ${palette.additional.gray[6]}`,
       borderRadius: 2,
-      color: palette.additional['gray'][9],
+      color: palette.additional.gray[9],
       marginTop: constants.generalUnit,
       marginBottom: constants.generalUnit * 3,
     },
@@ -105,16 +105,16 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: palette.additional['gray'][8],
-      backgroundColor: palette.additional['gray'][3],
-      borderColor: palette.additional['gray'][6],
+      color: palette.additional.gray[8],
+      backgroundColor: palette.additional.gray[3],
+      borderColor: palette.additional.gray[6],
       '&:hover': {
-        borderColor: palette.additional['gray'][6],
-        backgroundColor: palette.additional['gray'][7],
+        borderColor: palette.additional.gray[6],
+        backgroundColor: palette.additional.gray[7],
         color: palette.common.white.main,
       },
       '&:focus': {
-        borderColor: palette.additional['gray'][6],
+        borderColor: palette.additional.gray[6],
       },
     },
     currencySelector: {
@@ -139,7 +139,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       height: 20,
       width: 20,
       marginTop: constants.generalUnit * 5,
-      fill: `${palette.additional['transferUi'][1]} !important`,
+      fill: `${palette.additional.transferUi[1]} !important`,
     },
     tokenItem: {
       display: 'flex',
@@ -167,7 +167,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       '& > *': {
         display: 'block',
         width: '50%',
-        color: palette.additional['gray'][8],
+        color: palette.additional.gray[8],
         marginBottom: constants.generalUnit / 2,
         '&:nth-child(even)': {
           textAlign: 'right',
@@ -246,9 +246,8 @@ const TransferPage = () => {
           tokens[preflightDetails.token].balance !== undefined
         ) {
           return true;
-        } else {
-          return false;
         }
+        return false;
       })
       .test('InputValid', 'Input invalid', value => {
         try {
@@ -267,12 +266,11 @@ const TransferPage = () => {
         ) {
           if (homeConfig?.type === 'Ethereum') {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
-          } else {
-            return (
-              parseFloat(value + (bridgeFee || 0)) <=
-              tokens[preflightDetails.token].balance
-            );
           }
+          return (
+            parseFloat(value + (bridgeFee || 0)) <=
+            tokens[preflightDetails.token].balance
+          );
         }
         return false;
       })

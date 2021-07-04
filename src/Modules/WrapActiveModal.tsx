@@ -41,8 +41,8 @@ const useStyles = makeStyles(
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        border: `1px solid ${palette.additional['transactionModal'][2]}`,
-        color: palette.additional['transactionModal'][3],
+        border: `1px solid ${palette.additional.transactionModal[2]}`,
+        color: palette.additional.transactionModal[3],
         '& svg': {
           height: 20,
           width: 20,
@@ -63,12 +63,12 @@ const useStyles = makeStyles(
         },
       },
       button: {
-        borderColor: `${palette.additional['gray'][8]} !important`,
-        color: `${palette.additional['gray'][8]} !important`,
+        borderColor: `${palette.additional.gray[8]} !important`,
+        color: `${palette.additional.gray[8]} !important`,
         textDecoration: 'none',
         '&:hover': {
-          borderColor: `${palette.additional['gray'][8]} !important`,
-          backgroundColor: `${palette.additional['gray'][8]} !important`,
+          borderColor: `${palette.additional.gray[8]} !important`,
+          backgroundColor: `${palette.additional.gray[8]} !important`,
           color: `${palette.common.white.main} !important`,
           textDecoration: 'none',
         },
@@ -121,7 +121,7 @@ const useStyles = makeStyles(
           borderRadius: '0 !important',
           '&  >  *': {
             borderRadius: '0 !important',
-            background: `${palette.additional['transactionModal'][1]} !important`,
+            background: `${palette.additional.transactionModal[1]} !important`,
           },
         },
       },

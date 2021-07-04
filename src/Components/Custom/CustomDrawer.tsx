@@ -7,19 +7,19 @@ import clsx from 'clsx';
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      backgroundColor: `${palette.additional['gray'][9]} !important`,
+      backgroundColor: `${palette.additional.gray[9]} !important`,
       color: palette.common.white.main,
       border: 'none',
       padding: `${constants.generalUnit * 3}px ${constants.generalUnit * 4}px`,
     },
     backdrop: {
-      backgroundColor: `${palette.additional['gray'][9]} !important`,
+      backgroundColor: `${palette.additional.gray[9]} !important`,
       opacity: `0.6 !important`,
     },
   }),
 );
 
-interface ICustomDrawerProps extends IDrawerProps {}
+type ICustomDrawerProps = IDrawerProps;
 
 const CustomDrawer: React.FC<ICustomDrawerProps> = ({
   children,

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
-import AboutDrawer from '../../Modules/AboutDrawer';
-import ChangeNetworkDrawer from '../../Modules/ChangeNetworkDrawer';
 import {
   Button,
   Typography,
@@ -10,8 +8,10 @@ import {
 } from '@chainsafe/common-components';
 import { Form, Formik } from 'formik';
 import clsx from 'clsx';
-import { useChainbridge } from '../../Contexts/ChainbridgeContext';
 import { object, string } from 'yup';
+import { useChainbridge } from '../../Contexts/ChainbridgeContext';
+import ChangeNetworkDrawer from '../../Modules/ChangeNetworkDrawer';
+import AboutDrawer from '../../Modules/AboutDrawer';
 import { ReactComponent as ETHIcon } from '../../media/tokens/eth.svg';
 import { TokenConfig } from '../../chainbridgeConfig';
 import PreflightModalWrap from '../../Modules/PreflightModalWrap';
@@ -64,9 +64,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       padding: `${constants.generalUnit * 2}px ${
         constants.generalUnit * 1.5
       }px`,
-      border: `1px solid ${palette.additional['gray'][6]}`,
+      border: `1px solid ${palette.additional.gray[6]}`,
       borderRadius: 2,
-      color: palette.additional['gray'][9],
+      color: palette.additional.gray[9],
       marginTop: constants.generalUnit,
       marginBottom: constants.generalUnit * 3,
     },
@@ -108,16 +108,16 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: palette.additional['gray'][8],
-      backgroundColor: palette.additional['gray'][3],
-      borderColor: palette.additional['gray'][6],
+      color: palette.additional.gray[8],
+      backgroundColor: palette.additional.gray[3],
+      borderColor: palette.additional.gray[6],
       '&:hover': {
-        borderColor: palette.additional['gray'][6],
-        backgroundColor: palette.additional['gray'][7],
+        borderColor: palette.additional.gray[6],
+        backgroundColor: palette.additional.gray[7],
         color: palette.common.white.main,
       },
       '&:focus': {
-        borderColor: palette.additional['gray'][6],
+        borderColor: palette.additional.gray[6],
       },
     },
     tokenIndicator: {
@@ -140,12 +140,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       height: 20,
       width: 20,
       marginTop: constants.generalUnit * 5,
-      fill: `${palette.additional['transferUi'][1]} !important`,
+      fill: `${palette.additional.transferUi[1]} !important`,
     },
     token: {
-      backgroundColor: palette.additional['gray'][1],
+      backgroundColor: palette.additional.gray[1],
       borderRadius: 2,
-      border: `1px solid ${palette.additional['gray'][6]}`,
+      border: `1px solid ${palette.additional.gray[6]}`,
       padding: `${constants.generalUnit * 1}px ${
         constants.generalUnit * 1.5
       }px`,
@@ -164,7 +164,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       '& span': {
         minWidth: `calc(100% - 30px)`,
         textAlign: 'right',
-        color: palette.additional['gray'][9],
+        color: palette.additional.gray[9],
       },
     },
     tokenItem: {
@@ -242,7 +242,7 @@ const MainPage = () => {
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
         txState: 'inProgress',
-        action: action,
+        action,
       });
       const txHash = await wrapToken(preflightDetails.tokenAmount);
 
@@ -254,9 +254,9 @@ const MainPage = () => {
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
-        txHash: txHash,
+        txHash,
         txState: 'done',
-        action: action,
+        action,
       });
     } catch (error) {
       console.error(error);
@@ -271,7 +271,7 @@ const MainPage = () => {
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
         txState: 'inProgress',
-        action: action,
+        action,
       });
 
       const txHash = await unwrapToken(preflightDetails.tokenAmount);
@@ -284,9 +284,9 @@ const MainPage = () => {
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
-        txHash: txHash,
+        txHash,
         txState: 'done',
-        action: action,
+        action,
       });
     } catch (error) {
       console.error(error);
@@ -307,20 +307,20 @@ const MainPage = () => {
         }
         return false;
       })
-      .test('Max', 'Insufficent funds', value => {
-        return action === 'wrap'
-          ? nativeTokenBalance &&
-            value &&
-            parseFloat(value) <= nativeTokenBalance
-            ? true
-            : false
-          : tokens[wrapTokenConfig?.address || '0x'].balance &&
-            value &&
-            parseFloat(value) <=
-              tokens[wrapTokenConfig?.address || '0x']?.balance
-          ? true
-          : false;
-      })
+      .test('Max', 'Insufficent funds', value =>
+        action === 'wrap'
+          ? !!(
+              nativeTokenBalance &&
+              value &&
+              parseFloat(value) <= nativeTokenBalance
+            )
+          : !!(
+              tokens[wrapTokenConfig?.address || '0x'].balance &&
+              value &&
+              parseFloat(value) <=
+                tokens[wrapTokenConfig?.address || '0x']?.balance
+            ),
+      )
       .required('Please set a value'),
   });
 
@@ -471,7 +471,6 @@ const MainPage = () => {
       <PreflightModalWrap
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
-        sender={address || ''}
         start={() => {
           if (action === 'wrap') {
             handleWrapToken();

@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
-import CustomDrawer from '../Components/Custom/CustomDrawer';
 import { Button, Typography } from '@chainsafe/common-components';
+import CustomDrawer from '../Components/Custom/CustomDrawer';
 import { shortenAddress } from '../Utils/Helpers';
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
@@ -18,7 +18,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
         '&:before': {
           content: "''",
           display: 'block',
-          backgroundColor: palette.additional['gray'][2],
+          backgroundColor: palette.additional.gray[2],
           height: constants.generalUnit,
           width: constants.generalUnit,
           borderRadius: '50%',
@@ -36,8 +36,8 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       margin: `${constants.generalUnit * 2}px 0`,
     },
     startButton: {
-      backgroundColor: palette.additional['preflight'][1],
-      color: palette.additional['preflight'][2],
+      backgroundColor: palette.additional.preflight[1],
+      color: palette.additional.preflight[2],
       marginBottom: constants.generalUnit * 2,
     },
     backdrop: {

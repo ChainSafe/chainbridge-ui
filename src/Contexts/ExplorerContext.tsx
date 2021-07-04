@@ -77,6 +77,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                     )?.name || '',
                   toAddress: depositRecord._destinationRecipientAddress,
                   tokenAddress: depositRecord._tokenAddress,
+                  // @ts-expect-error
                   amount: depositRecord._amount,
                   resourceId: parsedLog.args.resourceID,
                 },
@@ -116,8 +117,9 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                       )?.name || '',
                     toAddress: depositRecord._destinationRecipientAddress,
                     tokenAddress: depositRecord._tokenAddress,
+                    // @ts-expect-error
                     amount: depositRecord._amount,
-                    resourceId: resourceId,
+                    resourceId,
                   },
                 },
               });
@@ -180,7 +182,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                 payload: {
                   depositNonce: depositNonce.toNumber(),
                   transferDetails: {
-                    resourceId: resourceId,
+                    resourceId,
                     fromChainId: originChainId,
                     fromNetworkName:
                       chainbridgeConfig.chains.find(
@@ -192,7 +194,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   proposalEventDetails: {
                     proposalEventBlockNumber: tx.blockNumber,
                     proposalEventTransactionHash: tx.transactionHash,
-                    dataHash: dataHash,
+                    dataHash,
                     timestamp: (await provider.getBlock(tx.blockNumber))
                       .timestamp,
                     proposalStatus: status,
@@ -257,7 +259,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                 payload: {
                   depositNonce: depositNonce.toNumber(),
                   transferDetails: {
-                    resourceId: resourceId,
+                    resourceId,
                     fromChainId: originChainId,
                     fromNetworkName:
                       chainbridgeConfig.chains.find(
@@ -272,7 +274,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                     dataHash: '', // TODO: Confirm whether this is available
                     timestamp: (await provider.getBlock(tx.blockNumber))
                       .timestamp,
-                    voteStatus: status === 1 ? true : false, // TODO: Confirm whether this is the correct status
+                    voteStatus: status === 1, // TODO: Confirm whether this is the correct status
                   },
                 },
               });

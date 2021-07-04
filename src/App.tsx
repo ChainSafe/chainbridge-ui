@@ -7,14 +7,14 @@ import {
   ToasterProvider,
 } from '@chainsafe/common-components';
 
+import { Web3Provider } from '@chainsafe/web3-context';
+import { utils } from 'ethers';
 import Routes from './Components/Routes';
 import { lightTheme } from './Themes/LightTheme';
 import { ChainbridgeProvider } from './Contexts/ChainbridgeContext';
 import AppWrapper from './Layouts/AppWrapper';
 import { NetworkManagerProvider } from './Contexts/NetworkManagerContext';
 import { chainbridgeConfig } from './chainbridgeConfig';
-import { Web3Provider } from '@chainsafe/web3-context';
-import { utils } from 'ethers';
 import '@chainsafe/common-theme/dist/font-faces.css';
 
 if (
@@ -37,9 +37,8 @@ const App: React.FC<{}> = () => {
           ...tca,
           [bc.networkId]: bc.tokens,
         };
-      } else {
-        return tca;
       }
+      return tca;
     }, {});
 
   return (
@@ -49,15 +48,20 @@ const App: React.FC<{}> = () => {
           <p>
             An error occurred and has been logged. If you would like to provide
             additional info to help us debug and resolve the issue, click the
-            "Provide Additional Details" button
+            &quot;Provide Additional Details&quot; button
           </p>
           <p>{error?.message.toString()}</p>
           <p>{componentStack}</p>
           <p>{eventId}</p>
-          <button onClick={() => showReportDialog({ eventId: eventId || '' })}>
+          <button
+            type="button"
+            onClick={() => showReportDialog({ eventId: eventId || '' })}
+          >
             Provide Additional Details
           </button>
-          <button onClick={resetError}>Reset error</button>
+          <button type="button" onClick={resetError}>
+            Reset error
+          </button>
         </div>
       )}
       onReset={() => window.location.reload()}

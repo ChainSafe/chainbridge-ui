@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
-import CustomDrawer from '../Components/Custom/CustomDrawer';
 import { Button, Typography } from '@chainsafe/common-components';
+import CustomDrawer from '../Components/Custom/CustomDrawer';
 import { useNetworkManager } from '../Contexts/NetworkManagerContext';
 import { useHomeBridge } from '../Contexts/HomeBridgeContext';
 import { useDestinationBridge } from '../Contexts/DestinationBridgeContext';

@@ -1,17 +1,17 @@
+import React, { ReactNode } from 'react';
 import { NavLink, Typography } from '@chainsafe/common-components';
 import { createStyles, ITheme, makeStyles } from '@chainsafe/common-theme';
-import React from 'react';
-import { ReactNode } from 'react';
 import AppHeader from './AppHeader';
 import { ReactComponent as GlobalSvg } from '../media/Icons/global.svg';
 import { ReactComponent as GiftSvg } from '../media/Icons/gift.svg';
 import { ROUTE_LINKS } from '../Components/Routes';
+
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
 }
 
-const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
-  return createStyles({
+const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
+  createStyles({
     root: {
       minHeight: '100vh',
       display: 'flex',
@@ -35,7 +35,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       // position: "absolute",
       // top: "50%",
       // left: "50%",
-      margin: `0 auto`,
+      margin: '0 auto',
       // transform: "translate(-50%, -50%)",
       maxWidth: 460,
       display: 'flex',
@@ -47,7 +47,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       height: '100%',
       width: '100%',
       overflow: 'hidden',
-      border: `1px solid ${palette.additional['gray'][7]}`,
+      border: `1px solid ${palette.additional.gray[7]}`,
       borderRadius: 4,
     },
     navTabs: {
@@ -67,21 +67,21 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
         flexDirection: 'row',
         alignItems: 'center',
         padding: `${constants.generalUnit}px ${constants.generalUnit * 1.5}px`,
-        border: `1px solid ${palette.additional['gray'][7]}`,
+        border: `1px solid ${palette.additional.gray[7]}`,
         textDecoration: 'none',
         marginRight: constants.generalUnit,
         transitionDuration: `${animation.transform}ms`,
-        color: palette.additional['gray'][8],
+        color: palette.additional.gray[8],
         maxHeight: constants.navItemHeight,
         '& svg': {
           transitionDuration: `${animation.transform}ms`,
-          fill: palette.additional['gray'][8],
+          fill: palette.additional.gray[8],
         },
         '&.active': {
-          color: palette.additional['gray'][9],
+          color: palette.additional.gray[9],
           textDecoration: 'underline',
           '& svg': {
-            fill: palette.additional['geekblue'][5],
+            fill: palette.additional.geekblue[5],
           },
         },
         '& > *:first-child': {
@@ -93,8 +93,8 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
         width: 14,
       },
     },
-  });
-});
+  }),
+);
 
 const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
   const classes = useStyles();

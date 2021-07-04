@@ -182,23 +182,23 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
           {children}
         </EVMDestinationAdaptorProvider>
       );
-    } else if (destinationChainConfig?.type === 'Substrate') {
+    }
+    if (destinationChainConfig?.type === 'Substrate') {
       return (
         <SubstrateDestinationAdaptorProvider>
           {children}
         </SubstrateDestinationAdaptorProvider>
       );
-    } else {
-      return (
-        <DestinationBridgeContext.Provider
-          value={{
-            disconnect: async () => {},
-          }}
-        >
-          {children}
-        </DestinationBridgeContext.Provider>
-      );
     }
+    return (
+      <DestinationBridgeContext.Provider
+        value={{
+          disconnect: async () => {},
+        }}
+      >
+        {children}
+      </DestinationBridgeContext.Provider>
+    );
   };
 
   return (
@@ -210,7 +210,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         homeChainConfig,
         setWalletType,
         walletType,
-        homeChains: homeChains,
+        homeChains,
         destinationChains,
         inTransitMessages,
         handleSetHomeChain,
@@ -240,18 +240,13 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
           value={{
             connect: async () => undefined,
             disconnect: async () => {},
-            getNetworkName: (id: any) => '',
+            getNetworkName: () => '',
             isReady: false,
             selectedToken: '',
-            deposit: async (
-              amount: number,
-              recipient: string,
-              tokenAddress: string,
-              destinationChainId: number,
-            ) => undefined,
+            deposit: async () => undefined,
             setDepositAmount: () => undefined,
             tokens: {},
-            setSelectedToken: (input: string) => undefined,
+            setSelectedToken: () => undefined,
             address: undefined,
             bridgeFee: undefined,
             chainConfig: undefined,
@@ -260,8 +255,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
             relayerThreshold: undefined,
             wrapTokenConfig: undefined,
             wrapper: undefined,
-            wrapToken: async (value: number) => '',
-            unwrapToken: async (value: number) => '',
+            wrapToken: async () => '',
+            unwrapToken: async () => '',
           }}
         >
           <DestinationProvider>{children}</DestinationProvider>

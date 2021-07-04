@@ -11,6 +11,7 @@ export class Erc20DetailedFactory {
     address: string,
     signerOrProvider: Signer | Provider,
   ): Erc20Detailed {
+    // @ts-expect-error
     return new Contract(address, _abi, signerOrProvider) as Erc20Detailed;
   }
 }

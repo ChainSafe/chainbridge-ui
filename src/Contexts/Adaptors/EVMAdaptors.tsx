@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Bridge, BridgeFactory } from '@chainsafe/chainbridge-contracts';
 import { useWeb3 } from '@chainsafe/web3-context';
 import { BigNumber, ethers, utils } from 'ethers';
-import { useCallback, useEffect, useState } from 'react';
+
+import { parseUnits } from 'ethers/lib/utils';
+import { decodeAddress } from '@polkadot/util-crypto';
 import {
   chainbridgeConfig,
   EvmBridgeConfig,
@@ -18,12 +20,10 @@ import {
 } from './interfaces';
 import { HomeBridgeContext } from '../HomeBridgeContext';
 import { DestinationBridgeContext } from '../DestinationBridgeContext';
-import { parseUnits } from 'ethers/lib/utils';
-import { decodeAddress } from '@polkadot/util-crypto';
 
 const resetAllowanceLogicFor = [
-  '0xdac17f958d2ee523a2206206994597c13d831ec7', //USDT
-  //Add other offending tokens here
+  '0xdac17f958d2ee523a2206206994597c13d831ec7', // USDT
+  // Add other offending tokens here
 ];
 
 export const EVMHomeAdaptorProvider = ({
@@ -225,6 +225,7 @@ export const EVMHomeAdaptorProvider = ({
     };
     const getBridgeFee = async () => {
       if (homeBridge) {
+        // @ts-expect-error
         const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
         setBridgeFee(bridgeFee);
       }
@@ -279,8 +280,7 @@ export const EVMHomeAdaptorProvider = ({
       const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
       const erc20Decimals = tokens[tokenAddress].decimals;
 
-      const data =
-        '0x' +
+      const data = `0x${
         utils
           .hexZeroPad(
             // TODO Wire up dynamic token decimals
@@ -289,11 +289,12 @@ export const EVMHomeAdaptorProvider = ({
             ).toHexString(),
             32,
           )
-          .substr(2) + // Deposit Amount (32 bytes)
+          .substr(2) // Deposit Amount (32 bytes)
+      }${
         utils
           .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
-          .substr(2) + // len(recipientAddress) (32 bytes)
-        recipient.substr(2); // recipientAddress (?? bytes)
+          .substr(2) // len(recipientAddress) (32 bytes)
+      }${recipient.substr(2)}`; // recipientAddress (?? bytes)
 
       try {
         const currentAllowance = await erc20.allowance(
@@ -302,14 +303,16 @@ export const EVMHomeAdaptorProvider = ({
         );
 
         if (
+          // @ts-expect-error
           Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
         ) {
           if (
+            // @ts-expect-error
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
             resetAllowanceLogicFor.includes(tokenAddress)
           ) {
-            //We need to reset the user's allowance to 0 before we give them a new allowance
-            //TODO Should we alert the user this is happening here?
+            // We need to reset the user's allowance to 0 before we give them a new allowance
+            // TODO Should we alert the user this is happening here?
             await (
               await erc20.approve(
                 (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
@@ -411,9 +414,8 @@ export const EVMHomeAdaptorProvider = ({
       await tx?.wait();
       if (tx?.hash) {
         return tx?.hash;
-      } else {
-        return '';
       }
+      return '';
     } catch (error) {
       console.error(error);
       return '';
@@ -440,9 +442,8 @@ export const EVMHomeAdaptorProvider = ({
       await tx?.wait();
       if (tx?.hash) {
         return tx?.hash;
-      } else {
-        return '';
       }
+      return '';
     } catch (error) {
       console.error(error);
       return '';
@@ -597,7 +598,7 @@ export const EVMDestinationAdaptorProvider = ({
       );
     }
     return () => {
-      //@ts-ignore
+      // @ts-ignore
       destinationBridge?.removeAllListeners();
     };
   }, [

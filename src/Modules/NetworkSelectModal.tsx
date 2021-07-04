@@ -1,16 +1,16 @@
 import React from 'react';
 import { createStyles, ITheme, makeStyles } from '@chainsafe/common-theme';
-import { useChainbridge } from '../Contexts/ChainbridgeContext';
-import { useNetworkManager } from '../Contexts/NetworkManagerContext';
 import {
   Button,
   Modal,
   ProgressBar,
   Typography,
 } from '@chainsafe/common-components';
+import { useChainbridge } from '../Contexts/ChainbridgeContext';
+import { useNetworkManager } from '../Contexts/NetworkManagerContext';
 
-const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
-  return createStyles({
+const useStyles = makeStyles(({ constants }: ITheme) =>
+  createStyles({
     root: {},
     slide: {
       borderRadius: constants.generalUnit / 2,
@@ -27,8 +27,8 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       flexDirection: 'row',
       justifyContent: 'space-around',
     },
-  });
-});
+  }),
+);
 
 const NetworkSelectModal = () => {
   const classes = useStyles();

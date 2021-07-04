@@ -1,10 +1,10 @@
 import React, { useCallback, useContext } from 'react';
+import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
 import {
   BridgeConfig,
   chainbridgeConfig,
   TokenConfig,
 } from '../chainbridgeConfig';
-import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
 import {
   TransactionStatus,
   useNetworkManager,
@@ -106,7 +106,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const handleDeposit = useCallback(
     async (amount: number, recipient: string, tokenAddress: string) => {
       if (chainConfig && destinationChainConfig) {
-        return await deposit(
+        return deposit(
           amount,
           recipient,
           tokenAddress,
@@ -134,15 +134,15 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         bridgeFee,
         transactionStatus,
         inTransitMessages,
-        depositAmount: depositAmount,
-        transferTxHash: transferTxHash,
-        selectedToken: selectedToken,
+        depositAmount,
+        transferTxHash,
+        selectedToken,
         // TODO: Confirm if EVM specific
         wrapToken,
-        wrapTokenConfig: wrapTokenConfig,
+        wrapTokenConfig,
         unwrapToken,
-        isReady: isReady,
-        nativeTokenBalance: nativeTokenBalance,
+        isReady,
+        nativeTokenBalance,
         tokens,
         address,
         chainId,

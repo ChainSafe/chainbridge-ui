@@ -25,7 +25,6 @@ const getLanguages = (): string[] => {
   const { languages, language, userLanguage } = window.navigator;
   if (Array.isArray(languages)) {
     // Dedupe array of languages
-    // @ts-ignore
     return [...new Set(languages.map(l => l.split('-')[0]))];
   }
   if (language) {
@@ -61,12 +60,10 @@ const LanguageProvider = ({
   const userLocales = getLocales();
   useEffect(() => {
     const userLanguages = getLanguages();
-    // @ts-ignore
     const matchingLanguages = [...new Set(userLanguages)].filter(x =>
       new Set(availableLanguages.map(l => l.id)).has(x),
     );
     const defaultLanguage = matchingLanguages[0] || 'en';
-    //@ts-ignore
     // i18n.load(defaultLanguage, catalogEn)
     // i18n.activate(defaultLanguage)
     setSelectedLanguage(defaultLanguage);
@@ -97,14 +94,14 @@ const LanguageProvider = ({
   return (
     <LanguageContext.Provider
       value={{
-        availableLanguages: availableLanguages,
-        selectedLanguage: selectedLanguage,
+        availableLanguages,
+        selectedLanguage,
         setActiveLanguage: setLanguage,
         selectedLocale: userLocales[0],
         formatLocaleDate,
       }}
     >
-      {/*<I18nProvider i18n={i18n}> */}
+      {/* <I18nProvider i18n={i18n}> */}
       {children}
       {/* </I18nProvider> */}
     </LanguageContext.Provider>

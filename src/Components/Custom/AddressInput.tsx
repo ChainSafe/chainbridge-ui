@@ -68,7 +68,7 @@ const AddressInput: React.FC<IAddressInput> = ({
       <div>
         <TextInput
           {...rest}
-          label={label ? label : field.name}
+          label={label || field.name}
           inputVariant={inputVariant}
           type={type}
           size={size}

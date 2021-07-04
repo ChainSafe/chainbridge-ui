@@ -1,13 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { DestinationBridgeContext } from '../DestinationBridgeContext';
-import { HomeBridgeContext } from '../HomeBridgeContext';
-import { useNetworkManager } from '../NetworkManagerContext';
-import { createApi, submitDeposit } from './SubstrateApis/ChainBridgeAPI';
-import {
-  IDestinationBridgeProviderProps,
-  IHomeBridgeProviderProps,
-  InjectedAccountType,
-} from './interfaces';
 
 import { ApiPromise } from '@polkadot/api';
 import {
@@ -20,6 +11,15 @@ import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
 import { BigNumber as BN } from 'bignumber.js';
 import { UnsubscribePromise, VoidFn } from '@polkadot/api/types';
 import { utils } from 'ethers';
+import {
+  IDestinationBridgeProviderProps,
+  IHomeBridgeProviderProps,
+  InjectedAccountType,
+} from './interfaces';
+import { createApi, submitDeposit } from './SubstrateApis/ChainBridgeAPI';
+import { useNetworkManager } from '../NetworkManagerContext';
+import { HomeBridgeContext } from '../HomeBridgeContext';
+import { DestinationBridgeContext } from '../DestinationBridgeContext';
 import { SubstrateBridgeConfig } from '../../chainbridgeConfig';
 
 export const SubstrateHomeAdaptorProvider = ({
@@ -48,6 +48,41 @@ export const SubstrateHomeAdaptorProvider = ({
   const [selectedToken, setSelectedToken] = useState<string>('CSS');
 
   const [tokens, setTokens] = useState<Tokens>({});
+
+  const handleConnect = useCallback(async () => {
+    // Requests permission to inject the wallet
+    if (!isReady) {
+      web3Enable('chainbridge-ui')
+        .then(() => {
+          // web3Account resolves with the injected accounts
+          // or an empty array
+          web3Accounts()
+            .then(accounts =>
+              accounts.map(({ address, meta }) => ({
+                address,
+                meta: {
+                  ...meta,
+                  name: `${meta.name} (${meta.source})`,
+                },
+              })),
+            )
+            .then(injectedAccounts => {
+              // This is where the correct chain configuration is set to the network context
+              // Any operations before presenting the accounts to the UI or providing the config
+              // to the rest of the dapp should be done here
+              setAccounts(injectedAccounts);
+              if (injectedAccounts.length === 1) {
+                setAddress(injectedAccounts[0].address);
+              }
+              handleSetHomeChain(
+                homeChains.find(item => item.type === 'Substrate')?.chainId,
+              );
+            })
+            .catch(console.error);
+        })
+        .catch(console.error);
+    }
+  }, [isReady, handleSetHomeChain, homeChains]);
 
   useEffect(() => {
     // Attempt connect on load
@@ -160,41 +195,6 @@ export const SubstrateHomeAdaptorProvider = ({
     };
   }, [api, address, homeChainConfig]);
 
-  const handleConnect = useCallback(async () => {
-    // Requests permission to inject the wallet
-    if (!isReady) {
-      web3Enable('chainbridge-ui')
-        .then(() => {
-          // web3Account resolves with the injected accounts
-          // or an empty array
-          web3Accounts()
-            .then(accounts => {
-              return accounts.map(({ address, meta }) => ({
-                address,
-                meta: {
-                  ...meta,
-                  name: `${meta.name} (${meta.source})`,
-                },
-              }));
-            })
-            .then(injectedAccounts => {
-              // This is where the correct chain configuration is set to the network context
-              // Any operations before presenting the accounts to the UI or providing the config
-              // to the rest of the dapp should be done here
-              setAccounts(injectedAccounts);
-              if (injectedAccounts.length === 1) {
-                setAddress(injectedAccounts[0].address);
-              }
-              handleSetHomeChain(
-                homeChains.find(item => item.type === 'Substrate')?.chainId,
-              );
-            })
-            .catch(console.error);
-        })
-        .catch(console.error);
-    }
-  }, [isReady, handleSetHomeChain, homeChains]);
-
   useEffect(() => {
     // This is a simple check
     // The reason for having a isReady is that the UI can lazy load data from this point
@@ -242,12 +242,12 @@ export const SubstrateHomeAdaptorProvider = ({
                   );
 
                 if (status.isFinalized) {
-                  events.filter(({ event }) => {
-                    return api.events[
+                  events.filter(({ event }) =>
+                    api.events[
                       (homeChainConfig as SubstrateBridgeConfig)
                         .chainbridgePalletName
-                    ].FungibleTransfer.is(event);
-                  });
+                    ].FungibleTransfer.is(event),
+                  );
                   api.query[
                     (homeChainConfig as SubstrateBridgeConfig)
                       .chainbridgePalletName
@@ -276,14 +276,10 @@ export const SubstrateHomeAdaptorProvider = ({
   );
 
   // Required for adaptor however not needed for substrate
-  const wrapToken = async (value: number): Promise<string> => {
-    return 'Not implemented';
-  };
+  const wrapToken = async (): Promise<string> => 'Not implemented';
 
   // Required for adaptor however not needed for substrate
-  const unwrapToken = async (value: number): Promise<string> => {
-    return 'Not implemented';
-  };
+  const unwrapToken = async (): Promise<string> => 'Not implemented';
 
   return (
     <HomeBridgeContext.Provider
@@ -299,18 +295,18 @@ export const SubstrateHomeAdaptorProvider = ({
         selectedToken,
         setDepositAmount,
         setSelectedToken,
-        tokens: tokens,
+        tokens,
         relayerThreshold,
         wrapTokenConfig: undefined, // Not implemented
         wrapper: undefined, // Not implemented
         wrapToken, // Not implemented
         unwrapToken, // Not implemented
-        isReady: isReady,
+        isReady,
         chainConfig: homeChainConfig,
-        address: address,
+        address,
         nativeTokenBalance: 0,
-        accounts: accounts,
-        selectAccount: selectAccount,
+        accounts,
+        selectAccount,
       }}
     >
       {children}
@@ -355,7 +351,7 @@ export const SubstrateDestinationAdaptorProvider = ({
       // Wire up event listeners
       // Subscribe to system events via storage
       const unsubscribe = api.query.system.events(events => {
-        console.log('----- Received ' + events.length + ' event(s): -----');
+        console.log(`----- Received ${events.length} event(s): -----`);
         // loop through the Vec<EventRecord>
         events.forEach(record => {
           // extract the phase, event and the event types
@@ -363,17 +359,12 @@ export const SubstrateDestinationAdaptorProvider = ({
           const types = event.typeDef;
           // show what we are busy with
           console.log(
-            event.section +
-              ':' +
-              event.method +
-              '::' +
-              'phase=' +
-              phase.toString(),
+            `${event.section}:${event.method}::phase=${phase.toString()}`,
           );
           console.log(event.meta.documentation.toString());
           // loop through each of the parameters, displaying the type and data
           event.data.forEach((data, index) => {
-            console.log(types[index].type + ';' + data.toString());
+            console.log(`${types[index].type};${data.toString()}`);
           });
 
           if (

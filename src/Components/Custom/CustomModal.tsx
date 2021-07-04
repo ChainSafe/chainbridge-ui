@@ -16,7 +16,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
   }),
 );
 
-interface ICustomModalProps extends IModalProps {}
+type ICustomModalProps = IModalProps;
 
 const CustomModal: React.FC<ICustomModalProps> = ({
   children,

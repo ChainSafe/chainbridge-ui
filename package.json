@@ -9,6 +9,11 @@
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
     "@chainsafe/web3-context": "1.2.0",
+    "@ethersproject/abi": "^5.4.0",
+    "@ethersproject/bignumber": "^5.4.0",
+    "@ethersproject/bytes": "^5.4.0",
+    "@ethersproject/contracts": "^5.4.0",
+    "@ethersproject/providers": "^5.4.1",
     "@material-ui/styles": "4.10.0",
     "@polkadot/api": "3.11.1",
     "@polkadot/extension-dapp": "0.37.1",
@@ -20,7 +25,7 @@
     "@polkadot/util": "5.6.3",
     "@polkadot/util-crypto": "5.6.3",
     "@sentry/react": "^5.26.0",
-    "@types/history": "^4.7.8",
+    "bignumber.js": "^9.0.1",
     "bnc-onboard": "1.26.1",
     "clsx": "^1.1.1",
     "dayjs": "^1.9.1",
@@ -29,7 +34,7 @@
     "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3",
+    "react-scripts": "4.0.3",
     "react-toast-notifications": "2.4.0",
     "yup": "^0.29.3"
   },
@@ -39,13 +44,22 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
     "@testing-library/user-event": "^12.1.7",
+    "@types/history": "^4.7.8",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.8",
     "@types/react": "^16.9.52",
     "@types/react-dom": "^16.9.0",
     "@types/yup": "^0.29.9",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
     "chalk": "^4.1.0",
     "craco": "^0.0.3",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^6.0.0",
     "prettier": "2.1.2",
     "pretty-quick": "^3.1.1",
@@ -67,12 +81,10 @@
     "start:centrifuge": "docker-compose -f ./docker-compose-centrifuge.yml up -V",
     "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",
     "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
   "cracoConfig": "./craco.config.cjs",
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -85,9 +97,8 @@
       "last 1 safari version"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --staged"
-    }
+  "resolutions": {
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0"
   }
 }

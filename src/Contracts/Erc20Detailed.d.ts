@@ -84,13 +84,19 @@ interface Erc20DetailedInterface extends ethers.utils.Interface {
 
 export class Erc20Detailed extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
+
   attach(addressOrName: string): this;
+
   deployed(): Promise<this>;
 
   on(event: EventFilter | string, listener: Listener): this;
+
   once(event: EventFilter | string, listener: Listener): this;
+
   addListener(eventName: EventFilter | string, listener: Listener): this;
+
   removeAllListeners(eventName?: EventFilter | string): this;
+
   removeListener(eventName: any, listener: Listener): this;
 
   interface: Erc20DetailedInterface;

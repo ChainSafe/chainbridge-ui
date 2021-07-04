@@ -5,8 +5,8 @@ import { Typography } from '@chainsafe/common-components';
 import { shortenAddress } from '../Utils/Helpers';
 import { useChainbridge } from '../Contexts/ChainbridgeContext';
 
-const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
-  return createStyles({
+const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
+  createStyles({
     root: {
       display: 'flex',
       position: 'fixed',
@@ -15,9 +15,9 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       width: '100%',
       top: 0,
       left: 0,
-      backgroundColor: palette.additional['header'][1],
-      borderBottom: `1px solid ${palette.additional['header'][3]}`,
-      color: palette.additional['header'][2],
+      backgroundColor: palette.additional.header[1],
+      borderBottom: `1px solid ${palette.additional.header[3]}`,
+      color: palette.additional.header[2],
       alignItems: 'center',
       zIndex: zIndex?.layer2,
     },
@@ -45,15 +45,15 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       height: 10,
       width: 10,
       borderRadius: '50%',
-      backgroundColor: palette.additional['green'][6],
+      backgroundColor: palette.additional.green[6],
       marginRight: constants.generalUnit,
     },
     address: {
       marginRight: constants.generalUnit,
     },
     network: {},
-  });
-});
+  }),
+);
 
 interface IAppHeader {}
 
@@ -74,7 +74,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
           <Typography variant="h5">No wallet connected</Typography>
         ) : (
           <>
-            <div className={classes.indicator}></div>
+            <div className={classes.indicator} />
             <Typography variant="h5" className={classes.address}>
               {address && shortenAddress(address)}
             </Typography>
