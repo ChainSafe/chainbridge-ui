@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { useField } from "formik";
-import { Button, FormikTextInput } from "@chainsafe/common-components";
+import { useField } from 'formik';
+import { Button, FormikTextInput } from '@chainsafe/common-components';
 
 interface ITokenInput {
   disabled?: boolean;

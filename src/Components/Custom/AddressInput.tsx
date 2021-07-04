@@ -1,20 +1,20 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState } from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
 import {
   CheckboxInput,
   FormikTextInputProps,
   TextInput,
-} from "@chainsafe/common-components";
-import clsx from "clsx";
-import { useField } from "formik";
+} from '@chainsafe/common-components';
+import clsx from 'clsx';
+import { useField } from 'formik';
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
     root: {},
     input: {
       margin: 0,
-      width: "100%",
+      width: '100%',
     },
     label: {
       marginBottom: constants.generalUnit,
@@ -22,7 +22,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
     checkbox: {
       marginTop: constants.generalUnit * 3,
     },
-  })
+  }),
 );
 
 interface IAddressInput extends FormikTextInputProps {
@@ -37,8 +37,8 @@ const AddressInput: React.FC<IAddressInput> = ({
   classNames,
   senderAddress,
   className,
-  inputVariant = "default",
-  type = "text",
+  inputVariant = 'default',
+  type = 'text',
   placeholder,
   name,
   size,
@@ -80,7 +80,7 @@ const AddressInput: React.FC<IAddressInput> = ({
           captionMessage={
             meta.error ? `${meta.error}` : captionMessage && captionMessage
           }
-          state={meta.error ? "error" : undefined}
+          state={meta.error ? 'error' : undefined}
           onChange={helpers.setValue}
           disabled={stored !== undefined}
         />

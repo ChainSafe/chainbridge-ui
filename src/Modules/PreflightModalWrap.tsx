@@ -1,30 +1,30 @@
-import React from "react";
+import React from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import CustomDrawer from "../Components/Custom/CustomDrawer";
-import { Button, Typography } from "@chainsafe/common-components";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import CustomDrawer from '../Components/Custom/CustomDrawer';
+import { Button, Typography } from '@chainsafe/common-components';
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
-      position: "absolute",
+      position: 'absolute',
       zIndex: zIndex?.blocker,
-      "& li": {
-        position: "relative",
+      '& li': {
+        position: 'relative',
         padding: `${constants.generalUnit}px 0 ${constants.generalUnit}px ${
           constants.generalUnit * 8
         }px`,
-        "&:before": {
+        '&:before': {
           content: "''",
-          display: "block",
-          backgroundColor: palette.additional["gray"][2],
+          display: 'block',
+          backgroundColor: palette.additional['gray'][2],
           height: constants.generalUnit,
           width: constants.generalUnit,
-          borderRadius: "50%",
-          position: "absolute",
-          top: "50%",
+          borderRadius: '50%',
+          position: 'absolute',
+          top: '50%',
           left: constants.generalUnit * 4,
-          transform: "translate(-50%, -50%)",
+          transform: 'translate(-50%, -50%)',
         },
       },
     },
@@ -35,15 +35,15 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       margin: `${constants.generalUnit * 2}px 0`,
     },
     startButton: {
-      backgroundColor: palette.additional["preflight"][1],
-      color: palette.additional["preflight"][2],
+      backgroundColor: palette.additional['preflight'][1],
+      color: palette.additional['preflight'][2],
       marginBottom: constants.generalUnit * 2,
     },
     backdrop: {
-      position: "absolute",
+      position: 'absolute',
       zIndex: zIndex?.layer4,
     },
-  })
+  }),
 );
 
 interface IPreflightModalWrapProps {
@@ -55,7 +55,7 @@ interface IPreflightModalWrapProps {
   sourceNetwork: string;
   start: () => void;
   wrappedTitle: string;
-  action: "wrap" | "unwrap";
+  action: 'wrap' | 'unwrap';
 }
 
 const PreflightModalWrap: React.FC<IPreflightModalWrapProps> = ({
@@ -109,15 +109,15 @@ const PreflightModalWrap: React.FC<IPreflightModalWrapProps> = ({
         </li>
       </ul>
       <Typography className={classes.agreement} variant="h5" component="p">
-        I agree and want to convert{" "}
+        I agree and want to convert{' '}
         <strong>
           {value} {tokenSymbol}
-        </strong>{" "}
+        </strong>{' '}
         on <strong>{sourceNetwork}</strong> to&nbsp;
         <strong>{wrappedTitle}</strong>
       </Typography>
       <Button onClick={start} className={classes.startButton} fullsize>
-        Convert to {action === "wrap" ? "Wrapped" : "Native"} Token
+        Convert to {action === 'wrap' ? 'Wrapped' : 'Native'} Token
       </Button>
       <Button onClick={close}>Back</Button>
     </CustomDrawer>

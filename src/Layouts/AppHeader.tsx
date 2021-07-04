@@ -1,51 +1,51 @@
-import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
-import React from "react";
-import clsx from "clsx";
-import { Typography } from "@chainsafe/common-components";
-import { shortenAddress } from "../Utils/Helpers";
-import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import { createStyles, ITheme, makeStyles } from '@chainsafe/common-theme';
+import React from 'react';
+import clsx from 'clsx';
+import { Typography } from '@chainsafe/common-components';
+import { shortenAddress } from '../Utils/Helpers';
+import { useChainbridge } from '../Contexts/ChainbridgeContext';
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
     root: {
-      display: "flex",
-      position: "fixed",
-      justifyContent: "space-between",
+      display: 'flex',
+      position: 'fixed',
+      justifyContent: 'space-between',
       padding: `${constants.generalUnit * 2}px ${constants.generalUnit * 4}px`,
-      width: "100%",
+      width: '100%',
       top: 0,
       left: 0,
-      backgroundColor: palette.additional["header"][1],
-      borderBottom: `1px solid ${palette.additional["header"][3]}`,
-      color: palette.additional["header"][2],
-      alignItems: "center",
+      backgroundColor: palette.additional['header'][1],
+      borderBottom: `1px solid ${palette.additional['header'][3]}`,
+      color: palette.additional['header'][2],
+      alignItems: 'center',
       zIndex: zIndex?.layer2,
     },
     left: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "flex-start",
-      alignItems: "center",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
     },
     logo: {
       height: constants.generalUnit * 5,
       width: constants.generalUnit * 5,
-      "& svg, & img": {
-        maxHeight: "100%",
-        maxWidth: "100%",
+      '& svg, & img': {
+        maxHeight: '100%',
+        maxWidth: '100%',
       },
     },
     state: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     indicator: {
-      display: "block",
+      display: 'block',
       height: 10,
       width: 10,
-      borderRadius: "50%",
-      backgroundColor: palette.additional["green"][6],
+      borderRadius: '50%',
+      backgroundColor: palette.additional['green'][6],
       marginRight: constants.generalUnit,
     },
     address: {

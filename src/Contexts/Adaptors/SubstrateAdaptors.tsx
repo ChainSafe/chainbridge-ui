@@ -1,26 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { DestinationBridgeContext } from "../DestinationBridgeContext";
-import { HomeBridgeContext } from "../HomeBridgeContext";
-import { useNetworkManager } from "../NetworkManagerContext";
-import { createApi, submitDeposit } from "./SubstrateApis/ChainBridgeAPI";
+import React, { useCallback, useEffect, useState } from 'react';
+import { DestinationBridgeContext } from '../DestinationBridgeContext';
+import { HomeBridgeContext } from '../HomeBridgeContext';
+import { useNetworkManager } from '../NetworkManagerContext';
+import { createApi, submitDeposit } from './SubstrateApis/ChainBridgeAPI';
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
   InjectedAccountType,
-} from "./interfaces";
+} from './interfaces';
 
-import { ApiPromise } from "@polkadot/api";
+import { ApiPromise } from '@polkadot/api';
 import {
   web3Accounts,
   web3Enable,
   web3FromSource,
-} from "@polkadot/extension-dapp";
-import { TypeRegistry } from "@polkadot/types";
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import { BigNumber as BN } from "bignumber.js";
-import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
-import { utils } from "ethers";
-import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
+} from '@polkadot/extension-dapp';
+import { TypeRegistry } from '@polkadot/types';
+import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
+import { BigNumber as BN } from 'bignumber.js';
+import { UnsubscribePromise, VoidFn } from '@polkadot/api/types';
+import { utils } from 'ethers';
+import { SubstrateBridgeConfig } from '../../chainbridgeConfig';
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -40,12 +40,12 @@ export const SubstrateHomeAdaptorProvider = ({
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
-    undefined
+    undefined,
   );
   const [bridgeFee, setBridgeFee] = useState<number | undefined>(undefined);
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
-  const [selectedToken, setSelectedToken] = useState<string>("CSS");
+  const [selectedToken, setSelectedToken] = useState<string>('CSS');
 
   const [tokens, setTokens] = useState<Tokens>({});
 
@@ -60,7 +60,7 @@ export const SubstrateHomeAdaptorProvider = ({
     if (!homeChainConfig || initiaising || api) return;
     setInitialising(true);
     createApi(homeChainConfig.rpcUrl)
-      .then((api) => {
+      .then(api => {
         setApi(api);
         setInitialising(false);
       })
@@ -85,8 +85,8 @@ export const SubstrateHomeAdaptorProvider = ({
             Number(
               await api.query[config.transferPalletName][
                 config.bridgeFeeFunctionName
-              ]()
-            )
+              ](),
+            ),
           )
             .shiftedBy(-config.decimals)
             .toNumber()
@@ -103,11 +103,11 @@ export const SubstrateHomeAdaptorProvider = ({
       const currentId = Number(
         api.consts[
           (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
-        ].chainIdentity.toHuman()
+        ].chainIdentity.toHuman(),
       );
       if (homeChainConfig?.chainId !== currentId) {
         const correctConfig = homeChains.find(
-          (item) => item.chainId === currentId
+          item => item.chainId === currentId,
         );
         if (correctConfig) {
           handleSetHomeChain(currentId);
@@ -134,15 +134,15 @@ export const SubstrateHomeAdaptorProvider = ({
     let unsubscribe: VoidFn | undefined;
     if (api) {
       api.query.system
-        .account(address, (result) => {
+        .account(address, result => {
           const {
             data: { free: balance },
           } = result.toJSON() as any;
           setTokens({
-            [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
+            [homeChainConfig.tokens[0].symbol || 'TOKEN']: {
               decimals: homeChainConfig.decimals,
               balance: parseInt(
-                utils.formatUnits(balance, homeChainConfig.decimals)
+                utils.formatUnits(balance, homeChainConfig.decimals),
               ),
               balanceBN: new BN(balance).shiftedBy(-homeChainConfig.decimals),
               name: homeChainConfig.tokens[0].name,
@@ -150,7 +150,7 @@ export const SubstrateHomeAdaptorProvider = ({
             },
           });
         })
-        .then((unsub) => {
+        .then(unsub => {
           unsubscribe = unsub;
         })
         .catch(console.error);
@@ -163,12 +163,12 @@ export const SubstrateHomeAdaptorProvider = ({
   const handleConnect = useCallback(async () => {
     // Requests permission to inject the wallet
     if (!isReady) {
-      web3Enable("chainbridge-ui")
+      web3Enable('chainbridge-ui')
         .then(() => {
           // web3Account resolves with the injected accounts
           // or an empty array
           web3Accounts()
-            .then((accounts) => {
+            .then(accounts => {
               return accounts.map(({ address, meta }) => ({
                 address,
                 meta: {
@@ -177,7 +177,7 @@ export const SubstrateHomeAdaptorProvider = ({
                 },
               }));
             })
-            .then((injectedAccounts) => {
+            .then(injectedAccounts => {
               // This is where the correct chain configuration is set to the network context
               // Any operations before presenting the accounts to the UI or providing the config
               // to the rest of the dapp should be done here
@@ -186,7 +186,7 @@ export const SubstrateHomeAdaptorProvider = ({
                 setAddress(injectedAccounts[0].address);
               }
               handleSetHomeChain(
-                homeChains.find((item) => item.type === "Substrate")?.chainId
+                homeChains.find(item => item.type === 'Substrate')?.chainId,
               );
             })
             .catch(console.error);
@@ -205,7 +205,7 @@ export const SubstrateHomeAdaptorProvider = ({
     (index: number) => {
       setAddress(accounts[index].address);
     },
-    [accounts]
+    [accounts],
   );
 
   const deposit = useCallback(
@@ -213,23 +213,23 @@ export const SubstrateHomeAdaptorProvider = ({
       amount: number,
       recipient: string,
       tokenAddress: string,
-      destinationChainId: number
+      destinationChainId: number,
     ) => {
       if (api && address) {
         const allAccounts = await web3Accounts();
         const targetAccount = allAccounts.find(
-          (item) => item.address === address
+          item => item.address === address,
         );
         if (targetAccount) {
           const transferExtrinsic = submitDeposit(
             api,
             amount,
             recipient,
-            destinationChainId
+            destinationChainId,
           );
 
           const injector = await web3FromSource(targetAccount.meta.source);
-          setTransactionStatus("Initializing Transfer");
+          setTransactionStatus('Initializing Transfer');
           setDepositAmount(amount);
           transferExtrinsic
             .signAndSend(
@@ -238,7 +238,7 @@ export const SubstrateHomeAdaptorProvider = ({
               ({ status, events }) => {
                 status.isInBlock &&
                   console.log(
-                    `Completed at block hash #${status.isInBlock.toString()}`
+                    `Completed at block hash #${status.isInBlock.toString()}`,
                   );
 
                 if (status.isFinalized) {
@@ -253,36 +253,36 @@ export const SubstrateHomeAdaptorProvider = ({
                       .chainbridgePalletName
                   ]
                     .chainNonces(destinationChainId)
-                    .then((response) => {
+                    .then(response => {
                       setDepositNonce(`${response.toJSON()}`);
-                      setTransactionStatus("In Transit");
+                      setTransactionStatus('In Transit');
                     })
-                    .catch((error) => {
+                    .catch(error => {
                       console.error(error);
                     });
                 } else {
                   console.log(`Current status: ${status.type}`);
                 }
-              }
+              },
             )
             .catch((error: any) => {
-              console.log(":( transaction failed", error);
-              setTransactionStatus("Transfer Aborted");
+              console.log(':( transaction failed', error);
+              setTransactionStatus('Transfer Aborted');
             });
         }
       }
     },
-    [api, setDepositNonce, setTransactionStatus, address, homeChainConfig]
+    [api, setDepositNonce, setTransactionStatus, address, homeChainConfig],
   );
 
   // Required for adaptor however not needed for substrate
   const wrapToken = async (value: number): Promise<string> => {
-    return "Not implemented";
+    return 'Not implemented';
   };
 
   // Required for adaptor however not needed for substrate
   const unwrapToken = async (value: number): Promise<string> => {
-    return "Not implemented";
+    return 'Not implemented';
   };
 
   return (
@@ -292,7 +292,7 @@ export const SubstrateHomeAdaptorProvider = ({
         disconnect: async () => {
           await api?.disconnect();
         },
-        getNetworkName: () => homeChainConfig?.name || "undefined",
+        getNetworkName: () => homeChainConfig?.name || 'undefined',
         bridgeFee,
         deposit,
         depositAmount,
@@ -339,7 +339,7 @@ export const SubstrateDestinationAdaptorProvider = ({
     if (!destinationChainConfig || initiaising || api) return;
     setInitialising(true);
     createApi(destinationChainConfig.rpcUrl)
-      .then((api) => {
+      .then(api => {
         setApi(api);
         setInitialising(false);
       })
@@ -354,40 +354,40 @@ export const SubstrateDestinationAdaptorProvider = ({
     if (api && !listenerActive && depositNonce) {
       // Wire up event listeners
       // Subscribe to system events via storage
-      const unsubscribe = api.query.system.events((events) => {
-        console.log("----- Received " + events.length + " event(s): -----");
+      const unsubscribe = api.query.system.events(events => {
+        console.log('----- Received ' + events.length + ' event(s): -----');
         // loop through the Vec<EventRecord>
-        events.forEach((record) => {
+        events.forEach(record => {
           // extract the phase, event and the event types
           const { event, phase } = record;
           const types = event.typeDef;
           // show what we are busy with
           console.log(
             event.section +
-              ":" +
+              ':' +
               event.method +
-              "::" +
-              "phase=" +
-              phase.toString()
+              '::' +
+              'phase=' +
+              phase.toString(),
           );
           console.log(event.meta.documentation.toString());
           // loop through each of the parameters, displaying the type and data
           event.data.forEach((data, index) => {
-            console.log(types[index].type + ";" + data.toString());
+            console.log(types[index].type + ';' + data.toString());
           });
 
           if (
             event.section ===
               (destinationChainConfig as SubstrateBridgeConfig)
                 .chainbridgePalletName &&
-            event.method === "VoteFor"
+            event.method === 'VoteFor'
           ) {
             setDepositVotes(depositVotes + 1);
             tokensDispatch({
-              type: "addMessage",
+              type: 'addMessage',
               payload: {
-                address: "Substrate Relayer",
-                signed: "Confirmed",
+                address: 'Substrate Relayer',
+                signed: 'Confirmed',
               },
             });
           }
@@ -396,10 +396,10 @@ export const SubstrateDestinationAdaptorProvider = ({
             event.section ===
               (destinationChainConfig as SubstrateBridgeConfig)
                 .chainbridgePalletName &&
-            event.method === "ProposalApproved"
+            event.method === 'ProposalApproved'
           ) {
             setDepositVotes(depositVotes + 1);
-            setTransactionStatus("Transfer Completed");
+            setTransactionStatus('Transfer Completed');
           }
         });
       });

@@ -1,28 +1,28 @@
-import React from "react";
-import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { useWeb3 } from "@chainsafe/web3-context";
-import { BigNumber, ethers, utils } from "ethers";
-import { useCallback, useEffect, useState } from "react";
+import React from 'react';
+import { Bridge, BridgeFactory } from '@chainsafe/chainbridge-contracts';
+import { useWeb3 } from '@chainsafe/web3-context';
+import { BigNumber, ethers, utils } from 'ethers';
+import { useCallback, useEffect, useState } from 'react';
 import {
   chainbridgeConfig,
   EvmBridgeConfig,
   TokenConfig,
-} from "../../chainbridgeConfig";
-import { Erc20DetailedFactory } from "../../Contracts/Erc20DetailedFactory";
-import { Weth } from "../../Contracts/Weth";
-import { WethFactory } from "../../Contracts/WethFactory";
-import { useNetworkManager } from "../NetworkManagerContext";
+} from '../../chainbridgeConfig';
+import { Erc20DetailedFactory } from '../../Contracts/Erc20DetailedFactory';
+import { Weth } from '../../Contracts/Weth';
+import { WethFactory } from '../../Contracts/WethFactory';
+import { useNetworkManager } from '../NetworkManagerContext';
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
-} from "./interfaces";
-import { HomeBridgeContext } from "../HomeBridgeContext";
-import { DestinationBridgeContext } from "../DestinationBridgeContext";
-import { parseUnits } from "ethers/lib/utils";
-import { decodeAddress } from "@polkadot/util-crypto";
+} from './interfaces';
+import { HomeBridgeContext } from '../HomeBridgeContext';
+import { DestinationBridgeContext } from '../DestinationBridgeContext';
+import { parseUnits } from 'ethers/lib/utils';
+import { decodeAddress } from '@polkadot/util-crypto';
 
 const resetAllowanceLogicFor = [
-  "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
+  '0xdac17f958d2ee523a2206206994597c13d831ec7', //USDT
   //Add other offending tokens here
 ];
 
@@ -46,23 +46,23 @@ export const EVMHomeAdaptorProvider = ({
   const getNetworkName = (id: any) => {
     switch (Number(id)) {
       case 5:
-        return "Localhost";
+        return 'Localhost';
       case 1:
-        return "Mainnet";
+        return 'Mainnet';
       case 3:
-        return "Ropsten";
+        return 'Ropsten';
       case 4:
-        return "Rinkeby";
+        return 'Rinkeby';
       // case 5:
       //   return "Goerli";
       case 6:
-        return "Kotti";
+        return 'Kotti';
       case 42:
-        return "Kovan";
+        return 'Kovan';
       case 61:
-        return "Ethereum Classic - Mainnet";
+        return 'Ethereum Classic - Mainnet';
       default:
-        return "Other";
+        return 'Other';
     }
   };
 
@@ -77,22 +77,22 @@ export const EVMHomeAdaptorProvider = ({
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
-    undefined
+    undefined,
   );
   const [bridgeFee, setBridgeFee] = useState<number | undefined>();
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
-  const [selectedToken, setSelectedToken] = useState<string>("");
+  const [selectedToken, setSelectedToken] = useState<string>('');
 
   // Contracts
   const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
   const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
-    undefined
+    undefined,
   );
 
   useEffect(() => {
     if (network) {
-      const chain = homeChains.find((chain) => chain.networkId === network);
+      const chain = homeChains.find(chain => chain.networkId === network);
       setNetworkId(network);
       if (chain) {
         handleSetHomeChain(chain.chainId);
@@ -104,33 +104,33 @@ export const EVMHomeAdaptorProvider = ({
   const [walletSelected, setWalletSelected] = useState(false);
   useEffect(() => {
     if (initialising || homeBridge || !onboard) return;
-    console.log("starting init");
+    console.log('starting init');
     setInitialising(true);
     if (!walletSelected) {
       onboard
-        .walletSelect("metamask")
-        .then((success) => {
+        .walletSelect('metamask')
+        .then(success => {
           setWalletSelected(success);
           if (success) {
             checkIsReady()
-              .then((success) => {
+              .then(success => {
                 if (success) {
                   if (homeChainConfig && network && isReady && provider) {
                     const signer = provider.getSigner();
                     if (!signer) {
-                      console.log("No signer");
+                      console.log('No signer');
                       setInitialising(false);
                       return;
                     }
 
                     const bridge = BridgeFactory.connect(
                       (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                      signer
+                      signer,
                     );
                     setHomeBridge(bridge);
 
                     const wrapperToken = homeChainConfig.tokens.find(
-                      (token) => token.isNativeWrappedToken
+                      token => token.isNativeWrappedToken,
                     );
 
                     if (!wrapperToken) {
@@ -140,14 +140,14 @@ export const EVMHomeAdaptorProvider = ({
                       setWrapperConfig(wrapperToken);
                       const connectedWeth = WethFactory.connect(
                         wrapperToken.address,
-                        signer
+                        signer,
                       );
                       setWrapper(connectedWeth);
                     }
                   }
                 }
               })
-              .catch((error) => {
+              .catch(error => {
                 console.error(error);
               })
               .finally(() => {
@@ -155,30 +155,30 @@ export const EVMHomeAdaptorProvider = ({
               });
           }
         })
-        .catch((error) => {
+        .catch(error => {
           setInitialising(false);
           console.error(error);
         });
     } else {
       checkIsReady()
-        .then((success) => {
+        .then(success => {
           if (success) {
             if (homeChainConfig && network && isReady && provider) {
               const signer = provider.getSigner();
               if (!signer) {
-                console.log("No signer");
+                console.log('No signer');
                 setInitialising(false);
                 return;
               }
 
               const bridge = BridgeFactory.connect(
                 (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                signer
+                signer,
               );
               setHomeBridge(bridge);
 
               const wrapperToken = homeChainConfig.tokens.find(
-                (token) => token.isNativeWrappedToken
+                token => token.isNativeWrappedToken,
               );
 
               if (!wrapperToken) {
@@ -188,14 +188,14 @@ export const EVMHomeAdaptorProvider = ({
                 setWrapperConfig(wrapperToken);
                 const connectedWeth = WethFactory.connect(
                   wrapperToken.address,
-                  signer
+                  signer,
                 );
                 setWrapper(connectedWeth);
               }
             }
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(error);
         })
         .finally(() => {
@@ -218,7 +218,7 @@ export const EVMHomeAdaptorProvider = ({
     const getRelayerThreshold = async () => {
       if (homeBridge) {
         const threshold = BigNumber.from(
-          await homeBridge._relayerThreshold()
+          await homeBridge._relayerThreshold(),
         ).toNumber();
         setRelayerThreshold(threshold);
       }
@@ -235,7 +235,7 @@ export const EVMHomeAdaptorProvider = ({
 
   const handleConnect = useCallback(async () => {
     if (wallet && wallet.connect && network) {
-      await onboard?.walletSelect("metamask");
+      await onboard?.walletSelect('metamask');
       await wallet.connect();
     }
   }, [wallet, network, onboard]);
@@ -245,49 +245,49 @@ export const EVMHomeAdaptorProvider = ({
       amount: number,
       recipient: string,
       tokenAddress: string,
-      destinationChainId: number
+      destinationChainId: number,
     ) => {
       if (!homeChainConfig || !homeBridge) {
-        console.error("Home bridge contract is not instantiated");
+        console.error('Home bridge contract is not instantiated');
         return;
       }
       const signer = provider?.getSigner();
       if (!address || !signer) {
-        console.log("No signer");
+        console.log('No signer');
         return;
       }
 
       const destinationChain = chainbridgeConfig.chains.find(
-        (c) => c.chainId === destinationChainId
+        c => c.chainId === destinationChainId,
       );
-      if (destinationChain?.type === "Substrate") {
+      if (destinationChain?.type === 'Substrate') {
         recipient = `0x${Buffer.from(decodeAddress(recipient)).toString(
-          "hex"
+          'hex',
         )}`;
       }
       const token = homeChainConfig.tokens.find(
-        (token) => token.address === tokenAddress
+        token => token.address === tokenAddress,
       );
 
       if (!token) {
-        console.log("Invalid token selected");
+        console.log('Invalid token selected');
         return;
       }
-      setTransactionStatus("Initializing Transfer");
+      setTransactionStatus('Initializing Transfer');
       setDepositAmount(amount);
       setSelectedToken(tokenAddress);
       const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
       const erc20Decimals = tokens[tokenAddress].decimals;
 
       const data =
-        "0x" +
+        '0x' +
         utils
           .hexZeroPad(
             // TODO Wire up dynamic token decimals
             BigNumber.from(
-              utils.parseUnits(amount.toString(), erc20Decimals)
+              utils.parseUnits(amount.toString(), erc20Decimals),
             ).toHexString(),
-            32
+            32,
           )
           .substr(2) + // Deposit Amount (32 bytes)
         utils
@@ -298,7 +298,7 @@ export const EVMHomeAdaptorProvider = ({
       try {
         const currentAllowance = await erc20.allowance(
           address,
-          (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
+          (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
         );
 
         if (
@@ -313,7 +313,7 @@ export const EVMHomeAdaptorProvider = ({
             await (
               await erc20.approve(
                 (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
-                BigNumber.from(utils.parseUnits("0", erc20Decimals)),
+                BigNumber.from(utils.parseUnits('0', erc20Decimals)),
                 {
                   gasPrice: BigNumber.from(
                     utils.parseUnits(
@@ -321,10 +321,10 @@ export const EVMHomeAdaptorProvider = ({
                         (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
                         gasPrice
                       ).toString(),
-                      9
-                    )
+                      9,
+                    ),
                   ).toString(),
-                }
+                },
               )
             ).wait(1);
           }
@@ -332,7 +332,7 @@ export const EVMHomeAdaptorProvider = ({
             await erc20.approve(
               (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
               BigNumber.from(
-                utils.parseUnits(amount.toString(), erc20Decimals)
+                utils.parseUnits(amount.toString(), erc20Decimals),
               ),
               {
                 gasPrice: BigNumber.from(
@@ -341,10 +341,10 @@ export const EVMHomeAdaptorProvider = ({
                       (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
                       gasPrice
                     ).toString(),
-                    9
-                  )
+                    9,
+                  ),
                 ).toString(),
-              }
+              },
             )
           ).wait(1);
         }
@@ -352,12 +352,12 @@ export const EVMHomeAdaptorProvider = ({
           homeBridge.filters.Deposit(
             destinationChainId,
             token.resourceId,
-            null
+            null,
           ),
           (destChainId, resourceId, depositNonce) => {
             setDepositNonce(`${depositNonce.toString()}`);
-            setTransactionStatus("In Transit");
-          }
+            setTransactionStatus('In Transit');
+          },
         );
 
         await (
@@ -366,7 +366,7 @@ export const EVMHomeAdaptorProvider = ({
               (
                 (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
               ).toString(),
-              9
+              9,
             ),
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
@@ -374,7 +374,7 @@ export const EVMHomeAdaptorProvider = ({
 
         return Promise.resolve();
       } catch (error) {
-        setTransactionStatus("Transfer Aborted");
+        setTransactionStatus('Transfer Aborted');
         setSelectedToken(tokenAddress);
       }
     },
@@ -388,12 +388,12 @@ export const EVMHomeAdaptorProvider = ({
       setDepositNonce,
       setTransactionStatus,
       tokens,
-    ]
+    ],
   );
 
   const wrapToken = async (value: number): Promise<string> => {
     if (!wrapTokenConfig || !wrapper?.deposit || !homeChainConfig)
-      return "not ready";
+      return 'not ready';
 
     try {
       const tx = await wrapper.deposit({
@@ -403,8 +403,8 @@ export const EVMHomeAdaptorProvider = ({
             (
               (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
             ).toString(),
-            9
-          )
+            9,
+          ),
         ).toString(),
       });
 
@@ -412,17 +412,17 @@ export const EVMHomeAdaptorProvider = ({
       if (tx?.hash) {
         return tx?.hash;
       } else {
-        return "";
+        return '';
       }
     } catch (error) {
       console.error(error);
-      return "";
+      return '';
     }
   };
 
   const unwrapToken = async (value: number): Promise<string> => {
     if (!wrapTokenConfig || !wrapper?.withdraw || !homeChainConfig)
-      return "not ready";
+      return 'not ready';
 
     try {
       const tx = await wrapper.deposit({
@@ -432,8 +432,8 @@ export const EVMHomeAdaptorProvider = ({
             (
               (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
             ).toString(),
-            9
-          )
+            9,
+          ),
         ).toString(),
       });
 
@@ -441,11 +441,11 @@ export const EVMHomeAdaptorProvider = ({
       if (tx?.hash) {
         return tx?.hash;
       } else {
-        return "";
+        return '';
       }
     } catch (error) {
       console.error(error);
-      return "";
+      return '';
     }
   };
 
@@ -483,7 +483,7 @@ export const EVMHomeAdaptorProvider = ({
 export const EVMDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  console.log("EVM destination loaded");
+  console.log('EVM destination loaded');
   const {
     depositNonce,
     destinationChainConfig,
@@ -502,32 +502,32 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (destinationBridge) return;
     let provider;
-    if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
-      if (destinationChainConfig.rpcUrl.includes("infura")) {
-        const parts = destinationChainConfig.rpcUrl.split("/");
+    if (destinationChainConfig?.rpcUrl.startsWith('wss')) {
+      if (destinationChainConfig.rpcUrl.includes('infura')) {
+        const parts = destinationChainConfig.rpcUrl.split('/');
 
         provider = new ethers.providers.InfuraWebSocketProvider(
           destinationChainConfig.networkId,
-          parts[parts.length - 1]
+          parts[parts.length - 1],
         );
       }
-      if (destinationChainConfig.rpcUrl.includes("alchemyapi")) {
-        const parts = destinationChainConfig.rpcUrl.split("/");
+      if (destinationChainConfig.rpcUrl.includes('alchemyapi')) {
+        const parts = destinationChainConfig.rpcUrl.split('/');
 
         provider = new ethers.providers.AlchemyWebSocketProvider(
           destinationChainConfig.networkId,
-          parts[parts.length - 1]
+          parts[parts.length - 1],
         );
       }
     } else {
       provider = new ethers.providers.JsonRpcProvider(
-        destinationChainConfig?.rpcUrl
+        destinationChainConfig?.rpcUrl,
       );
     }
     if (destinationChainConfig && provider) {
       const bridge = BridgeFactory.connect(
         (destinationChainConfig as EvmBridgeConfig).bridgeAddress,
-        provider
+        provider,
       );
       setDestinationBridge(bridge);
     }
@@ -546,32 +546,32 @@ export const EVMDestinationAdaptorProvider = ({
           BigNumber.from(depositNonce),
           null,
           null,
-          null
+          null,
         ),
         (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
           switch (BigNumber.from(status).toNumber()) {
             case 1:
               tokensDispatch({
-                type: "addMessage",
+                type: 'addMessage',
                 payload: `Proposal created on ${destinationChainConfig.name}`,
               });
               break;
             case 2:
               tokensDispatch({
-                type: "addMessage",
+                type: 'addMessage',
                 payload: `Proposal has passed. Executing...`,
               });
               break;
             case 3:
-              setTransactionStatus("Transfer Completed");
+              setTransactionStatus('Transfer Completed');
               setTransferTxHash(tx.transactionHash);
               break;
             case 4:
-              setTransactionStatus("Transfer Aborted");
+              setTransactionStatus('Transfer Aborted');
               setTransferTxHash(tx.transactionHash);
               break;
           }
-        }
+        },
       );
 
       destinationBridge.on(
@@ -579,7 +579,7 @@ export const EVMDestinationAdaptorProvider = ({
           homeChainConfig.chainId,
           BigNumber.from(depositNonce),
           null,
-          null
+          null,
         ),
         async (originChainId, depositNonce, status, resourceId, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
@@ -587,13 +587,13 @@ export const EVMDestinationAdaptorProvider = ({
             setDepositVotes(depositVotes + 1);
           }
           tokensDispatch({
-            type: "addMessage",
+            type: 'addMessage',
             payload: {
               address: String(txReceipt.from),
-              signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
+              signed: txReceipt.status === 1 ? 'Confirmed' : 'Rejected',
             },
           });
-        }
+        },
       );
     }
     return () => {

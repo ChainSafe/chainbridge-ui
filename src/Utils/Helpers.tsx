@@ -1,5 +1,5 @@
-const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
-const { hexToU8a, isHex } = require("@polkadot/util");
+const { decodeAddress, encodeAddress } = require('@polkadot/keyring');
+const { hexToU8a, isHex } = require('@polkadot/util');
 
 export const shortenAddress = (address: string) => {
   return `${address.substr(0, 6)}...${address.substr(address.length - 6, 6)}`;

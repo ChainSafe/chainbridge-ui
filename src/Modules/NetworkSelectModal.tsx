@@ -1,13 +1,13 @@
-import React from "react";
-import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
-import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { useNetworkManager } from "../Contexts/NetworkManagerContext";
+import React from 'react';
+import { createStyles, ITheme, makeStyles } from '@chainsafe/common-theme';
+import { useChainbridge } from '../Contexts/ChainbridgeContext';
+import { useNetworkManager } from '../Contexts/NetworkManagerContext';
 import {
   Button,
   Modal,
   ProgressBar,
   Typography,
-} from "@chainsafe/common-components";
+} from '@chainsafe/common-components';
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -15,17 +15,17 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
     slide: {
       borderRadius: constants.generalUnit / 2,
       padding: `${constants.generalUnit}px ${constants.generalUnit * 2}px`,
-      "& > p": {
+      '& > p': {
         marginTop: constants.generalUnit * 2,
         marginBottom: constants.generalUnit * 3,
-        textAlign: "center",
+        textAlign: 'center',
       },
     },
     buttons: {
       marginBottom: constants.generalUnit * 2,
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-around",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
     },
   });
 });
@@ -37,29 +37,29 @@ const NetworkSelectModal = () => {
 
   return (
     <Modal
-      active={walletType !== "unset" && walletType !== "Ethereum" && !isReady}
+      active={walletType !== 'unset' && walletType !== 'Ethereum' && !isReady}
       closePosition="right"
       className={classes.root}
       injectedClass={{
         inner: classes.slide,
       }}
     >
-      {walletType === "select" && (
+      {walletType === 'select' && (
         <>
           <Typography variant="h3" component="p">
             Please select a wallet type
           </Typography>
           <section className={classes.buttons}>
-            <Button onClick={() => setWalletType("Ethereum")}>
+            <Button onClick={() => setWalletType('Ethereum')}>
               Use Ethereum wallet
             </Button>
-            <Button onClick={() => setWalletType("Substrate")}>
+            <Button onClick={() => setWalletType('Substrate')}>
               Use Substrate wallet
             </Button>
           </section>
         </>
       )}
-      {walletType === "Substrate" && (
+      {walletType === 'Substrate' && (
         <>
           <Typography variant="h2" component="p">
             Connecting to node

@@ -5,45 +5,45 @@ import React, {
   useEffect,
   useReducer,
   useState,
-} from "react";
+} from 'react';
 import {
   BridgeConfig,
   chainbridgeConfig,
   ChainType,
-} from "../chainbridgeConfig";
+} from '../chainbridgeConfig';
 import {
   EVMDestinationAdaptorProvider,
   EVMHomeAdaptorProvider,
-} from "./Adaptors/EVMAdaptors";
-import { IDestinationBridgeProviderProps } from "./Adaptors/interfaces";
+} from './Adaptors/EVMAdaptors';
+import { IDestinationBridgeProviderProps } from './Adaptors/interfaces';
 import {
   SubstrateDestinationAdaptorProvider,
   SubstrateHomeAdaptorProvider,
-} from "./Adaptors/SubstrateAdaptors";
-import { DestinationBridgeContext } from "./DestinationBridgeContext";
-import { HomeBridgeContext } from "./HomeBridgeContext";
+} from './Adaptors/SubstrateAdaptors';
+import { DestinationBridgeContext } from './DestinationBridgeContext';
+import { HomeBridgeContext } from './HomeBridgeContext';
 import {
   AddMessageAction,
   ResetAction,
   transitMessageReducer,
-} from "./Reducers/TransitMessageReducer";
+} from './Reducers/TransitMessageReducer';
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-export type WalletType = ChainType | "select" | "unset";
+export type WalletType = ChainType | 'select' | 'unset';
 
 export type Vote = {
   address: string;
-  signed: "Confirmed" | "Rejected";
+  signed: 'Confirmed' | 'Rejected';
 };
 
 export type TransactionStatus =
-  | "Initializing Transfer"
-  | "In Transit"
-  | "Transfer Completed"
-  | "Transfer Aborted";
+  | 'Initializing Transfer'
+  | 'In Transit'
+  | 'Transfer Completed'
+  | 'Transfer Aborted';
 
 interface NetworkManagerContext {
   walletType: WalletType;
@@ -83,7 +83,7 @@ const NetworkManagerContext = React.createContext<
 >(undefined);
 
 const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
-  const [walletType, setWalletType] = useState<WalletType>("unset");
+  const [walletType, setWalletType] = useState<WalletType>('unset');
 
   const [networkId, setNetworkId] = useState(0);
 
@@ -95,20 +95,20 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     BridgeConfig | undefined
   >();
   const [destinationChains, setDestinationChains] = useState<BridgeConfig[]>(
-    []
+    [],
   );
 
-  const [transferTxHash, setTransferTxHash] = useState<string>("");
+  const [transferTxHash, setTransferTxHash] = useState<string>('');
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
   >(undefined);
   const [depositNonce, setDepositNonce] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
-    []
+    [],
   );
 
   const handleSetHomeChain = useCallback(
@@ -117,38 +117,38 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setHomeChainConfig(undefined);
         return;
       }
-      const chain = homeChains.find((c) => c.chainId === chainId);
+      const chain = homeChains.find(c => c.chainId === chainId);
 
       if (chain) {
         setHomeChainConfig(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter(
             (bridgeConfig: BridgeConfig) =>
-              bridgeConfig.chainId !== chain.chainId
-          )
+              bridgeConfig.chainId !== chain.chainId,
+          ),
         );
         if (chainbridgeConfig.chains.length === 2) {
           setDestinationChain(
             chainbridgeConfig.chains.find(
               (bridgeConfig: BridgeConfig) =>
-                bridgeConfig.chainId !== chain.chainId
-            )
+                bridgeConfig.chainId !== chain.chainId,
+            ),
           );
         }
       }
     },
-    [homeChains, setHomeChainConfig]
+    [homeChains, setHomeChainConfig],
   );
 
   useEffect(() => {
-    if (walletType !== "unset") {
-      if (walletType === "select") {
+    if (walletType !== 'unset') {
+      if (walletType === 'select') {
         setHomeChains(chainbridgeConfig.chains);
       } else {
         setHomeChains(
           chainbridgeConfig.chains.filter(
-            (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType
-          )
+            (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType,
+          ),
         );
       }
     } else {
@@ -161,28 +161,28 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       if (chainId === undefined) {
         setDestinationChain(undefined);
       } else if (homeChainConfig && !depositNonce) {
-        const chain = destinationChains.find((c) => c.chainId === chainId);
+        const chain = destinationChains.find(c => c.chainId === chainId);
         if (!chain) {
-          throw new Error("Invalid destination chain selected");
+          throw new Error('Invalid destination chain selected');
         }
         setDestinationChain(chain);
       } else {
-        throw new Error("Home chain not selected");
+        throw new Error('Home chain not selected');
       }
     },
-    [depositNonce, destinationChains, homeChainConfig]
+    [depositNonce, destinationChains, homeChainConfig],
   );
 
   const DestinationProvider = ({
     children,
   }: IDestinationBridgeProviderProps) => {
-    if (destinationChainConfig?.type === "Ethereum") {
+    if (destinationChainConfig?.type === 'Ethereum') {
       return (
         <EVMDestinationAdaptorProvider>
           {children}
         </EVMDestinationAdaptorProvider>
       );
-    } else if (destinationChainConfig?.type === "Substrate") {
+    } else if (destinationChainConfig?.type === 'Substrate') {
       return (
         <SubstrateDestinationAdaptorProvider>
           {children}
@@ -227,11 +227,11 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         transferTxHash,
       }}
     >
-      {walletType === "Ethereum" ? (
+      {walletType === 'Ethereum' ? (
         <EVMHomeAdaptorProvider>
           <DestinationProvider>{children}</DestinationProvider>
         </EVMHomeAdaptorProvider>
-      ) : walletType === "Substrate" ? (
+      ) : walletType === 'Substrate' ? (
         <SubstrateHomeAdaptorProvider>
           <DestinationProvider>{children}</DestinationProvider>
         </SubstrateHomeAdaptorProvider>
@@ -240,14 +240,14 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
           value={{
             connect: async () => undefined,
             disconnect: async () => {},
-            getNetworkName: (id: any) => "",
+            getNetworkName: (id: any) => '',
             isReady: false,
-            selectedToken: "",
+            selectedToken: '',
             deposit: async (
               amount: number,
               recipient: string,
               tokenAddress: string,
-              destinationChainId: number
+              destinationChainId: number,
             ) => undefined,
             setDepositAmount: () => undefined,
             tokens: {},
@@ -260,8 +260,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
             relayerThreshold: undefined,
             wrapTokenConfig: undefined,
             wrapper: undefined,
-            wrapToken: async (value: number) => "",
-            unwrapToken: async (value: number) => "",
+            wrapToken: async (value: number) => '',
+            unwrapToken: async (value: number) => '',
           }}
         >
           <DestinationProvider>{children}</DestinationProvider>
@@ -275,7 +275,7 @@ const useNetworkManager = () => {
   const context = useContext(NetworkManagerContext);
   if (context === undefined) {
     throw new Error(
-      "useNetworkManager must be called within a HomeNetworkProvider"
+      'useNetworkManager must be called within a HomeNetworkProvider',
     );
   }
   return context;

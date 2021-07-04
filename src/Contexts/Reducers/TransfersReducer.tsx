@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from '@ethersproject/bignumber';
 
 export enum ProposalStatus {
   Inactive,
@@ -98,20 +98,20 @@ export function transfersReducer(
   transfers: Transfers,
   action:
     | {
-        type: "addTransfer";
+        type: 'addTransfer';
         payload: AddTransferPayload;
       }
     | {
-        type: "addProposalEvent";
+        type: 'addProposalEvent';
         payload: AddProposalPayload;
       }
     | {
-        type: "addVote";
+        type: 'addVote';
         payload: AddVotePayload;
-      }
+      },
 ): Transfers {
   switch (action.type) {
-    case "addTransfer": {
+    case 'addTransfer': {
       const currentProposals =
         transfers[action.payload.depositNonce]?.proposalEvents || [];
       const currentVotes = transfers[action.payload.depositNonce]?.votes || [];
@@ -136,7 +136,7 @@ export function transfersReducer(
         },
       };
     }
-    case "addProposalEvent": {
+    case 'addProposalEvent': {
       const currentProposals =
         transfers[action.payload.depositNonce]?.proposalEvents || [];
       return {
@@ -151,7 +151,7 @@ export function transfersReducer(
         },
       };
     }
-    case "addVote": {
+    case 'addVote': {
       const currentVotes = transfers[action.payload.depositNonce]?.votes || [];
       return {
         ...transfers,

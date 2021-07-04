@@ -1,29 +1,29 @@
-import React from "react";
+import React from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import CustomDrawer from "../Components/Custom/CustomDrawer";
-import { Button, Typography } from "@chainsafe/common-components";
-import { useNetworkManager } from "../Contexts/NetworkManagerContext";
-import { useHomeBridge } from "../Contexts/HomeBridgeContext";
-import { useDestinationBridge } from "../Contexts/DestinationBridgeContext";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import CustomDrawer from '../Components/Custom/CustomDrawer';
+import { Button, Typography } from '@chainsafe/common-components';
+import { useNetworkManager } from '../Contexts/NetworkManagerContext';
+import { useHomeBridge } from '../Contexts/HomeBridgeContext';
+import { useDestinationBridge } from '../Contexts/DestinationBridgeContext';
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
     root: {},
     buttons: {
-      display: "flex",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      "& > *": {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      '& > *': {
         marginTop: constants.generalUnit * 2,
         marginRight: constants.generalUnit,
-        textDecoration: "none",
+        textDecoration: 'none',
       },
     },
     paragraph: {
       margin: `${constants.generalUnit * 3}px 0`,
     },
-  })
+  }),
 );
 
 interface IChangeNetworkDrawerProps {
@@ -67,7 +67,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
             await Promise.all([destinationBridge.disconnect(), disconnect()]);
             handleSetHomeChain(undefined);
             setDestinationChain(undefined);
-            setWalletType("select");
+            setWalletType('select');
           }}
           variant="outline"
         >

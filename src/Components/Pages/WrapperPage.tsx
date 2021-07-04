@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import AboutDrawer from "../../Modules/AboutDrawer";
-import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
+import React, { useEffect, useState } from 'react';
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import AboutDrawer from '../../Modules/AboutDrawer';
+import ChangeNetworkDrawer from '../../Modules/ChangeNetworkDrawer';
 import {
   Button,
   Typography,
   QuestionCircleSvg,
   SelectInput,
-} from "@chainsafe/common-components";
-import { Form, Formik } from "formik";
-import clsx from "clsx";
-import { useChainbridge } from "../../Contexts/ChainbridgeContext";
-import { object, string } from "yup";
-import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
-import { TokenConfig } from "../../chainbridgeConfig";
-import PreflightModalWrap from "../../Modules/PreflightModalWrap";
-import WrapActiveModal from "../../Modules/WrapActiveModal";
-import { forwardTo } from "../../Utils/History";
-import { ROUTE_LINKS } from "../Routes";
-import SimpleTokenInput from "../Custom/SimpleTokenInput";
-import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
-import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
+} from '@chainsafe/common-components';
+import { Form, Formik } from 'formik';
+import clsx from 'clsx';
+import { useChainbridge } from '../../Contexts/ChainbridgeContext';
+import { object, string } from 'yup';
+import { ReactComponent as ETHIcon } from '../../media/tokens/eth.svg';
+import { TokenConfig } from '../../chainbridgeConfig';
+import PreflightModalWrap from '../../Modules/PreflightModalWrap';
+import WrapActiveModal from '../../Modules/WrapActiveModal';
+import { forwardTo } from '../../Utils/History';
+import { ROUTE_LINKS } from '../Routes';
+import SimpleTokenInput from '../Custom/SimpleTokenInput';
+import { useNetworkManager } from '../../Contexts/NetworkManagerContext';
+import NetworkUnsupportedModal from '../../Modules/NetworkUnsupportedModal';
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       minHeight: constants.generalUnit * 69,
       padding: constants.generalUnit * 6,
-      overflow: "hidden",
-      position: "relative",
+      overflow: 'hidden',
+      position: 'relative',
     },
     walletArea: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "100%",
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
     },
     blurb: {
       color: palette.common.black.main,
@@ -44,63 +44,63 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
     },
     connecting: {
-      textAlign: "center",
+      textAlign: 'center',
       marginBottom: constants.generalUnit * 2,
     },
     connected: {
-      width: "100%",
-      "& > *:first-child": {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
+      width: '100%',
+      '& > *:first-child': {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
       },
     },
     changeButton: {
-      cursor: "pointer",
+      cursor: 'pointer',
     },
     networkName: {
       padding: `${constants.generalUnit * 2}px ${
         constants.generalUnit * 1.5
       }px`,
-      border: `1px solid ${palette.additional["gray"][6]}`,
+      border: `1px solid ${palette.additional['gray'][6]}`,
       borderRadius: 2,
-      color: palette.additional["gray"][9],
+      color: palette.additional['gray'][9],
       marginTop: constants.generalUnit,
       marginBottom: constants.generalUnit * 3,
     },
     formArea: {
-      "&.disabled": {
+      '&.disabled': {
         opacity: 0.4,
       },
     },
     currencySection: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
       margin: `${constants.generalUnit * 3}px 0`,
     },
     tokenInputArea: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-end",
-      justifyContent: "space-around",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'space-around',
       paddingRight: constants.generalUnit,
     },
     tokenInput: {
       margin: 0,
-      "& > div": {
+      '& > div': {
         height: 32,
-        "& input": {
+        '& input': {
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
           borderRight: 0,
         },
       },
-      "& span:last-child.error": {
-        position: "absolute",
+      '& span:last-child.error': {
+        position: 'absolute',
       },
     },
     maxButton: {
@@ -108,84 +108,84 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
-      borderColor: palette.additional["gray"][6],
-      "&:hover": {
-        borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
+      color: palette.additional['gray'][8],
+      backgroundColor: palette.additional['gray'][3],
+      borderColor: palette.additional['gray'][6],
+      '&:hover': {
+        borderColor: palette.additional['gray'][6],
+        backgroundColor: palette.additional['gray'][7],
         color: palette.common.white.main,
       },
-      "&:focus": {
-        borderColor: palette.additional["gray"][6],
+      '&:focus': {
+        borderColor: palette.additional['gray'][6],
       },
     },
     tokenIndicator: {
       width: 120,
-      textAlign: "right",
-      "& p": {
+      textAlign: 'right',
+      '& p': {
         marginBottom: constants.generalUnit,
       },
-      "& *": {
-        cursor: "pointer",
+      '& *': {
+        cursor: 'pointer',
       },
     },
     generalInput: {
-      "& > span": {
+      '& > span': {
         marginBottom: constants.generalUnit,
       },
     },
     faqButton: {
-      cursor: "pointer",
+      cursor: 'pointer',
       height: 20,
       width: 20,
       marginTop: constants.generalUnit * 5,
-      fill: `${palette.additional["transferUi"][1]} !important`,
+      fill: `${palette.additional['transferUi'][1]} !important`,
     },
     token: {
-      backgroundColor: palette.additional["gray"][1],
+      backgroundColor: palette.additional['gray'][1],
       borderRadius: 2,
-      border: `1px solid ${palette.additional["gray"][6]}`,
+      border: `1px solid ${palette.additional['gray'][6]}`,
       padding: `${constants.generalUnit * 1}px ${
         constants.generalUnit * 1.5
       }px`,
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      cursor: "pointer",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      cursor: 'pointer',
       height: constants.generalUnit * 4,
-      "& img, & svg": {
-        display: "block",
+      '& img, & svg': {
+        display: 'block',
         height: 14,
         width: 14,
         marginLeft: 10,
       },
-      "& span": {
+      '& span': {
         minWidth: `calc(100% - 30px)`,
-        textAlign: "right",
-        color: palette.additional["gray"][9],
+        textAlign: 'right',
+        color: palette.additional['gray'][9],
       },
     },
     tokenItem: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      cursor: "pointer",
-      "& img, & svg": {
-        display: "block",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      cursor: 'pointer',
+      '& img, & svg': {
+        display: 'block',
         height: 14,
         width: 14,
         marginRight: 10,
       },
-      "& span": {
+      '& span': {
         minWidth: `calc(100% - 30px)`,
-        textAlign: "right",
+        textAlign: 'right',
       },
     },
     submitButtonArea: {},
-  })
+  }),
 );
 
 type PreflightDetails = {
@@ -213,23 +213,23 @@ const MainPage = () => {
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     tokenAmount: 0,
   });
-  const [action, setAction] = useState<"wrap" | "unwrap">("wrap");
+  const [action, setAction] = useState<'wrap' | 'unwrap'>('wrap');
 
   const [txDetails, setTxDetails] = useState<
     | {
-        txState?: "inProgress" | "done";
+        txState?: 'inProgress' | 'done';
         value: number;
         tokenInfo: TokenConfig;
         txHash?: string;
-        action: "wrap" | "unwrap";
+        action: 'wrap' | 'unwrap';
       }
     | undefined
   >(undefined);
 
   useEffect(() => {
-    if (walletType !== "select" && walletConnecting === true) {
+    if (walletType !== 'select' && walletConnecting === true) {
       setWalletConnecting(false);
-    } else if (walletType === "select") {
+    } else if (walletType === 'select') {
       setWalletConnecting(true);
     }
   }, [walletType, walletConnecting]);
@@ -241,21 +241,21 @@ const MainPage = () => {
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
-        txState: "inProgress",
+        txState: 'inProgress',
         action: action,
       });
       const txHash = await wrapToken(preflightDetails.tokenAmount);
 
-      if (txHash === "") {
+      if (txHash === '') {
         setTxDetails(undefined);
-        throw Error("Wrap Transaction failed");
+        throw Error('Wrap Transaction failed');
       }
 
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
         txHash: txHash,
-        txState: "done",
+        txState: 'done',
         action: action,
       });
     } catch (error) {
@@ -270,22 +270,22 @@ const MainPage = () => {
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
-        txState: "inProgress",
+        txState: 'inProgress',
         action: action,
       });
 
       const txHash = await unwrapToken(preflightDetails.tokenAmount);
 
-      if (txHash === "") {
+      if (txHash === '') {
         setTxDetails(undefined);
-        throw Error("Unwrap Transaction failed");
+        throw Error('Unwrap Transaction failed');
       }
 
       setTxDetails({
         tokenInfo: wrapTokenConfig,
         value: preflightDetails.tokenAmount,
         txHash: txHash,
-        txState: "done",
+        txState: 'done',
         action: action,
       });
     } catch (error) {
@@ -300,28 +300,28 @@ const MainPage = () => {
 
   const wrapSchema = object().shape({
     tokenAmount: string()
-      .matches(REGEX, "Input invalid")
-      .test("Min", "Less than minimum", (value) => {
+      .matches(REGEX, 'Input invalid')
+      .test('Min', 'Less than minimum', value => {
         if (value) {
           return parseFloat(value) > 0;
         }
         return false;
       })
-      .test("Max", "Insufficent funds", (value) => {
-        return action === "wrap"
+      .test('Max', 'Insufficent funds', value => {
+        return action === 'wrap'
           ? nativeTokenBalance &&
             value &&
             parseFloat(value) <= nativeTokenBalance
             ? true
             : false
-          : tokens[wrapTokenConfig?.address || "0x"].balance &&
+          : tokens[wrapTokenConfig?.address || '0x'].balance &&
             value &&
             parseFloat(value) <=
-              tokens[wrapTokenConfig?.address || "0x"]?.balance
+              tokens[wrapTokenConfig?.address || '0x']?.balance
           ? true
           : false;
       })
-      .required("Please set a value"),
+      .required('Please set a value'),
   });
 
   return (
@@ -339,7 +339,7 @@ const MainPage = () => {
               className={classes.connectButton}
               fullsize
               onClick={() => {
-                setWalletType("select");
+                setWalletType('select');
               }}
             >
               Connect Metamask
@@ -380,7 +380,7 @@ const MainPage = () => {
         }}
         validationSchema={wrapSchema}
         validateOnChange={false}
-        onSubmit={(values) => {
+        onSubmit={values => {
           setPreflightDetails({
             ...values,
           });
@@ -405,21 +405,21 @@ const MainPage = () => {
                   name="tokenAmount"
                   label="I want to convert"
                   max={
-                    action === "wrap"
+                    action === 'wrap'
                       ? nativeTokenBalance
-                      : tokens[wrapTokenConfig?.address || "0x"]?.balance
+                      : tokens[wrapTokenConfig?.address || '0x']?.balance
                   }
                 />
               </div>
             </section>
             <section className={classes.tokenIndicator}>
               <Typography component="p">
-                Balance:{" "}
-                {action === "wrap"
+                Balance:{' '}
+                {action === 'wrap'
                   ? nativeTokenBalance
                     ? nativeTokenBalance.toFixed(2)
                     : 0.0
-                  : tokens[wrapTokenConfig?.address || "0x"].balance}
+                  : tokens[wrapTokenConfig?.address || '0x'].balance}
               </Typography>
               <SelectInput
                 options={[
@@ -430,7 +430,7 @@ const MainPage = () => {
                         <span>ETH</span>
                       </div>
                     ),
-                    value: "wrap",
+                    value: 'wrap',
                   },
                   {
                     label: (
@@ -439,20 +439,20 @@ const MainPage = () => {
                           src={wrapTokenConfig?.imageUri}
                           alt={wrapTokenConfig?.symbol}
                         />
-                        <span>{wrapTokenConfig?.symbol || "wETH"}</span>
+                        <span>{wrapTokenConfig?.symbol || 'wETH'}</span>
                       </div>
                     ),
-                    value: "unwrap",
+                    value: 'unwrap',
                   },
                 ]}
-                onChange={(val) => setAction(val)}
+                onChange={val => setAction(val)}
                 value={action}
               />
             </section>
           </section>
           <section className={classes.submitButtonArea}>
             <Button type="submit" fullsize variant="primary">
-              {action === "wrap" ? "Wrap Token" : "Unwrap token"}
+              {action === 'wrap' ? 'Wrap Token' : 'Unwrap token'}
             </Button>
           </section>
           <section>
@@ -471,9 +471,9 @@ const MainPage = () => {
       <PreflightModalWrap
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
-        sender={address || ""}
+        sender={address || ''}
         start={() => {
-          if (action === "wrap") {
+          if (action === 'wrap') {
             handleWrapToken();
             setPreflightModalOpen(false);
           } else {
@@ -481,17 +481,17 @@ const MainPage = () => {
             setPreflightModalOpen(false);
           }
         }}
-        sourceNetwork={homeConfig?.name || ""}
+        sourceNetwork={homeConfig?.name || ''}
         tokenSymbol={
-          action === "wrap"
-            ? homeConfig?.nativeTokenSymbol || "ETH"
-            : wrapTokenConfig?.symbol || "wETH"
+          action === 'wrap'
+            ? homeConfig?.nativeTokenSymbol || 'ETH'
+            : wrapTokenConfig?.symbol || 'wETH'
         }
         value={preflightDetails?.tokenAmount || 0}
         wrappedTitle={
-          action === "wrap"
+          action === 'wrap'
             ? `${wrapTokenConfig?.name} (${wrapTokenConfig?.symbol})`
-            : homeConfig?.nativeTokenSymbol || "ETH"
+            : homeConfig?.nativeTokenSymbol || 'ETH'
         }
         action={action}
       />

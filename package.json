@@ -46,9 +46,9 @@
     "@types/yup": "^0.29.9",
     "chalk": "^4.1.0",
     "craco": "^0.0.3",
-    "husky": "4.3.0",
+    "husky": "^6.0.0",
     "prettier": "2.1.2",
-    "pretty-quick": "3.0.2",
+    "pretty-quick": "^3.1.1",
     "typescript": "^4.0.3"
   },
   "scripts": {
@@ -61,12 +61,13 @@
     "clean:dependencies": "rm -rf ./node_modules && rm -rf ./*/**/node_modules",
     "clean:dist": "rm -rf ./*/**/dist && rm -rf ./*/**/build && rm -rf ./*/**/storybook-static",
     "clean": "yarn clean:dependencies && yarn clean:dist",
-    "prettier": "prettier --config .prettierrc 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --write",
+    "prettier": "prettier --config .prettierrc.js '**/*.{ts,tsx,js,jsx,json,css,md,html}' --write",
     "start:tunnel": "./ngrok http https://localhost:3000",
     "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V",
     "start:centrifuge": "docker-compose -f ./docker-compose-centrifuge.yml up -V",
     "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",
-    "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh"
+    "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh",
+    "prepare": "husky install"
   },
   "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {

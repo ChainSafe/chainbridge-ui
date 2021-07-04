@@ -1,11 +1,11 @@
-const TerserPlugin = require("terser-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   babel: {
-    plugins: ["macros"],
+    plugins: ['macros'],
   },
   webpack: {
-    configure: (webpackConfig) => ({
+    configure: webpackConfig => ({
       ...webpackConfig,
       optimization: {
         ...webpackConfig.optimization,
@@ -44,11 +44,11 @@ module.exports = {
           {
             test: /\.mjs$/,
             include: /node_modules/,
-            type: "javascript/auto",
+            type: 'javascript/auto',
           },
         ],
       },
-      devtool: "source-map",
+      devtool: 'source-map',
     }),
   },
 };

@@ -1,22 +1,22 @@
-import React from "react";
+import React from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import { Drawer, IDrawerProps } from "@chainsafe/common-components";
-import clsx from "clsx";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import { Drawer, IDrawerProps } from '@chainsafe/common-components';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      backgroundColor: `${palette.additional["gray"][9]} !important`,
+      backgroundColor: `${palette.additional['gray'][9]} !important`,
       color: palette.common.white.main,
-      border: "none",
+      border: 'none',
       padding: `${constants.generalUnit * 3}px ${constants.generalUnit * 4}px`,
     },
     backdrop: {
-      backgroundColor: `${palette.additional["gray"][9]} !important`,
+      backgroundColor: `${palette.additional['gray'][9]} !important`,
       opacity: `0.6 !important`,
     },
-  })
+  }),
 );
 
 interface ICustomDrawerProps extends IDrawerProps {}

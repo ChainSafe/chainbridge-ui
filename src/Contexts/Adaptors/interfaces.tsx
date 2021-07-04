@@ -1,6 +1,6 @@
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import { BridgeConfig, TokenConfig } from "../../chainbridgeConfig";
-import { Weth } from "../../Contracts/Weth";
+import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
+import { BridgeConfig, TokenConfig } from '../../chainbridgeConfig';
+import { Weth } from '../../Contracts/Weth';
 
 export interface IHomeBridgeProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -34,7 +34,7 @@ export interface HomeChainAdaptorContext {
     amount: number,
     recipient: string,
     tokenAddress: string,
-    destinationChainId: number
+    destinationChainId: number,
   ): Promise<void>;
 
   relayerThreshold: number | undefined;

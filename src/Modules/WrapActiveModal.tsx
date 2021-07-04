@@ -1,35 +1,35 @@
-import React from "react";
+import React from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import { Button, ProgressBar, Typography } from "@chainsafe/common-components";
-import CustomModal from "../Components/Custom/CustomModal";
-import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { EvmBridgeConfig, TokenConfig } from "../chainbridgeConfig";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import { Button, ProgressBar, Typography } from '@chainsafe/common-components';
+import CustomModal from '../Components/Custom/CustomModal';
+import { useChainbridge } from '../Contexts/ChainbridgeContext';
+import { EvmBridgeConfig, TokenConfig } from '../chainbridgeConfig';
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
     createStyles({
       root: {
-        width: "100%",
+        width: '100%',
       },
       inner: {
-        width: "100% !important",
-        maxWidth: "unset !important",
-        display: "flex",
-        flexDirection: "row",
+        width: '100% !important',
+        maxWidth: 'unset !important',
+        display: 'flex',
+        flexDirection: 'row',
         padding: `${constants.generalUnit * 5}px ${
           constants.generalUnit * 3.5
         }px`,
         bottom: 0,
-        top: "unset",
-        transform: "unset",
+        top: 'unset',
+        transform: 'unset',
         left: 0,
-        border: "none",
+        border: 'none',
         borderRadius: 0,
         transitionDuration: `${animation.transform}ms`,
       },
       heading: {
-        whiteSpace: "nowrap",
+        whiteSpace: 'nowrap',
         marginTop: constants.generalUnit / 2,
       },
       stepIndicator: {
@@ -37,72 +37,72 @@ const useStyles = makeStyles(
         height: 40,
         width: 40,
         marginRight: constants.generalUnit * 2,
-        borderRadius: "50%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        border: `1px solid ${palette.additional["transactionModal"][2]}`,
-        color: palette.additional["transactionModal"][3],
-        "& svg": {
+        borderRadius: '50%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: `1px solid ${palette.additional['transactionModal'][2]}`,
+        color: palette.additional['transactionModal'][3],
+        '& svg': {
           height: 20,
           width: 20,
-          display: "block",
+          display: 'block',
         },
       },
       content: {
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
       },
       buttons: {
-        display: "flex",
-        flexDirection: "row",
+        display: 'flex',
+        flexDirection: 'row',
         marginTop: constants.generalUnit * 5,
-        "& > *": {
-          textDecoration: "none",
+        '& > *': {
+          textDecoration: 'none',
           marginRight: constants.generalUnit,
         },
       },
       button: {
-        borderColor: `${palette.additional["gray"][8]} !important`,
-        color: `${palette.additional["gray"][8]} !important`,
-        textDecoration: "none",
-        "&:hover": {
-          borderColor: `${palette.additional["gray"][8]} !important`,
-          backgroundColor: `${palette.additional["gray"][8]} !important`,
+        borderColor: `${palette.additional['gray'][8]} !important`,
+        color: `${palette.additional['gray'][8]} !important`,
+        textDecoration: 'none',
+        '&:hover': {
+          borderColor: `${palette.additional['gray'][8]} !important`,
+          backgroundColor: `${palette.additional['gray'][8]} !important`,
           color: `${palette.common.white.main} !important`,
-          textDecoration: "none",
+          textDecoration: 'none',
         },
       },
       initCopy: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        "& > *:first-child": {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        '& > *:first-child': {
           marginTop: constants.generalUnit * 3.5,
           marginBottom: constants.generalUnit * 8,
         },
       },
       sendingCopy: {},
       vote: {
-        display: "flex",
-        flexDirection: "row",
+        display: 'flex',
+        flexDirection: 'row',
         marginTop: constants.generalUnit,
-        "& > *": {
-          "&:first-child": {
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+        '& > *': {
+          '&:first-child': {
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
             maxWidth: 240,
           },
-          "&:last-child": {
+          '&:last-child': {
             marginLeft: constants.generalUnit * 3.5,
-            fontStyle: "italic",
+            fontStyle: 'italic',
           },
         },
       },
       warning: {
         marginTop: constants.generalUnit * 3.5,
-        display: "block",
+        display: 'block',
         fontWeight: 600,
       },
       receipt: {
@@ -113,28 +113,28 @@ const useStyles = makeStyles(
         fontWeight: 600,
       },
       progress: {
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         left: 0,
-        width: "100%",
-        "& > *": {
-          borderRadius: "0 !important",
-          "&  >  *": {
-            borderRadius: "0 !important",
-            background: `${palette.additional["transactionModal"][1]} !important`,
+        width: '100%',
+        '& > *': {
+          borderRadius: '0 !important',
+          '&  >  *': {
+            borderRadius: '0 !important',
+            background: `${palette.additional['transactionModal'][1]} !important`,
           },
         },
       },
-    })
+    }),
 );
 
 interface IWrapActiveModalProps {
-  txState?: "inProgress" | "done";
+  txState?: 'inProgress' | 'done';
   value: number;
   tokenInfo: TokenConfig;
   txHash?: string;
   close: () => void;
-  action: "wrap" | "unwrap";
+  action: 'wrap' | 'unwrap';
 }
 
 const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
@@ -160,27 +160,27 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
         className={classes.progress}
         size="small"
         variant="primary"
-        progress={txState !== "done" ? -1 : 100}
+        progress={txState !== 'done' ? -1 : 100}
       />
       <section>
         <div className={classes.stepIndicator}>
-          {txState === "inProgress" ? 1 : 2}
+          {txState === 'inProgress' ? 1 : 2}
         </div>
       </section>
       <section className={classes.content}>
         <Typography className={classes.heading} variant="h3" component="h3">
-          {txState === "inProgress"
-            ? action === "wrap"
+          {txState === 'inProgress'
+            ? action === 'wrap'
               ? `Wrapping ${value} ${homeConfig?.nativeTokenSymbol}`
               : `Unwrapping ${value} ${tokenInfo.symbol}`
-            : action === "wrap"
-            ? "Token wrapped"
-            : "Token unwrapped"}
+            : action === 'wrap'
+            ? 'Token wrapped'
+            : 'Token unwrapped'}
         </Typography>
-        {txState !== "inProgress" && (
+        {txState !== 'inProgress' && (
           <>
             <Typography className={classes.receipt} component="p">
-              {action === "wrap"
+              {action === 'wrap'
                 ? `Successfully wrapped ${homeConfig?.nativeTokenSymbol} to ${tokenInfo.symbol}`
                 : `Successfully unwrapped ${tokenInfo.symbol} to ${homeConfig?.nativeTokenSymbol}`}
               {homeConfig &&

@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { Typography } from "@chainsafe/common-components";
-import { useFormikContext } from "formik";
+import { Typography } from '@chainsafe/common-components';
+import { useFormikContext } from 'formik';
 
 interface IFeesFormikWrapped {
   className?: string;
@@ -35,8 +35,8 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
           <Typography component="p">Transfer Amount:</Typography>
           <Typography component="p">
             {Number((values as Record<string, any>)[amountFormikName])?.toFixed(
-              3
-            )}{" "}
+              3,
+            )}{' '}
             {symbol}
           </Typography>
         </>

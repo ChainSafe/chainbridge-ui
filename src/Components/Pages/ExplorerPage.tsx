@@ -1,13 +1,13 @@
-import React from "react";
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import React from 'react';
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       padding: constants.generalUnit * 6,
-      position: "relative",
+      position: 'relative',
     },
-  })
+  }),
 );
 
 type PreflightDetails = {

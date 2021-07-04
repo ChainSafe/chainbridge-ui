@@ -1,16 +1,16 @@
-import { Vote } from "../NetworkManagerContext";
+import { Vote } from '../NetworkManagerContext';
 
-export type AddMessageAction = { type: "addMessage"; payload: string | Vote };
-export type ResetAction = { type: "resetMessages" };
+export type AddMessageAction = { type: 'addMessage'; payload: string | Vote };
+export type ResetAction = { type: 'resetMessages' };
 
 export function transitMessageReducer(
   transitMessage: Array<string | Vote>,
-  action: AddMessageAction | ResetAction
+  action: AddMessageAction | ResetAction,
 ) {
   switch (action.type) {
-    case "addMessage":
+    case 'addMessage':
       return [...transitMessage, action.payload];
-    case "resetMessages":
+    case 'resetMessages':
       return [];
     default:
       return transitMessage;

@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { useField, useFormikContext } from "formik";
-import { Button, FormikTextInput } from "@chainsafe/common-components";
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { useField, useFormikContext } from 'formik';
+import { Button, FormikTextInput } from '@chainsafe/common-components';
+import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
 
 interface ITokenInput {
   disabled?: boolean;
@@ -42,7 +42,7 @@ const TokenInput: React.FC<ITokenInput> = ({
         className={classNames?.button}
         onClick={() => {
           helpers.setValue(
-            tokens[(values as Record<string, any>)[tokenSelectorKey]].balance
+            tokens[(values as Record<string, any>)[tokenSelectorKey]].balance,
           );
         }}
         variant="outline"

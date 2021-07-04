@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { HomeChainAdaptorContext } from "./Adaptors/interfaces";
+import React, { useContext } from 'react';
+import { HomeChainAdaptorContext } from './Adaptors/interfaces';
 
 const HomeBridgeContext = React.createContext<
   HomeChainAdaptorContext | undefined
@@ -8,7 +8,7 @@ const HomeBridgeContext = React.createContext<
 const useHomeBridge = () => {
   const context = useContext(HomeBridgeContext);
   if (context === undefined) {
-    throw new Error("useHomeBridge must be called within a HomeBridgeProvider");
+    throw new Error('useHomeBridge must be called within a HomeBridgeProvider');
   }
   return context;
 };

@@ -1,11 +1,11 @@
-import { NavLink, Typography } from "@chainsafe/common-components";
-import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
-import React from "react";
-import { ReactNode } from "react";
-import AppHeader from "./AppHeader";
-import { ReactComponent as GlobalSvg } from "../media/Icons/global.svg";
-import { ReactComponent as GiftSvg } from "../media/Icons/gift.svg";
-import { ROUTE_LINKS } from "../Components/Routes";
+import { NavLink, Typography } from '@chainsafe/common-components';
+import { createStyles, ITheme, makeStyles } from '@chainsafe/common-theme';
+import React from 'react';
+import { ReactNode } from 'react';
+import AppHeader from './AppHeader';
+import { ReactComponent as GlobalSvg } from '../media/Icons/global.svg';
+import { ReactComponent as GiftSvg } from '../media/Icons/gift.svg';
+import { ROUTE_LINKS } from '../Components/Routes';
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
 }
@@ -13,10 +13,10 @@ interface IAppWrapper {
 const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
   return createStyles({
     root: {
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
       paddingTop: 60,
     },
     inner: {
@@ -24,10 +24,10 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       paddingBottom: (constants.navItemHeight as number) * 2,
     },
     cta: {
-      display: "block",
+      display: 'block',
       maxWidth: 200,
       maxHeight: 200,
-      position: "fixed",
+      position: 'fixed',
       bottom: constants.generalUnit * 3,
       right: constants.generalUnit * 3,
     },
@@ -38,57 +38,57 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       margin: `0 auto`,
       // transform: "translate(-50%, -50%)",
       maxWidth: 460,
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden",
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
       borderRadius: 4,
     },
     pageArea: {
-      height: "100%",
-      width: "100%",
-      overflow: "hidden",
-      border: `1px solid ${palette.additional["gray"][7]}`,
+      height: '100%',
+      width: '100%',
+      overflow: 'hidden',
+      border: `1px solid ${palette.additional['gray'][7]}`,
       borderRadius: 4,
     },
     navTabs: {
       // position: "absolute",
       // top: 0,
       // left: 0,
-      width: "100%",
+      width: '100%',
       // transform: "translate(0,-100%)",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "flex-start",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
       padding: `0 ${constants.generalUnit}px`,
-      transform: "translateY(1px)",
-      "& > a": {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
+      transform: 'translateY(1px)',
+      '& > a': {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         padding: `${constants.generalUnit}px ${constants.generalUnit * 1.5}px`,
-        border: `1px solid ${palette.additional["gray"][7]}`,
-        textDecoration: "none",
+        border: `1px solid ${palette.additional['gray'][7]}`,
+        textDecoration: 'none',
         marginRight: constants.generalUnit,
         transitionDuration: `${animation.transform}ms`,
-        color: palette.additional["gray"][8],
+        color: palette.additional['gray'][8],
         maxHeight: constants.navItemHeight,
-        "& svg": {
+        '& svg': {
           transitionDuration: `${animation.transform}ms`,
-          fill: palette.additional["gray"][8],
+          fill: palette.additional['gray'][8],
         },
-        "&.active": {
-          color: palette.additional["gray"][9],
-          textDecoration: "underline",
-          "& svg": {
-            fill: palette.additional["geekblue"][5],
+        '&.active': {
+          color: palette.additional['gray'][9],
+          textDecoration: 'underline',
+          '& svg': {
+            fill: palette.additional['geekblue'][5],
           },
         },
-        "& > *:first-child": {
+        '& > *:first-child': {
           marginRight: constants.generalUnit,
         },
       },
-      "& svg": {
+      '& svg': {
         height: 14,
         width: 14,
       },

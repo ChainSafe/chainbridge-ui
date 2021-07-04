@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import { IModalProps, Modal } from "@chainsafe/common-components";
-import clsx from "clsx";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import { IModalProps, Modal } from '@chainsafe/common-components';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
@@ -10,10 +10,10 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
       height: `100% !important`,
       borderTopLeftRadius: constants.generalUnit / 2,
       borderTopRightRadius: constants.generalUnit / 2,
-      overflow: "hidden",
-      position: "absolute",
+      overflow: 'hidden',
+      position: 'absolute',
     },
-  })
+  }),
 );
 
 interface ICustomModalProps extends IModalProps {}

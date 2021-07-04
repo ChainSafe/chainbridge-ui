@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer } from 'react';
 import {
   Bridge,
   BridgeFactory,
   Erc20HandlerFactory,
-} from "@chainsafe/chainbridge-contracts";
-import { BigNumber, ethers, Event, providers } from "ethers";
-import { chainbridgeConfig, EvmBridgeConfig } from "../chainbridgeConfig";
-import { Transfers, transfersReducer } from "./Reducers/TransfersReducer";
+} from '@chainsafe/chainbridge-contracts';
+import { BigNumber, ethers, Event, providers } from 'ethers';
+import { chainbridgeConfig, EvmBridgeConfig } from '../chainbridgeConfig';
+import { Transfers, transfersReducer } from './Reducers/TransfersReducer';
 
 interface IExplorerContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -17,7 +17,7 @@ type ExplorerContext = {
 };
 
 const ExplorerContext = React.createContext<ExplorerContext | undefined>(
-  undefined
+  undefined,
 );
 
 const ExplorerProvider = ({ children }: IExplorerContextProps) => {
@@ -26,40 +26,40 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
   const fetchTransfersAndListen = async () => {
     const bridges = await Promise.all(
       chainbridgeConfig.chains
-        .filter((c) => c.type === "Substrate")
-        .map(async (bridge) => {
+        .filter(c => c.type === 'Substrate')
+        .map(async bridge => {
           console.log(`Checking events for ${bridge.name}`);
 
           const provider = new providers.JsonRpcProvider(
             bridge.rpcUrl,
-            bridge.networkId
+            bridge.networkId,
           );
           const bridgeContract = BridgeFactory.connect(
             (bridge as EvmBridgeConfig).bridgeAddress,
-            provider
+            provider,
           );
           const erc20HandlerContract = Erc20HandlerFactory.connect(
             (bridge as EvmBridgeConfig).erc20HandlerAddress,
-            provider
+            provider,
           );
           const depositFilter = bridgeContract.filters.Deposit(
             null,
             null,
-            null
+            null,
           );
           const depositLogs = await provider.getLogs({
             ...depositFilter,
             fromBlock: (bridge as EvmBridgeConfig).deployedBlockNumber,
           });
-          depositLogs.forEach(async (dl) => {
+          depositLogs.forEach(async dl => {
             const parsedLog = bridgeContract.interface.parseLog(dl);
             const depositRecord = await erc20HandlerContract.getDepositRecord(
               parsedLog.args.depositNonce,
-              parsedLog.args.destinationChainID
+              parsedLog.args.destinationChainID,
             );
 
             transfersDispatch({
-              type: "addTransfer",
+              type: 'addTransfer',
               payload: {
                 depositNonce: parsedLog.args.depositNonce.toNumber(),
                 transferDetails: {
@@ -73,8 +73,8 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   toChainId: parsedLog.args.destinationChainID,
                   toNetworkName:
                     chainbridgeConfig.chains.find(
-                      (c) => c.chainId === parsedLog.args.destinationChainID
-                    )?.name || "",
+                      c => c.chainId === parsedLog.args.destinationChainID,
+                    )?.name || '',
                   toAddress: depositRecord._destinationRecipientAddress,
                   tokenAddress: depositRecord._tokenAddress,
                   amount: depositRecord._amount,
@@ -90,15 +90,15 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
               destChainId: number,
               resourceId: string,
               depositNonce: ethers.BigNumber,
-              tx: Event
+              tx: Event,
             ) => {
               const depositRecord = await erc20HandlerContract.getDepositRecord(
                 depositNonce,
-                destChainId
+                destChainId,
               );
 
               transfersDispatch({
-                type: "addTransfer",
+                type: 'addTransfer',
                 payload: {
                   depositNonce: depositNonce.toNumber(),
                   transferDetails: {
@@ -112,8 +112,8 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                     toChainId: destChainId,
                     toNetworkName:
                       chainbridgeConfig.chains.find(
-                        (c) => c.chainId === destChainId
-                      )?.name || "",
+                        c => c.chainId === destChainId,
+                      )?.name || '',
                     toAddress: depositRecord._destinationRecipientAddress,
                     tokenAddress: depositRecord._tokenAddress,
                     amount: depositRecord._amount,
@@ -121,24 +121,24 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   },
                 },
               });
-            }
+            },
           );
           const proposalEventFilter = bridgeContract.filters.ProposalEvent(
             null,
             null,
             null,
             null,
-            null
+            null,
           );
 
           const proposalEventLogs = await provider.getLogs({
             ...proposalEventFilter,
             fromBlock: (bridge as EvmBridgeConfig).deployedBlockNumber,
           });
-          proposalEventLogs.forEach(async (pel) => {
+          proposalEventLogs.forEach(async pel => {
             const parsedLog = bridgeContract.interface.parseLog(pel);
             transfersDispatch({
-              type: "addProposalEvent",
+              type: 'addProposalEvent',
               payload: {
                 depositNonce: parsedLog.args.depositNonce.toNumber(),
                 transferDetails: {
@@ -146,8 +146,8 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   fromChainId: parsedLog.args.originChainID,
                   fromNetworkName:
                     chainbridgeConfig.chains.find(
-                      (c) => c.chainId === parsedLog.args.originChainID
-                    )?.name || "",
+                      c => c.chainId === parsedLog.args.originChainID,
+                    )?.name || '',
                   toChainId: bridge.chainId,
                   toNetworkName: bridge.name,
                 },
@@ -163,7 +163,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
             });
           });
           console.log(
-            `Added ${bridge.name} ${proposalEventLogs.length} proposal events`
+            `Added ${bridge.name} ${proposalEventLogs.length} proposal events`,
           );
           bridgeContract.on(
             proposalEventFilter,
@@ -173,10 +173,10 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
               status: number,
               resourceId: string,
               dataHash: string,
-              tx: Event
+              tx: Event,
             ) => {
               transfersDispatch({
-                type: "addProposalEvent",
+                type: 'addProposalEvent',
                 payload: {
                   depositNonce: depositNonce.toNumber(),
                   transferDetails: {
@@ -184,8 +184,8 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                     fromChainId: originChainId,
                     fromNetworkName:
                       chainbridgeConfig.chains.find(
-                        (c) => c.chainId === originChainId
-                      )?.name || "",
+                        c => c.chainId === originChainId,
+                      )?.name || '',
                     toChainId: bridge.chainId,
                     toNetworkName: bridge.name,
                   },
@@ -199,24 +199,24 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   },
                 },
               });
-            }
+            },
           );
           const proposalVoteFilter = bridgeContract.filters.ProposalVote(
             null,
             null,
             null,
-            null
+            null,
           );
 
           const proposalVoteLogs = await provider.getLogs({
             ...proposalVoteFilter,
             fromBlock: (bridge as EvmBridgeConfig).deployedBlockNumber,
           });
-          proposalVoteLogs.forEach(async (pvl) => {
+          proposalVoteLogs.forEach(async pvl => {
             const parsedLog = bridgeContract.interface.parseLog(pvl);
 
             transfersDispatch({
-              type: "addVote",
+              type: 'addVote',
               payload: {
                 depositNonce: parsedLog.args.depositNonce.toNumber(),
                 transferDetails: {
@@ -224,8 +224,8 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   fromChainId: parsedLog.args.originChainID,
                   fromNetworkName:
                     chainbridgeConfig.chains.find(
-                      (c) => c.chainId === parsedLog.args.originChainID
-                    )?.name || "",
+                      c => c.chainId === parsedLog.args.originChainID,
+                    )?.name || '',
                   toChainId: bridge.chainId,
                   toNetworkName: bridge.name,
                 },
@@ -241,7 +241,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
             });
           });
           console.log(
-            `Added ${bridge.name} ${proposalVoteLogs.length} proposal votes`
+            `Added ${bridge.name} ${proposalVoteLogs.length} proposal votes`,
           );
           bridgeContract.on(
             proposalVoteFilter,
@@ -250,10 +250,10 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
               depositNonce: BigNumber,
               status: number, // TODO: Confirm wether this is actually being used
               resourceId: string,
-              tx: Event
+              tx: Event,
             ) => {
               transfersDispatch({
-                type: "addVote",
+                type: 'addVote',
                 payload: {
                   depositNonce: depositNonce.toNumber(),
                   transferDetails: {
@@ -261,25 +261,25 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                     fromChainId: originChainId,
                     fromNetworkName:
                       chainbridgeConfig.chains.find(
-                        (c) => c.chainId === originChainId
-                      )?.name || "",
+                        c => c.chainId === originChainId,
+                      )?.name || '',
                     toChainId: bridge.chainId,
                     toNetworkName: bridge.name,
                   },
                   voteDetails: {
                     voteBlockNumber: tx.blockNumber,
                     voteTransactionHash: tx.transactionHash,
-                    dataHash: "", // TODO: Confirm whether this is available
+                    dataHash: '', // TODO: Confirm whether this is available
                     timestamp: (await provider.getBlock(tx.blockNumber))
                       .timestamp,
                     voteStatus: status === 1 ? true : false, // TODO: Confirm whether this is the correct status
                   },
                 },
               });
-            }
+            },
           );
           return bridgeContract;
-        })
+        }),
     );
     return bridges;
   };
@@ -295,7 +295,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
 
     return () => {
       if (bridgeContracts.length > 0) {
-        bridgeContracts.forEach((bc) => {
+        bridgeContracts.forEach(bc => {
           // @ts-ignore
           bc.removeAllListeners();
         });
@@ -317,7 +317,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
 const useExplorer = () => {
   const context = useContext(ExplorerContext);
   if (context === undefined) {
-    throw new Error("useExplorer must be called within a ExplorerProvider");
+    throw new Error('useExplorer must be called within a ExplorerProvider');
   }
   return context;
 };

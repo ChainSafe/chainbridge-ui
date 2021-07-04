@@ -1,24 +1,24 @@
-import React from "react";
-import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
-import { ThemeSwitcher } from "@chainsafe/common-theme";
+import React from 'react';
+import { init, ErrorBoundary, showReportDialog } from '@sentry/react';
+import { ThemeSwitcher } from '@chainsafe/common-theme';
 import {
   CssBaseline,
   Router,
   ToasterProvider,
-} from "@chainsafe/common-components";
+} from '@chainsafe/common-components';
 
-import Routes from "./Components/Routes";
-import { lightTheme } from "./Themes/LightTheme";
-import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
-import AppWrapper from "./Layouts/AppWrapper";
-import { NetworkManagerProvider } from "./Contexts/NetworkManagerContext";
-import { chainbridgeConfig } from "./chainbridgeConfig";
-import { Web3Provider } from "@chainsafe/web3-context";
-import { utils } from "ethers";
-import "@chainsafe/common-theme/dist/font-faces.css";
+import Routes from './Components/Routes';
+import { lightTheme } from './Themes/LightTheme';
+import { ChainbridgeProvider } from './Contexts/ChainbridgeContext';
+import AppWrapper from './Layouts/AppWrapper';
+import { NetworkManagerProvider } from './Contexts/NetworkManagerContext';
+import { chainbridgeConfig } from './chainbridgeConfig';
+import { Web3Provider } from '@chainsafe/web3-context';
+import { utils } from 'ethers';
+import '@chainsafe/common-theme/dist/font-faces.css';
 
 if (
-  process.env.NODE_ENV === "production" &&
+  process.env.NODE_ENV === 'production' &&
   process.env.REACT_APP_SENTRY_DSN_URL &&
   process.env.REACT_APP_SENTRY_RELEASE
 ) {
@@ -30,7 +30,7 @@ if (
 
 const App: React.FC<{}> = () => {
   const tokens = chainbridgeConfig.chains
-    .filter((c) => c.type === "Ethereum")
+    .filter(c => c.type === 'Ethereum')
     .reduce((tca, bc: any) => {
       if (bc.networkId) {
         return {
@@ -54,7 +54,7 @@ const App: React.FC<{}> = () => {
           <p>{error?.message.toString()}</p>
           <p>{componentStack}</p>
           <p>{eventId}</p>
-          <button onClick={() => showReportDialog({ eventId: eventId || "" })}>
+          <button onClick={() => showReportDialog({ eventId: eventId || '' })}>
             Provide Additional Details
           </button>
           <button onClick={resetError}>Reset error</button>
@@ -71,13 +71,13 @@ const App: React.FC<{}> = () => {
             onboardConfig={{
               dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
               walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
+                wallets: [{ walletName: 'metamask', preferred: true }],
               },
               subscriptions: {
-                network: (network) =>
-                  network && console.log("chainId: ", network),
-                balance: (amount) =>
-                  amount && console.log("balance: ", utils.formatEther(amount)),
+                network: network =>
+                  network && console.log('chainId: ', network),
+                balance: amount =>
+                  amount && console.log('balance: ', utils.formatEther(amount)),
               },
             }}
             checkNetwork={false}

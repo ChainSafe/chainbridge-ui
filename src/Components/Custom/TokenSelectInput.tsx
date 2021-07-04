@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useField } from "formik";
+import React, { useEffect, useState } from 'react';
+import { useField } from 'formik';
 import {
   IFormikSelectInputProps,
   FormikSelectInput,
-} from "@chainsafe/common-components";
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+} from '@chainsafe/common-components';
+import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
 
 interface ITokenSelectInput extends IFormikSelectInputProps {
   tokens: Tokens;
@@ -22,13 +22,13 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
   const [field, , helpers] = useField(name);
   const labelParsed = tokens[field.value]
     ? `${label} ${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
-    : "Please select token";
+    : 'Please select token';
 
   const [synced, setSynced] = useState();
   useEffect(() => {
     if (sync && field.value !== synced) {
       setSynced(field.value);
-      if (field.value !== "") {
+      if (field.value !== '') {
         sync(field.value);
       }
     }
@@ -37,7 +37,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
 
   useEffect(() => {
     // If there is only one token, auto select
-    if (Object.keys(tokens).length === 1 && field.value === "") {
+    if (Object.keys(tokens).length === 1 && field.value === '') {
       helpers.setValue(Object.keys(tokens)[0]);
     }
   }, [tokens, helpers, field.value]);

@@ -1,103 +1,103 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import AboutDrawer from "../../Modules/AboutDrawer";
-import ChangeNetworkDrawer from "../../Modules/ChangeNetworkDrawer";
-import PreflightModalTransfer from "../../Modules/PreflightModalTransfer";
+import React, { useEffect, useState } from 'react';
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import AboutDrawer from '../../Modules/AboutDrawer';
+import ChangeNetworkDrawer from '../../Modules/ChangeNetworkDrawer';
+import PreflightModalTransfer from '../../Modules/PreflightModalTransfer';
 import {
   Button,
   Typography,
   QuestionCircleSvg,
   SelectInput,
-} from "@chainsafe/common-components";
-import { Form, Formik } from "formik";
-import AddressInput from "../Custom/AddressInput";
-import clsx from "clsx";
-import TransferActiveModal from "../../Modules/TransferActiveModal";
-import { useChainbridge } from "../../Contexts/ChainbridgeContext";
-import TokenSelectInput from "../Custom/TokenSelectInput";
-import TokenInput from "../Custom/TokenInput";
-import { object, string } from "yup";
-import { utils } from "ethers";
-import FeesFormikWrapped from "./FormikContextElements/Fees";
-import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
-import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
-import { isValidSubstrateAddress } from "../../Utils/Helpers";
-import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
+} from '@chainsafe/common-components';
+import { Form, Formik } from 'formik';
+import AddressInput from '../Custom/AddressInput';
+import clsx from 'clsx';
+import TransferActiveModal from '../../Modules/TransferActiveModal';
+import { useChainbridge } from '../../Contexts/ChainbridgeContext';
+import TokenSelectInput from '../Custom/TokenSelectInput';
+import TokenInput from '../Custom/TokenInput';
+import { object, string } from 'yup';
+import { utils } from 'ethers';
+import FeesFormikWrapped from './FormikContextElements/Fees';
+import { useNetworkManager } from '../../Contexts/NetworkManagerContext';
+import NetworkUnsupportedModal from '../../Modules/NetworkUnsupportedModal';
+import { isValidSubstrateAddress } from '../../Utils/Helpers';
+import { useHomeBridge } from '../../Contexts/HomeBridgeContext';
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       padding: constants.generalUnit * 6,
-      position: "relative",
+      position: 'relative',
     },
     walletArea: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "100%",
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
     },
     connectButton: {
       margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
     },
     connecting: {
-      textAlign: "center",
+      textAlign: 'center',
       marginBottom: constants.generalUnit * 2,
     },
     connected: {
-      width: "100%",
-      "& > *:first-child": {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
+      width: '100%',
+      '& > *:first-child': {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
       },
     },
     changeButton: {
-      cursor: "pointer",
+      cursor: 'pointer',
     },
     networkName: {
       padding: `${constants.generalUnit * 2}px ${
         constants.generalUnit * 1.5
       }px`,
-      border: `1px solid ${palette.additional["gray"][6]}`,
+      border: `1px solid ${palette.additional['gray'][6]}`,
       borderRadius: 2,
-      color: palette.additional["gray"][9],
+      color: palette.additional['gray'][9],
       marginTop: constants.generalUnit,
       marginBottom: constants.generalUnit * 3,
     },
     formArea: {
-      "&.disabled": {
+      '&.disabled': {
         opacity: 0.4,
       },
     },
     currencySection: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
       margin: `${constants.generalUnit * 3}px 0`,
     },
     tokenInputArea: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-end",
-      justifyContent: "space-around",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'space-around',
       paddingRight: constants.generalUnit,
     },
     tokenInput: {
       margin: 0,
-      "& > div": {
+      '& > div': {
         height: 32,
-        "& input": {
+        '& input': {
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
           borderRight: 0,
         },
       },
-      "& span:last-child.error": {
-        position: "absolute",
+      '& span:last-child.error': {
+        position: 'absolute',
       },
     },
     maxButton: {
@@ -105,22 +105,22 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
-      borderColor: palette.additional["gray"][6],
-      "&:hover": {
-        borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
+      color: palette.additional['gray'][8],
+      backgroundColor: palette.additional['gray'][3],
+      borderColor: palette.additional['gray'][6],
+      '&:hover': {
+        borderColor: palette.additional['gray'][6],
+        backgroundColor: palette.additional['gray'][7],
         color: palette.common.white.main,
       },
-      "&:focus": {
-        borderColor: palette.additional["gray"][6],
+      '&:focus': {
+        borderColor: palette.additional['gray'][6],
       },
     },
     currencySelector: {
       width: 120,
-      "& *": {
-        cursor: "pointer",
+      '& *': {
+        cursor: 'pointer',
       },
     },
     token: {},
@@ -130,54 +130,54 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     addressInput: {},
     generalInput: {
-      "& > span": {
+      '& > span': {
         marginBottom: constants.generalUnit,
       },
     },
     faqButton: {
-      cursor: "pointer",
+      cursor: 'pointer',
       height: 20,
       width: 20,
       marginTop: constants.generalUnit * 5,
-      fill: `${palette.additional["transferUi"][1]} !important`,
+      fill: `${palette.additional['transferUi'][1]} !important`,
     },
     tokenItem: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      cursor: "pointer",
-      "& img, & svg": {
-        display: "block",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      cursor: 'pointer',
+      '& img, & svg': {
+        display: 'block',
         height: 14,
         width: 14,
         marginRight: 10,
       },
-      "& span": {
+      '& span': {
         minWidth: `calc(100% - 30px)`,
-        textAlign: "right",
+        textAlign: 'right',
       },
     },
     fees: {
-      display: "flex",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "space-between",
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
       marginBottom: constants.generalUnit,
-      "& > *": {
-        display: "block",
-        width: "50%",
-        color: palette.additional["gray"][8],
+      '& > *': {
+        display: 'block',
+        width: '50%',
+        color: palette.additional['gray'][8],
         marginBottom: constants.generalUnit / 2,
-        "&:nth-child(even)": {
-          textAlign: "right",
+        '&:nth-child(even)': {
+          textAlign: 'right',
         },
       },
     },
     accountSelector: {
       marginBottom: 24,
     },
-  })
+  }),
 );
 
 type PreflightDetails = {
@@ -212,16 +212,16 @@ const TransferPage = () => {
   const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
-    receiver: "",
-    token: "",
+    receiver: '',
+    token: '',
     tokenAmount: 0,
-    tokenSymbol: "",
+    tokenSymbol: '',
   });
 
   useEffect(() => {
-    if (walletType !== "select" && walletConnecting === true) {
+    if (walletType !== 'select' && walletConnecting === true) {
       setWalletConnecting(false);
-    } else if (walletType === "select") {
+    } else if (walletType === 'select') {
       setWalletConnecting(true);
     }
   }, [walletType, walletConnecting]);
@@ -238,7 +238,7 @@ const TransferPage = () => {
 
   const transferSchema = object().shape({
     tokenAmount: string()
-      .test("Token selected", "Please select a token", (value) => {
+      .test('Token selected', 'Please select a token', value => {
         if (
           !!value &&
           preflightDetails &&
@@ -250,7 +250,7 @@ const TransferPage = () => {
           return false;
         }
       })
-      .test("InputValid", "Input invalid", (value) => {
+      .test('InputValid', 'Input invalid', value => {
         try {
           return REGEX.test(`${value}`);
         } catch (error) {
@@ -258,14 +258,14 @@ const TransferPage = () => {
           return false;
         }
       })
-      .test("Max", "Insufficent funds", (value) => {
+      .test('Max', 'Insufficent funds', value => {
         if (
           value &&
           preflightDetails &&
           tokens[preflightDetails.token] &&
           tokens[preflightDetails.token].balance
         ) {
-          if (homeConfig?.type === "Ethereum") {
+          if (homeConfig?.type === 'Ethereum') {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
             return (
@@ -276,22 +276,22 @@ const TransferPage = () => {
         }
         return false;
       })
-      .test("Min", "Less than minimum", (value) => {
+      .test('Min', 'Less than minimum', value => {
         if (value) {
           return parseFloat(value) > 0;
         }
         return false;
       })
-      .required("Please set a value"),
-    token: string().required("Please select a token"),
+      .required('Please set a value'),
+    token: string().required('Please select a token'),
     receiver: string()
-      .test("Valid address", "Please add a valid address", (value) => {
-        if (destinationChainConfig?.type === "Substrate") {
+      .test('Valid address', 'Please add a valid address', value => {
+        if (destinationChainConfig?.type === 'Substrate') {
           return isValidSubstrateAddress(value as string);
         }
         return utils.isAddress(value as string);
       })
-      .required("Please add a receiving address"),
+      .required('Please add a receiving address'),
   });
 
   return (
@@ -302,7 +302,7 @@ const TransferPage = () => {
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              setWalletType("select");
+              setWalletType('select');
             }}
           >
             Connect
@@ -337,7 +337,7 @@ const TransferPage = () => {
         )}
       </div>
       {isReady &&
-        walletType === "Substrate" &&
+        walletType === 'Substrate' &&
         accounts &&
         accounts.length > 0 && (
           <div>
@@ -349,8 +349,8 @@ const TransferPage = () => {
                   label: acc.address,
                   value: i,
                 }))}
-                onChange={(value) => selectAccount && selectAccount(value)}
-                value={accounts.findIndex((v) => v.address === address)}
+                onChange={value => selectAccount && selectAccount(value)}
+                value={accounts.findIndex(v => v.address === address)}
                 placeholder="Select an account"
               />
             </section>
@@ -359,15 +359,15 @@ const TransferPage = () => {
       <Formik
         initialValues={{
           tokenAmount: 0,
-          token: "",
-          receiver: "",
+          token: '',
+          receiver: '',
         }}
         validateOnChange={false}
         validationSchema={transferSchema}
-        onSubmit={(values) => {
+        onSubmit={values => {
           setPreflightDetails({
             ...values,
-            tokenSymbol: tokens[values.token].symbol || "",
+            tokenSymbol: tokens[values.token].symbol || '',
           });
           setPreflightModalOpen(true);
         }}
@@ -382,11 +382,11 @@ const TransferPage = () => {
               label="Destination Network"
               className={classes.generalInput}
               disabled={!homeConfig}
-              options={destinationChains.map((dc) => ({
+              options={destinationChains.map(dc => ({
                 label: dc.name,
                 value: dc.chainId,
               }))}
-              onChange={(value) => setDestinationChain(value)}
+              onChange={value => setDestinationChain(value)}
               value={destinationChainConfig?.chainId}
             />
           </section>
@@ -405,7 +405,7 @@ const TransferPage = () => {
                   disabled={
                     !destinationChainConfig ||
                     !preflightDetails.token ||
-                    preflightDetails.token === ""
+                    preflightDetails.token === ''
                   }
                   name="tokenAmount"
                   label="I want to send"
@@ -420,17 +420,17 @@ const TransferPage = () => {
                 label={`Balance: `}
                 className={classes.generalInput}
                 placeholder=""
-                sync={(tokenAddress) => {
+                sync={tokenAddress => {
                   setPreflightDetails({
                     ...preflightDetails,
                     token: tokenAddress,
-                    receiver: "",
+                    receiver: '',
                     tokenAmount: 0,
-                    tokenSymbol: "",
+                    tokenSymbol: '',
                   });
                 }}
                 options={
-                  Object.keys(tokens).map((t) => ({
+                  Object.keys(tokens).map(t => ({
                     value: t,
                     label: (
                       <div className={classes.tokenItem}>
@@ -496,20 +496,20 @@ const TransferPage = () => {
       <PreflightModalTransfer
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
-        receiver={preflightDetails?.receiver || ""}
-        sender={address || ""}
+        receiver={preflightDetails?.receiver || ''}
+        sender={address || ''}
         start={() => {
           setPreflightModalOpen(false);
           preflightDetails &&
             deposit(
               preflightDetails.tokenAmount,
               preflightDetails.receiver,
-              preflightDetails.token
+              preflightDetails.token,
             );
         }}
-        sourceNetwork={homeConfig?.name || ""}
-        targetNetwork={destinationChainConfig?.name || ""}
-        tokenSymbol={preflightDetails?.tokenSymbol || ""}
+        sourceNetwork={homeConfig?.name || ''}
+        targetNetwork={destinationChainConfig?.name || ''}
+        tokenSymbol={preflightDetails?.tokenSymbol || ''}
         value={preflightDetails?.tokenAmount || 0}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />

@@ -1,17 +1,17 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext } from 'react';
 import {
   BridgeConfig,
   chainbridgeConfig,
   TokenConfig,
-} from "../chainbridgeConfig";
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+} from '../chainbridgeConfig';
+import { Tokens } from '@chainsafe/web3-context/dist/context/tokensReducer';
 import {
   TransactionStatus,
   useNetworkManager,
   Vote,
-} from "./NetworkManagerContext";
-import { useHomeBridge } from "./HomeBridgeContext";
-import NetworkSelectModal from "../Modules/NetworkSelectModal";
+} from './NetworkManagerContext';
+import { useHomeBridge } from './HomeBridgeContext';
+import NetworkSelectModal from '../Modules/NetworkSelectModal';
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -27,7 +27,7 @@ type ChainbridgeContext = {
   deposit(
     amount: number,
     recipient: string,
-    tokenAddress: string
+    tokenAddress: string,
   ): Promise<void>;
   resetDeposit(): void;
   depositVotes: number;
@@ -50,7 +50,7 @@ type ChainbridgeContext = {
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
-  undefined
+  undefined,
 );
 
 const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
@@ -98,9 +98,9 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDepositVotes(0);
     setDepositAmount(undefined);
     tokensDispatch({
-      type: "resetMessages",
+      type: 'resetMessages',
     });
-    setSelectedToken("");
+    setSelectedToken('');
   };
 
   const handleDeposit = useCallback(
@@ -110,11 +110,11 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           amount,
           recipient,
           tokenAddress,
-          destinationChainConfig.chainId
+          destinationChainConfig.chainId,
         );
       }
     },
-    [deposit, destinationChainConfig, chainConfig]
+    [deposit, destinationChainConfig, chainConfig],
   );
 
   return (
@@ -158,7 +158,7 @@ const useChainbridge = () => {
   const context = useContext(ChainbridgeContext);
   if (context === undefined) {
     throw new Error(
-      "useChainbridge must be called within a ChainbridgeProvider"
+      'useChainbridge must be called within a ChainbridgeProvider',
     );
   }
   return context;

@@ -1,26 +1,26 @@
-import React from "react";
+import React from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import CustomDrawer from "../Components/Custom/CustomDrawer";
-import { Button, Typography } from "@chainsafe/common-components";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import CustomDrawer from '../Components/Custom/CustomDrawer';
+import { Button, Typography } from '@chainsafe/common-components';
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
     root: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
     },
     buttons: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      "& *": {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      '& *': {
         marginRight: constants.generalUnit,
-        textDecoration: "none",
+        textDecoration: 'none',
       },
     },
-  })
+  }),
 );
 
 interface IAboutDrawerProps {

@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import CustomModal from "../Components/Custom/CustomModal";
+import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
+import CustomModal from '../Components/Custom/CustomModal';
 import {
   Button,
   ExclamationCircleInverseSvg,
   Typography,
   useLocation,
-} from "@chainsafe/common-components";
-import { useNetworkManager } from "../Contexts/NetworkManagerContext";
-import { ROUTE_LINKS } from "../Components/Routes";
-import { useHomeBridge } from "../Contexts/HomeBridgeContext";
-import { chainbridgeConfig } from "../chainbridgeConfig";
+} from '@chainsafe/common-components';
+import { useNetworkManager } from '../Contexts/NetworkManagerContext';
+import { ROUTE_LINKS } from '../Components/Routes';
+import { useHomeBridge } from '../Contexts/HomeBridgeContext';
+import { chainbridgeConfig } from '../chainbridgeConfig';
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      width: "100%",
+      width: '100%',
     },
     inner: {
-      width: "100% !important",
-      maxWidth: "unset !important",
-      borderRadius: "4px",
-      display: "flex",
-      flexDirection: "row",
+      width: '100% !important',
+      maxWidth: 'unset !important',
+      borderRadius: '4px',
+      display: 'flex',
+      flexDirection: 'row',
       padding: `${constants.generalUnit * 6}px ${constants.generalUnit * 7}px`,
     },
     heading: {
@@ -34,27 +34,27 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       width: 20,
       marginTop: constants.generalUnit * 0.8,
       marginRight: constants.generalUnit * 2,
-      fill: palette.additional["gray"][7],
+      fill: palette.additional['gray'][7],
     },
     buttons: {
-      display: "flex",
-      flexDirection: "row",
+      display: 'flex',
+      flexDirection: 'row',
       marginTop: constants.generalUnit * 5,
-      "& > *": {
-        textDecoration: "none",
+      '& > *': {
+        textDecoration: 'none',
         marginRight: constants.generalUnit,
       },
     },
     button: {
-      borderColor: palette.additional["gray"][8],
-      color: palette.additional["gray"][8],
-      "&:hover": {
-        borderColor: palette.additional["gray"][8],
-        backgroundColor: palette.additional["gray"][8],
+      borderColor: palette.additional['gray'][8],
+      color: palette.additional['gray'][8],
+      '&:hover': {
+        borderColor: palette.additional['gray'][8],
+        backgroundColor: palette.additional['gray'][8],
         color: palette.common.white.main,
       },
     },
-  })
+  }),
 );
 
 const NetworkUnsupportedModal = () => {
@@ -71,16 +71,16 @@ const NetworkUnsupportedModal = () => {
       setOpen(!homeChainConfig && !!isReady);
       setSupportedNetworks(
         chainbridgeConfig.chains
-          .filter((bc) => bc.networkId !== undefined)
-          .map((bc) => Number(bc.networkId))
+          .filter(bc => bc.networkId !== undefined)
+          .map(bc => Number(bc.networkId)),
       );
     } else if (pathname === ROUTE_LINKS.Wrap) {
       setOpen(!wrapTokenConfig && !!isReady);
       setSupportedNetworks(
         chainbridgeConfig.chains
-          .filter((bc) => bc.networkId !== undefined)
-          .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))
-          .map((bc) => Number(bc.networkId))
+          .filter(bc => bc.networkId !== undefined)
+          .filter(bc => bc.tokens.find(t => t.isNativeWrappedToken))
+          .map(bc => Number(bc.networkId)),
       );
     } else {
       setOpen(false);
@@ -104,19 +104,19 @@ const NetworkUnsupportedModal = () => {
           Network Unsupported
         </Typography>
         <Typography component="p" variant="body1">
-          This app does not currently support transfers on{" "}
+          This app does not currently support transfers on{' '}
           {getNetworkName(networkId)}. Please change networks from within your
           browser wallet.
         </Typography>
         <br />
         <Typography component="p" variant="body1">
-          This app is configured to work on{" "}
+          This app is configured to work on{' '}
           {supportedNetworks.map(
             (n, i) =>
               `${getNetworkName(n)}${
-                i < supportedNetworks.length - 1 ? ", " : ""
-              }`
-          )}{" "}
+                i < supportedNetworks.length - 1 ? ', ' : ''
+              }`,
+          )}{' '}
           networks
         </Typography>
         <section className={classes.buttons}>
