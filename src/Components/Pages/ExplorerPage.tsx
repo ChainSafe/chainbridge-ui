@@ -10,7 +10,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
   }),
 );
 
-const ExplorerPage = () => {
+const ExplorerPage = (): JSX.Element => {
   const classes = useStyles();
 
   return <article className={classes.root}>Explorer</article>;

@@ -41,13 +41,15 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
-      borderRadius: 4,
+      borderRadius: 8,
+      boxShadow: '0 7px 30px -10px rgba(150,170,180,0.5);',
     },
     pageArea: {
       height: '100%',
       width: '100%',
       overflow: 'hidden',
-      border: `1px solid ${palette.additional.gray[7]}`,
+
+      // border: `1px solid ${palette.additional.gray[7]}`,
       borderRadius: 4,
     },
     navTabs: {

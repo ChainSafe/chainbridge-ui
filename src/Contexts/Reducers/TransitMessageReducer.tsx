@@ -6,7 +6,7 @@ export type ResetAction = { type: 'resetMessages' };
 export function transitMessageReducer(
   transitMessage: Array<string | Vote>,
   action: AddMessageAction | ResetAction,
-) {
+): Array<string | Vote> {
   switch (action.type) {
     case 'addMessage':
       return [...transitMessage, action.payload];

@@ -11,7 +11,7 @@ export const ROUTE_LINKS = {
   Explore: '/explore',
 };
 
-const FilesRoutes = () => (
+const FilesRoutes = (): JSX.Element => (
   <Switch>
     <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
     <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />

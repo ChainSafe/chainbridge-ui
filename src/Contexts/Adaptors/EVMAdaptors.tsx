@@ -28,7 +28,7 @@ const resetAllowanceLogicFor = [
 
 export const EVMHomeAdaptorProvider = ({
   children,
-}: IHomeBridgeProviderProps) => {
+}: IHomeBridgeProviderProps): JSX.Element => {
   const {
     isReady,
     network,
@@ -483,7 +483,7 @@ export const EVMHomeAdaptorProvider = ({
 
 export const EVMDestinationAdaptorProvider = ({
   children,
-}: IDestinationBridgeProviderProps) => {
+}: IDestinationBridgeProviderProps): JSX.Element => {
   console.log('EVM destination loaded');
   const {
     depositNonce,

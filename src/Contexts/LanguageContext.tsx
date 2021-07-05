@@ -55,7 +55,7 @@ const getLocales = (): string[] => {
 const LanguageProvider = ({
   children,
   availableLanguages,
-}: LanguageProviderProps) => {
+}: LanguageProviderProps): JSX.Element => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const userLocales = getLocales();
   useEffect(() => {
@@ -107,7 +107,7 @@ const LanguageProvider = ({
     </LanguageContext.Provider>
   );
 };
-function useLanguageContext() {
+function useLanguageContext(): LanguageContext {
   const context = React.useContext(LanguageContext);
   if (context === undefined) {
     throw new Error(

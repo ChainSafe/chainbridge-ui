@@ -5,7 +5,7 @@ const DestinationBridgeContext = React.createContext<
   DestinationChainContext | undefined
 >(undefined);
 
-const useDestinationBridge = () => {
+const useDestinationBridge = (): DestinationChainContext => {
   const context = useContext(DestinationBridgeContext);
   if (context === undefined) {
     throw new Error('useHomeBridge must be called within a HomeBridgeProvider');

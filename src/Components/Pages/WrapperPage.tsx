@@ -192,7 +192,7 @@ type PreflightDetails = {
   tokenAmount: number;
 };
 
-const MainPage = () => {
+const MainPage = (): JSX.Element => {
   const classes = useStyles();
   const { walletType, setWalletType, homeChainConfig } = useNetworkManager();
   const {
@@ -203,7 +203,6 @@ const MainPage = () => {
     isReady,
     tokens,
     nativeTokenBalance,
-    address,
   } = useChainbridge();
 
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);

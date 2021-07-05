@@ -16,7 +16,6 @@ import PreflightModalTransfer from '../../Modules/PreflightModalTransfer';
 import AddressInput from '../Custom/AddressInput';
 import TransferActiveModal from '../../Modules/TransferActiveModal';
 import { useChainbridge } from '../../Contexts/ChainbridgeContext';
-import TokenSelectInput from '../Custom/TokenSelectInput';
 import TokenInput from '../Custom/TokenInput';
 import FeesFormikWrapped from './FormikContextElements/Fees';
 import { useNetworkManager } from '../../Contexts/NetworkManagerContext';
@@ -36,9 +35,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
+      height: '80px',
     },
     connectButton: {
-      margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
+      width: '160px',
+      fontSize: '16px',
+      height: '40px',
     },
     connecting: {
       textAlign: 'center',
@@ -84,20 +86,18 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: 'row',
       alignItems: 'flex-end',
       justifyContent: 'space-around',
-      paddingRight: constants.generalUnit,
     },
     tokenInput: {
+      width: '100%',
       margin: 0,
       '& > div': {
         height: 32,
-        '& input': {
-          borderBottomRightRadius: 0,
-          borderTopRightRadius: 0,
-          borderRight: 0,
-        },
       },
       '& span:last-child.error': {
         position: 'absolute',
+      },
+      '& span': {
+        fontSize: '14px',
       },
     },
     maxButton: {
@@ -128,7 +128,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       margin: 0,
       marginBottom: constants.generalUnit * 3,
     },
-    addressInput: {},
+    addressInput: {
+      '& span': {
+        fontSize: '14px',
+      },
+    },
     generalInput: {
       '& > span': {
         marginBottom: constants.generalUnit,
@@ -293,15 +297,32 @@ const TransferPage = (): JSX.Element => {
   const ConnectButton = () => {
     if (!isReady) {
       return (
-        <Button
-          className={classes.connectButton}
-          fullsize
-          onClick={() => {
-            setWalletType('select');
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
           }}
         >
-          Connect
-        </Button>
+          <Button
+            className={classes.connectButton}
+            fullsize
+            onClick={() => {
+              setWalletType('select');
+            }}
+          >
+            Bridge to wCFG
+          </Button>
+          <Button
+            className={classes.connectButton}
+            fullsize
+            onClick={() => {
+              setWalletType('select');
+            }}
+          >
+            Bridge to CFG
+          </Button>
+        </div>
       );
     }
 
@@ -382,7 +403,7 @@ const TransferPage = (): JSX.Element => {
           })}
         >
           <section className={classes.currencySection}>
-            <section>
+            <section style={{ width: '100%' }}>
               <div
                 className={clsx(classes.tokenInputArea, classes.generalInput)}
               >
@@ -391,52 +412,11 @@ const TransferPage = (): JSX.Element => {
                     input: clsx(classes.tokenInput, classes.generalInput),
                     button: classes.maxButton,
                   }}
-                  tokenSelectorKey="token"
-                  tokens={tokens}
-                  disabled={
-                    !destinationChainConfig ||
-                    !preflightDetails.token ||
-                    preflightDetails.token === ''
-                  }
+                  disabled={!destinationChainConfig}
                   name="tokenAmount"
                   label="I want to send"
                 />
               </div>
-            </section>
-            <section className={classes.currencySelector}>
-              <TokenSelectInput
-                tokens={tokens}
-                name="token"
-                disabled={!destinationChainConfig}
-                label={`Balance: `}
-                className={classes.generalInput}
-                placeholder=""
-                sync={tokenAddress => {
-                  setPreflightDetails({
-                    ...preflightDetails,
-                    token: tokenAddress,
-                    receiver: '',
-                    tokenAmount: 0,
-                    tokenSymbol: '',
-                  });
-                }}
-                options={
-                  Object.keys(tokens).map(t => ({
-                    value: t,
-                    label: (
-                      <div className={classes.tokenItem}>
-                        {tokens[t]?.imageUri && (
-                          <img
-                            src={tokens[t]?.imageUri}
-                            alt={tokens[t]?.symbol}
-                          />
-                        )}
-                        <span>{tokens[t]?.symbol || t}</span>
-                      </div>
-                    ),
-                  })) || []
-                }
-              />
             </section>
           </section>
           <section>

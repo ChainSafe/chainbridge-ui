@@ -28,7 +28,7 @@ if (
   });
 }
 
-const App: React.FC<{}> = () => {
+const App = (): JSX.Element => {
   const tokens = chainbridgeConfig.chains
     .filter(c => c.type === 'Ethereum')
     .reduce((tca, bc: any) => {

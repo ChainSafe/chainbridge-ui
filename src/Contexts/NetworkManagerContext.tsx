@@ -82,7 +82,9 @@ const NetworkManagerContext = React.createContext<
   NetworkManagerContext | undefined
 >(undefined);
 
-const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
+const NetworkManagerProvider = ({
+  children,
+}: INetworkManagerProviderProps): JSX.Element => {
   const [walletType, setWalletType] = useState<WalletType>('unset');
 
   const [networkId, setNetworkId] = useState(0);
@@ -266,7 +268,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   );
 };
 
-const useNetworkManager = () => {
+const useNetworkManager = (): NetworkManagerContext => {
   const context = useContext(NetworkManagerContext);
   if (context === undefined) {
     throw new Error(

@@ -20,7 +20,7 @@ const ExplorerContext = React.createContext<ExplorerContext | undefined>(
   undefined,
 );
 
-const ExplorerProvider = ({ children }: IExplorerContextProps) => {
+const ExplorerProvider = ({ children }: IExplorerContextProps): JSX.Element => {
   const [transfers, transfersDispatch] = useReducer(transfersReducer, {});
 
   const fetchTransfersAndListen = async () => {
@@ -316,7 +316,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
   );
 };
 
-const useExplorer = () => {
+const useExplorer = (): ExplorerContext => {
   const context = useContext(ExplorerContext);
   if (context === undefined) {
     throw new Error('useExplorer must be called within a ExplorerProvider');

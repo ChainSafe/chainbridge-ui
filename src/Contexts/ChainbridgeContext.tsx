@@ -53,7 +53,9 @@ const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
   undefined,
 );
 
-const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
+const ChainbridgeProvider = ({
+  children,
+}: IChainbridgeContextProps): JSX.Element => {
   const {
     handleSetHomeChain,
     destinationChainConfig,
@@ -154,7 +156,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   );
 };
 
-const useChainbridge = () => {
+const useChainbridge = (): ChainbridgeContext => {
   const context = useContext(ChainbridgeContext);
   if (context === undefined) {
     throw new Error(

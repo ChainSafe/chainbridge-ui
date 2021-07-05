@@ -30,7 +30,7 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
   }),
 );
 
-const NetworkSelectModal = () => {
+const NetworkSelectModal = (): JSX.Element => {
   const classes = useStyles();
   const { isReady } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();

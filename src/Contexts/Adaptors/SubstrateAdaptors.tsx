@@ -24,7 +24,7 @@ import { SubstrateBridgeConfig } from '../../chainbridgeConfig';
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
-}: IHomeBridgeProviderProps) => {
+}: IHomeBridgeProviderProps): JSX.Element => {
   const registry = new TypeRegistry();
   const [api, setApi] = useState<ApiPromise | undefined>();
   const [isReady, setIsReady] = useState(false);
@@ -231,10 +231,12 @@ export const SubstrateHomeAdaptorProvider = ({
           const injector = await web3FromSource(targetAccount.meta.source);
           setTransactionStatus('Initializing Transfer');
           setDepositAmount(amount);
+          // @ts-expect-error
           transferExtrinsic
             .signAndSend(
               address,
               { signer: injector.signer },
+              // @ts-expect-error
               ({ status, events }) => {
                 status.isInBlock &&
                   console.log(
@@ -242,6 +244,7 @@ export const SubstrateHomeAdaptorProvider = ({
                   );
 
                 if (status.isFinalized) {
+                  // @ts-expect-error
                   events.filter(({ event }) =>
                     api.events[
                       (homeChainConfig as SubstrateBridgeConfig)
@@ -316,7 +319,7 @@ export const SubstrateHomeAdaptorProvider = ({
 
 export const SubstrateDestinationAdaptorProvider = ({
   children,
-}: IDestinationBridgeProviderProps) => {
+}: IDestinationBridgeProviderProps): JSX.Element => {
   const {
     depositNonce,
     destinationChainConfig,

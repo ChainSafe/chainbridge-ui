@@ -3,7 +3,7 @@ import { createTheme } from '@chainsafe/common-theme';
 export const lightTheme = createTheme({
   globalStyling: {
     body: {
-      backgroundColor: '#F5F5F5',
+      backgroundColor: '#FFFFFF',
     },
   },
   themeConfig: {
@@ -44,6 +44,7 @@ export const lightTheme = createTheme({
         variants: {
           primary: {
             root: {
+              borderRadius: '40px',
               backgroundColor: '#262626',
               color: '#ffffff',
               border: `1px solid #262626`,

@@ -1,11 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
-import {
-  CheckboxInput,
-  FormikTextInputProps,
-  TextInput,
-} from '@chainsafe/common-components';
+import { FormikTextInputProps, TextInput } from '@chainsafe/common-components';
 import clsx from 'clsx';
 import { useField } from 'formik';
 
@@ -35,7 +31,6 @@ interface IAddressInput extends FormikTextInputProps {
 
 const AddressInput: React.FC<IAddressInput> = ({
   classNames,
-  senderAddress,
   className,
   inputVariant = 'default',
   type = 'text',
@@ -45,23 +40,10 @@ const AddressInput: React.FC<IAddressInput> = ({
   label,
   labelClassName,
   captionMessage,
-  sendToSameAccountHelper = false,
   ...rest
 }: IAddressInput) => {
   const classes = useStyles();
   const [field, meta, helpers] = useField(name);
-
-  const [stored, setStored] = useState<string | undefined>();
-
-  const toggleReceiver = useCallback(() => {
-    if (stored === undefined) {
-      setStored(field.value);
-      helpers.setValue(senderAddress);
-    } else {
-      helpers.setValue(stored);
-      setStored(undefined);
-    }
-  }, [helpers, field, senderAddress, stored, setStored]);
 
   return (
     <section className={clsx(classes.root, className)}>
@@ -82,18 +64,8 @@ const AddressInput: React.FC<IAddressInput> = ({
           }
           state={meta.error ? 'error' : undefined}
           onChange={helpers.setValue}
-          disabled={stored !== undefined}
         />
       </div>
-      {sendToSameAccountHelper && (
-        <div className={classes.checkbox}>
-          <CheckboxInput
-            label="I want to send funds to my address"
-            value={stored !== undefined}
-            onChange={() => toggleReceiver()}
-          />
-        </div>
-      )}
     </section>
   );
 };

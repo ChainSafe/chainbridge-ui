@@ -57,7 +57,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   }),
 );
 
-const NetworkUnsupportedModal = () => {
+const NetworkUnsupportedModal = (): JSX.Element => {
   const classes = useStyles();
   const { homeChainConfig, networkId } = useNetworkManager();
   const { getNetworkName, wrapTokenConfig, isReady } = useHomeBridge();

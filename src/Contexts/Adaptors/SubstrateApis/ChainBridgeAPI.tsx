@@ -1,11 +1,17 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
+import {
+  SubmittableExtrinsics,
+  SubmittableResultResult,
+  SubmittableResultSubscription,
+} from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import BigNumber from 'bignumber.js';
 import {
   chainbridgeConfig,
   SubstrateBridgeConfig,
 } from '../../../chainbridgeConfig';
 
-export const createApi = async (rpcUrl: string) => {
+export const createApi = async (rpcUrl: string): Promise<ApiPromise> => {
   const provider = new WsProvider(rpcUrl);
   const subChainConfig = chainbridgeConfig.chains.find(
     c => c.rpcUrl === rpcUrl,
@@ -19,7 +25,7 @@ export const submitDeposit = (
   amount: number,
   recipient: string,
   destinationChainId: number,
-) => {
+): unknown => {
   const subChainConfig = chainbridgeConfig.chains.find(
     c => c.chainId !== destinationChainId,
   ) as SubstrateBridgeConfig;
