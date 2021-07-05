@@ -129,6 +129,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     generalInput: {
       '& > span': {
+        fontSize: '14px',
         marginBottom: constants.generalUnit,
       },
     },
