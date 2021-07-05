@@ -104,7 +104,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
       <section className={classes.inner}>
         <AppHeader />
         <section className={classes.content}>
-          <section className={classes.navTabs}>
+          {/* <section className={classes.navTabs}>
             <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
               <GlobalSvg />
               <Typography variant="h5">Transfer</Typography>
@@ -113,7 +113,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               <GiftSvg />
               <Typography variant="h5">Wrap token</Typography>
             </NavLink>
-          </section>
+          </section> */}
           <div className={classes.pageArea}>{children}</div>
         </section>
 

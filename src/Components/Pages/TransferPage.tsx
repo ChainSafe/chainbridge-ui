@@ -193,7 +193,6 @@ const TransferPage = () => {
 
   const {
     deposit,
-    setDestinationChain,
     transactionStatus,
     resetDeposit,
     bridgeFee,
@@ -201,7 +200,6 @@ const TransferPage = () => {
     isReady,
     homeConfig,
     destinationChainConfig,
-    destinationChains,
     address,
   } = useChainbridge();
 
@@ -375,19 +373,6 @@ const TransferPage = () => {
             disabled: !homeConfig || !address,
           })}
         >
-          <section>
-            <SelectInput
-              label="Destination Network"
-              className={classes.generalInput}
-              disabled={!homeConfig}
-              options={destinationChains.map(dc => ({
-                label: dc.name,
-                value: dc.chainId,
-              }))}
-              onChange={value => setDestinationChain(value)}
-              value={destinationChainConfig?.chainId}
-            />
-          </section>
           <section className={classes.currencySection}>
             <section>
               <div

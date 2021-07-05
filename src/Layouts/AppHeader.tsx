@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { Typography } from '@chainsafe/common-components';
 import { shortenAddress } from '../Utils/Helpers';
 import { useChainbridge } from '../Contexts/ChainbridgeContext';
+import { ReactComponent as CentrifugeLogo } from '../media/centrifuge_wordmark.svg';
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
@@ -27,14 +28,6 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       justifyContent: 'flex-start',
       alignItems: 'center',
     },
-    logo: {
-      height: constants.generalUnit * 5,
-      width: constants.generalUnit * 5,
-      '& svg, & img': {
-        maxHeight: '100%',
-        maxWidth: '100%',
-      },
-    },
     state: {
       display: 'flex',
       flexDirection: 'row',
@@ -52,22 +45,24 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginRight: constants.generalUnit,
     },
     network: {},
+    tokenSwapTitle: {
+      paddingTop: '4px',
+      paddingLeft: '8px',
+      color: '#000000',
+    },
   }),
 );
 
-interface IAppHeader {}
-
-const AppHeader: React.FC<IAppHeader> = () => {
+const AppHeader: React.FC = () => {
   const classes = useStyles();
   const { homeConfig, isReady, address } = useChainbridge();
   return (
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
-        {/* ADD LOGO HERE */}
-        {/* <div className={classes.logo}>
-        
-        </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+        <CentrifugeLogo />
+        <div className={classes.tokenSwapTitle}>
+          <Typography variant="h4">Token Swap</Typography>
+        </div>
       </div>
       <section className={classes.state}>
         {!isReady ? (
