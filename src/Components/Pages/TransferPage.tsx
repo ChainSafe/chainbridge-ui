@@ -35,7 +35,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
-      height: '80px',
+      marginBottom: '28px',
     },
     connectButton: {
       width: '160px',
@@ -57,17 +57,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     changeButton: {
+      fontSize: '16px',
       cursor: 'pointer',
     },
     networkName: {
-      padding: `${constants.generalUnit * 2}px ${
-        constants.generalUnit * 1.5
-      }px`,
-      border: `1px solid ${palette.additional.gray[6]}`,
       borderRadius: 2,
       color: palette.additional.gray[9],
       marginTop: constants.generalUnit,
-      marginBottom: constants.generalUnit * 3,
+      marginBottom: constants.generalUnit,
+      fontWeight: 800,
     },
     formArea: {
       '&.disabled': {
@@ -75,11 +73,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySection: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      margin: `${constants.generalUnit * 3}px 0`,
+      marginBottom: `${constants.generalUnit * 3}px`,
     },
     tokenInputArea: {
       display: 'flex',
@@ -180,6 +174,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     accountSelector: {
       marginBottom: 24,
+    },
+    network: {
+      fontSize: '16px',
     },
   }),
 );
@@ -340,7 +337,9 @@ const TransferPage = (): JSX.Element => {
     return (
       <section className={classes.connected}>
         <div>
-          <Typography variant="body1">Home network</Typography>
+          <Typography variant="body1" className={classes.network}>
+            Network: <strong>{homeConfig?.name}</strong>
+          </Typography>
           <Typography
             className={classes.changeButton}
             variant="body1"
@@ -349,9 +348,6 @@ const TransferPage = (): JSX.Element => {
             Change
           </Typography>
         </div>
-        <Typography component="h2" variant="h2" className={classes.networkName}>
-          {homeConfig?.name}
-        </Typography>
       </section>
     );
   };
@@ -403,21 +399,14 @@ const TransferPage = (): JSX.Element => {
           })}
         >
           <section className={classes.currencySection}>
-            <section style={{ width: '100%' }}>
-              <div
-                className={clsx(classes.tokenInputArea, classes.generalInput)}
-              >
-                <TokenInput
-                  classNames={{
-                    input: clsx(classes.tokenInput, classes.generalInput),
-                    button: classes.maxButton,
-                  }}
-                  disabled={!destinationChainConfig}
-                  name="tokenAmount"
-                  label="I want to send"
-                />
-              </div>
-            </section>
+            <TokenInput
+              classNames={{
+                input: clsx(classes.tokenInput, classes.generalInput),
+              }}
+              disabled={!destinationChainConfig}
+              name="tokenAmount"
+              label="I want to send"
+            />
           </section>
           <section>
             <AddressInput
