@@ -44,11 +44,6 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginRight: constants.generalUnit,
     },
     network: {},
-    tokenSwapTitle: {
-      paddingTop: '4px',
-      paddingLeft: '8px',
-      color: '#000000',
-    },
   }),
 );
 
@@ -59,9 +54,6 @@ const AppHeader: React.FC = () => {
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
         <CentrifugeLogo />
-        <div className={classes.tokenSwapTitle}>
-          <Typography variant="h4">Token Swap</Typography>
-        </div>
       </div>
       <section className={classes.state}>
         {!isReady ? (

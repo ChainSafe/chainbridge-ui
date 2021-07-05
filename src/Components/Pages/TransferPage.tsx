@@ -354,6 +354,15 @@ const TransferPage = (): JSX.Element => {
 
   return (
     <article className={classes.root}>
+      <div
+        style={{
+          marginBottom: '48px',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="h1">Token Bridge</Typography>
+      </div>
       <div className={classes.walletArea}>
         <ConnectButton />
       </div>
@@ -436,7 +445,12 @@ const TransferPage = (): JSX.Element => {
             }
           />
           <section>
-            <Button type="submit" fullsize variant="primary">
+            <Button
+              style={{ fontSize: '16px', height: '40px' }}
+              type="submit"
+              fullsize
+              variant="primary"
+            >
               Start transfer
             </Button>
           </section>
