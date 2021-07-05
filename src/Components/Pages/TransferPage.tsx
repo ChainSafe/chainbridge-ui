@@ -305,7 +305,7 @@ const TransferPage = (): JSX.Element => {
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              setWalletType('select');
+              setWalletType('Ethereum');
             }}
           >
             Bridge to wCFG
@@ -314,7 +314,7 @@ const TransferPage = (): JSX.Element => {
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              setWalletType('select');
+              setWalletType('Substrate');
             }}
           >
             Bridge to CFG
