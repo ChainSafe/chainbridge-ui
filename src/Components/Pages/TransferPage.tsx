@@ -198,6 +198,7 @@ const TransferPage = (): JSX.Element => {
     resetDeposit,
     bridgeFee,
     tokens,
+    nativeTokenBalance,
     isReady,
     homeConfig,
     destinationChainConfig,
@@ -212,9 +213,12 @@ const TransferPage = (): JSX.Element => {
 
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: '',
-    token: '',
+    token:
+      homeConfig?.name === 'Ethereum'
+        ? '0x2726A258f88b4e5B3a251e3d91594c527E10494D'
+        : 'CFG',
+    tokenSymbol: homeConfig?.nativeTokenSymbol || '',
     tokenAmount: 0,
-    tokenSymbol: '',
   });
 
   useEffect(() => {
@@ -242,7 +246,7 @@ const TransferPage = (): JSX.Element => {
           !!value &&
           preflightDetails &&
           tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance !== undefined
+          nativeTokenBalance !== undefined
         ) {
           return true;
         }
@@ -261,15 +265,12 @@ const TransferPage = (): JSX.Element => {
           value &&
           preflightDetails &&
           tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance
+          nativeTokenBalance
         ) {
           if (homeConfig?.type === 'Ethereum') {
-            return parseFloat(value) <= tokens[preflightDetails.token].balance;
+            return parseFloat(value) <= nativeTokenBalance;
           }
-          return (
-            parseFloat(value + (bridgeFee || 0)) <=
-            tokens[preflightDetails.token].balance
-          );
+          return parseFloat(value + (bridgeFee || 0)) <= nativeTokenBalance;
         }
         return false;
       })
@@ -280,7 +281,6 @@ const TransferPage = (): JSX.Element => {
         return false;
       })
       .required('Please set a value'),
-    token: string().required('Please select a token'),
     receiver: string()
       .test('Valid address', 'Please add a valid address', value => {
         if (destinationChainConfig?.type === 'Substrate') {
@@ -389,7 +389,10 @@ const TransferPage = (): JSX.Element => {
       <Formik
         initialValues={{
           tokenAmount: 0,
-          token: '',
+          token:
+            homeConfig?.name === 'Ethereum'
+              ? '0x2726A258f88b4e5B3a251e3d91594c527E10494D'
+              : 'CFG',
           receiver: '',
         }}
         validateOnChange={false}
