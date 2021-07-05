@@ -67,7 +67,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
             await Promise.all([destinationBridge.disconnect(), disconnect()]);
             handleSetHomeChain(undefined);
             setDestinationChain(undefined);
-            setWalletType('select');
+            setWalletType('unset');
           }}
           variant="outline"
         >
