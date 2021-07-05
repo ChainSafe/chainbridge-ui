@@ -42,6 +42,7 @@ module.exports = {
     'import/prefer-default-export': [0, false],
     'no-shadow': [0, false],
     'no-underscore-dangle': [0, false],
+    'no-unused-expressions': [0, false],
     'no-use-before-define': [0, false],
     'prettier/prettier': 'error',
     radix: [0, false],

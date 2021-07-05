@@ -187,7 +187,7 @@ type PreflightDetails = {
   receiver: string;
 };
 
-const TransferPage = () => {
+const TransferPage = (): JSX.Element => {
   const classes = useStyles();
   const { walletType, setWalletType } = useNetworkManager();
 
@@ -290,47 +290,55 @@ const TransferPage = () => {
       .required('Please add a receiving address'),
   });
 
+  const ConnectButton = () => {
+    if (!isReady) {
+      return (
+        <Button
+          className={classes.connectButton}
+          fullsize
+          onClick={() => {
+            setWalletType('select');
+          }}
+        >
+          Connect
+        </Button>
+      );
+    }
+
+    if (walletConnecting) {
+      return (
+        <section className={classes.connecting}>
+          <Typography component="p" variant="h5">
+            This app requires access to your wallet, <br />
+            please login and authorize access to continue.
+          </Typography>
+        </section>
+      );
+    }
+
+    return (
+      <section className={classes.connected}>
+        <div>
+          <Typography variant="body1">Home network</Typography>
+          <Typography
+            className={classes.changeButton}
+            variant="body1"
+            onClick={() => setChangeNetworkOpen(true)}
+          >
+            Change
+          </Typography>
+        </div>
+        <Typography component="h2" variant="h2" className={classes.networkName}>
+          {homeConfig?.name}
+        </Typography>
+      </section>
+    );
+  };
+
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>
-        {!isReady ? (
-          <Button
-            className={classes.connectButton}
-            fullsize
-            onClick={() => {
-              setWalletType('select');
-            }}
-          >
-            Connect
-          </Button>
-        ) : walletConnecting ? (
-          <section className={classes.connecting}>
-            <Typography component="p" variant="h5">
-              This app requires access to your wallet, <br />
-              please login and authorize access to continue.
-            </Typography>
-          </section>
-        ) : (
-          <section className={classes.connected}>
-            <div>
-              <Typography variant="body1">Home network</Typography>
-              <Typography
-                className={classes.changeButton}
-                variant="body1"
-                onClick={() => setChangeNetworkOpen(true)}
-              >
-                Change
-              </Typography>
-            </div>
-            <Typography
-              component="h2"
-              variant="h2"
-              className={classes.networkName}
-            >
-              {homeConfig?.name}
-            </Typography>
-          </section>
-        )}
+        <ConnectButton />
       </div>
       {isReady &&
         walletType === 'Substrate' &&
