@@ -62,7 +62,7 @@ const NetworkSelectModal = (): JSX.Element => {
       {walletType === 'Substrate' && (
         <>
           <Typography variant="h2" component="p">
-            Connecting to node
+            Connecting to node...
           </Typography>
           <ProgressBar size="small" variant="primary" />
         </>

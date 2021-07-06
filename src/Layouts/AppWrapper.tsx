@@ -42,7 +42,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) =>
       flexDirection: 'column',
       overflow: 'hidden',
       borderRadius: 8,
-      boxShadow: '0 7px 30px -10px rgba(150,170,180,0.5);',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.3);', // '0 7px 30px -10px rgba(150,170,180,0.5);'
     },
     pageArea: {
       height: '100%',

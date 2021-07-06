@@ -309,7 +309,7 @@ const TransferPage = (): JSX.Element => {
               setWalletType('Ethereum');
             }}
           >
-            Bridge to wCFG
+            Bridge wCFG
           </Button>
           <Button
             className={classes.connectButton}
@@ -318,7 +318,7 @@ const TransferPage = (): JSX.Element => {
               setWalletType('Substrate');
             }}
           >
-            Bridge to CFG
+            Bridge CFG
           </Button>
         </div>
       );
@@ -418,15 +418,15 @@ const TransferPage = (): JSX.Element => {
               }}
               disabled={!destinationChainConfig}
               name="tokenAmount"
-              label="I want to send"
+              label="Amount"
             />
           </section>
           <section>
             <AddressInput
               disabled={!destinationChainConfig}
               name="receiver"
-              label="Destination Address"
-              placeholder="Please enter the receiving address"
+              label="Destination address"
+              placeholder="Receiving address" // @ JP can we make the label dynamic depending on the chosen action? I.e. Polkadot address or Ethereum address
               className={classes.address}
               classNames={{
                 input: classes.addressInput,
@@ -455,7 +455,7 @@ const TransferPage = (): JSX.Element => {
               fullsize
               variant="primary"
             >
-              Start transfer
+              Start Transfer
             </Button>
           </section>
           <section>
