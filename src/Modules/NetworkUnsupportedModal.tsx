@@ -74,14 +74,6 @@ const NetworkUnsupportedModal = () => {
           .filter((bc) => bc.networkId !== undefined)
           .map((bc) => Number(bc.networkId))
       );
-    } else if (pathname === ROUTE_LINKS.Wrap) {
-      setOpen(!wrapTokenConfig && !!isReady);
-      setSupportedNetworks(
-        chainbridgeConfig.chains
-          .filter((bc) => bc.networkId !== undefined)
-          .filter((bc) => bc.tokens.find((t) => t.isNativeWrappedToken))
-          .map((bc) => Number(bc.networkId))
-      );
     } else {
       setOpen(false);
       setSupportedNetworks([]);

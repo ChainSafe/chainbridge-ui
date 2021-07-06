@@ -4,7 +4,6 @@ import React from "react";
 import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
 import { ReactComponent as GlobalSvg } from "../media/Icons/global.svg";
-import { ReactComponent as GiftSvg } from "../media/Icons/gift.svg";
 import { ROUTE_LINKS } from "../Components/Routes";
 
 interface IAppWrapper {
@@ -123,12 +122,6 @@ const AppWrapper: React.FC<IAppWrapper> = ({
               <GlobalSvg />
               <Typography variant="h5">Transfer</Typography>
             </NavLink>
-            {wrapTokenPage && (
-              <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-                <GiftSvg />
-                <Typography variant="h5">Wrap token</Typography>
-              </NavLink>
-            )}
           </section>
           <div className={classes.pageArea}>{children}</div>
         </section>

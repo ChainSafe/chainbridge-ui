@@ -338,10 +338,10 @@ const TransferPage = () => {
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              setWalletType("select");
+              setWalletType("Ethereum");
             }}
           >
-            Connect
+            Connect to Wallet
           </Button>
         ) : walletConnecting ? (
           <section className={classes.connecting}>
