@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { makeStyles, createStyles, ITheme } from '@chainsafe/common-theme';
 import {
   Button,
@@ -292,6 +292,18 @@ const TransferPage = (): JSX.Element => {
       .required('Please add a receiving address'),
   });
 
+  const placeholder = useMemo(() => {
+    if (homeConfig?.chainId === 0) {
+      return 'Ethereum address';
+    }
+
+    if (homeConfig?.chainId === 1) {
+      return 'Polkadot address';
+    }
+
+    return 'Address';
+  }, [homeConfig]);
+
   const ConnectButton = () => {
     if (!isReady) {
       return (
@@ -426,7 +438,7 @@ const TransferPage = (): JSX.Element => {
               disabled={!destinationChainConfig}
               name="receiver"
               label="Destination address"
-              placeholder="Receiving address" // @ JP can we make the label dynamic depending on the chosen action? I.e. Polkadot address or Ethereum address
+              placeholder={placeholder}
               className={classes.address}
               classNames={{
                 input: classes.addressInput,

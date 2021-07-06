@@ -117,7 +117,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
     {
       chainId: 1,
       networkId: 2,
-      name: 'Centrifuge - Amber',
+      name: 'Centrifuge',
       decimals: 18,
       rpcUrl: 'wss://fullnode.amber.centrifuge.io',
       type: 'Substrate',
