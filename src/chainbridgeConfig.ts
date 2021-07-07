@@ -52,8 +52,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
   chains: [
     {
       chainId: (process.env.REACT_APP_ETHEREUM_CHAIN_ID as unknown) as number,
-      // networkId: (process.env.REACT_APP_ETHEREUM_NETWORK_ID as unknown as number),
-      networkId: 5,
+      networkId: +((process.env
+        .REACT_APP_ETHEREUM_NETWORK_ID as unknown) as number),
       name: process.env.REACT_APP_ETHEREUM_NETWORK_NAME as string,
       decimals: 18,
       bridgeAddress: process.env.REACT_APP_ETHEREUM_BRIDGE_ADDRESS as string,
