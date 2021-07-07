@@ -51,7 +51,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
   // Local GETH <> Local Substrate
   chains: [
     {
-      chainId: (process.env.REACT_APP_ETHEREUM_CHAIN_ID as unknown) as number,
+      chainId: +((process.env
+        .REACT_APP_ETHEREUM_CHAIN_ID as unknown) as number),
       networkId: +((process.env
         .REACT_APP_ETHEREUM_NETWORK_ID as unknown) as number),
       name: process.env.REACT_APP_ETHEREUM_NETWORK_NAME as string,
@@ -69,13 +70,14 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           symbol: process.env.REACT_APP_ETHEREUM_ERC20_SYMBOL as string,
           imageUri: ETHIcon,
           resourceId:
-            "0x00000000000000000000000000000009e974040e705c10fb4de576d6cc261900",
+            "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
         },
       ],
     },
     {
-      chainId: (process.env.REACT_APP_CERE_CHAIN_ID as unknown) as number,
-      networkId: (process.env.REACT_APP_CERE_NETWORK_ID as unknown) as number,
+      chainId: +((process.env.REACT_APP_CERE_CHAIN_ID as unknown) as number),
+      networkId: +((process.env
+        .REACT_APP_CERE_NETWORK_ID as unknown) as number),
       name: process.env.REACT_APP_CERE_NETWORK_NAME as string,
       decimals: 10,
       rpcUrl: process.env.REACT_APP_CERE_RPC_URL as string,
