@@ -75,7 +75,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       ],
     },
     {
-      chainId: 1,
+      chainId: +((process.env.REACT_APP_CERE_CHAIN_ID as unknown) as number),
       networkId: 2,
       name: process.env.REACT_APP_CERE_NETWORK_NAME as string,
       decimals: 10,
