@@ -13,7 +13,7 @@ export const lightTheme = createTheme({
     palette: {
       additional: {
         general: {
-          1: '#85A5FF', // Accents //geekblue4
+          1: '#2762FF', // Accents //geekblue4
         },
         transferUi: {
           1: '#595959', // FAQ button // gray8
@@ -24,13 +24,13 @@ export const lightTheme = createTheme({
           3: '#BFBFBF', // border // gray6
         },
         preflight: {
-          1: '#85A5FF', // Button bg color
+          1: '#2762FF', // Button bg color
           2: '#262626', // Button color
         },
         transactionModal: {
-          1: '#597EF7', // border //geekblue5
-          2: '#85A5FF', // indicator border //geekblue4
-          3: '#2F54EB', // indicator text //geekblue6
+          1: '#2762FF', // border //geekblue5 #597EF7
+          2: '#2762FF', // indicator border //geekblue4
+          3: '#2762FF', // indicator text //geekblue6 #2F54EB
         },
       },
     },
