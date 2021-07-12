@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import CereLogo from "../media/Icons/Cere_logo_lite-04.svg";
 
 const useStyles = makeStyles(
   ({ constants, palette, zIndex, breakpoints }: ITheme) => {
@@ -81,9 +82,10 @@ const AppHeader: React.FC<IAppHeader> = () => {
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
         {/* ADD LOGO HERE */}
-        {/* <div className={classes.logo}>
-        </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+        <div className={classes.logo}>
+          <img src={CereLogo} alt="Cere Logo" />
+        </div>
+        <Typography variant="h4">ETH-CERE Bridge</Typography>
       </div>
       <section className={classes.state}>
         {!isReady ? (
