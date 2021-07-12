@@ -1,6 +1,6 @@
 import ETHIcon from "./media/tokens/eth.svg";
 // import WETHIcon from "./media/tokens/weth.svg";
-import CEREIcon from "./media/tokens/Cere_logo_lite-04.svg";
+import CEREIcon from "./media/tokens/cere-token.svg";
 
 export type TokenConfig = {
   address: string;
