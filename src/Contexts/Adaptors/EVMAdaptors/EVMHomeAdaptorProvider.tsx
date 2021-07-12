@@ -228,7 +228,7 @@ export const EVMHomeAdaptorProvider = ({
         const threshold = BigNumber.from(
           await homeBridge._relayerThreshold()
         ).toNumber();
-        setRelayerThreshold(threshold);
+        setRelayerThreshold(2);
       }
     };
     const getBridgeFee = async () => {
