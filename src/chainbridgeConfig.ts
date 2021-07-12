@@ -1,5 +1,6 @@
 import ETHIcon from "./media/tokens/eth.svg";
 // import WETHIcon from "./media/tokens/weth.svg";
+import CEREIcon from "./media/tokens/cere-token.svg";
 
 export type TokenConfig = {
   address: string;
@@ -68,7 +69,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           address: process.env.REACT_APP_ETHEREUM_ERC20_TOKEN_ADDRESS as string,
           name: process.env.REACT_APP_ETHEREUM_ERC20_NAME as string,
           symbol: process.env.REACT_APP_ETHEREUM_ERC20_SYMBOL as string,
-          imageUri: ETHIcon,
+          imageUri: CEREIcon,
           resourceId:
             "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
         },
