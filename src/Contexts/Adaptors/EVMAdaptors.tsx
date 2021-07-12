@@ -217,9 +217,11 @@ export const EVMHomeAdaptorProvider = ({
   useEffect(() => {
     const getRelayerThreshold = async () => {
       if (homeBridge) {
-        const threshold = BigNumber.from(
-          await homeBridge._relayerThreshold()
-        ).toNumber();
+        //TODO: https://cerenetwork.atlassian.net/browse/CBI-1124
+        // const threshold = BigNumber.from(
+        //   await homeBridge._relayerThreshold()
+        // ).toNumber();
+        const threshold = 2;
         setRelayerThreshold(threshold);
       }
     };
