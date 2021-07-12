@@ -240,7 +240,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </strong>
             </Typography>
             <section className={classes.buttons}>
-              <Button
+              {/* <Button
                 onClick={() =>
                   destinationChainConfig &&
                   (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
@@ -262,7 +262,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 // }
               >
                 View transaction
-              </Button>
+              </Button> */}
               <Button
                 size="small"
                 className={classes.button}
@@ -278,7 +278,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {homeConfig &&
+            {/* {homeConfig &&
               (homeConfig as EvmBridgeConfig).blockExplorer &&
               transferTxHash && (
                 <Button
@@ -297,7 +297,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 >
                   View transaction
                 </Button>
-              )}
+              )} */}
             <section className={classes.buttons}>
               <Button
                 size="small"
