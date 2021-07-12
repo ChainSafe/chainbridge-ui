@@ -1,9 +1,9 @@
 {
-  "short_name": "Chainbridge",
-  "name": "Chainbridge",
+  "short_name": "ETH-CERE bridge",
+  "name": "ETH-CERE bridge",
   "icons": [
     {
-      "src": "ChainSafe-logo.png",
+      "src": "cere-logo.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
