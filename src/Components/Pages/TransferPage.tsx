@@ -6,7 +6,7 @@ import PreflightModalTransfer from "../../Modules/PreflightModalTransfer";
 import {
   Button,
   Typography,
-  QuestionCircleSvg,
+  // QuestionCircleSvg,
   SelectInput,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
@@ -480,12 +480,12 @@ const TransferPage = () => {
               Start transfer
             </Button>
           </section>
-          <section>
+          {/* <section>
             <QuestionCircleSvg
               onClick={() => setAboutOpen(true)}
               className={classes.faqButton}
             />
-          </section>
+          </section> */}
         </Form>
       </Formik>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
