@@ -6,7 +6,7 @@ import PreflightModalTransfer from "../../Modules/PreflightModalTransfer";
 import {
   Button,
   Typography,
-  QuestionCircleSvg,
+  // QuestionCircleSvg,
   SelectInput,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
@@ -428,7 +428,7 @@ const TransferPage = () => {
               />
             </section>
             <section className={classes.currencySection}>
-              {/* <section>
+              <section>
               <div
                 className={clsx(classes.tokenInputArea, classes.generalInput)}
               >
@@ -448,103 +448,82 @@ const TransferPage = () => {
                   label="I want to send"
                 />
               </div>
-            </section> */}
-              <section className={classes.currencySelector}>
-                <TokenSelectInput
-                  tokens={tokens}
-                  name="token"
-                  disabled={!destinationChainConfig}
-                  label={`Balance: `}
-                  className={classes.generalInput}
-                  placeholder=""
-                  sync={(tokenAddress) => {
-                    setPreflightDetails({
-                      ...preflightDetails,
-                      token: tokenAddress,
-                      receiver: "",
-                      tokenAmount: 0,
-                      tokenSymbol: "",
-                    });
-                  }}
-                  options={
-                    Object.keys(tokens).map((t) => ({
-                      value: t,
-                      label: (
-                        <div className={classes.tokenItem}>
-                          {tokens[t]?.imageUri && (
-                            <img
-                              src={showImageUrl(tokens[t]?.imageUri)}
-                              alt={tokens[t]?.symbol}
-                            />
-                          )}
-                          <span>{tokens[t]?.symbol || t}</span>
-                        </div>
-                      ),
-                    })) || []
-                  }
-                />
               </section>
-              <section className={classes.tokenInputSection}>
-                <div
-                  className={clsx(classes.tokenInputArea, classes.generalInput)}
-                >
-                  <TokenInput
-                    classNames={{
-                      input: clsx(classes.tokenInput, classes.generalInput),
-                      button: classes.maxButton,
-                    }}
-                    tokenSelectorKey="token"
-                    tokens={tokens}
-                    disabled={
-                      !destinationChainConfig ||
-                      !preflightDetails.token ||
-                      preflightDetails.token === ""
-                    }
-                    name="tokenAmount"
-                    label="I want to send"
-                  />
-                </div>
-              </section>
-            </section>
-            <section>
-              <AddressInput
+            <section className={classes.currencySelector}>
+              <TokenSelectInput
+                tokens={tokens}
+                name="token"
                 disabled={!destinationChainConfig}
-                name="receiver"
-                label="Destination Address"
-                placeholder="Please enter the receiving address"
-                className={classes.address}
-                classNames={{
-                  input: classes.addressInput,
+                label={`Balance: `}
+                className={classes.generalInput}
+                placeholder=""
+                sync={(tokenAddress) => {
+                  setPreflightDetails({
+                    ...preflightDetails,
+                    token: tokenAddress,
+                    receiver: "",
+                    tokenAmount: 0,
+                    tokenSymbol: "",
+                  });
                 }}
-                senderAddress={`${address}`}
-                sendToSameAccountHelper={
-                  destinationChainConfig?.type === homeConfig?.type
+                options={
+                  Object.keys(tokens).map((t) => ({
+                    value: t,
+                    label: (
+                      <div className={classes.tokenItem}>
+                        {tokens[t]?.imageUri && (
+                          <img
+                            src={showImageUrl(tokens[t]?.imageUri)}
+                            alt={tokens[t]?.symbol}
+                          />
+                        )}
+                        <span>{tokens[t]?.symbol || t}</span>
+                      </div>
+                    ),
+                  })) || []
                 }
               />
             </section>
-            <FeesFormikWrapped
-              amountFormikName="tokenAmount"
-              className={classes.fees}
-              fee={bridgeFee}
-              feeSymbol={homeConfig?.nativeTokenSymbol}
-              symbol={
-                preflightDetails && tokens[preflightDetails.token]
-                  ? tokens[preflightDetails.token].symbol
-                  : undefined
+          </section>
+          <section>
+            <AddressInput
+              disabled={!destinationChainConfig}
+              name="receiver"
+              label="Destination Address"
+              placeholder="Please enter the receiving address"
+              className={classes.address}
+              classNames={{
+                input: classes.addressInput,
+              }}
+              senderAddress={`${address}`}
+              sendToSameAccountHelper={
+                destinationChainConfig?.type === homeConfig?.type
               }
             />
-            <section>
-              <Button type="submit" fullsize variant="primary">
-                Start transfer
-              </Button>
-            </section>
-            <section>
-              <QuestionCircleSvg
-                onClick={() => setAboutOpen(true)}
-                className={classes.faqButton}
-              />
-            </section>
-          </Form>
+          </section>
+          <FeesFormikWrapped
+            amountFormikName="tokenAmount"
+            className={classes.fees}
+            fee={bridgeFee}
+            feeSymbol={homeConfig?.nativeTokenSymbol}
+            symbol={
+              preflightDetails && tokens[preflightDetails.token]
+                ? tokens[preflightDetails.token].symbol
+                : undefined
+            }
+          />
+          <section>
+            <Button type="submit" fullsize variant="primary">
+              Start transfer
+            </Button>
+          </section>
+          {/* <section>
+            <QuestionCircleSvg
+              onClick={() => setAboutOpen(true)}
+              className={classes.faqButton}
+            />
+          </section> */}
+        </Form>
         )}
       </Formik>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
