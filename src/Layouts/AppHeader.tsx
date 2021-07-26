@@ -1,7 +1,7 @@
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import clsx from "clsx";
-import { Typography } from "@chainsafe/common-components";
+import { NavLink, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import CereLogo from "../media/Icons/cere-icon.svg";
@@ -83,9 +83,13 @@ const AppHeader: React.FC<IAppHeader> = () => {
       <div className={classes.left}>
         {/* ADD LOGO HERE */}
         <div className={classes.logo}>
-          <img src={CereLogo} alt="Cere Logo" />
+          <NavLink style={{ textDecoration: "none" }} to="/">
+            <img src={CereLogo} alt="Cere Logo" />
+          </NavLink>
         </div>
-        <Typography variant="h4">ETH-CERE Bridge</Typography>
+        <NavLink style={{ textDecoration: "none" }} to="/">
+          <Typography variant="h4">ETH-CERE Bridge</Typography>
+        </NavLink>
       </div>
       <section className={classes.state}>
         {!isReady ? (
