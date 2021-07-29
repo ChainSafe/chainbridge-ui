@@ -62,6 +62,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
         type: "Ethereum",
         blockExplorer: "https://bx.shyft.network/tx",
         nativeTokenSymbol: "SHFT [ TestNet5 ]",
+		decimals: 18,
         tokens: [
           {
             address: "0x8ba95659e89b69506b46b47c232011e9cd754e15",
@@ -83,6 +84,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
         type: "Ethereum",
         blockExplorer: "https://goerli.etherscan.io/tx",
         nativeTokenSymbol: "ETH [ Goerli ]",
+		decimals: 18,
         tokens: [
           {
             address: "0xb17c88bda07d28b3838e0c1de6a30eafbcf52d85",
