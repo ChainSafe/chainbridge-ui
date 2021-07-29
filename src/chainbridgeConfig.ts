@@ -49,8 +49,6 @@ export type ChainbridgeConfig = {
 };
 
 export const chainbridgeConfig: ChainbridgeConfig = {
-  // Local GETH <> Local Substrate
-  export const chainbridgeConfig: ChainbridgeConfig = {
     // Goerli - Shyft Testnet Bridge
     chains: [
 
