@@ -235,6 +235,7 @@ const MainPage = () => {
   }, [walletType, walletConnecting]);
 
   const handleWrapToken = async () => {
+    console.log({ wrapTokenConfig, homeConfig });
     if (!wrapTokenConfig || !wrapToken || !homeConfig) return;
 
     try {

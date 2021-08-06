@@ -9,8 +9,7 @@ import {
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../Contracts/Erc20DetailedFactory";
-import { Weth } from "../../Contracts/Weth";
-import { WethFactory } from "../../Contracts/WethFactory";
+import { ShyftFactory } from "../../Contracts/ShyftFactory";
 import { useNetworkManager } from "../NetworkManagerContext";
 import {
   IDestinationBridgeProviderProps,
@@ -85,7 +84,7 @@ export const EVMHomeAdaptorProvider = ({
   const [selectedToken, setSelectedToken] = useState<string>("");
 
   // Contracts
-  const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
+  const [wrapper, setWrapper] = useState<any>(undefined);
   const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
     undefined
   );
@@ -138,7 +137,7 @@ export const EVMHomeAdaptorProvider = ({
                       setWrapper(undefined);
                     } else {
                       setWrapperConfig(wrapperToken);
-                      const connectedWeth = WethFactory.connect(
+                      const connectedWeth = ShyftFactory.connect(
                         wrapperToken.address,
                         signer
                       );
@@ -186,7 +185,7 @@ export const EVMHomeAdaptorProvider = ({
                 setWrapper(undefined);
               } else {
                 setWrapperConfig(wrapperToken);
-                const connectedWeth = WethFactory.connect(
+                const connectedWeth = ShyftFactory.connect(
                   wrapperToken.address,
                   signer
                 );
@@ -392,21 +391,29 @@ export const EVMHomeAdaptorProvider = ({
   );
 
   const wrapToken = async (value: number): Promise<string> => {
-    if (!wrapTokenConfig || !wrapper?.deposit || !homeChainConfig)
+    console.log("this is called!!!", { wrapper });
+    if (!wrapTokenConfig || !wrapper?.withdrawNative || !homeChainConfig)
       return "not ready";
 
+    console.log({ wrapper });
+
     try {
-      const tx = await wrapper.deposit({
-        value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: BigNumber.from(
-          utils.parseUnits(
-            (
-              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-            ).toString(),
-            9
-          )
-        ).toString(),
-      });
+      // const tx = await wrapper.withdrawNative({
+      //   value: parseUnits(`${value}`, homeChainConfig.decimals),
+      //   gasPrice: BigNumber.from(
+      //     utils.parseUnits(
+      //       (
+      //         (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
+      //       ).toString(),
+      //       9
+      //     )
+      //   ).toString(),
+      // });
+
+      const tx = await wrapper.approve(
+        wrapper.address,
+        parseUnits(`${value}`, homeChainConfig.decimals)
+      );
 
       await tx?.wait();
       if (tx?.hash) {
@@ -421,21 +428,28 @@ export const EVMHomeAdaptorProvider = ({
   };
 
   const unwrapToken = async (value: number): Promise<string> => {
-    if (!wrapTokenConfig || !wrapper?.withdraw || !homeChainConfig)
+    if (!wrapTokenConfig || !wrapper?.withdrawNative || !homeChainConfig)
       return "not ready";
 
+    console.log({ wrapper });
+
     try {
-      const tx = await wrapper.deposit({
-        value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: BigNumber.from(
-          utils.parseUnits(
-            (
-              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-            ).toString(),
-            9
-          )
-        ).toString(),
-      });
+      // const tx = await wrapper.deposit({
+      //   value: parseUnits(`${value}`, homeChainConfig.decimals),
+      //   gasPrice: BigNumber.from(
+      //     utils.parseUnits(
+      //       (
+      //         (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
+      //       ).toString(),
+      //       9
+      //     )
+      //   ).toString(),
+      // });
+
+      const tx = await wrapper.withdrawNative(
+        address,
+        parseUnits(`${value}`, homeChainConfig.decimals)
+      );
 
       await tx?.wait();
       if (tx?.hash) {
