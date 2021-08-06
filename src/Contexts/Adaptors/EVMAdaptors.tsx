@@ -391,11 +391,8 @@ export const EVMHomeAdaptorProvider = ({
   );
 
   const wrapToken = async (value: number): Promise<string> => {
-    console.log("this is called!!!", { wrapper });
-    if (!wrapTokenConfig || !wrapper?.withdrawNative || !homeChainConfig)
+    if (!wrapTokenConfig || !wrapper?.transfer || !homeChainConfig)
       return "not ready";
-
-    console.log({ wrapper });
 
     try {
       // const tx = await wrapper.withdrawNative({
@@ -410,7 +407,7 @@ export const EVMHomeAdaptorProvider = ({
       //   ).toString(),
       // });
 
-      const tx = await wrapper.approve(
+      const tx = await wrapper.transfer(
         wrapper.address,
         parseUnits(`${value}`, homeChainConfig.decimals)
       );
@@ -430,8 +427,6 @@ export const EVMHomeAdaptorProvider = ({
   const unwrapToken = async (value: number): Promise<string> => {
     if (!wrapTokenConfig || !wrapper?.withdrawNative || !homeChainConfig)
       return "not ready";
-
-    console.log({ wrapper });
 
     try {
       // const tx = await wrapper.deposit({
