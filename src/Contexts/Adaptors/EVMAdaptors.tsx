@@ -395,22 +395,16 @@ export const EVMHomeAdaptorProvider = ({
       return "not ready";
 
     try {
-      // const tx = await wrapper.withdrawNative({
-      //   value: parseUnits(`${value}`, homeChainConfig.decimals),
-      //   gasPrice: BigNumber.from(
-      //     utils.parseUnits(
-      //       (
-      //         (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-      //       ).toString(),
-      //       9
-      //     )
-      //   ).toString(),
-      // });
+      const signer = provider?.getSigner();
 
-      const tx = await wrapper.transfer(
-        wrapper.address,
-        parseUnits(`${value}`, homeChainConfig.decimals)
-      );
+      if (!address || !signer) {
+        console.log("No signer");
+      }
+
+      let tx = await signer?.sendTransaction({
+        to: wrapper.address,
+        value: parseUnits(`${value}`, homeChainConfig.decimals)
+      })
 
       await tx?.wait();
       if (tx?.hash) {
@@ -429,18 +423,6 @@ export const EVMHomeAdaptorProvider = ({
       return "not ready";
 
     try {
-      // const tx = await wrapper.deposit({
-      //   value: parseUnits(`${value}`, homeChainConfig.decimals),
-      //   gasPrice: BigNumber.from(
-      //     utils.parseUnits(
-      //       (
-      //         (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-      //       ).toString(),
-      //       9
-      //     )
-      //   ).toString(),
-      // });
-
       const tx = await wrapper.withdrawNative(
         address,
         parseUnits(`${value}`, homeChainConfig.decimals)
