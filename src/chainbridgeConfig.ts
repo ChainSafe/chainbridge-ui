@@ -65,7 +65,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       tokens: [
         {
           address: "0x8ba95659e89b69506b46b47c232011e9cd754e15",
-          name: "Shyft [ Wrapped ]",
+          name: "SHFT [ Wrapped ]",
           symbol: "SHFT",
           imageUri: ShyftIcon,
           resourceId:
