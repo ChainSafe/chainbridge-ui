@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { ReactComponent as SyftIcon } from "../media/logos/shyft-logo.svg";
+import { ReactComponent as ShyftIcon } from "../media/logos/shyft-logo.svg";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -69,7 +69,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
         
         </div> */}
         <Typography variant="h4">
-          <SyftIcon />
+          <a href={"https://shyft.network"} style={{ color: '#FFFFFF00' }}> <ShyftIcon/> </a> powered by ChainBridge Token Swap
         </Typography>
       </div>
       <section className={classes.state}>
