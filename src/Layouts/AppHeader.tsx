@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
+import { ReactComponent as SyftIcon } from "../media/logos/shyft-logo.svg";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
   return createStyles({
@@ -67,7 +68,9 @@ const AppHeader: React.FC<IAppHeader> = () => {
         {/* <div className={classes.logo}>
         
         </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+        <Typography variant="h4">
+          <SyftIcon />
+        </Typography>
       </div>
       <section className={classes.state}>
         {!isReady ? (
