@@ -12,7 +12,7 @@ import { Form, Formik } from "formik";
 import clsx from "clsx";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import { object, string } from "yup";
-import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
+// import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
 import { TokenConfig } from "../../chainbridgeConfig";
 import PreflightModalWrap from "../../Modules/PreflightModalWrap";
 import WrapActiveModal from "../../Modules/WrapActiveModal";
