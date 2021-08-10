@@ -121,7 +121,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     tokenIndicator: {
-      width: 120,
+      width: 230,
       textAlign: "right",
       "& p": {
         marginBottom: constants.generalUnit,
@@ -426,8 +426,11 @@ const MainPage = () => {
                   {
                     label: (
                       <div className={classes.tokenItem}>
-                        <ETHIcon />
-                        <span>ETH</span>
+                        <img
+                          src={wrapTokenConfig?.imageUri}
+                          alt={wrapTokenConfig?.symbol}
+                        />
+                        <span>SHFT</span>
                       </div>
                     ),
                     value: "wrap",
@@ -439,7 +442,7 @@ const MainPage = () => {
                           src={wrapTokenConfig?.imageUri}
                           alt={wrapTokenConfig?.symbol}
                         />
-                        <span>{wrapTokenConfig?.symbol || "wETH"}</span>
+                        <span>{wrapTokenConfig?.name || "wETH"}</span>
                       </div>
                     ),
                     value: "unwrap",
