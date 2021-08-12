@@ -10,7 +10,8 @@ interface IAppWrapper {
   children: ReactNode | ReactNode[];
 }
 
-const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
+const useStyles = makeStyles(
+  ({ animation, constants, palette, breakpoints }: ITheme) => {
   return createStyles({
     root: {
       minHeight: "100vh",
@@ -18,7 +19,11 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       flexDirection: "column",
       justifyContent: "center",
       paddingTop: 60,
+        marginTop: 55,
+        [breakpoints.between("sm", "xl")]: {
+          paddingTop: 40,
     },
+      },
     inner: {
       paddingTop: (constants.navItemHeight as number) * 2,
       paddingBottom: (constants.navItemHeight as number) * 2,
@@ -35,7 +40,7 @@ const useStyles = makeStyles(({ animation, constants, palette }: ITheme) => {
       // position: "absolute",
       // top: "50%",
       // left: "50%",
-      margin: `0 auto`,
+        margin: `30px auto`,
       // transform: "translate(-50%, -50%)",
       maxWidth: 460,
       display: "flex",

@@ -5,7 +5,8 @@ import { Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
-const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
+const useStyles = makeStyles(
+  ({ constants, palette, zIndex, breakpoints }: ITheme) => {
   return createStyles({
     root: {
       display: "flex",
@@ -20,7 +21,10 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       color: palette.additional["header"][2],
       alignItems: "center",
       zIndex: zIndex?.layer2,
+        [breakpoints.down("sm")]: {
+          flexDirection: "column",
     },
+      },
     left: {
       display: "flex",
       flexDirection: "row",
@@ -52,6 +56,16 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       marginRight: constants.generalUnit,
     },
     network: {},
+      accountInfo: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      mainInfo: {
+        display: "flex",
+        flexDirection: "column",
+      },
   });
 });
 
@@ -74,13 +88,22 @@ const AppHeader: React.FC<IAppHeader> = () => {
           <Typography variant="h5">No wallet connected</Typography>
         ) : (
           <>
-            <div className={classes.indicator}></div>
+            <div className={classes.mainInfo}>
+              <div className={classes.accountInfo}>
+                <span className={classes.indicator} />
             <Typography variant="h5" className={classes.address}>
               {address && shortenAddress(address)}
             </Typography>
+              </div>
             <Typography variant="h5" className={classes.address}>
-              connected to <strong>{homeConfig?.name}</strong>
+                <div>
+                  <span>connected to </span>
+                  <span>
+                    <strong>{homeConfig?.name}</strong>
+                  </span>
+                </div>
             </Typography>
+            </div>
           </>
         )}
       </section>
