@@ -12,94 +12,97 @@ interface IAppWrapper {
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, breakpoints }: ITheme) => {
-  return createStyles({
-    root: {
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      paddingTop: 60,
+    return createStyles({
+      root: {
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        paddingTop: 60,
         marginTop: 55,
         [breakpoints.between("sm", "xl")]: {
           paddingTop: 40,
-    },
+        },
       },
-    inner: {
-      paddingTop: (constants.navItemHeight as number) * 2,
-      paddingBottom: (constants.navItemHeight as number) * 2,
-    },
-    cta: {
-      display: "block",
-      maxWidth: 200,
-      maxHeight: 200,
-      position: "fixed",
-      bottom: constants.generalUnit * 3,
-      right: constants.generalUnit * 3,
-    },
-    content: {
-      // position: "absolute",
-      // top: "50%",
-      // left: "50%",
+      inner: {
+        paddingTop: (constants.navItemHeight as number) * 2,
+        paddingBottom: (constants.navItemHeight as number) * 2,
+      },
+      cta: {
+        display: "block",
+        maxWidth: 200,
+        maxHeight: 200,
+        position: "fixed",
+        bottom: constants.generalUnit * 3,
+        right: constants.generalUnit * 3,
+      },
+      content: {
+        // position: "absolute",
+        // top: "50%",
+        // left: "50%",
+        // transform: "translate(-50%, -50%)",
         margin: `30px auto`,
-      // transform: "translate(-50%, -50%)",
-      maxWidth: 460,
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden",
-      borderRadius: 4,
-    },
-    pageArea: {
-      height: "100%",
-      width: "100%",
-      overflow: "hidden",
-      border: `1px solid ${palette.additional["gray"][7]}`,
-      borderRadius: 4,
-    },
-    navTabs: {
-      // position: "absolute",
-      // top: 0,
-      // left: 0,
-      width: "100%",
-      // transform: "translate(0,-100%)",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "flex-start",
-      padding: `0 ${constants.generalUnit}px`,
-      transform: "translateY(1px)",
-      "& > a": {
+        maxWidth: 460,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        borderRadius: 4,
+      },
+      pageArea: {
+        height: "100%",
+        width: "100%",
+        overflow: "hidden",
+        border: `1px solid ${palette.additional["gray"][7]}`,
+        borderRadius: 4,
+      },
+      navTabs: {
+        // position: "absolute",
+        // top: 0,
+        // left: 0,
+        width: "100%",
+        // transform: "translate(0,-100%)",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        padding: `${constants.generalUnit}px ${constants.generalUnit * 1.5}px`,
-        border: `1px solid ${palette.additional["gray"][7]}`,
-        textDecoration: "none",
-        marginRight: constants.generalUnit,
-        transitionDuration: `${animation.transform}ms`,
-        color: palette.additional["gray"][8],
-        maxHeight: constants.navItemHeight,
-        "& svg": {
+        justifyContent: "flex-start",
+        padding: `0 ${constants.generalUnit}px`,
+        transform: "translateY(1px)",
+        "& > a": {
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          padding: `${constants.generalUnit}px ${
+            constants.generalUnit * 1.5
+          }px`,
+          border: `1px solid ${palette.additional["gray"][7]}`,
+          textDecoration: "none",
+          marginRight: constants.generalUnit,
           transitionDuration: `${animation.transform}ms`,
-          fill: palette.additional["gray"][8],
-        },
-        "&.active": {
-          color: palette.additional["gray"][9],
-          textDecoration: "underline",
+          color: palette.additional["gray"][8],
+          maxHeight: constants.navItemHeight,
           "& svg": {
-            fill: palette.additional["geekblue"][5],
+            transitionDuration: `${animation.transform}ms`,
+            fill: palette.additional["gray"][8],
+          },
+          "&.active": {
+            color: palette.additional["gray"][9],
+            textDecoration: "underline",
+            "& svg": {
+              fill: palette.additional["geekblue"][5],
+            },
+          },
+          "& > *:first-child": {
+            marginRight: constants.generalUnit,
           },
         },
-        "& > *:first-child": {
-          marginRight: constants.generalUnit,
+        "& svg": {
+          height: 14,
+          width: 14,
         },
       },
-      "& svg": {
-        height: 14,
-        width: 14,
-      },
-    },
-  });
-});
+    });
+  }
+);
 
 const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
   const classes = useStyles();
