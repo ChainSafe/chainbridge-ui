@@ -29,12 +29,8 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
       alignItems: "center",
     },
     logo: {
-      height: constants.generalUnit * 5,
-      width: constants.generalUnit * 5,
-      "& svg, & img": {
-        maxHeight: "100%",
-        maxWidth: "100%",
-      },
+      display: 'flex',
+      alignItems: 'center'
     },
     state: {
       display: "flex",
@@ -68,8 +64,9 @@ const AppHeader: React.FC<IAppHeader> = () => {
         {/* <div className={classes.logo}>
         
         </div> */}
-        <Typography variant="h4">
-          <a href={"https://shyft.network"} style={{ color: '#FFFFFF00' }}> <ShyftIcon/> </a> powered by ChainBridge Token Swap
+        <Typography variant="h4" className={classes.logo}>
+          <a href={"https://shyft.network"} style={{ color: '#FFFFFF00' }}> <ShyftIcon/> </a> 
+          <span style={{marginLeft: '20px'}}>powered by ChainBridge Token Swap</span>
         </Typography>
       </div>
       <section className={classes.state}>
