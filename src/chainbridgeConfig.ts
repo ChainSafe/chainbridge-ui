@@ -57,7 +57,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       name: "Shyft [ v5 Testnet ]",
       bridgeAddress: "0x566Ab5072CDB9cBEa216f9f9aB6AE11ee2f53203",
       erc20HandlerAddress: "0x3Bc3f0d31996f26914FFFC261Bd38FbB8A5aD649",
-      rpcUrl: "http://testrpc.shyft.network:64738",
+      rpcUrl: "http://rpc.testnet.shyft.network:64738",
       type: "Ethereum",
       blockExplorer: "https://bx.shyft.network/tx",
       nativeTokenSymbol: "SHFT [ TestNet5 ]",
