@@ -18,10 +18,11 @@ const useStyles = makeStyles(
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        paddingTop: 60,
-        marginTop: 55,
+        paddingTop: 30,
+        marginTop: 10,
         [breakpoints.between("sm", "xl")]: {
-          paddingTop: 40,
+          paddingTop: 20,
+          marginTop: 55,
         },
       },
       inner: {
