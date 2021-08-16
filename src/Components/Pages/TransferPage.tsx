@@ -157,8 +157,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         marginRight: 10,
       },
       "& span": {
-        minWidth: `calc(100% - 30px)`,
-        textAlign: "right",
+        minWidth: `calc(100% - 20px)`,
+        textAlign: "left",
       },
     },
     fees: {
