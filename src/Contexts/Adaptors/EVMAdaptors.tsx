@@ -536,7 +536,8 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (
       destinationChainConfig &&
-      homeChainConfig?.chainId &&
+      homeChainConfig?.chainId !== null &&
+      homeChainConfig?.chainId !== undefined &&
       destinationBridge &&
       depositNonce
     ) {

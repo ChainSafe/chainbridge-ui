@@ -23,6 +23,18 @@ import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
 import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
+import ETHIcon from "../../media/tokens/eth.svg";
+import WETHIcon from "../../media/tokens/weth.svg";
+import DAIIcon from "../../media/tokens/dai.svg";
+
+const PredefinedIcons: any = {
+  ETHIcon: ETHIcon,
+  WETHIcon: WETHIcon,
+  DAIIcon: DAIIcon,
+};
+
+const showImageUrl = (url?: string) =>
+  url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -84,7 +96,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: "row",
       alignItems: "flex-end",
       justifyContent: "space-around",
-      paddingRight: constants.generalUnit,
+    },
+    tokenInputSection: {
+      width: "60%",
     },
     tokenInput: {
       margin: 0,
@@ -118,7 +132,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySelector: {
-      width: 120,
+      width: "40%",
+      paddingRight: constants.generalUnit,
       "& *": {
         cursor: "pointer",
       },
@@ -154,8 +169,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         marginRight: 10,
       },
       "& span": {
-        minWidth: `calc(100% - 30px)`,
-        textAlign: "right",
+        minWidth: `calc(100% - 20px)`,
+        textAlign: "left",
       },
     },
     fees: {
@@ -391,7 +406,7 @@ const TransferPage = () => {
             />
           </section>
           <section className={classes.currencySection}>
-            <section>
+            {/* <section>
               <div
                 className={clsx(classes.tokenInputArea, classes.generalInput)}
               >
@@ -411,7 +426,7 @@ const TransferPage = () => {
                   label="I want to send"
                 />
               </div>
-            </section>
+            </section> */}
             <section className={classes.currencySelector}>
               <TokenSelectInput
                 tokens={tokens}
@@ -436,7 +451,7 @@ const TransferPage = () => {
                       <div className={classes.tokenItem}>
                         {tokens[t]?.imageUri && (
                           <img
-                            src={tokens[t]?.imageUri}
+                            src={showImageUrl(tokens[t]?.imageUri)}
                             alt={tokens[t]?.symbol}
                           />
                         )}
@@ -446,6 +461,27 @@ const TransferPage = () => {
                   })) || []
                 }
               />
+            </section>
+            <section className={classes.tokenInputSection}>
+              <div
+                className={clsx(classes.tokenInputArea, classes.generalInput)}
+              >
+                <TokenInput
+                  classNames={{
+                    input: clsx(classes.tokenInput, classes.generalInput),
+                    button: classes.maxButton,
+                  }}
+                  tokenSelectorKey="token"
+                  tokens={tokens}
+                  disabled={
+                    !destinationChainConfig ||
+                    !preflightDetails.token ||
+                    preflightDetails.token === ""
+                  }
+                  name="tokenAmount"
+                  label="I want to send"
+                />
+              </div>
             </section>
           </section>
           <section>
