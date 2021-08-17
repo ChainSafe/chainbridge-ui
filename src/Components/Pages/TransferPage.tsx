@@ -23,6 +23,18 @@ import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
 import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
+import ETHIcon from "../../media/tokens/eth.svg";
+import WETHIcon from "../../media/tokens/weth.svg";
+import DAIIcon from "../../media/tokens/dai.svg";
+
+const PredefinedIcons: any = {
+  ETHIcon: ETHIcon,
+  WETHIcon: WETHIcon,
+  DAIIcon: DAIIcon,
+};
+
+const showImageUrl = (url?: string) =>
+  url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -439,7 +451,7 @@ const TransferPage = () => {
                       <div className={classes.tokenItem}>
                         {tokens[t]?.imageUri && (
                           <img
-                            src={tokens[t]?.imageUri}
+                            src={showImageUrl(tokens[t]?.imageUri)}
                             alt={tokens[t]?.symbol}
                           />
                         )}
