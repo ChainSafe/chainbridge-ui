@@ -6,6 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./chainbridge-runtime-config.js:/usr/share/nginx/html/chainbridge-runtime-config.js
+      - ./config/chainbridge-runtime-config.evm.js:/usr/share/nginx/html/chainbridge-runtime-config.js
     ports:
       - "3000:80"
