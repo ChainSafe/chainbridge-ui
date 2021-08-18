@@ -8,7 +8,7 @@ import { ExplorerProvider } from "../Contexts/ExplorerContext";
 export const ROUTE_LINKS = {
   Transfer: "/transfer",
   Wrap: "/wrap",
-  Explore: "/explore",
+  Explorer: "/explorer/list",
 };
 
 const FilesRoutes = () => {
@@ -16,7 +16,7 @@ const FilesRoutes = () => {
     <Switch>
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
       <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
-      <Route exact path={ROUTE_LINKS.Explore}>
+      <Route exact path={ROUTE_LINKS.Explorer} component={ExplorerPage}>
         <ExplorerProvider>
           <ExplorerPage />
         </ExplorerProvider>
