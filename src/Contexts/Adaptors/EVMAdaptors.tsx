@@ -28,6 +28,9 @@ const resetAllowanceLogicFor = [
   //Add other offending tokens here
 ];
 
+const isCelo = (networkId?: number) =>
+  [42220, 44787, 62320].includes(networkId ?? 0);
+
 export const EVMHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
@@ -510,9 +513,7 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (destinationBridge) return;
     let provider;
-    if (
-      [42220, 44787, 62320].includes(destinationChainConfig?.networkId ?? 0)
-    ) {
+    if (isCelo(destinationChainConfig?.networkId)) {
       provider = new CeloProvider(destinationChainConfig?.rpcUrl);
     } else if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
       if (destinationChainConfig.rpcUrl.includes("infura")) {
