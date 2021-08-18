@@ -25,6 +25,7 @@ import { decodeAddress } from "@polkadot/util-crypto";
 const resetAllowanceLogicFor = [
   "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
   "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", //cUSD CELO
+  "0xe09523d86d9b788BCcb580d061605F31FCe69F51", //сTST CELO cUSD on Rinkeby
   //Add other offending tokens here
 ];
 
