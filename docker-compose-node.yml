@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./config/chainbridge-runtime-config.evm.js:/usr/share/nginx/html/chainbridge-runtime-config.js
+    ports:
+      - "3000:80"
