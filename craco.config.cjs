@@ -20,7 +20,7 @@ module.exports = {
                 warnings: false,
                 comparisons: false,
                 inline: 2,
-                drop_console: true,
+                drop_console: false,
               },
               mangle: {
                 safari10: true,
