@@ -11,7 +11,7 @@ import ExplorerTable from "../Custom/ExplorerTable";
 import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 
-const useStyles = makeStyles(({ constants, palette }: ITheme) =>
+const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
     root: {
       padding: constants.generalUnit * 6,
