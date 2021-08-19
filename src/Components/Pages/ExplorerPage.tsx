@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   Button,
@@ -8,6 +8,8 @@ import {
   SearchIcon,
 } from "@chainsafe/common-components";
 import ExplorerTable from "../Custom/ExplorerTable";
+import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
+import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -19,11 +21,16 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       display: "flex",
       flexDirection: "column",
     },
+    networkInfoContainer: {
+      display: "flex",
+      justifyContent: "center",
+    },
     networkInfo: {
       display: "flex",
       flexDirection: "row",
-      justifyContent: "space-evenly",
+      justifyContent: "space-between",
       alignItems: "baseline",
+      width: 955,
     },
     networkSelection: {
       display: "flex",
@@ -34,6 +41,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     searchInput: {
+      display: "flex",
+      justifyContent: "flex-end",
+      alignSelf: "flex-start",
       height: 32,
       width: 292,
       borderRadius: "2px",
@@ -42,7 +52,6 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       marginLeft: 21,
       width: 327,
       "& > div > div": {
-        height: 43,
         lineHeight: 32,
         color: "#262626",
         "& > div > div": {
@@ -50,6 +59,18 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
           fontWeight: 600,
         },
       },
+    },
+    explorerTableContainer: {
+      display: "flex",
+      justifyContent: "center",
+    },
+    explorerTable: {
+      marginTop: 29,
+      borderRadius: 4,
+      border: "1px solid #B6B6B6",
+      background: "#FAFAFA",
+      width: 955,
+      height: 685,
     },
   })
 );
@@ -61,45 +82,57 @@ type PreflightDetails = {
   receiver: string;
 };
 
-const networks = [{ name: "Ethereum Mainnet" }];
-
 const ExplorerPage = (props: any) => {
   const classes = useStyles();
+  const { homeChains } = useNetworkManager();
+  const { destinationChains } = useChainbridge();
 
   const [network, setNetwork] = useState({ name: "" });
 
+  const handleNetworkSelection = (evt: React.ChangeEvent) => {};
+
+  const renderOptions = () => {
+    if (!homeChains.length) return [];
+    return homeChains.map(({ chainId, name }) => ({
+      label: name,
+      value: chainId,
+    }));
+  };
+
   return (
-    <div className={classes.mainContent}>
-      <div className={classes.networkInfo}>
-        <div className={classes.networkSelection}>
-          <Typography component="h2" variant="h2">
-            Transfers on
-          </Typography>
-          <SelectInput
-            className={classes.networkSelector}
-            options={networks.map((network, idx) => ({
-              label: network.name,
-              value: idx,
-            }))}
-            onChange={(value: any) => {
-              setNetwork(value);
-            }}
-            value={network}
-            placeholder="Select network"
-          />
+    <section className={classes.mainContent}>
+      <section className={classes.networkInfoContainer}>
+        <div className={classes.networkInfo}>
+          <div className={classes.networkSelection}>
+            <Typography component="h2" variant="h2">
+              Transfers on
+            </Typography>
+            <SelectInput
+              className={classes.networkSelector}
+              options={renderOptions()}
+              onChange={(value: any) => {
+                setNetwork(value);
+              }}
+              value={network}
+              placeholder="Select network"
+              disabled={!homeChains.length}
+            />
+          </div>
+          <div className={classes.searchInput}>
+            <TextInput
+              placeholder={"Search by deposit hash"}
+              LeftIcon={SearchIcon}
+              onChange={() => {}}
+            />
+          </div>
         </div>
-        <div className={classes.searchInput}>
-          <TextInput
-            placeholder={"Search by deposit hash"}
-            LeftIcon={SearchIcon}
-            onChange={() => {}}
-          />
+      </section>
+      <div className={classes.explorerTableContainer}>
+        <div className={classes.explorerTable}>
+          <ExplorerTable />
         </div>
       </div>
-      <div>
-        <ExplorerTable />
-      </div>
-    </div>
+    </section>
   );
 };
 export default ExplorerPage;
