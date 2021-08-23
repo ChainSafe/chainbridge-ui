@@ -21,6 +21,7 @@ import { HomeBridgeContext } from "../HomeBridgeContext";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
+import { getNetworkName } from "../../Utils/Helpers";
 
 const resetAllowanceLogicFor = [
   "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
@@ -48,35 +49,6 @@ export const EVMHomeAdaptorProvider = ({
     onboard,
     resetOnboard,
   } = useWeb3();
-
-  const getNetworkName = (id: any) => {
-    switch (Number(id)) {
-      case 5:
-        return "Localhost";
-      case 1:
-        return "Mainnet";
-      case 3:
-        return "Ropsten";
-      case 4:
-        return "Rinkeby";
-      // case 5:
-      //   return "Goerli";
-      case 6:
-        return "Kotti";
-      case 42:
-        return "Kovan";
-      case 61:
-        return "Ethereum Classic - Mainnet";
-      case 42220:
-        return "CELO - Mainnet";
-      case 44787:
-        return "CELO - Alfajores Testnet";
-      case 62320:
-        return "CELO - Baklava Testnet";
-      default:
-        return "Other";
-    }
-  };
 
   const {
     homeChainConfig,

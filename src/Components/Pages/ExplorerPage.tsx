@@ -10,6 +10,11 @@ import {
 import ExplorerTable from "../Custom/ExplorerTable";
 import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import { useChainbridge } from "../../Contexts/ChainbridgeContext";
+import {
+  DepositRecord,
+  ProposalStatus,
+} from "../../Contexts/Reducers/TransfersReducer";
+import { BigNumber } from "ethers";
 
 const useStyles = makeStyles(({ constants }: ITheme) =>
   createStyles({
@@ -82,7 +87,114 @@ type PreflightDetails = {
   receiver: string;
 };
 
-const ExplorerPage = (props: any) => {
+const mockAddres = {
+  from: "0xd840B622CF6C86a20bE34c2aA85238eE0EDC82Ac",
+  to: "0x7bA334C8976664d80DA211e5A48E80B22Cdb1d2b",
+};
+
+//TODO: mock data for view purposes. Soon to be removed
+const mockedTransactions: DepositRecord[] = Array.from(
+  new Array(10).keys()
+).map((key) => {
+  switch (true) {
+    case key % 2 === 0: {
+      return {
+        fromAddress: mockAddres.from,
+        fromChainId: 5,
+        fromNetworkName: "Goerli",
+        toAddres: mockAddres.to,
+        toChainId: 44787,
+        toNetworkName: "Celo Testnet",
+        tokenAddress: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
+        amount: BigNumber.from("144435150"),
+        timestamp: 1629461364,
+        depositTransactionHash: "0xcab0...e06e",
+        depositBlockNumber: 4043802,
+        proposalEvents: [
+          {
+            proposalStatus: ProposalStatus.Active,
+            proposalEventTransactionHash: "0xcab0...e06e",
+            proposalEventBlockNumber: 4043802,
+            timestamp: 1629461364,
+          },
+        ],
+        votes: [
+          {
+            voteStatus: true,
+            voteTransactionHash: "0xcab0...e06e",
+            voteBlockNumber: 4043802,
+            timestamp: 1629461364,
+            dataHash: "0xcab0...e06e",
+          },
+        ],
+      };
+    }
+    case key % 3 === 0: {
+      return {
+        fromAddress: mockAddres.from,
+        fromChainId: 5,
+        fromNetworkName: "Goerli",
+        toAddres: mockAddres.to,
+        toChainId: 44787,
+        toNetworkName: "Mainnet",
+        tokenAddress: "0xe09523d86d9b788BCcb580d061605F31FCe69F51",
+        amount: BigNumber.from("144435150"),
+        timestamp: 1629461364,
+        depositTransactionHash: "0xcab0...e06e",
+        depositBlockNumber: 4043802,
+        proposalEvents: [
+          {
+            proposalStatus: ProposalStatus.Executed,
+            proposalEventTransactionHash: "0xcab0...e06e",
+            proposalEventBlockNumber: 4043802,
+            timestamp: 1629461364,
+          },
+        ],
+        votes: [
+          {
+            voteStatus: true,
+            voteTransactionHash: "0xcab0...e06e",
+            voteBlockNumber: 4043802,
+            timestamp: 1629461364,
+            dataHash: "0xcab0...e06e",
+          },
+        ],
+      };
+    }
+    default: {
+      return {
+        fromAddress: mockAddres.from,
+        fromChainId: 44787,
+        fromNetworkName: "Celo",
+        toAddres: mockAddres.to,
+        toChainId: 5,
+        toNetworkName: "Goerli",
+        tokenAddress: "0xe09523d86d9b788BCcb580d061605F31FCe69F51",
+        amount: BigNumber.from("144435150"),
+        timestamp: 1629461364,
+        depositTransactionHash: "0xcab0...e06e",
+        depositBlockNumber: 4043802,
+        proposalEvents: [
+          {
+            proposalStatus: ProposalStatus.Passed,
+            proposalEventTransactionHash: "0xcab0...e06e",
+            proposalEventBlockNumber: 4043802,
+            timestamp: 1629461364,
+          },
+        ],
+        votes: [
+          {
+            voteStatus: true,
+            voteTransactionHash: "0xcab0...e06e",
+            voteBlockNumber: 4043802,
+            timestamp: 1629461364,
+            dataHash: "0xcab0...e06e",
+          },
+        ],
+      };
+    }
+  }
+});
   const classes = useStyles();
   const { homeChains } = useNetworkManager();
   const { destinationChains } = useChainbridge();
@@ -129,7 +241,7 @@ const ExplorerPage = (props: any) => {
       </section>
       <div className={classes.explorerTableContainer}>
         <div className={classes.explorerTable}>
-          <ExplorerTable />
+          <ExplorerTable transactionList={mockedTransactions} />
         </div>
       </div>
     </section>

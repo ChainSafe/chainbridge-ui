@@ -23,17 +23,7 @@ import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
 import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
-import ETHIcon from "../../media/tokens/eth.svg";
-import WETHIcon from "../../media/tokens/weth.svg";
-import DAIIcon from "../../media/tokens/dai.svg";
-import celoUSD from "../../media/tokens/cusd.svg";
-
-const PredefinedIcons: any = {
-  ETHIcon: ETHIcon,
-  WETHIcon: WETHIcon,
-  DAIIcon: DAIIcon,
-  celoUSD: celoUSD,
-};
+import { PredefinedIcons } from "../../Utils/Helpers";
 
 const showImageUrl = (url?: string) =>
   url && PredefinedIcons[url] ? PredefinedIcons[url] : url;

@@ -7,7 +7,10 @@ import {
   TableBody,
   TableRow,
   TableHeadCell,
+  SvgIcon,
 } from "@chainsafe/common-components";
+import { DepositRecord } from "../../Contexts/Reducers/TransfersReducer";
+import { getIcon, getTokenIcon } from "../../Utils/Helpers";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -15,19 +18,107 @@ const useStyles = makeStyles(() =>
       display: "table",
     },
     row: {
+      verticalAlign: "middle",
       "& > td:nth-child(1)": {
         paddingLeft: 26,
         textAlign: "left",
       },
       "& > td": {
         textAlign: "left",
+        "& > div": {
+          display: "flex",
+          "& > span:nth-child(1)": {
+            marginRight: 3,
+          },
+          "& > span": {
+            display: "flex",
+            alignItems: "center",
+            "& > span": {
+              marginLeft: 2,
+            },
+          },
+        },
+        "& > div > span > svg": {
+          height: 21,
+          width: 21,
+        },
       },
+    },
+    elipsisIcon: {
+      borderRadius: "50%",
+    },
+    accountAddress: {
+      display: "flex",
+    },
+    cellRow: {
+      verticalAlign: "middle",
+    },
+    tokenIcon: {
+      height: 14,
+      width: 14,
+    },
+    amountInfo: {
+      display: "flex",
+      alignItems: "center",
     },
   })
 );
 
-const ExplorerTable: React.FC = () => {
+// TODO: just for mocking purposes
+type ExplorerTable = {
+  transactionList: DepositRecord[];
+};
+
+const ExplorerTable: React.FC<ExplorerTable> = ({ transactionList }) => {
   const classes = useStyles();
+
+  const renderTransferList = (transferData: DepositRecord[]) =>
+    transferData.map((transfer: DepositRecord, idx: number) => {
+      const FromChainIcon = getIcon(transfer.fromChainId);
+      const ToChainIcon = getIcon(transfer.toChainId);
+      const TokenIcon = getTokenIcon();
+
+      return (
+        <TableRow className={classes.row} key={transfer.fromAddress}>
+          <TableCell className={classes.cellRow}>
+            {transfer.timestamp}
+          </TableCell>
+          <TableCell>
+            <div className={classes.accountAddress}>
+              <span>{transfer.fromAddress}</span>
+            </div>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <div>
+              <span>
+                <SvgIcon>
+                  <FromChainIcon />
+                </SvgIcon>
+                <span>{transfer.fromNetworkName} to</span>
+              </span>
+              <span>
+                <SvgIcon>
+                  <ToChainIcon />
+                </SvgIcon>{" "}
+                <span>{transfer.toNetworkName}</span>
+              </span>
+            </div>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <span className={classes.amountInfo}>
+              <SvgIcon>
+                <TokenIcon className={classes.tokenIcon} />
+              </SvgIcon>
+              <span>{transfer.amount?.toString()}</span>
+            </span>
+          </TableCell>
+          <TableCell>
+            <span>View Details</span>
+          </TableCell>
+        </TableRow>
+      );
+    });
+
   return (
     <Table fullWidth={true} className={classes.root}>
       <TableHead>
@@ -39,15 +130,7 @@ const ExplorerTable: React.FC = () => {
           <TableHeadCell></TableHeadCell>
         </TableRow>
       </TableHead>
-      <TableBody>
-        <TableRow className={classes.row}>
-          <TableCell>Jan 27, 10:13pm</TableCell>
-          <TableCell>0x93b1...3k2a</TableCell>
-          <TableCell>Goerli to Celo</TableCell>
-          <TableCell>144,435,150.12 DAI</TableCell>
-          <TableCell>View details</TableCell>
-        </TableRow>
-      </TableBody>
+      <TableBody>{renderTransferList(transactionList)}</TableBody>
     </Table>
   );
 };
