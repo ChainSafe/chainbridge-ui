@@ -88,8 +88,8 @@ type PreflightDetails = {
 };
 
 const mockAddres = {
-  from: "0xd840B622CF6C86a20bE34c2aA85238eE0EDC82Ac",
-  to: "0x7bA334C8976664d80DA211e5A48E80B22Cdb1d2b",
+  from: "0xd840...82Ac",
+  to: "0x7bA3...1d2b",
 };
 
 //TODO: mock data for view purposes. Soon to be removed

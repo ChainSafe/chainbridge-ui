@@ -8,9 +8,11 @@ import {
   TableRow,
   TableHeadCell,
   SvgIcon,
+  Button,
 } from "@chainsafe/common-components";
 import { DepositRecord } from "../../Contexts/Reducers/TransfersReducer";
 import { getIcon, getTokenIcon } from "../../Utils/Helpers";
+import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,6 +44,10 @@ const useStyles = makeStyles(() =>
           height: 21,
           width: 21,
         },
+        "& > div > span > svg:last-child": {
+          height: "14.44px",
+          width: "14.44px",
+        },
       },
     },
     elipsisIcon: {
@@ -60,6 +66,15 @@ const useStyles = makeStyles(() =>
     amountInfo: {
       display: "flex",
       alignItems: "center",
+    },
+    viewDetailsInfo: {
+      "& > button": {
+        background: "none",
+        color: "black",
+        border: "none",
+        padding: "0 !important",
+        textDecoration: "underline",
+      },
     },
   })
 );
@@ -112,8 +127,13 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ transactionList }) => {
               <span>{transfer.amount?.toString()}</span>
             </span>
           </TableCell>
-          <TableCell>
-            <span>View Details</span>
+          <TableCell className={classes.row}>
+            <div className={classes.viewDetailsInfo}>
+              <SvgIcon>
+                <DirectionalIcon />
+              </SvgIcon>
+              <Button>View Details</Button>
+            </div>
           </TableCell>
         </TableRow>
       );
