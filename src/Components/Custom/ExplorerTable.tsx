@@ -9,17 +9,26 @@ import {
   TableHeadCell,
   SvgIcon,
   Button,
+  Avatar,
+  Blockies,
 } from "@chainsafe/common-components";
+import dayjs from "dayjs";
 import { DepositRecord } from "../../Contexts/Reducers/TransfersReducer";
-import { getIcon, getTokenIcon } from "../../Utils/Helpers";
+import { getIcon, getTokenIcon, shortenAddress } from "../../Utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
       display: "table",
+      width: "100%",
+      "& > thead > tr": {
+        fontSize: 16,
+        fontWeight: 600,
+      },
     },
     row: {
+      fontWeight: 400,
       verticalAlign: "middle",
       "& > td:nth-child(1)": {
         paddingLeft: 26,
@@ -76,6 +85,9 @@ const useStyles = makeStyles(() =>
         textDecoration: "underline",
       },
     },
+    avatar: {
+      marginRight: 6,
+    },
   })
 );
 
@@ -84,23 +96,49 @@ type ExplorerTable = {
   transactionList: DepositRecord[];
 };
 
-const ExplorerTable: React.FC<ExplorerTable> = ({ transactionList }) => {
+const ExplorerTable: React.FC<ExplorerTable> = ({
+  transactionList,
+}: ExplorerTable) => {
   const classes = useStyles();
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
+      const fromAddressShortened = shortenAddress(transfer.fromAddress ?? "");
+
       const FromChainIcon = getIcon(transfer.fromChainId);
       const ToChainIcon = getIcon(transfer.toChainId);
       const TokenIcon = getTokenIcon();
 
+      // Seed some random string for the Blockies component
+      const arr = new Uint8Array(20);
+      const randomValues = crypto.getRandomValues(arr);
+      const randomString = Array.from(randomValues, (val) =>
+        val.toString(16).padStart(2, "0")
+      ).join("");
+
+      const transferDateFormated = dayjs(transfer.timestamp).format(
+        "MMM D, h:mmA"
+      );
+
+      const amount = transfer.amount?.toNumber();
+      const formatedAmount = Intl.NumberFormat("es-US").format(amount ?? 0);
+
       return (
         <TableRow className={classes.row} key={transfer.fromAddress}>
           <TableCell className={classes.cellRow}>
-            {transfer.timestamp}
+            {transferDateFormated}
           </TableCell>
           <TableCell>
             <div className={classes.accountAddress}>
-              <span>{transfer.fromAddress}</span>
+              <Avatar size="small" className={classes.avatar}>
+                <Blockies
+                  seed={randomString}
+                  size={15}
+                  color={"pink"}
+                  bgColor={"white"}
+                />
+              </Avatar>
+              <span>{fromAddressShortened}</span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
@@ -124,7 +162,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ transactionList }) => {
               <SvgIcon>
                 <TokenIcon className={classes.tokenIcon} />
               </SvgIcon>
-              <span>{transfer.amount?.toString()}</span>
+              <span>{formatedAmount} ETH</span>
             </span>
           </TableCell>
           <TableCell className={classes.row}>

@@ -1,41 +1,41 @@
 import React, { useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
-  Button,
   SelectInput,
   TextInput,
   Typography,
   SearchIcon,
+  Grid,
 } from "@chainsafe/common-components";
 import ExplorerTable from "../Custom/ExplorerTable";
-import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
-import { useChainbridge } from "../../Contexts/ChainbridgeContext";
 import {
   DepositRecord,
   ProposalStatus,
 } from "../../Contexts/Reducers/TransfersReducer";
 import { BigNumber } from "ethers";
 
-const useStyles = makeStyles(({ constants }: ITheme) =>
+const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
   createStyles({
     root: {
       padding: constants.generalUnit * 6,
       position: "relative",
     },
     mainContent: {
-      display: "flex",
-      flexDirection: "column",
+      display: "grid",
+      gridTemplateRows: "repeat(1, 1fr)",
+      width: "70%",
+      [breakpoints.down("lg")]: {
+        width: "80%",
+      },
     },
     networkInfoContainer: {
-      display: "flex",
-      justifyContent: "center",
+      display: "grid",
+      gridTemplateColumns: "repeat(2, 1fr)",
     },
     networkInfo: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "baseline",
-      width: 955,
+      display: "grid",
+      gridColumn: "1/5",
+      gridRow: "1",
     },
     networkSelection: {
       display: "flex",
@@ -43,15 +43,20 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
       "& > h2": {
         color: "#595959",
         fontWeight: 600,
+        marginRight: 26,
+        [breakpoints.down("md")]: {
+          fontSize: 20,
+        },
       },
     },
-    searchInput: {
+    networkSelectorContainer: {
       display: "flex",
-      justifyContent: "flex-end",
-      alignSelf: "flex-start",
-      height: 32,
-      width: 292,
-      borderRadius: "2px",
+      width: 372,
+    },
+    searchInput: {
+      display: "grid",
+      gridColumn: "3/4",
+      gridRow: "1",
     },
     networkSelector: {
       marginLeft: 21,
@@ -74,7 +79,8 @@ const useStyles = makeStyles(({ constants }: ITheme) =>
       borderRadius: 4,
       border: "1px solid #B6B6B6",
       background: "#FAFAFA",
-      width: 955,
+      minWidth: 955,
+      width: "100%",
       height: 685,
     },
   })
@@ -88,8 +94,8 @@ type PreflightDetails = {
 };
 
 const mockAddres = {
-  from: "0xd840...82Ac",
-  to: "0x7bA3...1d2b",
+  from: "0x2116B3669d0BEA25aA3050F167266Cd21dA04839",
+  to: "0xFb422cF8A06Aab21428F943C251758155Cd5f87D",
 };
 
 //TODO: mock data for view purposes. Soon to be removed
@@ -195,40 +201,47 @@ const mockedTransactions: DepositRecord[] = Array.from(
     }
   }
 });
-  const classes = useStyles();
-  const { homeChains } = useNetworkManager();
-  const { destinationChains } = useChainbridge();
 
+const ExplorerPage = () => {
+  // NOTE: this is provisional
+  const {
+    __RUNTIME_CONFIG__: {
+      CHAINBRIDGE: { chains },
+    },
+  } = window;
+
+  const classes = useStyles();
   const [network, setNetwork] = useState({ name: "" });
 
-  const handleNetworkSelection = (evt: React.ChangeEvent) => {};
-
   const renderOptions = () => {
-    if (!homeChains.length) return [];
-    return homeChains.map(({ chainId, name }) => ({
+    return chains.map(({ chainId, name }) => ({
       label: name,
       value: chainId,
     }));
   };
 
   return (
-    <section className={classes.mainContent}>
-      <section className={classes.networkInfoContainer}>
-        <div className={classes.networkInfo}>
-          <div className={classes.networkSelection}>
-            <Typography component="h2" variant="h2">
-              Transfers on
-            </Typography>
-            <SelectInput
-              className={classes.networkSelector}
-              options={renderOptions()}
-              onChange={(value: any) => {
-                setNetwork(value);
-              }}
-              value={network}
-              placeholder="Select network"
-              disabled={!homeChains.length}
-            />
+    <Grid lg={12} justifyContent="center" flexWrap="wrap">
+      <section className={classes.mainContent}>
+        <section className={classes.networkInfoContainer}>
+          <div className={classes.networkInfo}>
+            <div className={classes.networkSelection}>
+              <Typography component="h2" variant="h2">
+                Transfers on
+              </Typography>
+              <div className={classes.networkSelectorContainer}>
+                <SelectInput
+                  className={classes.networkSelector}
+                  options={renderOptions()}
+                  onChange={(value: any) => {
+                    setNetwork(value);
+                  }}
+                  value={network}
+                  placeholder="Select network"
+                  disabled={!chains.length}
+                />
+              </div>
+            </div>
           </div>
           <div className={classes.searchInput}>
             <TextInput
@@ -237,14 +250,14 @@ const mockedTransactions: DepositRecord[] = Array.from(
               onChange={() => {}}
             />
           </div>
+        </section>
+        <div className={classes.explorerTableContainer}>
+          <div className={classes.explorerTable}>
+            <ExplorerTable transactionList={mockedTransactions} />
+          </div>
         </div>
       </section>
-      <div className={classes.explorerTableContainer}>
-        <div className={classes.explorerTable}>
-          <ExplorerTable transactionList={mockedTransactions} />
-        </div>
-      </div>
-    </section>
+    </Grid>
   );
 };
 export default ExplorerPage;

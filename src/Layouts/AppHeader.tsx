@@ -37,6 +37,10 @@ const useStyles = makeStyles(
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
+        [breakpoints.down("sm")]: {
+          display: "flex",
+          flexDirection: "column",
+        },
       },
       logo: {
         height: constants.generalUnit * 5,
@@ -76,10 +80,24 @@ const useStyles = makeStyles(
       mainTitle: {},
       headerLinks: {
         marginLeft: 49,
+        [breakpoints.down("sm")]: {
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          marginLeft: "unset",
+          alignItems: "center",
+          width: "100%",
+          "& > a:last-child": {
+            marginLeft: 5,
+          },
+        },
       },
       link: {
         marginLeft: 46,
         textDecoration: "none",
+        [breakpoints.down("sm")]: {
+          marginLeft: "unset",
+        },
       },
       linkTitle: {
         fontSize: 16,

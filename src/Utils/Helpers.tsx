@@ -1,9 +1,20 @@
 import ETHIcon from "../media/tokens/eth.png";
+import { ReactComponent as EthTokenIcon } from "../media/tokens/eth.svg";
+import WETHIcon, {
+  ReactComponent as WETHTokenIcon,
+} from "../media/tokens/weth.svg";
 import DAIIcon, {
   ReactComponent as DaiTokenIcon,
 } from "../media/tokens/dai.svg";
+import celoUSD, {
+  ReactComponent as CeloTokenIcon,
+} from "../media/tokens/cusd.svg";
+
 import { ReactComponent as EthIcon } from "../media/networks/eth.svg";
 import { ReactComponent as CeloUSD } from "../media/networks/celo.svg";
+import { ReactComponent as EtcIcon } from "../media/networks/etc.svg";
+import { ReactComponent as CosmosIcon } from "../media/networks/cosmos.svg";
+import { ReactComponent as EthermintIcon } from "../media/networks/ethermint.svg";
 const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
 const { hexToU8a, isHex } = require("@polkadot/util");
 
@@ -76,7 +87,7 @@ export const getIcon = (chainId: number | undefined) => {
   }
 };
 
-// TODO: for now just DAI token Icon
+// TODO: for now just ERC20 token Icon
 export const getTokenIcon = () => {
-  return DaiTokenIcon;
+  return EthTokenIcon;
 };
