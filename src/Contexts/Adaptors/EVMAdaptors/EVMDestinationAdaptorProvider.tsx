@@ -30,7 +30,7 @@ export const EVMDestinationAdaptorProvider = ({
 
   useEffect(() => {
     if (destinationBridge) return;
-    let provider = getProvider(destinationChainConfig);
+    const provider = getProvider(destinationChainConfig);
 
     if (destinationChainConfig && provider) {
       const bridge = BridgeFactory.connect(
