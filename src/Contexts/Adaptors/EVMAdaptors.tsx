@@ -358,6 +358,7 @@ export const EVMHomeAdaptorProvider = ({
 
         return Promise.resolve();
       } catch (error) {
+        console.error(error);
         setTransactionStatus("Transfer Aborted");
         setSelectedToken(tokenAddress);
       }
