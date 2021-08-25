@@ -203,7 +203,7 @@ const mockedTransactions: DepositRecord[] = Array.from(
 });
 
 const ExplorerPage = () => {
-  // NOTE: this is provisional
+  // TODO: delete this, is provisional
   const {
     __RUNTIME_CONFIG__: {
       CHAINBRIDGE: { chains },
