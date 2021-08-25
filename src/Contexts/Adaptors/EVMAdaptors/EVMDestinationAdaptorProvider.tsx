@@ -12,7 +12,6 @@ import { getProvider } from "./helpers";
 export const EVMDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  console.log("EVM destination loaded");
   const {
     depositNonce,
     destinationChainConfig,
