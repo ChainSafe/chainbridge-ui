@@ -1,7 +1,6 @@
 import {
   NavLink,
   Typography,
-  useHistory,
   useLocation,
 } from "@chainsafe/common-components";
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
