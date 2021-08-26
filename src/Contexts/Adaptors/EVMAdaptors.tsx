@@ -270,11 +270,6 @@ export const EVMHomeAdaptorProvider = ({
         console.log("No signer");
         return;
       }
-      const gasPriceCompatibility = await getPriceCompatibility(
-        provider,
-        homeChainConfig,
-        gasPrice
-      );
 
       const destinationChain = chainbridgeConfig.chains.find(
         (c) => c.chainId === destinationChainId
@@ -315,6 +310,12 @@ export const EVMHomeAdaptorProvider = ({
         recipient.substr(2); // recipientAddress (?? bytes)
 
       try {
+        const gasPriceCompatibility = await getPriceCompatibility(
+          provider,
+          homeChainConfig,
+          gasPrice
+        );
+
         const currentAllowance = await erc20.allowance(
           address,
           (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
@@ -394,13 +395,13 @@ export const EVMHomeAdaptorProvider = ({
     if (!wrapTokenConfig || !wrapper?.deposit || !homeChainConfig)
       return "not ready";
 
-    const gasPriceCompatibility = await getPriceCompatibility(
-      provider,
-      homeChainConfig,
-      gasPrice
-    );
-
     try {
+      const gasPriceCompatibility = await getPriceCompatibility(
+        provider,
+        homeChainConfig,
+        gasPrice
+      );
+
       const tx = await wrapper.deposit({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
         gasPrice: gasPriceCompatibility,
@@ -422,13 +423,13 @@ export const EVMHomeAdaptorProvider = ({
     if (!wrapTokenConfig || !wrapper?.withdraw || !homeChainConfig)
       return "not ready";
 
-    const gasPriceCompatibility = await getPriceCompatibility(
-      provider,
-      homeChainConfig,
-      gasPrice
-    );
-
     try {
+      const gasPriceCompatibility = await getPriceCompatibility(
+        provider,
+        homeChainConfig,
+        gasPrice
+      );
+
       const tx = await wrapper.deposit({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
         gasPrice: gasPriceCompatibility,
