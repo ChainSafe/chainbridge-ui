@@ -36,7 +36,7 @@ export function getProvider(destinationChainConfig?: any) {
 }
 
 export async function detectEIP1559MaxFeePerGas(
-  provider: any
+  provider: ethers.providers.Web3Provider
 ): Promise<boolean> {
   try {
     const feeData = await provider.getFeeData();
@@ -53,7 +53,7 @@ export async function detectEIP1559MaxFeePerGas(
 }
 
 export async function getPriceCompatibility(
-  provider: any,
+  provider: ethers.providers.Web3Provider | undefined,
   homeChainConfig: any,
   gasPrice: number
 ) {
