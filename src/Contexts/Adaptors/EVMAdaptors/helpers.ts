@@ -1,5 +1,5 @@
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
-import { ethers, utils } from "ethers";
+import { ethers, utils, BigNumber } from "ethers";
 import { Erc20HandlerFactory } from "@chainsafe/chainbridge-contracts";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
@@ -82,4 +82,43 @@ export async function hasTokenSupplies(
     }
     return true;
   }
+}
+
+export async function detectEIP1559MaxFeePerGas(
+  provider: ethers.providers.Web3Provider
+): Promise<boolean> {
+  try {
+    const feeData = await provider.getFeeData();
+    if (typeof feeData.maxFeePerGas !== "undefined") {
+      return true;
+    }
+  } catch (error) {
+    console.warn(error);
+    console.warn(
+      "Can't access fee data for EIP-1559, fallback to legacy transaction"
+    );
+  }
+  return false;
+}
+
+export async function getPriceCompatibility(
+  provider: ethers.providers.Web3Provider | undefined,
+  homeChainConfig: any,
+  gasPrice: number
+) {
+  let gasPriceCompatibility = undefined;
+  if (provider) {
+    const hasMaxPrice = await detectEIP1559MaxFeePerGas(provider);
+    if (!hasMaxPrice) {
+      gasPriceCompatibility = BigNumber.from(
+        utils.parseUnits(
+          (
+            (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
+          ).toString(),
+          9
+        )
+      ).toString();
+    }
+  }
+  return gasPriceCompatibility;
 }
