@@ -20,7 +20,7 @@ window.__RUNTIME_CONFIG__ = {
             symbol: "SHFT",
             imageUri: "shyftIcon",
             resourceId:
-              "0x00000000000000000000008ba95659e89b69506b46b47c232011e9cd754e1500",
+              "0x00000000000000000000008ba95659e89b69506b46b47c232011e9cd754e1501",
             isNativeWrappedToken: true,
           },
         ],
@@ -43,7 +43,7 @@ window.__RUNTIME_CONFIG__ = {
             symbol: "SHFT",
             imageUri: "shyftIcon",
             resourceId:
-              "0x00000000000000000000008ba95659e89b69506b46b47c232011e9cd754e1500",
+              "0x00000000000000000000008ba95659e89b69506b46b47c232011e9cd754e1501",
           },
         ],
       },
