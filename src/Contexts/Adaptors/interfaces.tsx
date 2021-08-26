@@ -59,6 +59,12 @@ export interface HomeChainAdaptorContext {
   selectAccount?: (index: number) => void;
   nativeTokenBalance: number | undefined;
 
+  handleCheckSupplies?: (
+    amount: number,
+    tokenAddress: string,
+    destinationChainId: number
+  ) => Promise<boolean | undefined>;
+
   tokens: Tokens;
 }
 
