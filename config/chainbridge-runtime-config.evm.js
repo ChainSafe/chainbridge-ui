@@ -10,7 +10,7 @@ window.__RUNTIME_CONFIG__ = {
         erc20HandlerAddress: "0x3Bc3f0d31996f26914FFFC261Bd38FbB8A5aD649",
         rpcUrl: "http://rpc.testnet.shyft.network:64738",
         type: "Ethereum",
-        blockExplorer: "https://bx.shyft.network/tx",
+        blockExplorer: "https://bx.testnet.shyft.network/tx",
         nativeTokenSymbol: "SHFT [ TestNet5 ]",
         decimals: 18,
         tokens: [
