@@ -22,6 +22,8 @@ import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 
+import { getPriceCompatibility } from "./EVMAdaptors/helpers";
+
 const resetAllowanceLogicFor = [
   "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
   "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", //cUSD CELO
@@ -308,6 +310,12 @@ export const EVMHomeAdaptorProvider = ({
         recipient.substr(2); // recipientAddress (?? bytes)
 
       try {
+        const gasPriceCompatibility = await getPriceCompatibility(
+          provider,
+          homeChainConfig,
+          gasPrice
+        );
+
         const currentAllowance = await erc20.allowance(
           address,
           (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
@@ -327,15 +335,7 @@ export const EVMHomeAdaptorProvider = ({
                 (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
                 BigNumber.from(utils.parseUnits("0", erc20Decimals)),
                 {
-                  gasPrice: BigNumber.from(
-                    utils.parseUnits(
-                      (
-                        (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
-                        gasPrice
-                      ).toString(),
-                      9
-                    )
-                  ).toString(),
+                  gasPrice: gasPriceCompatibility,
                 }
               )
             ).wait(1);
@@ -347,15 +347,7 @@ export const EVMHomeAdaptorProvider = ({
                 utils.parseUnits(amount.toString(), erc20Decimals)
               ),
               {
-                gasPrice: BigNumber.from(
-                  utils.parseUnits(
-                    (
-                      (homeChainConfig as EvmBridgeConfig).defaultGasPrice ||
-                      gasPrice
-                    ).toString(),
-                    9
-                  )
-                ).toString(),
+                gasPrice: gasPriceCompatibility,
               }
             )
           ).wait(1);
@@ -374,12 +366,7 @@ export const EVMHomeAdaptorProvider = ({
 
         await (
           await homeBridge.deposit(destinationChainId, token.resourceId, data, {
-            gasPrice: utils.parseUnits(
-              (
-                (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-              ).toString(),
-              9
-            ),
+            gasPrice: gasPriceCompatibility,
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
         ).wait();
@@ -409,16 +396,15 @@ export const EVMHomeAdaptorProvider = ({
       return "not ready";
 
     try {
+      const gasPriceCompatibility = await getPriceCompatibility(
+        provider,
+        homeChainConfig,
+        gasPrice
+      );
+
       const tx = await wrapper.deposit({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: BigNumber.from(
-          utils.parseUnits(
-            (
-              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-            ).toString(),
-            9
-          )
-        ).toString(),
+        gasPrice: gasPriceCompatibility,
       });
 
       await tx?.wait();
@@ -438,16 +424,15 @@ export const EVMHomeAdaptorProvider = ({
       return "not ready";
 
     try {
+      const gasPriceCompatibility = await getPriceCompatibility(
+        provider,
+        homeChainConfig,
+        gasPrice
+      );
+
       const tx = await wrapper.deposit({
         value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: BigNumber.from(
-          utils.parseUnits(
-            (
-              (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-            ).toString(),
-            9
-          )
-        ).toString(),
+        gasPrice: gasPriceCompatibility,
       });
 
       await tx?.wait();
