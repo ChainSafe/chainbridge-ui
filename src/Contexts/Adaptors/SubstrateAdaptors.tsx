@@ -311,6 +311,7 @@ export const SubstrateHomeAdaptorProvider = ({
         nativeTokenBalance: 0,
         accounts: accounts,
         selectAccount: selectAccount,
+        handleCheckSupplies: undefined,
       }}
     >
       {children}
