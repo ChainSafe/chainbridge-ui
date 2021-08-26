@@ -2,6 +2,7 @@ import React from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { useWeb3 } from "@chainsafe/web3-context";
 import { BigNumber, ethers, utils } from "ethers";
+import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
 import { useCallback, useEffect, useState } from "react";
 import {
   chainbridgeConfig,
@@ -29,6 +30,9 @@ const resetAllowanceLogicFor = [
   "0xe09523d86d9b788BCcb580d061605F31FCe69F51", //сTST CELO cUSD on Rinkeby
   //Add other offending tokens here
 ];
+
+const isCelo = (networkId?: number) =>
+  [42220, 44787, 62320].includes(networkId ?? 0);
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -65,6 +69,12 @@ export const EVMHomeAdaptorProvider = ({
         return "Kovan";
       case 61:
         return "Ethereum Classic - Mainnet";
+      case 42220:
+        return "CELO - Mainnet";
+      case 44787:
+        return "CELO - Alfajores Testnet";
+      case 62320:
+        return "CELO - Baklava Testnet";
       default:
         return "Other";
     }
@@ -362,6 +372,7 @@ export const EVMHomeAdaptorProvider = ({
 
         return Promise.resolve();
       } catch (error) {
+        console.error(error);
         setTransactionStatus("Transfer Aborted");
         setSelectedToken(tokenAddress);
       }
@@ -488,7 +499,9 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (destinationBridge) return;
     let provider;
-    if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
+    if (isCelo(destinationChainConfig?.networkId)) {
+      provider = new CeloProvider(destinationChainConfig?.rpcUrl);
+    } else if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
       if (destinationChainConfig.rpcUrl.includes("infura")) {
         const parts = destinationChainConfig.rpcUrl.split("/");
 
