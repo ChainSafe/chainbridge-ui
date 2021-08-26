@@ -47,6 +47,11 @@ type ChainbridgeContext = {
   isReady: boolean | undefined;
   address: string | undefined;
   chainId?: number;
+  checkSupplies?: (
+    amount: number,
+    tokenAddress: string,
+    destinationChainId: number
+  ) => Promise<boolean | undefined>;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
@@ -89,6 +94,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     tokens,
     wrapToken,
     unwrapToken,
+    handleCheckSupplies,
   } = useHomeBridge();
 
   const resetDeposit = () => {
@@ -116,6 +122,20 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     },
     [deposit, destinationChainConfig, chainConfig]
   );
+
+  const checkSupplies = async (
+    amount: number,
+    tokenAddress: string,
+    destinationChainId: number
+  ) => {
+    if (handleCheckSupplies && chainConfig && destinationChainConfig) {
+      return await handleCheckSupplies(
+        amount,
+        tokenAddress,
+        destinationChainId
+      );
+    }
+  };
 
   return (
     <ChainbridgeContext.Provider
@@ -146,6 +166,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         tokens,
         address,
         chainId,
+        checkSupplies,
       }}
     >
       <NetworkSelectModal />

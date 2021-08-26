@@ -24,3 +24,6 @@ yarn-error.log*
 
 .env
 .vscode
+
+# runtime config
+public/chainbridge-runtime-config.js

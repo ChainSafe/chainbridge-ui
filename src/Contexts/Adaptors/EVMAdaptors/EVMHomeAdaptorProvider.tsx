@@ -1,38 +1,30 @@
 import React from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { useWeb3 } from "@chainsafe/web3-context";
-import { BigNumber, ethers, utils } from "ethers";
-import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
+import { BigNumber, utils } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import {
   chainbridgeConfig,
   EvmBridgeConfig,
   TokenConfig,
-} from "../../chainbridgeConfig";
-import { Erc20DetailedFactory } from "../../Contracts/Erc20DetailedFactory";
-import { Weth } from "../../Contracts/Weth";
-import { WethFactory } from "../../Contracts/WethFactory";
-import { useNetworkManager } from "../NetworkManagerContext";
-import {
-  IDestinationBridgeProviderProps,
-  IHomeBridgeProviderProps,
-} from "./interfaces";
-import { HomeBridgeContext } from "../HomeBridgeContext";
-import { DestinationBridgeContext } from "../DestinationBridgeContext";
+} from "../../../chainbridgeConfig";
+import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
+import { Weth } from "../../../Contracts/Weth";
+import { WethFactory } from "../../../Contracts/WethFactory";
+import { useNetworkManager } from "../../NetworkManagerContext";
+import { IHomeBridgeProviderProps } from "../interfaces";
+import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 
-import { getPriceCompatibility } from "./EVMAdaptors/helpers";
+import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
 
 const resetAllowanceLogicFor = [
   "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
   "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", //cUSD CELO
-  "0xe09523d86d9b788BCcb580d061605F31FCe69F51", //сTST CELO cUSD on Rinkeby
+  // "0xe09523d86d9b788BCcb580d061605F31FCe69F51", //сTST CELO cUSD on Rinkeby
   //Add other offending tokens here
 ];
-
-const isCelo = (networkId?: number) =>
-  [42220, 44787, 62320].includes(networkId ?? 0);
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -254,6 +246,38 @@ export const EVMHomeAdaptorProvider = ({
     }
   }, [wallet, network, onboard]);
 
+  const handleCheckSupplies = useCallback(
+    async (
+      amount: number,
+      tokenAddress: string,
+      destinationChainId: number
+    ) => {
+      if (homeChainConfig) {
+        const destinationChain = chainbridgeConfig.chains.find(
+          (c) => c.chainId === destinationChainId
+        );
+        const token = homeChainConfig.tokens.find(
+          (token) => token.address === tokenAddress
+        );
+
+        if (destinationChain?.type === "Ethereum" && token) {
+          const hasSupplies = await hasTokenSupplies(
+            destinationChain,
+            tokens,
+            token,
+            amount,
+            tokenAddress
+          );
+          if (!hasSupplies) {
+            return false;
+          }
+        }
+        return true;
+      }
+    },
+    [homeChainConfig, tokens]
+  );
+
   const deposit = useCallback(
     async (
       amount: number,
@@ -471,155 +495,10 @@ export const EVMHomeAdaptorProvider = ({
         chainConfig: homeChainConfig,
         address,
         nativeTokenBalance: ethBalance,
+        handleCheckSupplies,
       }}
     >
       {children}
     </HomeBridgeContext.Provider>
-  );
-};
-
-export const EVMDestinationAdaptorProvider = ({
-  children,
-}: IDestinationBridgeProviderProps) => {
-  console.log("EVM destination loaded");
-  const {
-    depositNonce,
-    destinationChainConfig,
-    homeChainConfig,
-    tokensDispatch,
-    setTransactionStatus,
-    setTransferTxHash,
-    setDepositVotes,
-    depositVotes,
-  } = useNetworkManager();
-
-  const [destinationBridge, setDestinationBridge] = useState<
-    Bridge | undefined
-  >(undefined);
-
-  useEffect(() => {
-    if (destinationBridge) return;
-    let provider;
-    if (isCelo(destinationChainConfig?.networkId)) {
-      provider = new CeloProvider(destinationChainConfig?.rpcUrl);
-    } else if (destinationChainConfig?.rpcUrl.startsWith("wss")) {
-      if (destinationChainConfig.rpcUrl.includes("infura")) {
-        const parts = destinationChainConfig.rpcUrl.split("/");
-
-        provider = new ethers.providers.InfuraWebSocketProvider(
-          destinationChainConfig.networkId,
-          parts[parts.length - 1]
-        );
-      }
-      if (destinationChainConfig.rpcUrl.includes("alchemyapi")) {
-        const parts = destinationChainConfig.rpcUrl.split("/");
-
-        provider = new ethers.providers.AlchemyWebSocketProvider(
-          destinationChainConfig.networkId,
-          parts[parts.length - 1]
-        );
-      }
-    } else {
-      provider = new ethers.providers.JsonRpcProvider(
-        destinationChainConfig?.rpcUrl
-      );
-    }
-    if (destinationChainConfig && provider) {
-      const bridge = BridgeFactory.connect(
-        (destinationChainConfig as EvmBridgeConfig).bridgeAddress,
-        provider
-      );
-      setDestinationBridge(bridge);
-    }
-  }, [destinationChainConfig, destinationBridge]);
-
-  useEffect(() => {
-    if (
-      destinationChainConfig &&
-      homeChainConfig?.chainId !== null &&
-      homeChainConfig?.chainId !== undefined &&
-      destinationBridge &&
-      depositNonce
-    ) {
-      destinationBridge.on(
-        destinationBridge.filters.ProposalEvent(
-          homeChainConfig.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null,
-          null
-        ),
-        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
-          switch (BigNumber.from(status).toNumber()) {
-            case 1:
-              tokensDispatch({
-                type: "addMessage",
-                payload: `Proposal created on ${destinationChainConfig.name}`,
-              });
-              break;
-            case 2:
-              tokensDispatch({
-                type: "addMessage",
-                payload: `Proposal has passed. Executing...`,
-              });
-              break;
-            case 3:
-              setTransactionStatus("Transfer Completed");
-              setTransferTxHash(tx.transactionHash);
-              break;
-            case 4:
-              setTransactionStatus("Transfer Aborted");
-              setTransferTxHash(tx.transactionHash);
-              break;
-          }
-        }
-      );
-
-      destinationBridge.on(
-        destinationBridge.filters.ProposalVote(
-          homeChainConfig.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null
-        ),
-        async (originChainId, depositNonce, status, resourceId, tx) => {
-          const txReceipt = await tx.getTransactionReceipt();
-          if (txReceipt.status === 1) {
-            setDepositVotes(depositVotes + 1);
-          }
-          tokensDispatch({
-            type: "addMessage",
-            payload: {
-              address: String(txReceipt.from),
-              signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
-            },
-          });
-        }
-      );
-    }
-    return () => {
-      //@ts-ignore
-      destinationBridge?.removeAllListeners();
-    };
-  }, [
-    depositNonce,
-    homeChainConfig,
-    destinationBridge,
-    depositVotes,
-    destinationChainConfig,
-    setDepositVotes,
-    setTransactionStatus,
-    setTransferTxHash,
-    tokensDispatch,
-  ]);
-
-  return (
-    <DestinationBridgeContext.Provider
-      value={{
-        disconnect: async () => {},
-      }}
-    >
-      {children}
-    </DestinationBridgeContext.Provider>
   );
 };
