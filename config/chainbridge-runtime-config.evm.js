@@ -18,7 +18,7 @@ window.__RUNTIME_CONFIG__ = {
             address: "0x8ba95659e89b69506b46b47c232011e9cd754e15",
             name: "SHFT [ Wrapped ]",
             symbol: "SHFT",
-            imageUri: "ShyftIcon",
+            imageUri: "shyftIcon",
             resourceId:
               "0x00000000000000000000008ba95659e89b69506b46b47c232011e9cd754e1500",
             isNativeWrappedToken: true,
@@ -41,7 +41,7 @@ window.__RUNTIME_CONFIG__ = {
             address: "0xb17c88bda07d28b3838e0c1de6a30eafbcf52d85",
             name: "Shyft [ Wrapped ]",
             symbol: "SHFT",
-            imageUri: "ShyftIcon",
+            imageUri: "shyftIcon",
             resourceId:
               "0x00000000000000000000008ba95659e89b69506b46b47c232011e9cd754e1500",
           },

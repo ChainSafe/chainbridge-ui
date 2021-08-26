@@ -80,7 +80,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
   const { homeConfig, isReady, address } = useChainbridge();
   return (
     <header className={clsx(classes.root)}>
-      <div className={classes.left}>
+      <div className={classes.left} style={{ display: "block" }}>
         {/* ADD LOGO HERE */}
         {/* <div className={classes.logo}>
         </div> */}
