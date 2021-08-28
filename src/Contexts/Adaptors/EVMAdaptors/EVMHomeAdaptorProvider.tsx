@@ -414,6 +414,57 @@ export const EVMHomeAdaptorProvider = ({
     ]
   );
 
+
+  // const wrapToken = async (value: number): Promise<string> => {
+  //   if (!wrapTokenConfig || !wrapper?.transfer || !homeChainConfig)
+  //     return "not ready";
+  //
+  //   try {
+  //     const signer = provider?.getSigner();
+  //
+  //     if (!address || !signer) {
+  //       console.log("No signer");
+  //     }
+  //
+  //     let tx = await signer?.sendTransaction({
+  //       to: wrapper.address,
+  //       value: parseUnits(`${value}`, homeChainConfig.decimals)
+  //     })
+  //
+  //     await tx?.wait();
+  //     if (tx?.hash) {
+  //       return tx?.hash;
+  //     } else {
+  //       return "";
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     return "";
+  //   }
+  // };
+  //
+  // const unwrapToken = async (value: number): Promise<string> => {
+  //   if (!wrapTokenConfig || !wrapper?.withdrawNative || !homeChainConfig)
+  //     return "not ready";
+  //
+  //   try {
+  //     const tx = await wrapper.withdrawNative(
+  //         address,
+  //         parseUnits(`${value}`, homeChainConfig.decimals)
+  //     );
+  //
+  //     await tx?.wait();
+  //     if (tx?.hash) {
+  //       return tx?.hash;
+  //     } else {
+  //       return "";
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     return "";
+  //   }
+  //
+  //
   const wrapToken = async (value: number): Promise<string> => {
     if (!wrapTokenConfig || !wrapper?.transfer || !homeChainConfig)
       return "not ready";
@@ -425,10 +476,20 @@ export const EVMHomeAdaptorProvider = ({
         gasPrice
       );
 
-      const tx = await wrapper.deposit({
+    const signer = provider?.getSigner();
+
+      if (!address || !signer) {
+        console.log("No signer");
+      }
+      let tx = await signer?.sendTransaction({
+        to: wrapper.address,
         value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: gasPriceCompatibility,
-      });
+        gasPrice: gasPriceCompatibility
+      })
+      // const tx = await wrapper.deposit({
+      //   value: parseUnits(`${value}`, homeChainConfig.decimals),
+      //   gasPrice: gasPriceCompatibility,
+      // });
 
       await tx?.wait();
       if (tx?.hash) {
@@ -453,10 +514,19 @@ export const EVMHomeAdaptorProvider = ({
         gasPrice
       );
 
-      const tx = await wrapper.deposit({
-        value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: gasPriceCompatibility,
-      });
+      const tx = await wrapper.withdrawNative(
+          address,
+          parseUnits(`${value}`, homeChainConfig.decimals),
+          { gasPrice: gasPriceCompatibility, gasLimit: 6700000 }
+          // {
+          //   gasPrice: 350000//gasPriceCompatibility
+          // }
+      );
+
+      // const tx = await wrapper.deposit({
+      //   value: parseUnits(`${value}`, homeChainConfig.decimals),
+      //   gasPrice: gasPriceCompatibility,
+      // });
 
       await tx?.wait();
       if (tx?.hash) {
