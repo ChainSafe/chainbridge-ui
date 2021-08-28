@@ -22,6 +22,23 @@ import SimpleTokenInput from "../Custom/SimpleTokenInput";
 import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 
+import ETHIcon from "../../media/tokens/eth.svg";
+import WETHIcon from "../../media/tokens/weth.svg";
+import DAIIcon from "../../media/tokens/dai.svg";
+import celoUSD from "../../media/tokens/cusd.svg";
+import shyftIcon from "../../media/tokens/shyft.svg";
+
+const PredefinedIcons: any = {
+    ETHIcon: ETHIcon,
+    WETHIcon: WETHIcon,
+    DAIIcon: DAIIcon,
+    celoUSD: celoUSD,
+    shyftIcon: shyftIcon,
+};
+
+const showImageUrl = (url?: string) =>
+    url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
+
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
@@ -427,7 +444,7 @@ const MainPage = () => {
                     label: (
                       <div className={classes.tokenItem}>
                         <img
-                          src={wrapTokenConfig?.imageUri}
+                          src={showImageUrl(wrapTokenConfig?.imageUri)}
                           alt={wrapTokenConfig?.symbol}
                         />
                         <span>SHFT</span>
@@ -439,7 +456,7 @@ const MainPage = () => {
                     label: (
                       <div className={classes.tokenItem}>
                         <img
-                          src={wrapTokenConfig?.imageUri}
+                          src={showImageUrl(wrapTokenConfig?.imageUri)}
                           alt={wrapTokenConfig?.symbol}
                         />
                         <span>{wrapTokenConfig?.name || "wETH"}</span>
