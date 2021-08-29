@@ -16,7 +16,7 @@ import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
-import { getNetworkName } from "../../Utils/Helpers";
+import { getNetworkName } from "../../../Utils/Helpers";
 
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
 

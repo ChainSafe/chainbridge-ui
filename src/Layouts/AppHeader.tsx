@@ -122,7 +122,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
         </div>
         <div className={classes.headerLinks}>
           {ROUTE_LINKS_HEADERS.map(({ route, label }) => (
-            <NavLink to={route} className={classes.link}>
+            <NavLink to={route} className={classes.link} key={route}>
               <Typography className={classes.linkTitle}>{label}</Typography>
             </NavLink>
           ))}
