@@ -1,9 +1,15 @@
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
 import React from "react";
 import clsx from "clsx";
-import { Typography } from "@chainsafe/common-components";
+import { Typography, NavLink } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
+
+const ROUTE_LINKS_HEADERS = [
+  { route: "/transfer", label: "Transfer" },
+  // temporary commented due to work in progress feature
+  // { route: "/explorer/list", label: "Explorer" },
+];
 
 const useStyles = makeStyles(
   ({ constants, palette, zIndex, breakpoints }: ITheme) => {
@@ -32,6 +38,10 @@ const useStyles = makeStyles(
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
+        [breakpoints.down("sm")]: {
+          display: "flex",
+          flexDirection: "column",
+        },
       },
       logo: {
         height: constants.generalUnit * 5,
@@ -68,6 +78,31 @@ const useStyles = makeStyles(
         display: "flex",
         flexDirection: "column",
       },
+      mainTitle: {},
+      headerLinks: {
+        marginLeft: 49,
+        [breakpoints.down("sm")]: {
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          marginLeft: "unset",
+          alignItems: "center",
+          width: "100%",
+          "& > a:last-child": {
+            marginLeft: 5,
+          },
+        },
+      },
+      link: {
+        marginLeft: 46,
+        textDecoration: "none",
+        [breakpoints.down("sm")]: {
+          marginLeft: "unset",
+        },
+      },
+      linkTitle: {
+        fontSize: 16,
+      },
     });
   }
 );
@@ -83,7 +118,16 @@ const AppHeader: React.FC<IAppHeader> = () => {
         {/* ADD LOGO HERE */}
         {/* <div className={classes.logo}>
         </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+        <div className={classes.mainTitle}>
+          <Typography variant="h4">ChainBridge Token Swap</Typography>
+        </div>
+        <div className={classes.headerLinks}>
+          {ROUTE_LINKS_HEADERS.map(({ route, label }) => (
+            <NavLink to={route} className={classes.link} key={route}>
+              <Typography className={classes.linkTitle}>{label}</Typography>
+            </NavLink>
+          ))}
+        </div>
       </div>
       <section className={classes.state}>
         {!isReady ? (
