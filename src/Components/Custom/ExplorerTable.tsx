@@ -12,10 +12,25 @@ import {
   Avatar,
   Blockies,
 } from "@chainsafe/common-components";
-import dayjs from "dayjs";
 import { DepositRecord } from "../../Contexts/Reducers/TransfersReducer";
-import { getIcon, getTokenIcon, shortenAddress } from "../../Utils/Helpers";
+import {
+  formatAmount,
+  formatTransferDate,
+  getColorSchemaTransferStatus,
+  getIcon,
+  getRandomSeed,
+  getTokenIcon,
+  shortenAddress,
+} from "../../Utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
+import DetailView from "./DetailView";
+
+type PillColorSchema = {
+  pillColorSchema: {
+    borderColor: string;
+    background: string;
+  };
+};
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -88,18 +103,83 @@ const useStyles = makeStyles(() =>
     avatar: {
       marginRight: 6,
     },
+    transferDetailContainer: {
+      width: "100%",
+    },
+    transferDetails: {
+      minWidth: 768,
+      width: "100%",
+      height: 731,
+    },
+    closeButton: {
+      display: "flex",
+      justifyContent: "flex-end",
+      "& > button": {
+        background: "none",
+        border: "none",
+        "& > span > span > svg": {
+          fill: "black",
+          // transitionDuration: "unset",
+        },
+      },
+    },
+    transferDetailSection: {
+      width: "100%",
+      padding: "35px 38px 0 38px",
+    },
+    headerSection: {
+      display: "flex",
+      flexDirection: "column",
+      "& > span": {
+        marginBottom: 8,
+      },
+    },
+    statusSection: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr",
+    },
+    proposalStatusPill: {
+      display: "flex",
+      justifyContent: "center",
+      borderRadius: 16,
+      background: ({ pillColorSchema }: PillColorSchema) =>
+        pillColorSchema.background,
+      border: ({ pillColorSchema }: PillColorSchema) =>
+        `1px solid ${pillColorSchema.borderColor}`,
+      width: 53,
+      height: 22,
+    },
   })
 );
 
 // TODO: just for mocking purposes
 type ExplorerTable = {
   transactionList: DepositRecord[];
+  handleOpenModal: (fromAddress: string | undefined) => () => void;
+  handleClose: () => void;
+  active: boolean;
+  setActive: (state: boolean) => void;
+  transferDetails: DepositRecord | undefined;
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
   transactionList,
+  active,
+  setActive,
+  handleOpenModal,
+  handleClose,
+  transferDetails,
 }: ExplorerTable) => {
-  const classes = useStyles();
+  //TODO: check type definitions
+  // @ts-ignore
+  const { proposalEvents: [proposalEventData = {}] = [] } = transferDetails;
+  const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
+    proposalEventData.proposalStatus
+  )!;
+  console.log("COLOR SCHEMA", colorSchemaForTransferStatus);
+  const classes = useStyles({
+    pillColorSchema: colorSchemaForTransferStatus,
+  });
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
@@ -109,19 +189,12 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const ToChainIcon = getIcon(transfer.toChainId);
       const TokenIcon = getTokenIcon();
 
-      // Seed some random string for the Blockies component
-      const arr = new Uint8Array(20);
-      const randomValues = crypto.getRandomValues(arr);
-      const randomString = Array.from(randomValues, (val) =>
-        val.toString(16).padStart(2, "0")
-      ).join("");
+      const randomString = getRandomSeed();
 
-      const transferDateFormated = dayjs(transfer.timestamp).format(
-        "MMM D, h:mmA"
-      );
+      const transferDateFormated = formatTransferDate(transfer.timestamp);
 
       const amount = transfer.amount?.toNumber();
-      const formatedAmount = Intl.NumberFormat("es-US").format(amount ?? 0);
+      const formatedAmount = formatAmount(amount);
 
       return (
         <TableRow className={classes.row} key={transfer.fromAddress}>
@@ -170,7 +243,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
               <SvgIcon>
                 <DirectionalIcon />
               </SvgIcon>
-              <Button>View Details</Button>
+              <Button onClick={handleOpenModal(transfer.fromAddress)}>
+                View Details
+              </Button>
             </div>
           </TableCell>
         </TableRow>
@@ -189,6 +264,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         </TableRow>
       </TableHead>
       <TableBody>{renderTransferList(transactionList)}</TableBody>
+      <>
+        <DetailView
+          active={active}
+          transferDetails={transferDetails}
+          handleClose={handleClose}
+          classes={classes}
+        />
+      </>
     </Table>
   );
 };

@@ -93,9 +93,19 @@ type PreflightDetails = {
   receiver: string;
 };
 
-const mockAddres = {
-  from: "0x2116B3669d0BEA25aA3050F167266Cd21dA04839",
-  to: "0xFb422cF8A06Aab21428F943C251758155Cd5f87D",
+const mockAddress = {
+  odd: {
+    from: "0x2116B3669d0BEA25aA3050F167266Cd21dA04839",
+    to: "0xFb422cF8A06Aab21428F943C251758155Cd5f87D",
+  },
+  even: {
+    from: "0xe8A65847fc8341C45917Eb054191Db0f674182Ed",
+    to: "0x259103715496CcF80c6e2b5d9500e3918eC7a4c8",
+  },
+  toDefault: {
+    from: "0xEAe8cFbD2cc1c8C0c530Fb30f359078D3a1d02DD",
+    to: "0x3d83a581c2a5819635847756A41bD7aB8dDBD9B9",
+  },
 };
 
 //TODO: mock data for view purposes. Soon to be removed
@@ -105,10 +115,10 @@ const mockedTransactions: DepositRecord[] = Array.from(
   switch (true) {
     case key % 2 === 0: {
       return {
-        fromAddress: mockAddres.from,
+        fromAddress: mockAddress.even.from,
         fromChainId: 5,
         fromNetworkName: "Goerli",
-        toAddres: mockAddres.to,
+        toAddress: mockAddress.even.to,
         toChainId: 44787,
         toNetworkName: "Celo Testnet",
         tokenAddress: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
@@ -137,10 +147,10 @@ const mockedTransactions: DepositRecord[] = Array.from(
     }
     case key % 3 === 0: {
       return {
-        fromAddress: mockAddres.from,
+        fromAddress: mockAddress.odd.from,
         fromChainId: 5,
         fromNetworkName: "Goerli",
-        toAddres: mockAddres.to,
+        toAddress: mockAddress.odd.to,
         toChainId: 44787,
         toNetworkName: "Mainnet",
         tokenAddress: "0xe09523d86d9b788BCcb580d061605F31FCe69F51",
@@ -169,10 +179,10 @@ const mockedTransactions: DepositRecord[] = Array.from(
     }
     default: {
       return {
-        fromAddress: mockAddres.from,
+        fromAddress: mockAddress.toDefault.from,
         fromChainId: 44787,
         fromNetworkName: "Celo",
-        toAddres: mockAddres.to,
+        toAddress: mockAddress.toDefault.to,
         toChainId: 5,
         toNetworkName: "Goerli",
         tokenAddress: "0xe09523d86d9b788BCcb580d061605F31FCe69F51",
@@ -212,12 +222,26 @@ const ExplorerPage = () => {
 
   const classes = useStyles();
   const [network, setNetwork] = useState({ name: "" });
+  const [active, setActive] = useState(false);
 
   const renderOptions = () => {
     return chains.map(({ chainId, name }) => ({
       label: name,
       value: chainId,
     }));
+  };
+
+  const handleOpenModal = (fromAddress: string | undefined) => () => {
+    const transferDetails = mockedTransactions.find(
+      (item) => item.fromAddress === fromAddress
+    );
+    setTransferDetails(transferDetails);
+    setActive(true);
+  };
+
+  const handleClose = () => {
+    setActive(false);
+    setTransferDetails(null);
   };
 
   return (
@@ -253,7 +277,14 @@ const ExplorerPage = () => {
         </section>
         <div className={classes.explorerTableContainer}>
           <div className={classes.explorerTable}>
-            <ExplorerTable transactionList={mockedTransactions} />
+            <ExplorerTable
+              transactionList={mockedTransactions}
+              active={active}
+              setActive={setActive}
+              handleOpenModal={handleOpenModal}
+              handleClose={handleClose}
+              transferDetails={transferDetails}
+            />
           </div>
         </div>
       </section>

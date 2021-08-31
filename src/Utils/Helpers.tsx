@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import ETHIcon from "../media/tokens/eth.png";
 import { ReactComponent as EthTokenIcon } from "../media/tokens/eth.svg";
 import WETHIcon, {
@@ -90,4 +91,52 @@ export const getIcon = (chainId: number | undefined) => {
 // TODO: for now just ERC20 token Icon
 export const getTokenIcon = () => {
   return EthTokenIcon;
+};
+
+export const formatTransferDate = (transferDate: number | undefined) =>
+  dayjs(transferDate).format("MMM D, h:mmA");
+
+export const formatAmount = (amount: number | undefined) =>
+  Intl.NumberFormat("es-US").format(amount ?? 0);
+
+export const getRandomSeed = () => {
+  const arr = new Uint8Array(20);
+  const randomValues = crypto.getRandomValues(arr);
+  const randomString = Array.from(randomValues, (val) =>
+    val.toString(16).padStart(2, "0")
+  ).join("");
+
+  return randomString;
+};
+
+export const getProposalStatus = (status: number | undefined) => {
+  switch (status) {
+    case 0:
+      return "Inactive";
+    case 1:
+      return "Active";
+    case 2:
+      return "Passed";
+    case 3:
+      return "Executed";
+    case 4:
+      return "Cancelled";
+  }
+};
+
+export const getColorSchemaTransferStatus = (status: number | undefined) => {
+  console.log("STATUS", status);
+  //TODO: just for now we have passed and executed as provided in figma mockups
+  switch (status) {
+    case 2:
+      return {
+        borderColor: "#69C0FF",
+        background: '#E6F7FF"',
+      };
+    case 3:
+      return {
+        borderColor: "",
+        background: "",
+      };
+  }
 };
