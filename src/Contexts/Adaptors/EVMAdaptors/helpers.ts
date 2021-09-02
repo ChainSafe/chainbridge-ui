@@ -10,6 +10,19 @@ import { EvmBridgeConfig, TokenConfig } from "../../../chainbridgeConfig";
 const isCelo = (networkId?: number) =>
   [42220, 44787, 62320].includes(networkId ?? 0);
 
+const getRpcProviderFromHttpUrl = (url: string) => {
+  const urlInstance = new URL(url);
+  if (urlInstance.username && urlInstance.password) {
+    var urlInfo = {
+      url: "https://e0n76adq06-e0mcjir2bt-rpc.de0-aws.kaleido.io",
+      user: "e0o54v56j3",
+      password: "FX45LLu0AsQQCXyWNtgoUAWnMqJ24Cqwyu69qpHLp8A",
+    };
+    return new ethers.providers.JsonRpcProvider(urlInfo);
+  }
+  return new ethers.providers.JsonRpcProvider(url);
+};
+
 export function getProvider(destinationChainConfig?: any) {
   let provider: any;
   if (isCelo(destinationChainConfig?.networkId)) {
@@ -32,9 +45,7 @@ export function getProvider(destinationChainConfig?: any) {
       );
     }
   } else {
-    provider = new ethers.providers.JsonRpcProvider(
-      destinationChainConfig?.rpcUrl
-    );
+    provider = getRpcProviderFromHttpUrl(destinationChainConfig?.rpcUrl);
   }
   return provider;
 }
