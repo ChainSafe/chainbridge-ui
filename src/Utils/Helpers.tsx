@@ -131,7 +131,7 @@ export const getColorSchemaTransferStatus = (status: number | undefined) => {
     case 2:
       return {
         borderColor: "#69C0FF",
-        background: '#E6F7FF"',
+        background: "#E6F7FF",
       };
     case 3:
       return {

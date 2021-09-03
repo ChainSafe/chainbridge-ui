@@ -17,6 +17,7 @@ import {
   getRandomSeed,
   getProposalStatus,
 } from "../../Utils/Helpers";
+import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 
 type DetailView = {
   active: boolean;
@@ -31,7 +32,17 @@ type DetailView = {
     | "statusSection"
     | "accountAddress"
     | "avatar"
-    | "proposalStatusPill",
+    | "proposalStatusPill"
+    | "fromAddressDetails"
+    | "addressDetailView"
+    | "sentAndFromSection"
+    | "amountSent"
+    | "fromDetailView"
+    | "toDetailView"
+    | "bridgeSection"
+    | "transactionHashSection"
+    | "colTitles"
+    | "transferTimeline",
     string
   >;
 };
@@ -63,28 +74,36 @@ const DetailView: React.FC<DetailView> = ({
         <section className={classes.transferDetailSection}>
           <div className={classes.headerSection}>
             <span>{formatTransferDate(transferDetails?.timestamp)}</span>
-            <Typography variant="h2">Transfer Summary</Typography>
+            <Typography variant="h2" component="h2">
+              Transfer Summary
+            </Typography>
           </div>
 
           <section className={classes.statusSection}>
             <div>
-              <Typography variant="body1">Address</Typography>
+              <Typography variant="body1" className={classes.colTitles}>
+                Address
+              </Typography>
               <div className={classes.accountAddress}>
-                <Avatar size="small" className={classes.avatar}>
-                  <Blockies
-                    seed={getRandomSeed()}
-                    size={15}
-                    color={"pink"}
-                    bgColor={"white"}
-                  />
-                </Avatar>
-                <span>
-                  {shortenAddress(transferDetails?.fromAddress ?? "")}
-                </span>
+                <div className={classes.addressDetailView}>
+                  <Avatar size="small" className={classes.avatar}>
+                    <Blockies
+                      seed={getRandomSeed()}
+                      size={15}
+                      color={"pink"}
+                      bgColor={"white"}
+                    />
+                  </Avatar>
+                  <span className={classes.fromAddressDetails}>
+                    {shortenAddress(transferDetails?.fromAddress ?? "")}
+                  </span>
+                </div>
               </div>
             </div>
             <div>
-              <Typography variant="body1">Status</Typography>
+              <Typography variant="body1" className={classes.colTitles}>
+                Status
+              </Typography>
               <p className={classes.proposalStatusPill}>
                 {getProposalStatus(
                   transferDetails?.proposalEvents[0].proposalStatus
@@ -93,13 +112,19 @@ const DetailView: React.FC<DetailView> = ({
             </div>
           </section>
           {/* Sent and From section */}
-          <section>
-            <div>
-              <Typography variant="body1">Sent</Typography>
-              {formatAmount(transferDetails?.amount?.toNumber())}
+          <section className={classes.sentAndFromSection}>
+            <div className={classes.amountSent}>
+              <Typography variant="body1" className={classes.colTitles}>
+                Sent
+              </Typography>
+              <div>
+                <p>{formatAmount(transferDetails?.amount?.toNumber())}</p>
+              </div>
             </div>
-            <div>
-              <Typography variant="body1">From</Typography>
+            <div className={classes.fromDetailView}>
+              <Typography variant="body1" className={classes.colTitles}>
+                From
+              </Typography>
               <div>
                 <span>
                   <SvgIcon>
@@ -109,24 +134,48 @@ const DetailView: React.FC<DetailView> = ({
                 <span>{transferDetails?.fromNetworkName}</span>
               </div>
             </div>
-            <div>
-              <Typography variant="body1">To</Typography>
+            <div className={classes.toDetailView}>
+              <Typography variant="body1" className={classes.colTitles}>
+                To
+              </Typography>
               <div>
                 <span>
                   <SvgIcon>
                     <ToChainIcon />
                   </SvgIcon>
-                  <span>{transferDetails?.toNetworkName}</span>
                 </span>
+                <span>{transferDetails?.toNetworkName}</span>
               </div>
             </div>
           </section>
           {/* Bridge section */}
-          <section>
+          <section className={classes.bridgeSection}>
             <div>
-              <Typography variant="body1">Bridge Fee</Typography>
+              <Typography variant="body1" className={classes.colTitles}>
+                Bridge Fee
+              </Typography>
               <span>{}</span>
             </div>
+            <div>
+              <Typography variant="body1" className={classes.colTitles}>
+                Network Fee
+              </Typography>
+              <span>{}</span>
+            </div>
+            <div className={classes.transactionHashSection}>
+              <div>
+                <Typography variant="body1" className={classes.colTitles}>
+                  Transaction Hash
+                </Typography>
+                <span>
+                  <SvgIcon>
+                    <HashTxIcon />
+                  </SvgIcon>
+                  {shortenAddress(transferDetails?.depositTransactionHash!)}
+                </span>
+              </div>
+            </div>
+          </section>
           </section>
         </section>
       </section>

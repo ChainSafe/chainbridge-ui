@@ -80,6 +80,10 @@ const useStyles = makeStyles(() =>
     accountAddress: {
       display: "flex",
     },
+    addressDetailView: {
+      display: "flex",
+      marginTop: 10,
+    },
     cellRow: {
       verticalAlign: "middle",
     },
@@ -117,26 +121,86 @@ const useStyles = makeStyles(() =>
       "& > button": {
         background: "none",
         border: "none",
+        "& > span": {
+          width: 15,
+          height: 15,
+        },
+        "& > span > span": {
+          width: 15,
+          height: 15,
+        },
         "& > span > span > svg": {
-          fill: "black",
+          fill: "#9E9E9E",
+          border: "#9E9E9E",
+          width: 15,
+          height: 15,
           // transitionDuration: "unset",
         },
       },
     },
     transferDetailSection: {
       width: "100%",
-      padding: "35px 38px 0 38px",
+      padding: "0px 38px 0px 38px",
+      "& > hr": {
+        color: "#595959",
+        marginTop: 26,
+      },
     },
     headerSection: {
       display: "flex",
       flexDirection: "column",
+      marginBottom: 26,
       "& > span": {
         marginBottom: 8,
+        fontSize: 14,
       },
     },
     statusSection: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr 1fr",
+      marginBottom: 26,
+    },
+    sentAndFromSection: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr",
+      marginBottom: 26,
+    },
+    colTitles: {
+      color: "#595959",
+    },
+    amountSent: {
+      fontSize: 16,
+      "& > div": {
+        marginTop: 16,
+      },
+      "& > p": {
+        marginTop: 10,
+        fontsize: 16,
+      },
+    },
+    toDetailView: {
+      "& > div": {
+        marginTop: 12,
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        "& > span:nth-child(2)": {
+          marginLeft: 6,
+          fontSize: 16,
+        },
+      },
+    },
+    fromDetailView: {
+      "& > div": {
+        marginTop: 12,
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        "& > span": {
+          marginLeft: 6,
+          fontSize: 16,
+        },
+      },
     },
     proposalStatusPill: {
       display: "flex",
@@ -148,6 +212,27 @@ const useStyles = makeStyles(() =>
         `1px solid ${pillColorSchema.borderColor}`,
       width: 53,
       height: 22,
+      fontSize: 14,
+      padding: "0px 8px 0px 8px",
+      margin: "10px 0px",
+    },
+    fromAddressDetails: {
+      fontSize: 16,
+    },
+    bridgeSection: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr",
+    },
+    transactionHashSection: {
+      "& > div": {
+        display: "flex",
+        flexDirection: "column",
+        "& > span:nth-child(2)": {
+          marginTop: 12,
+          fontSize: 14,
+          display: "flex",
+        },
+      },
     },
   })
 );
