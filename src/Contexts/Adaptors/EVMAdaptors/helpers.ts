@@ -14,9 +14,9 @@ const getRpcProviderFromHttpUrl = (url: string) => {
   const urlInstance = new URL(url);
   if (urlInstance.username && urlInstance.password) {
     var urlInfo = {
-      url: "https://e0n76adq06-e0mcjir2bt-rpc.de0-aws.kaleido.io",
-      user: "e0o54v56j3",
-      password: "FX45LLu0AsQQCXyWNtgoUAWnMqJ24Cqwyu69qpHLp8A",
+      url: urlInstance.hostname,
+      user: urlInstance.username,
+      password: urlInstance.password,
     };
     return new ethers.providers.JsonRpcProvider(urlInfo);
   }
