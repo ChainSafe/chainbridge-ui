@@ -55,23 +55,21 @@ export const chainbridgeConfig: ChainbridgeConfig = {
   // Local GETH <> Local Substrate
   chains: [
     {
-      chainId: +((process.env
-        .REACT_APP_ETHEREUM_CHAIN_ID as unknown) as number),
-      networkId: +((process.env
-        .REACT_APP_ETHEREUM_NETWORK_ID as unknown) as number),
-      name: process.env.REACT_APP_ETHEREUM_NETWORK_NAME as string,
+      chainId: 81,
+      networkId: 80001,
+      name: "Polygon Mumbai",
       decimals: 18,
-      bridgeAddress: process.env.REACT_APP_ETHEREUM_BRIDGE_ADDRESS as string,
-      erc20HandlerAddress: process.env
-        .REACT_APP_ETHEREUM_ERC20_HANDLER_ADDRESS as string,
-      rpcUrl: process.env.REACT_APP_ETHEREUM_RPC_URL as string,
+      bridgeAddress: "0x1671f420cD3E59d8A462a87bE62Ff57F872319E4",
+      erc20HandlerAddress: "0x07c822e2B037474811aD0dB20D4F393Be2991428",
+      rpcUrl:
+        "https://speedy-nodes-nyc.moralis.io/222e9489703e5fe672a8429e/polygon/mumbai/archive",
       type: "Ethereum",
-      nativeTokenSymbol: "ETH",
+      nativeTokenSymbol: "MATIC",
       tokens: [
         {
-          address: process.env.REACT_APP_ETHEREUM_ERC20_TOKEN_ADDRESS as string,
-          name: process.env.REACT_APP_ETHEREUM_ERC20_NAME as string,
-          symbol: process.env.REACT_APP_ETHEREUM_ERC20_SYMBOL as string,
+          address: "0x28239a7CC85bB25DaaddED1Ba08D2F0E420C0480",
+          name: "CN",
+          symbol: "CS",
           imageUri: CEREIcon,
           resourceId:
             "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
@@ -97,6 +95,30 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           name: "CFG",
           symbol: "CFG",
           resourceId: "substrate-native",
+        },
+      ],
+    },
+    {
+      chainId: +((process.env
+        .REACT_APP_ETHEREUM_CHAIN_ID as unknown) as number),
+      networkId: +((process.env
+        .REACT_APP_ETHEREUM_NETWORK_ID as unknown) as number),
+      name: process.env.REACT_APP_ETHEREUM_NETWORK_NAME as string,
+      decimals: 18,
+      bridgeAddress: process.env.REACT_APP_ETHEREUM_BRIDGE_ADDRESS as string,
+      erc20HandlerAddress: process.env
+        .REACT_APP_ETHEREUM_ERC20_HANDLER_ADDRESS as string,
+      rpcUrl: process.env.REACT_APP_ETHEREUM_RPC_URL as string,
+      type: "Ethereum",
+      nativeTokenSymbol: "ETH",
+      tokens: [
+        {
+          address: process.env.REACT_APP_ETHEREUM_ERC20_TOKEN_ADDRESS as string,
+          name: process.env.REACT_APP_ETHEREUM_ERC20_NAME as string,
+          symbol: process.env.REACT_APP_ETHEREUM_ERC20_SYMBOL as string,
+          imageUri: CEREIcon,
+          resourceId:
+            "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
         },
       ],
     },
