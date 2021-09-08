@@ -11,6 +11,7 @@ export function transitMessageReducer(
     case "addMessage":
       // NOTE: this is to avoid duplicate messages due to chain reorganization
       const { payload } = action;
+
       if (typeof payload === "object") {
         const foundElement = transitMessage.find(
           ({ address }: any) => address === payload.address
