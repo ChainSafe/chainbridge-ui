@@ -13,6 +13,7 @@ import {
   ProposalStatus,
 } from "../../Contexts/Reducers/TransfersReducer";
 import { BigNumber } from "ethers";
+import { getColorSchemaTransferStatus } from "../../Utils/Helpers";
 
 const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
   createStyles({
@@ -223,6 +224,11 @@ const ExplorerPage = () => {
   const classes = useStyles();
   const [network, setNetwork] = useState({ name: "" });
   const [active, setActive] = useState(false);
+  const [transferDetails, setTransferDetails] = useState<any>(undefined);
+  const [pillColorStatus, setPillColorStatus] = useState({
+    borderColor: "",
+    background: "",
+  });
 
   const renderOptions = () => {
     return chains.map(({ chainId, name }) => ({
@@ -232,10 +238,18 @@ const ExplorerPage = () => {
   };
 
   const handleOpenModal = (fromAddress: string | undefined) => () => {
-    const transferDetails = mockedTransactions.find(
+    const txDetail = mockedTransactions.find(
       (item) => item.fromAddress === fromAddress
     );
-    setTransferDetails(transferDetails);
+
+    //TODO: check type definitions
+    // @ts-ignore
+    const { proposalEvents: [proposalEventData = {}] = [] } = txDetail;
+    const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
+      proposalEventData.proposalStatus
+    )!;
+    setPillColorStatus(colorSchemaForTransferStatus);
+    setTransferDetails(txDetail);
     setActive(true);
   };
 
@@ -284,6 +298,7 @@ const ExplorerPage = () => {
               handleOpenModal={handleOpenModal}
               handleClose={handleClose}
               transferDetails={transferDetails}
+              pillColorStatus={pillColorStatus}
             />
           </div>
         </div>

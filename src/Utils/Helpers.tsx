@@ -125,9 +125,9 @@ export const getProposalStatus = (status: number | undefined) => {
 };
 
 export const getColorSchemaTransferStatus = (status: number | undefined) => {
-  console.log("STATUS", status);
   //TODO: just for now we have passed and executed as provided in figma mockups
   switch (status) {
+    case 1:
     case 2:
       return {
         borderColor: "#69C0FF",
@@ -135,8 +135,14 @@ export const getColorSchemaTransferStatus = (status: number | undefined) => {
       };
     case 3:
       return {
-        borderColor: "",
-        background: "",
+        borderColor: "#389E0D",
+        background: "#D9F7BE",
+      };
+    case 0:
+    case 4:
+      return {
+        borderColor: "#FF4D4F",
+        background: "#ff9a9b",
       };
   }
 };

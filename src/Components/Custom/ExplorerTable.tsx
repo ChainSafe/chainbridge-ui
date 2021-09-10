@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, createStyles } from "@chainsafe/common-theme";
+import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   Table,
   TableHead,
@@ -16,7 +16,6 @@ import { DepositRecord } from "../../Contexts/Reducers/TransfersReducer";
 import {
   formatAmount,
   formatTransferDate,
-  getColorSchemaTransferStatus,
   getIcon,
   getRandomSeed,
   getTokenIcon,
@@ -32,7 +31,7 @@ type PillColorSchema = {
   };
 };
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles(({ breakpoints }: ITheme) =>
   createStyles({
     root: {
       display: "table",
@@ -109,11 +108,21 @@ const useStyles = makeStyles(() =>
     },
     transferDetailContainer: {
       width: "100%",
+      "& > section": {
+        maxWidth: "768px !important",
+        width: "100%",
+        [breakpoints.down("sm")]: {
+          width: "411px !important",
+        },
+      },
     },
     transferDetails: {
       minWidth: 768,
       width: "100%",
       height: 731,
+      [breakpoints.down("sm")]: {
+        minWidth: 411,
+      },
     },
     closeButton: {
       display: "flex",
@@ -159,6 +168,11 @@ const useStyles = makeStyles(() =>
       display: "grid",
       gridTemplateColumns: "1fr 1fr 1fr",
       marginBottom: 26,
+      [breakpoints.down("sm")]: {
+        "& > div:nth-child(2)": {
+          gridColumn: "3/3",
+        },
+      },
     },
     sentAndFromSection: {
       display: "grid",
@@ -177,8 +191,15 @@ const useStyles = makeStyles(() =>
         marginTop: 10,
         fontsize: 16,
       },
+      [breakpoints.down("sm")]: {
+        gridColumn: "span 3",
+        marginBottom: 16,
+      },
     },
     toDetailView: {
+      [breakpoints.down("sm")]: {
+        gridColumn: "3/3",
+      },
       "& > div": {
         marginTop: 12,
         display: "flex",
@@ -210,11 +231,14 @@ const useStyles = makeStyles(() =>
         pillColorSchema.background,
       border: ({ pillColorSchema }: PillColorSchema) =>
         `1px solid ${pillColorSchema.borderColor}`,
-      width: 53,
+      width: 75,
       height: 22,
       fontSize: 14,
       padding: "0px 8px 0px 8px",
       margin: "10px 0px",
+      color: ({ pillColorSchema }: PillColorSchema) =>
+        pillColorSchema.borderColor,
+      fontWeight: 400,
     },
     fromAddressDetails: {
       fontSize: 16,
@@ -224,6 +248,7 @@ const useStyles = makeStyles(() =>
       gridTemplateColumns: "1fr 1fr 1fr",
     },
     transactionHashSection: {
+      gridColumn: "1/3",
       "& > div": {
         display: "flex",
         flexDirection: "column",
@@ -234,6 +259,7 @@ const useStyles = makeStyles(() =>
         },
       },
     },
+    transferTimeline: {},
   })
 );
 
@@ -245,6 +271,7 @@ type ExplorerTable = {
   active: boolean;
   setActive: (state: boolean) => void;
   transferDetails: DepositRecord | undefined;
+  pillColorStatus: { borderColor: string; background: string };
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
@@ -254,16 +281,10 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   handleOpenModal,
   handleClose,
   transferDetails,
+  pillColorStatus,
 }: ExplorerTable) => {
-  //TODO: check type definitions
-  // @ts-ignore
-  const { proposalEvents: [proposalEventData = {}] = [] } = transferDetails;
-  const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
-    proposalEventData.proposalStatus
-  )!;
-  console.log("COLOR SCHEMA", colorSchemaForTransferStatus);
   const classes = useStyles({
-    pillColorSchema: colorSchemaForTransferStatus,
+    pillColorSchema: pillColorStatus,
   });
 
   const renderTransferList = (transferData: DepositRecord[]) =>
