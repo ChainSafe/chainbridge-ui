@@ -1,4 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
+import {
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
+} from "../../chainbridgeConfig";
+import { computeTransferDetails } from "../../Utils/Helpers";
 
 export enum ProposalStatus {
   Inactive,
@@ -9,6 +14,7 @@ export enum ProposalStatus {
 }
 
 export type DepositRecord = {
+  id?: string;
   fromAddress?: string;
   fromChainId?: number;
   fromNetworkName?: string;
@@ -16,11 +22,11 @@ export type DepositRecord = {
   toChainId?: number;
   toNetworkName?: string;
   tokenAddress?: string;
-  amount?: BigNumber;
+  amount?: string;
   timestamp?: number;
   depositTransactionHash?: string;
   depositBlockNumber?: number;
-  proposalEvents: Array<{
+  proposals: Array<{
     proposalStatus: ProposalStatus;
     dataHash?: string;
     proposalEventTransactionHash?: string;
@@ -90,79 +96,79 @@ export type AddVotePayload = {
   };
 };
 
+export type TransferResponse = {
+  transfers: Array<DepositRecord>;
+};
+
+export type Action =
+  | { type: "fetchTransfers"; payload: Array<DepositRecord> }
+  | { type: "error" }
+  | { type: "selectNetwork"; payload: number }
+  | { type: "setTransferDetails"; payload: DepositRecord }
+  | { type: "cleanTransferDetails" };
+
 export type Transfers = {
   [depositNonce: number]: DepositRecord;
 };
 
-export function transfersReducer(
-  transfers: Transfers,
-  action:
-    | {
-        type: "addTransfer";
-        payload: AddTransferPayload;
-      }
-    | {
-        type: "addProposalEvent";
-        payload: AddProposalPayload;
-      }
-    | {
-        type: "addVote";
-        payload: AddVotePayload;
-      }
-): Transfers {
-  switch (action.type) {
-    case "addTransfer": {
-      const currentProposals =
-        transfers[action.payload.depositNonce]?.proposalEvents || [];
-      const currentVotes = transfers[action.payload.depositNonce]?.votes || [];
+type NetworkSelection = {
+  name: string;
+  chainId: number;
+};
 
-      return {
-        ...transfers,
-        [action.payload.depositNonce]: {
-          ...transfers[action.payload.depositNonce],
-          ...action.payload.transferDetails,
-          proposalEvents: [
-            {
-              proposalStatus: ProposalStatus.Inactive,
-              proposalEventBlockNumber:
-                action.payload.transferDetails.depositBlockNumber,
-              proposalEventTransactionHash:
-                action.payload.transferDetails.depositTransactionHash,
-              timestamp: action.payload.transferDetails.timestamp,
-            },
-            ...currentProposals,
-          ],
-          votes: [...currentVotes],
-        },
+export type TransferDetails = {
+  formatedTransferDate: string;
+  addressShortened: string;
+  proposalStatus: string;
+  formatedAmount: string;
+  fromNetworkName?: string;
+  toNetworkName?: string;
+  depositTxHashShortened: string;
+  fromChainId?: number;
+  toChainId?: number;
+};
+
+export type ExplorerState = {
+  transfers: Array<DepositRecord>;
+  error: boolean;
+  network: NetworkSelection;
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  transferDetails: TransferDetails;
+};
+
+export function transfersReducer(
+  explorerState: ExplorerState,
+  action: Action
+): ExplorerState {
+  switch (action.type) {
+    case "fetchTransfers":
+      return { ...explorerState, transfers: action.payload };
+    case "error":
+      return { ...explorerState, error: true };
+    case "selectNetwork":
+      const { chains } = explorerState;
+      const networkSelected = chains.find(
+        ({ chainId }) => chainId === action.payload
+      );
+      const { name, chainId } = networkSelected!;
+      return { ...explorerState, network: { name, chainId } };
+    case "setTransferDetails":
+      const transferDetails = computeTransferDetails(action.payload);
+      return { ...explorerState, transferDetails };
+    case "cleanTransferDetails":
+      const cleanedTransferDetails = {
+        formatedTransferDate: "",
+        addressShortened: "",
+        proposalStatus: "",
+        formatedAmount: "",
+        fromNetworkName: "",
+        toNetworkName: "",
+        depositTxHashShortened: "",
+        fromChainId: 0,
+        toChainId: 0,
       };
-    }
-    case "addProposalEvent": {
-      const currentProposals =
-        transfers[action.payload.depositNonce]?.proposalEvents || [];
-      return {
-        ...transfers,
-        [action.payload.depositNonce]: {
-          ...transfers[action.payload.depositNonce],
-          ...action.payload.transferDetails,
-          proposalEvents: [
-            ...currentProposals,
-            action.payload.proposalEventDetails,
-          ],
-        },
-      };
-    }
-    case "addVote": {
-      const currentVotes = transfers[action.payload.depositNonce]?.votes || [];
-      return {
-        ...transfers,
-        [action.payload.depositNonce]: {
-          ...transfers[action.payload.depositNonce],
-          ...action.payload.transferDetails,
-          votes: [...currentVotes, action.payload.voteDetails],
-        },
-      };
-    }
+      return { ...explorerState, transferDetails: cleanedTransferDetails };
     default:
-      return transfers;
+      return explorerState;
   }
 }
