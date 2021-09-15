@@ -49,7 +49,7 @@ const DetailView = ({
   const FromChainIcon = getIcon(transferDetails?.fromChainId);
   const ToChainIcon = getIcon(transferDetails?.toChainId);
   return (
-    (transferDetails && (
+    (!Object.values(transferDetails).includes("") && (
       <Modal
         active={active}
         // setActive={setActive}
