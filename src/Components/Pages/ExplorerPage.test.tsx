@@ -6,6 +6,14 @@ import { ExplorerProvider } from "../../Contexts/ExplorerContext";
 import { lightTheme } from "../../Themes/LightTheme";
 import { runtimeTestingConfig, testResponse } from "../../Utils/TestUtils";
 
+jest.mock("../../Contexts/NetworkManagerContext.tsx", () => {
+  const FakeNetworkManager = (children: any) => <>{children}</>;
+  return {
+    NetworkManagerProvider: FakeNetworkManager,
+    useNetworkManager: jest.fn(),
+  };
+});
+
 describe("ExplorerPage", () => {
   beforeEach(() => {
     Object.defineProperties(window, {

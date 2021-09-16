@@ -20,7 +20,6 @@ const ExplorerContext = React.createContext<ExplorerContext | undefined>(
 );
 
 const ExplorerProvider = ({ children }: IExplorerContextProps) => {
-  // TODO: delete this, is provisional
   const {
     __RUNTIME_CONFIG__: {
       CHAINBRIDGE: { chains },
