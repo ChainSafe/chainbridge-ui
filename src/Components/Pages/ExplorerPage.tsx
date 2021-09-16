@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   SelectInput,
@@ -8,12 +8,8 @@ import {
   Grid,
 } from "@chainsafe/common-components";
 import ExplorerTable from "../Custom/ExplorerTable";
-import {
-  DepositRecord,
-  ProposalStatus,
-} from "../../Contexts/Reducers/TransfersReducer";
-import { BigNumber } from "ethers";
 import { getColorSchemaTransferStatus } from "../../Utils/Helpers";
+import { useExplorer } from "../../Contexts/ExplorerContext";
 
 const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
   createStyles({
@@ -94,137 +90,13 @@ type PreflightDetails = {
   receiver: string;
 };
 
-const mockAddress = {
-  odd: {
-    from: "0x2116B3669d0BEA25aA3050F167266Cd21dA04839",
-    to: "0xFb422cF8A06Aab21428F943C251758155Cd5f87D",
-  },
-  even: {
-    from: "0xe8A65847fc8341C45917Eb054191Db0f674182Ed",
-    to: "0x259103715496CcF80c6e2b5d9500e3918eC7a4c8",
-  },
-  toDefault: {
-    from: "0xEAe8cFbD2cc1c8C0c530Fb30f359078D3a1d02DD",
-    to: "0x3d83a581c2a5819635847756A41bD7aB8dDBD9B9",
-  },
-};
-
-//TODO: mock data for view purposes. Soon to be removed
-const mockedTransactions: DepositRecord[] = Array.from(
-  new Array(10).keys()
-).map((key) => {
-  switch (true) {
-    case key % 2 === 0: {
-      return {
-        fromAddress: mockAddress.even.from,
-        fromChainId: 5,
-        fromNetworkName: "Goerli",
-        toAddress: mockAddress.even.to,
-        toChainId: 44787,
-        toNetworkName: "Celo Testnet",
-        tokenAddress: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
-        amount: BigNumber.from("144435150"),
-        timestamp: 1629461364,
-        depositTransactionHash: "0xcab0...e06e",
-        depositBlockNumber: 4043802,
-        proposalEvents: [
-          {
-            proposalStatus: ProposalStatus.Active,
-            proposalEventTransactionHash: "0xcab0...e06e",
-            proposalEventBlockNumber: 4043802,
-            timestamp: 1629461364,
-          },
-        ],
-        votes: [
-          {
-            voteStatus: true,
-            voteTransactionHash: "0xcab0...e06e",
-            voteBlockNumber: 4043802,
-            timestamp: 1629461364,
-            dataHash: "0xcab0...e06e",
-          },
-        ],
-      };
-    }
-    case key % 3 === 0: {
-      return {
-        fromAddress: mockAddress.odd.from,
-        fromChainId: 5,
-        fromNetworkName: "Goerli",
-        toAddress: mockAddress.odd.to,
-        toChainId: 44787,
-        toNetworkName: "Mainnet",
-        tokenAddress: "0xe09523d86d9b788BCcb580d061605F31FCe69F51",
-        amount: BigNumber.from("144435150"),
-        timestamp: 1629461364,
-        depositTransactionHash: "0xcab0...e06e",
-        depositBlockNumber: 4043802,
-        proposalEvents: [
-          {
-            proposalStatus: ProposalStatus.Executed,
-            proposalEventTransactionHash: "0xcab0...e06e",
-            proposalEventBlockNumber: 4043802,
-            timestamp: 1629461364,
-          },
-        ],
-        votes: [
-          {
-            voteStatus: true,
-            voteTransactionHash: "0xcab0...e06e",
-            voteBlockNumber: 4043802,
-            timestamp: 1629461364,
-            dataHash: "0xcab0...e06e",
-          },
-        ],
-      };
-    }
-    default: {
-      return {
-        fromAddress: mockAddress.toDefault.from,
-        fromChainId: 44787,
-        fromNetworkName: "Celo",
-        toAddress: mockAddress.toDefault.to,
-        toChainId: 5,
-        toNetworkName: "Goerli",
-        tokenAddress: "0xe09523d86d9b788BCcb580d061605F31FCe69F51",
-        amount: BigNumber.from("144435150"),
-        timestamp: 1629461364,
-        depositTransactionHash: "0xcab0...e06e",
-        depositBlockNumber: 4043802,
-        proposalEvents: [
-          {
-            proposalStatus: ProposalStatus.Passed,
-            proposalEventTransactionHash: "0xcab0...e06e",
-            proposalEventBlockNumber: 4043802,
-            timestamp: 1629461364,
-          },
-        ],
-        votes: [
-          {
-            voteStatus: true,
-            voteTransactionHash: "0xcab0...e06e",
-            voteBlockNumber: 4043802,
-            timestamp: 1629461364,
-            dataHash: "0xcab0...e06e",
-          },
-        ],
-      };
-    }
-  }
-});
-
 const ExplorerPage = () => {
-  // TODO: delete this, is provisional
-  const {
-    __RUNTIME_CONFIG__: {
-      CHAINBRIDGE: { chains },
-    },
-  } = window;
+  const explorerContext = useExplorer();
+  const { explorerDispatcher, explorerState } = explorerContext;
+  const { chains, transfers, network, transferDetails } = explorerState;
 
   const classes = useStyles();
-  const [network, setNetwork] = useState({ name: "" });
   const [active, setActive] = useState(false);
-  const [transferDetails, setTransferDetails] = useState<any>(undefined);
   const [pillColorStatus, setPillColorStatus] = useState({
     borderColor: "",
     background: "",
@@ -237,25 +109,34 @@ const ExplorerPage = () => {
     }));
   };
 
-  const handleOpenModal = (fromAddress: string | undefined) => () => {
-    const txDetail = mockedTransactions.find(
-      (item) => item.fromAddress === fromAddress
-    );
-
+  const handleOpenModal = (txId: string | undefined) => () => {
+    const txDetail = transfers.find((tx) => tx.id === txId);
     //TODO: check type definitions
     // @ts-ignore
-    const { proposalEvents: [proposalEventData = {}] = [] } = txDetail;
-    const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
-      proposalEventData.proposalStatus
-    )!;
-    setPillColorStatus(colorSchemaForTransferStatus);
-    setTransferDetails(txDetail);
+    const { proposals } = txDetail;
+    let colorSchemaForTransferStatus;
+    if (!proposals.length) {
+      colorSchemaForTransferStatus = getColorSchemaTransferStatus(undefined);
+      setPillColorStatus(colorSchemaForTransferStatus);
+    } else {
+      colorSchemaForTransferStatus = getColorSchemaTransferStatus(
+        proposals[0].proposalStatus
+      );
+      setPillColorStatus(colorSchemaForTransferStatus);
+    }
+
+    explorerDispatcher({
+      type: "setTransferDetails",
+      payload: txDetail!,
+    });
     setActive(true);
   };
 
   const handleClose = () => {
     setActive(false);
-    setTransferDetails(null);
+    explorerDispatcher({
+      type: "cleanTransferDetails",
+    });
   };
 
   return (
@@ -272,7 +153,10 @@ const ExplorerPage = () => {
                   className={classes.networkSelector}
                   options={renderOptions()}
                   onChange={(value: any) => {
-                    setNetwork(value);
+                    explorerDispatcher({
+                      type: "selectNetwork",
+                      payload: value,
+                    });
                   }}
                   value={network}
                   placeholder="Select network"
@@ -292,12 +176,12 @@ const ExplorerPage = () => {
         <div className={classes.explorerTableContainer}>
           <div className={classes.explorerTable}>
             <ExplorerTable
-              transactionList={mockedTransactions}
+              transactionList={transfers || []}
               active={active}
               setActive={setActive}
               handleOpenModal={handleOpenModal}
               handleClose={handleClose}
-              transferDetails={transferDetails}
+              transferDetails={transferDetails || {}}
               pillColorStatus={pillColorStatus}
             />
           </div>

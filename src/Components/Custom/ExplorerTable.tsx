@@ -12,14 +12,17 @@ import {
   Avatar,
   Blockies,
 } from "@chainsafe/common-components";
-import { DepositRecord } from "../../Contexts/Reducers/TransfersReducer";
 import {
-  formatAmount,
+  DepositRecord,
+  TransferDetails,
+} from "../../Contexts/Reducers/TransfersReducer";
+import {
   formatTransferDate,
   getIcon,
   getRandomSeed,
   getTokenIcon,
   shortenAddress,
+  computeAndFormatAmount,
 } from "../../Utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 import DetailView from "./DetailView";
@@ -270,7 +273,7 @@ type ExplorerTable = {
   handleClose: () => void;
   active: boolean;
   setActive: (state: boolean) => void;
-  transferDetails: DepositRecord | undefined;
+  transferDetails: TransferDetails;
   pillColorStatus: { borderColor: string; background: string };
 };
 
@@ -289,6 +292,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
+      const { amount } = transfer;
       const fromAddressShortened = shortenAddress(transfer.fromAddress ?? "");
 
       const FromChainIcon = getIcon(transfer.fromChainId);
@@ -299,11 +303,11 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
       const transferDateFormated = formatTransferDate(transfer.timestamp);
 
-      const amount = transfer.amount?.toNumber();
-      const formatedAmount = formatAmount(amount);
+      //TODO check how to work better with BG and bigint
+      const amountFormated = computeAndFormatAmount(amount!);
 
       return (
-        <TableRow className={classes.row} key={transfer.fromAddress}>
+        <TableRow className={classes.row} key={transfer.id}>
           <TableCell className={classes.cellRow}>
             {transferDateFormated}
           </TableCell>
@@ -341,7 +345,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
               <SvgIcon>
                 <TokenIcon className={classes.tokenIcon} />
               </SvgIcon>
-              <span>{formatedAmount} ETH</span>
+              <span>{amountFormated} ETH</span>
             </span>
           </TableCell>
           <TableCell className={classes.row}>
@@ -349,7 +353,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
               <SvgIcon>
                 <DirectionalIcon />
               </SvgIcon>
-              <Button onClick={handleOpenModal(transfer.fromAddress)}>
+              <Button onClick={handleOpenModal(transfer.id)}>
                 View Details
               </Button>
             </div>

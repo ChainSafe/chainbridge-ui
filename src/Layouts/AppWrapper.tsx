@@ -1,6 +1,7 @@
 import {
   NavLink,
   Typography,
+  useHistory,
   useLocation,
 } from "@chainsafe/common-components";
 import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
@@ -124,6 +125,17 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
   const [enableNavTabs, setEnableNavTabs] = useState(true);
 
   const location = useLocation();
+  const { redirect } = useHistory();
+
+  const { __RUNTIME_CONFIG__ } = window;
+
+  const indexerEnabled = "INDEXER_URL" in __RUNTIME_CONFIG__;
+
+  useEffect(() => {
+    if (location.pathname.includes("/explorer/list") && !indexerEnabled) {
+      redirect("/transfer");
+    }
+  }, []);
 
   useEffect(() => {
     if (location.pathname.includes("/explorer/list")) {

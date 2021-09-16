@@ -16,6 +16,11 @@ import { ReactComponent as CeloUSD } from "../media/networks/celo.svg";
 import { ReactComponent as EtcIcon } from "../media/networks/etc.svg";
 import { ReactComponent as CosmosIcon } from "../media/networks/cosmos.svg";
 import { ReactComponent as EthermintIcon } from "../media/networks/ethermint.svg";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import {
+  DepositRecord,
+  TransferDetails,
+} from "../Contexts/Reducers/TransfersReducer";
 const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
 const { hexToU8a, isHex } = require("@polkadot/util");
 
@@ -96,8 +101,8 @@ export const getTokenIcon = () => {
 export const formatTransferDate = (transferDate: number | undefined) =>
   dayjs(transferDate).format("MMM D, h:mmA");
 
-export const formatAmount = (amount: number | undefined) =>
-  Intl.NumberFormat("es-US").format(amount ?? 0);
+export const formatAmount = (amount: BigNumberish) =>
+  ethers.utils.formatUnits(amount);
 
 export const getRandomSeed = () => {
   const arr = new Uint8Array(20);
@@ -121,6 +126,8 @@ export const getProposalStatus = (status: number | undefined) => {
       return "Executed";
     case 4:
       return "Cancelled";
+    default:
+      return "No status";
   }
 };
 
@@ -144,5 +151,61 @@ export const getColorSchemaTransferStatus = (status: number | undefined) => {
         borderColor: "#FF4D4F",
         background: "#ff9a9b",
       };
+    default:
+      return {
+        borderColor: "#548CA8",
+        background: "#EEEEEE",
+      };
   }
+};
+
+export const computeAndFormatAmount = (amount: string) => {
+  const amountParsed = parseInt(amount);
+  const toBigInt = BigInt(amountParsed);
+  const toBigNumber = BigNumber.from(toBigInt);
+  return formatAmount(toBigNumber);
+};
+
+export const computeTransferDetails = (
+  txDetails: DepositRecord
+): TransferDetails => {
+  const {
+    timestamp,
+    fromAddress,
+    proposals,
+    amount,
+    fromNetworkName,
+    toNetworkName,
+    depositTransactionHash,
+    fromChainId,
+    toChainId,
+  } = txDetails;
+
+  let proposalStatus;
+
+  if (proposals.length) {
+    proposalStatus = getProposalStatus(proposals[0].proposalStatus);
+  } else {
+    proposalStatus = getProposalStatus(undefined);
+  }
+
+  const formatedTransferDate = formatTransferDate(timestamp);
+
+  const addressShortened = shortenAddress(fromAddress!);
+
+  const depositTxHashShortened = shortenAddress(depositTransactionHash!);
+
+  const formatedAmount = computeAndFormatAmount(amount!);
+
+  return {
+    formatedTransferDate,
+    addressShortened,
+    proposalStatus,
+    formatedAmount,
+    fromNetworkName,
+    toNetworkName,
+    depositTxHashShortened,
+    fromChainId,
+    toChainId,
+  };
 };

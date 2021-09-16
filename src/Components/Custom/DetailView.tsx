@@ -8,20 +8,13 @@ import {
   Avatar,
   Blockies,
 } from "@chainsafe/common-components";
-import { DepositRecord } from "../../Contexts/Reducers/TransfersReducer";
-import {
-  formatTransferDate,
-  formatAmount,
-  shortenAddress,
-  getIcon,
-  getRandomSeed,
-  getProposalStatus,
-} from "../../Utils/Helpers";
+import { TransferDetails } from "../../Contexts/Reducers/TransfersReducer";
+import { getIcon, getRandomSeed } from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 
 type DetailView = {
   active: boolean;
-  transferDetails: DepositRecord | undefined;
+  transferDetails: TransferDetails;
   handleClose: () => void;
   classes: Record<
     | "transferDetailContainer"
@@ -56,7 +49,7 @@ const DetailView = ({
   const FromChainIcon = getIcon(transferDetails?.fromChainId);
   const ToChainIcon = getIcon(transferDetails?.toChainId);
   return (
-    (transferDetails && (
+    (!Object.values(transferDetails).includes("") && (
       <Modal
         active={active}
         // setActive={setActive}
@@ -74,7 +67,7 @@ const DetailView = ({
           {/* Address and status section */}
           <section className={classes.transferDetailSection}>
             <div className={classes.headerSection}>
-              <span>{formatTransferDate(transferDetails?.timestamp)}</span>
+              <span>{transferDetails?.formatedTransferDate}</span>
               <Typography variant="h2" component="h2">
                 Transfer Summary
               </Typography>
@@ -96,7 +89,7 @@ const DetailView = ({
                       />
                     </Avatar>
                     <span className={classes.fromAddressDetails}>
-                      {shortenAddress(transferDetails?.fromAddress ?? "")}
+                      {transferDetails.addressShortened}
                     </span>
                   </div>
                 </div>
@@ -106,9 +99,7 @@ const DetailView = ({
                   Status
                 </Typography>
                 <p className={classes.proposalStatusPill}>
-                  {getProposalStatus(
-                    transferDetails?.proposalEvents[0].proposalStatus
-                  )}
+                  {transferDetails.proposalStatus}
                 </p>
               </div>
             </section>
@@ -119,9 +110,7 @@ const DetailView = ({
                   Sent
                 </Typography>
                 <div>
-                  <p>
-                    {formatAmount(transferDetails?.amount?.toNumber())} Ether
-                  </p>
+                  <p>{transferDetails.formatedAmount} Ether</p>
                 </div>
               </div>
               <div className={classes.fromDetailView}>
@@ -174,7 +163,7 @@ const DetailView = ({
                     <SvgIcon>
                       <HashTxIcon />
                     </SvgIcon>
-                    {shortenAddress(transferDetails?.depositTransactionHash!)}
+                    {transferDetails.depositTxHashShortened}
                   </span>
                 </div>
               </div>
