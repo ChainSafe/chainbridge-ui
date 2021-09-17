@@ -88,7 +88,11 @@ const AppHeader: React.FC<IAppHeader> = () => {
           </NavLink>
         </div>
         <NavLink style={{ textDecoration: "none" }} to="/">
-          <Typography variant="h4">ETH-CERE Bridge</Typography>
+          <Typography variant="h4">Bridge</Typography>
+          <br />
+          <Typography variant="body1">
+            Transfer CERE tokens from Ethereum and Polygon to Cere Network
+          </Typography>
         </NavLink>
       </div>
       <section className={classes.state}>
