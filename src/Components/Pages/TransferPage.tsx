@@ -377,7 +377,6 @@ const TransferPage = () => {
             disabled: !homeConfig || !address,
           })}
         >
-          {console.log(destinationChainConfig)}
           <section>
             <SelectInput
               label="Destination Network"
