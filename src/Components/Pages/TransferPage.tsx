@@ -377,15 +377,18 @@ const TransferPage = () => {
             disabled: !homeConfig || !address,
           })}
         >
+          {console.log(destinationChainConfig)}
           <section>
             <SelectInput
               label="Destination Network"
               className={classes.generalInput}
               disabled={!homeConfig}
-              options={destinationChains.map((dc) => ({
-                label: dc.name,
-                value: dc.chainId,
-              }))}
+              options={destinationChains
+                .filter((dc) => dc.chainId === 1)
+                .map((dc) => ({
+                  label: dc.name,
+                  value: dc.chainId,
+                }))}
               onChange={(value) => setDestinationChain(value)}
               value={destinationChainConfig?.chainId}
             />
