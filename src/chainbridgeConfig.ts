@@ -22,6 +22,7 @@ export type BridgeConfig = {
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
   decimals: number;
+  destinationChain?: boolean;
 };
 
 export type EvmBridgeConfig = BridgeConfig & {
@@ -95,6 +96,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           resourceId: "substrate-native",
         },
       ],
+      destinationChain: true,
     },
     {
       chainId: +((process.env
