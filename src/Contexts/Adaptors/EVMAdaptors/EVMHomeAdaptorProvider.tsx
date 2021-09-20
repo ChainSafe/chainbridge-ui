@@ -67,6 +67,8 @@ export const EVMHomeAdaptorProvider = ({
         return "CELO - Alfajores Testnet";
       case 62320:
         return "CELO - Baklava Testnet";
+      case 1749641142:
+        return "Besu";
       default:
         return "Other";
     }
