@@ -245,10 +245,12 @@ const TransferPage = () => {
     }
   }, [walletType, walletConnecting]);
 
+  const selectedToken = homeConfig?.tokens.find(
+    (token) => token.address === preflightDetails.token
+  );
+
   const DECIMALS =
-    preflightDetails && tokens[preflightDetails.token]
-      ? tokens[preflightDetails.token].decimals
-      : 18;
+    selectedToken && selectedToken.decimals ? selectedToken.decimals : 18;
 
   const REGEX =
     DECIMALS > 0
