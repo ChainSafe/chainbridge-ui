@@ -5,6 +5,7 @@ export type TokenConfig = {
   imageUri?: string;
   resourceId: string;
   isNativeWrappedToken?: boolean;
+  decimals?: number;
 };
 
 export type ChainType = "Ethereum" | "Substrate";

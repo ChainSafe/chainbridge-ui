@@ -12,9 +12,10 @@ const isCelo = (networkId?: number) =>
 
 const getRpcProviderFromHttpUrl = (url: string) => {
   const urlInstance = new URL(url);
+
   if (urlInstance.username && urlInstance.password) {
     var urlInfo = {
-      url: urlInstance.hostname,
+      url: urlInstance.origin,
       user: urlInstance.username,
       password: urlInstance.password,
     };
@@ -66,6 +67,7 @@ export async function hasTokenSupplies(
     destinationChain.type === "Ethereum"
   ) {
     let provider = getProvider(destinationChain);
+    await provider.ready;
     const erc20destinationToken = Erc20DetailedFactory.connect(
       destinationToken.address,
       provider
@@ -87,7 +89,9 @@ export async function hasTokenSupplies(
     const balanceTokens = await erc20destinationToken.balanceOf(
       destinationErc20Handler
     );
-    if (Number(utils.formatUnits(balanceTokens)) < amount) {
+    const erc20Decimals =
+      destinationToken.decimals ?? destinationChain.decimals;
+    if (Number(utils.formatUnits(balanceTokens, erc20Decimals)) < amount) {
       console.log("Not enough token balance on destination chain!");
       return false;
     }
