@@ -32,15 +32,19 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
     network: { name: "", chainId: 0 },
     chains,
     transferDetails: {
+      id: "",
       formatedTransferDate: "",
       addressShortened: "",
-      proposalStatus: "",
+      proposalStatus: 0,
       formatedAmount: "",
       fromNetworkName: "",
       toNetworkName: "",
       depositTxHashShortened: "",
       fromChainId: 0,
       toChainId: 0,
+      votes: [],
+      proposals: [],
+      timelineMessages: [],
     },
   };
 

@@ -8,8 +8,9 @@ import {
   Avatar,
   Blockies,
 } from "@chainsafe/common-components";
+import clsx from "clsx";
 import { TransferDetails } from "../../Contexts/Reducers/TransfersReducer";
-import { getIcon, getRandomSeed } from "../../Utils/Helpers";
+import { getIcon, getProposalStatus, getRandomSeed } from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 
 type DetailView = {
@@ -35,7 +36,12 @@ type DetailView = {
     | "bridgeSection"
     | "transactionHashSection"
     | "colTitles"
-    | "transferTimeline",
+    | "transferTimeline"
+    | "dot"
+    | "greenDot"
+    | "greyBar"
+    | "messages"
+    | "messageContainer",
     string
   >;
 };
@@ -46,6 +52,8 @@ const DetailView = ({
   handleClose,
   classes,
 }: DetailView) => {
+  const { timelineMessages } = transferDetails;
+
   const FromChainIcon = getIcon(transferDetails?.fromChainId);
   const ToChainIcon = getIcon(transferDetails?.toChainId);
   return (
@@ -99,7 +107,7 @@ const DetailView = ({
                   Status
                 </Typography>
                 <p className={classes.proposalStatusPill}>
-                  {transferDetails.proposalStatus}
+                  {getProposalStatus(transferDetails.proposalStatus)}
                 </p>
               </div>
             </section>
@@ -168,15 +176,70 @@ const DetailView = ({
                 </div>
               </div>
             </section>
-            {/* <hr /> */}
+            <hr />
             {/* Transfer timeline section */}
-            {/* <section className={classes.transferTimeline}>
-            <div>
-              <Typography variant="h2" component="h2">
-                Transfer Timeline
-              </Typography>
-            </div>
-          </section> */}
+            <section className={classes.transferTimeline}>
+              <div>
+                <Typography variant="h2" component="h2">
+                  Transfer Timeline
+                </Typography>
+              </div>
+              <div>
+                {timelineMessages.map((msg, idx) => {
+                  if ("votes" in msg) {
+                    return (
+                      <>
+                        <div className={classes.messageContainer}>
+                          <p className={classes.messages}>
+                            <span>
+                              <div
+                                className={clsx(classes.dot, classes.greenDot)}
+                              />
+                              {msg.message}
+                            </span>
+                            <span>{msg.time}</span>
+                          </p>
+                          <div className={classes.greyBar} />
+                        </div>
+                        {msg.votes.map((vote: any) => (
+                          <div className={classes.messageContainer}>
+                            <p className={classes.messages}>
+                              <span>
+                                <div
+                                  className={clsx(
+                                    classes.dot,
+                                    classes.greenDot
+                                  )}
+                                />
+                                <span>{vote.message}</span>
+                              </span>
+                              <span>{vote.time}</span>
+                            </p>
+                            <div className={classes.greyBar} />
+                          </div>
+                        ))}
+                      </>
+                    );
+                  }
+                  return (
+                    <div className={classes.messageContainer}>
+                      <p className={classes.messages}>
+                        <span>
+                          <div
+                            className={clsx(classes.dot, classes.greenDot)}
+                          />
+                          {msg.message}
+                        </span>
+                        <span>{msg.time}</span>
+                      </p>
+                      {idx !== timelineMessages.length - 1 && (
+                        <div className={classes.greyBar} />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
           </section>
         </section>
       </Modal>

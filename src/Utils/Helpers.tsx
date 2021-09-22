@@ -166,6 +166,8 @@ export const computeAndFormatAmount = (amount: string) => {
   return formatAmount(toBigNumber);
 };
 
+const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
+
 export const computeTransferDetails = (
   txDetails: DepositRecord
 ): TransferDetails => {
@@ -179,15 +181,10 @@ export const computeTransferDetails = (
     depositTransactionHash,
     fromChainId,
     toChainId,
+    status: proposalStatus,
+    votes,
+    id,
   } = txDetails;
-
-  let proposalStatus;
-
-  if (proposals.length) {
-    proposalStatus = getProposalStatus(proposals[0].proposalStatus);
-  } else {
-    proposalStatus = getProposalStatus(undefined);
-  }
 
   const formatedTransferDate = formatTransferDate(timestamp);
 
@@ -197,15 +194,56 @@ export const computeTransferDetails = (
 
   const formatedAmount = computeAndFormatAmount(amount!);
 
+  const timelineMessages =
+    proposalStatus !== 1
+      ? proposals.map((proposal) => {
+          switch (proposal.proposalStatus) {
+            case 1:
+              return {
+                message: "Waiting for more votes...",
+                time: formatDateTimeline(proposal.timestamp),
+              };
+            case 2:
+              return {
+                message: `Waiting for execution`,
+                time: formatDateTimeline(proposal.timestamp),
+                votes: votes.map((vote) => ({
+                  message: `Confirmed by ${shortenAddress(vote.by)}`,
+                  time: formatDateTimeline(vote.timestamp),
+                })),
+              };
+            case 3:
+              return {
+                message: "Completed!",
+                time: formatDateTimeline(proposal.timestamp),
+              };
+            case 4:
+              return {
+                message: "Canceled",
+                time: formatTransferDate(proposal.timestamp),
+              };
+          }
+        })
+      : [
+          {
+            message: "Proposal submitted",
+            time: formatDateTimeline(timestamp!),
+          },
+        ];
+
   return {
+    id,
     formatedTransferDate,
     addressShortened,
-    proposalStatus,
     formatedAmount,
     fromNetworkName,
     toNetworkName,
     depositTxHashShortened,
     fromChainId,
     toChainId,
+    votes,
+    proposals,
+    proposalStatus,
+    timelineMessages,
   };
 };

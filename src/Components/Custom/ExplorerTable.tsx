@@ -262,7 +262,50 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
         },
       },
     },
-    transferTimeline: {},
+    transferTimeline: {
+      "& > div:first-child": {
+        marginBottom: 22,
+      },
+    },
+    messageContainer: {
+      display: "grid",
+      gridTemplateRows: "1fr 0.5fr",
+      position: "relative",
+    },
+    messages: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      height: 30,
+      fontSize: 14,
+      // marginBottom: 20,
+      fontWeight: 400,
+      color: "#595959",
+      "& > span": {
+        display: "flex",
+        alignItems: "center",
+        "& > div": {
+          marginRight: 5,
+        },
+      },
+    },
+    dot: {
+      border: "1px solid",
+      borderRadius: "50%",
+      height: 8,
+      width: 8,
+    },
+    greenDot: {
+      background: "#73D13D",
+    },
+    greyBar: {
+      border: "0.2px solid #E8E8E8",
+      height: 28,
+      width: 0.3,
+      // marginLeft: 3,
+      position: "absolute",
+      top: 21,
+      left: 3,
+    },
   })
 );
 

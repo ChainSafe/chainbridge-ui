@@ -13,8 +13,25 @@ export enum ProposalStatus {
   Cancelled,
 }
 
+type Vote = {
+  voteStatus: boolean;
+  voteTransactionHash?: string;
+  voteBlockNumber: number;
+  timestamp: number;
+  dataHash: string;
+  by: string;
+};
+
+type Proposal = {
+  proposalStatus: ProposalStatus;
+  dataHash?: string;
+  proposalEventTransactionHash?: string;
+  proposalEventBlockNumber: number;
+  timestamp: number;
+};
+
 export type DepositRecord = {
-  id?: string;
+  id: string;
   fromAddress?: string;
   fromChainId?: number;
   fromNetworkName?: string;
@@ -26,20 +43,9 @@ export type DepositRecord = {
   timestamp?: number;
   depositTransactionHash?: string;
   depositBlockNumber?: number;
-  proposals: Array<{
-    proposalStatus: ProposalStatus;
-    dataHash?: string;
-    proposalEventTransactionHash?: string;
-    proposalEventBlockNumber: number;
-    timestamp: number;
-  }>;
-  votes: Array<{
-    voteStatus: boolean;
-    voteTransactionHash?: string;
-    voteBlockNumber: number;
-    timestamp: number;
-    dataHash: string;
-  }>;
+  proposals: Array<Proposal>;
+  votes: Array<Vote>;
+  status: number;
 };
 
 export type AddTransferPayload = {
@@ -117,15 +123,19 @@ type NetworkSelection = {
 };
 
 export type TransferDetails = {
+  id: string;
   formatedTransferDate: string;
   addressShortened: string;
-  proposalStatus: string;
   formatedAmount: string;
   fromNetworkName?: string;
   toNetworkName?: string;
   depositTxHashShortened: string;
   fromChainId?: number;
   toChainId?: number;
+  proposalStatus: number;
+  votes: Array<Vote>;
+  proposals: Array<Proposal>;
+  timelineMessages: Array<any>;
 };
 
 export type ExplorerState = {
@@ -157,15 +167,19 @@ export function transfersReducer(
       return { ...explorerState, transferDetails };
     case "cleanTransferDetails":
       const cleanedTransferDetails = {
+        id: "",
         formatedTransferDate: "",
         addressShortened: "",
-        proposalStatus: "",
+        proposalStatus: 0,
         formatedAmount: "",
         fromNetworkName: "",
         toNetworkName: "",
         depositTxHashShortened: "",
         fromChainId: 0,
         toChainId: 0,
+        votes: [],
+        proposals: [],
+        timelineMessages: [],
       };
       return { ...explorerState, transferDetails: cleanedTransferDetails };
     default:
