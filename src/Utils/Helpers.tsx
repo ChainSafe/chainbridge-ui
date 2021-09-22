@@ -21,6 +21,7 @@ import {
   DepositRecord,
   TransferDetails,
 } from "../Contexts/Reducers/TransfersReducer";
+import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
 const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
 const { hexToU8a, isHex } = require("@polkadot/util");
 
@@ -74,28 +75,12 @@ export const PredefinedIcons: any = {
   celoUSD: celoUSD,
 };
 
-export const getIcon = (chainId: number | undefined) => {
-  switch (chainId) {
-    case 1:
-    case 3:
-    case 4:
-    case 5:
-    case 42:
-      return EthIcon;
-    case 42220:
-    case 44787:
-    case 62320:
-      return CeloUSD;
-    case 61:
-      return EthIcon;
-    default:
-      return EthIcon;
-  }
-};
+export const showImageUrl = (url?: string) =>
+  url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
 
 // TODO: for now just ERC20 token Icon
 export const getTokenIcon = () => {
-  return EthTokenIcon;
+  return PredefinedIcons["ETHIcon"];
 };
 
 export const formatTransferDate = (transferDate: number | undefined) =>
@@ -168,8 +153,20 @@ export const computeAndFormatAmount = (amount: string) => {
 
 const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
 
+export const computeIconsToUse = (
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>,
+  fromChainId: number,
+  toChainId: number
+) => {
+  const fromIcon = chains.find((chain) => chain.chainId === fromChainId);
+  const toIcon = chains.find((chain) => chain.chainId === toChainId);
+
+  return { fromIcon, toIcon };
+};
+
 export const computeTransferDetails = (
-  txDetails: DepositRecord
+  txDetails: DepositRecord,
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>
 ): TransferDetails => {
   const {
     timestamp,
@@ -185,6 +182,12 @@ export const computeTransferDetails = (
     votes,
     id,
   } = txDetails;
+
+  const { fromIcon, toIcon } = computeIconsToUse(
+    chains,
+    fromChainId!,
+    toChainId!
+  );
 
   const formatedTransferDate = formatTransferDate(timestamp);
 
@@ -245,5 +248,7 @@ export const computeTransferDetails = (
     proposals,
     proposalStatus,
     timelineMessages,
+    fromIcon,
+    toIcon,
   };
 };

@@ -183,6 +183,7 @@ const ExplorerPage = () => {
               handleClose={handleClose}
               transferDetails={transferDetails || {}}
               pillColorStatus={pillColorStatus}
+              chains={chains}
             />
           </div>
         </div>

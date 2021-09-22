@@ -18,14 +18,19 @@ import {
 } from "../../Contexts/Reducers/TransfersReducer";
 import {
   formatTransferDate,
-  getIcon,
   getRandomSeed,
   getTokenIcon,
   shortenAddress,
   computeAndFormatAmount,
+  showImageUrl,
+  computeIconsToUse,
 } from "../../Utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 import DetailView from "./DetailView";
+import {
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
+} from "../../chainbridgeConfig";
 
 type PillColorSchema = {
   pillColorSchema: {
@@ -306,6 +311,10 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       top: 21,
       left: 3,
     },
+    imageToken: {
+      height: 27,
+      width: 27,
+    },
   })
 );
 
@@ -318,16 +327,17 @@ type ExplorerTable = {
   setActive: (state: boolean) => void;
   transferDetails: TransferDetails;
   pillColorStatus: { borderColor: string; background: string };
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
   transactionList,
   active,
-  setActive,
   handleOpenModal,
   handleClose,
   transferDetails,
   pillColorStatus,
+  chains,
 }: ExplorerTable) => {
   const classes = useStyles({
     pillColorSchema: pillColorStatus,
@@ -335,12 +345,16 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
-      const { amount } = transfer;
+      const { amount, fromChainId, toChainId } = transfer;
       const fromAddressShortened = shortenAddress(transfer.fromAddress ?? "");
 
-      const FromChainIcon = getIcon(transfer.fromChainId);
-      const ToChainIcon = getIcon(transfer.toChainId);
-      const TokenIcon = getTokenIcon();
+      const { fromIcon, toIcon } = computeIconsToUse(
+        chains,
+        fromChainId!,
+        toChainId!
+      );
+
+      const tokenIcon = getTokenIcon();
 
       const randomString = getRandomSeed();
 
@@ -370,24 +384,30 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell className={classes.row}>
             <div>
               <span>
-                <SvgIcon>
-                  <FromChainIcon />
-                </SvgIcon>
+                <img
+                  className={classes.imageToken}
+                  src={showImageUrl(fromIcon?.tokens[0].imageUri!)}
+                  alt={fromIcon?.tokens[0].symbol}
+                />
                 <span>{transfer.fromNetworkName} to</span>
               </span>
               <span>
-                <SvgIcon>
-                  <ToChainIcon />
-                </SvgIcon>{" "}
+                <img
+                  className={classes.imageToken}
+                  src={showImageUrl(toIcon?.tokens[0].imageUri!)}
+                  alt={fromIcon?.tokens[0].symbol}
+                />
                 <span>{transfer.toNetworkName}</span>
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
-              <SvgIcon>
-                <TokenIcon className={classes.tokenIcon} />
-              </SvgIcon>
+              <img
+                src={showImageUrl(tokenIcon!)}
+                alt=""
+                className={classes.imageToken}
+              />
               <span>{amountFormated} ETH</span>
             </span>
           </TableCell>

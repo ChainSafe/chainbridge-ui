@@ -106,12 +106,18 @@ export type TransferResponse = {
   transfers: Array<DepositRecord>;
 };
 
+type TokenForDetailsView = {
+  fromIcon: EvmBridgeConfig | SubstrateBridgeConfig;
+  toIcon: EvmBridgeConfig | SubstrateBridgeConfig;
+};
+
 export type Action =
   | { type: "fetchTransfers"; payload: Array<DepositRecord> }
   | { type: "error" }
   | { type: "selectNetwork"; payload: number }
   | { type: "setTransferDetails"; payload: DepositRecord }
-  | { type: "cleanTransferDetails" };
+  | { type: "cleanTransferDetails" }
+  | { type: "setTokenIconsForDetailView"; payload: TokenForDetailsView };
 
 export type Transfers = {
   [depositNonce: number]: DepositRecord;
@@ -136,6 +142,8 @@ export type TransferDetails = {
   votes: Array<Vote>;
   proposals: Array<Proposal>;
   timelineMessages: Array<any>;
+  fromIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+  toIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
 };
 
 export type ExplorerState = {
@@ -163,7 +171,10 @@ export function transfersReducer(
       const { name, chainId } = networkSelected!;
       return { ...explorerState, network: { name, chainId } };
     case "setTransferDetails":
-      const transferDetails = computeTransferDetails(action.payload);
+      const transferDetails = computeTransferDetails(
+        action.payload,
+        explorerState.chains
+      );
       return { ...explorerState, transferDetails };
     case "cleanTransferDetails":
       const cleanedTransferDetails = {
@@ -180,8 +191,22 @@ export function transfersReducer(
         votes: [],
         proposals: [],
         timelineMessages: [],
+        fromIcon: undefined,
+        toIcon: undefined,
       };
       return { ...explorerState, transferDetails: cleanedTransferDetails };
+    case "setTokenIconsForDetailView":
+      const {
+        payload: { fromIcon, toIcon },
+      } = action;
+      return {
+        ...explorerState,
+        transferDetails: {
+          ...explorerState.transferDetails,
+          fromIcon,
+          toIcon,
+        },
+      };
     default:
       return explorerState;
   }

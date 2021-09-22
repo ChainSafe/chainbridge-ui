@@ -10,7 +10,11 @@ import {
 } from "@chainsafe/common-components";
 import clsx from "clsx";
 import { TransferDetails } from "../../Contexts/Reducers/TransfersReducer";
-import { getIcon, getProposalStatus, getRandomSeed } from "../../Utils/Helpers";
+import {
+  getProposalStatus,
+  getRandomSeed,
+  showImageUrl,
+} from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 
 type DetailView = {
@@ -41,7 +45,8 @@ type DetailView = {
     | "greenDot"
     | "greyBar"
     | "messages"
-    | "messageContainer",
+    | "messageContainer"
+    | "imageToken",
     string
   >;
 };
@@ -52,17 +57,16 @@ const DetailView = ({
   handleClose,
   classes,
 }: DetailView) => {
-  const { timelineMessages } = transferDetails;
+  const { timelineMessages, fromIcon, toIcon } = transferDetails;
 
-  const FromChainIcon = getIcon(transferDetails?.fromChainId);
-  const ToChainIcon = getIcon(transferDetails?.toChainId);
   return (
     (!Object.values(transferDetails).includes("") && (
       <Modal
         active={active}
-        // setActive={setActive}
+        setActive={handleClose}
         className={classes.transferDetailContainer}
         maxWidth="md"
+        closePosition="none"
       >
         <section className={classes.transferDetails}>
           <div className={classes.closeButton}>
@@ -127,9 +131,11 @@ const DetailView = ({
                 </Typography>
                 <div>
                   <span>
-                    <SvgIcon>
-                      <FromChainIcon />
-                    </SvgIcon>
+                    <img
+                      className={classes.imageToken}
+                      src={showImageUrl(fromIcon?.tokens[0].imageUri!)}
+                      alt={fromIcon?.tokens[0].symbol}
+                    />
                   </span>
                   <span>{transferDetails?.fromNetworkName}</span>
                 </div>
@@ -140,9 +146,11 @@ const DetailView = ({
                 </Typography>
                 <div>
                   <span>
-                    <SvgIcon>
-                      <ToChainIcon />
-                    </SvgIcon>
+                    <img
+                      className={classes.imageToken}
+                      src={showImageUrl(fromIcon?.tokens[0].imageUri!)}
+                      alt={fromIcon?.tokens[0].symbol}
+                    />
                   </span>
                   <span>{transferDetails?.toNetworkName}</span>
                 </div>
