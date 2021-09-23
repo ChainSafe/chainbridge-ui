@@ -21,6 +21,8 @@ type DetailView = {
   active: boolean;
   transferDetails: TransferDetails;
   handleClose: () => void;
+  handleTimelineButtonClick: () => void;
+  timelineButtonClicked: boolean;
   classes: Record<
     | "transferDetailContainer"
     | "transferDetails"
@@ -46,7 +48,19 @@ type DetailView = {
     | "greyBar"
     | "messages"
     | "messageContainer"
-    | "imageToken",
+    | "imageToken"
+    | "timelineButton"
+    | "timelineButtonClicked"
+    | "transferDetailExpanded"
+    | "transferDetailNotExpanded"
+    | "messageCollapsed"
+    | "messageNotCollapsed"
+    | "buttonTimelineContainer"
+    | "lastMessage"
+    | "customGreyBar"
+    | "time"
+    | "secondElementGreybar"
+    | "buttonTimelineContainerClicked",
     string
   >;
 };
@@ -56,6 +70,8 @@ const DetailView = ({
   transferDetails,
   handleClose,
   classes,
+  handleTimelineButtonClick,
+  timelineButtonClicked,
 }: DetailView) => {
   const { timelineMessages, fromIcon, toIcon } = transferDetails;
 
@@ -68,7 +84,14 @@ const DetailView = ({
         maxWidth="md"
         closePosition="none"
       >
-        <section className={classes.transferDetails}>
+        <section
+          className={clsx(
+            classes.transferDetails,
+            timelineButtonClicked
+              ? classes.transferDetailExpanded
+              : classes.transferDetailNotExpanded
+          )}
+        >
           <div className={classes.closeButton}>
             <Button onClick={handleClose}>
               <SvgIcon color="primary">
@@ -205,32 +228,80 @@ const DetailView = ({
                               />
                               {msg.message}
                             </span>
-                            <span>{msg.time}</span>
+                            <span className={classes.time}>{msg.time}</span>
                           </p>
-                          <div className={classes.greyBar} />
+                          <div
+                            className={clsx(
+                              classes.greyBar,
+                              idx === 1 &&
+                                !timelineButtonClicked &&
+                                classes.secondElementGreybar
+                            )}
+                          />
                         </div>
-                        {msg.votes.map((vote: any) => (
-                          <div className={classes.messageContainer}>
-                            <p className={classes.messages}>
-                              <span>
-                                <div
-                                  className={clsx(
-                                    classes.dot,
-                                    classes.greenDot
-                                  )}
-                                />
-                                <span>{vote.message}</span>
-                              </span>
-                              <span>{vote.time}</span>
-                            </p>
-                            <div className={classes.greyBar} />
-                          </div>
-                        ))}
+                        <div
+                          className={clsx(
+                            classes.buttonTimelineContainer,
+                            timelineButtonClicked &&
+                              classes.buttonTimelineContainerClicked
+                          )}
+                        >
+                          <hr />
+                          <button
+                            onClick={handleTimelineButtonClick}
+                            className={clsx(
+                              classes.timelineButton,
+                              timelineButtonClicked &&
+                                classes.timelineButtonClicked
+                            )}
+                          >
+                            View full timeline
+                          </button>
+                        </div>
+                        {msg.votes.map((vote: any, idx: number) => {
+                          return (
+                            <div
+                              className={clsx(
+                                classes.messageContainer,
+                                timelineButtonClicked
+                                  ? classes.messageNotCollapsed
+                                  : classes.messageCollapsed
+                              )}
+                            >
+                              <p className={classes.messages}>
+                                <span>
+                                  <div
+                                    className={clsx(
+                                      classes.dot,
+                                      classes.greenDot
+                                    )}
+                                  />
+                                  <span>{vote.message}</span>
+                                </span>
+                                <span className={classes.time}>
+                                  {vote.time}
+                                </span>
+                              </p>
+                              <div
+                                className={clsx(
+                                  classes.greyBar,
+                                  timelineButtonClicked && classes.customGreyBar
+                                )}
+                              />
+                            </div>
+                          );
+                        })}
                       </>
                     );
                   }
                   return (
-                    <div className={classes.messageContainer}>
+                    <div
+                      className={clsx(
+                        classes.messageContainer,
+                        idx === timelineMessages.length - 1 &&
+                          classes.lastMessage
+                      )}
+                    >
                       <p className={classes.messages}>
                         <span>
                           <div
@@ -238,7 +309,7 @@ const DetailView = ({
                           />
                           {msg.message}
                         </span>
-                        <span>{msg.time}</span>
+                        <span className={classes.time}>{msg.time}</span>
                       </p>
                       {idx !== timelineMessages.length - 1 && (
                         <div className={classes.greyBar} />

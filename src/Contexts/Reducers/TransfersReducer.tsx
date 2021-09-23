@@ -117,7 +117,8 @@ export type Action =
   | { type: "selectNetwork"; payload: number }
   | { type: "setTransferDetails"; payload: DepositRecord }
   | { type: "cleanTransferDetails" }
-  | { type: "setTokenIconsForDetailView"; payload: TokenForDetailsView };
+  | { type: "setTokenIconsForDetailView"; payload: TokenForDetailsView }
+  | { type: "timelineButtonClick" };
 
 export type Transfers = {
   [depositNonce: number]: DepositRecord;
@@ -152,6 +153,7 @@ export type ExplorerState = {
   network: NetworkSelection;
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
   transferDetails: TransferDetails;
+  timelineButtonClicked: boolean;
 };
 
 export function transfersReducer(
@@ -194,7 +196,11 @@ export function transfersReducer(
         fromIcon: undefined,
         toIcon: undefined,
       };
-      return { ...explorerState, transferDetails: cleanedTransferDetails };
+      return {
+        ...explorerState,
+        transferDetails: cleanedTransferDetails,
+        timelineButtonClicked: false,
+      };
     case "setTokenIconsForDetailView":
       const {
         payload: { fromIcon, toIcon },
@@ -206,6 +212,11 @@ export function transfersReducer(
           fromIcon,
           toIcon,
         },
+      };
+    case "timelineButtonClick":
+      return {
+        ...explorerState,
+        timelineButtonClicked: !explorerState.timelineButtonClicked,
       };
     default:
       return explorerState;

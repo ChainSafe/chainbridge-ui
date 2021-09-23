@@ -93,7 +93,13 @@ type PreflightDetails = {
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
   const { explorerDispatcher, explorerState } = explorerContext;
-  const { chains, transfers, network, transferDetails } = explorerState;
+  const {
+    chains,
+    transfers,
+    network,
+    transferDetails,
+    timelineButtonClicked,
+  } = explorerState;
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
@@ -138,6 +144,9 @@ const ExplorerPage = () => {
       type: "cleanTransferDetails",
     });
   };
+
+  const handleTimelineButtonClick = () =>
+    explorerDispatcher({ type: "timelineButtonClick" });
 
   return (
     <Grid lg={12} justifyContent="center" flexWrap="wrap">
@@ -184,6 +193,8 @@ const ExplorerPage = () => {
               transferDetails={transferDetails || {}}
               pillColorStatus={pillColorStatus}
               chains={chains}
+              handleTimelineButtonClick={handleTimelineButtonClick}
+              timelineButtonClicked={timelineButtonClicked}
             />
           </div>
         </div>

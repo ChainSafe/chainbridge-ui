@@ -48,6 +48,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
       fromIcon: undefined,
       toIcon: undefined,
     },
+    timelineButtonClicked: false,
   };
 
   const [explorerState, explorerDispatcher] = useReducer(

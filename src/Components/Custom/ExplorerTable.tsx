@@ -127,10 +127,18 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     transferDetails: {
       minWidth: 768,
       width: "100%",
-      height: 731,
       [breakpoints.down("sm")]: {
         minWidth: 411,
       },
+      transition: "heigth 0.5s ease-out",
+    },
+    transferDetailExpanded: {
+      height: 900,
+      transition: "height 0.5s ease-out",
+    },
+    transferDetailNotExpanded: {
+      height: 731,
+      transition: "height 0.5s ease-out",
     },
     closeButton: {
       display: "flex",
@@ -277,6 +285,10 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       gridTemplateRows: "1fr 0.5fr",
       position: "relative",
     },
+    lastMessage: {
+      visibility: "visible",
+      marginTop: 10,
+    },
     messages: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
@@ -304,16 +316,74 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     greyBar: {
       border: "0.2px solid #E8E8E8",
-      height: 28,
+      height: 32,
       width: 0.3,
-      // marginLeft: 3,
       position: "absolute",
       top: 21,
-      left: 3,
+      left: 2.5,
     },
     imageToken: {
       height: 27,
       width: 27,
+    },
+    timelineButton: {
+      display: "block",
+      [breakpoints.down("sm")]: {
+        borderRadius: 16,
+        width: 114,
+        display: "flex",
+        alignSelf: "center",
+        justifySelf: "center",
+        border: "1px solid #D9D9D9",
+        fontSize: 14,
+        zIndex: 10,
+      },
+    },
+    timelineButtonClicked: {
+      display: "none",
+    },
+    messageCollapsed: {
+      [breakpoints.down("sm")]: {
+        display: "none",
+      },
+    },
+    messageNotCollapsed: {
+      [breakpoints.down("sm")]: {
+        display: "grid",
+        marginBottom: 10,
+      },
+    },
+    buttonTimelineContainer: {
+      display: "none",
+      [breakpoints.down("sm")]: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        "& > hr": {
+          position: "absolute",
+          width: 325,
+          zIndex: 0,
+          border: "0.2px solid #E8E8E8",
+        },
+      },
+    },
+    buttonTimelineContainerClicked: {
+      "& > hr": {
+        display: "none",
+      },
+    },
+    customGreyBar: {
+      top: 29,
+      height: 39,
+    },
+    time: {
+      [breakpoints.down("sm")]: {
+        display: "flex",
+        justifySelf: "center",
+      },
+    },
+    secondElementGreybar: {
+      height: 64,
     },
   })
 );
@@ -328,6 +398,8 @@ type ExplorerTable = {
   transferDetails: TransferDetails;
   pillColorStatus: { borderColor: string; background: string };
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  handleTimelineButtonClick: () => void;
+  timelineButtonClicked: boolean;
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
@@ -338,6 +410,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   transferDetails,
   pillColorStatus,
   chains,
+  handleTimelineButtonClick,
+  timelineButtonClicked,
 }: ExplorerTable) => {
   const classes = useStyles({
     pillColorSchema: pillColorStatus,
@@ -443,6 +517,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           transferDetails={transferDetails}
           handleClose={handleClose}
           classes={classes}
+          handleTimelineButtonClick={handleTimelineButtonClick}
+          timelineButtonClicked={timelineButtonClicked}
         />
       </>
     </Table>
