@@ -79,17 +79,17 @@ const useStyles = makeStyles(
           textDecoration: "none",
           marginRight: constants.generalUnit,
           transitionDuration: `${animation.transform}ms`,
-          color: palette.additional["gray"][8],
+          color: "#7C99B9",
           maxHeight: constants.navItemHeight,
           "& svg": {
             transitionDuration: `${animation.transform}ms`,
-            fill: palette.additional["gray"][8],
+            fill: "#7C99B9",
           },
           "&.active": {
-            color: palette.additional["gray"][9],
+            color: "#1B6DC1",
             textDecoration: "underline",
             "& svg": {
-              fill: palette.additional["geekblue"][5],
+              fill: "#1B6DC1",
             },
           },
           "& > *:first-child": {

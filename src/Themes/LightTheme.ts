@@ -4,6 +4,7 @@ export const lightTheme = createTheme({
   globalStyling: {
     body: {
       backgroundColor: "#F5F5F5",
+      color: "#7C99B9",
     },
   },
   themeConfig: {
@@ -16,11 +17,11 @@ export const lightTheme = createTheme({
           1: "#85A5FF", // Accents //geekblue4
         },
         transferUi: {
-          1: "#595959", // FAQ button // gray8
+          1: "#7C99B9", // FAQ button // gray8
         },
         header: {
           1: "#F5F5F5", // Background
-          2: "#595959", // Text color //gray8
+          2: "#11396F", // Text color //gray8
           3: "#BFBFBF", // border // gray6
         },
         preflight: {
@@ -44,25 +45,25 @@ export const lightTheme = createTheme({
         variants: {
           primary: {
             root: {
-              backgroundColor: "#262626",
+              backgroundColor: "#1B6DC1",
               color: "#ffffff",
-              border: `1px solid #262626`,
+              border: `1px solid #1B6DC1`,
               "& svg": {
                 fill: "#ffffff",
               },
             },
             active: {
-              backgroundColor: "#ffffff",
-              color: "#262626",
+              backgroundColor: "#1B6DC1",
+              color: "#ffffff",
               "& svg": {
-                fill: "#262626",
+                fill: "#ffffff",
               },
             },
             hover: {
-              backgroundColor: "#ffffff",
-              color: "#262626",
+              backgroundColor: "#7C99B9",
+              color: "#ffffff",
               "& svg": {
-                fill: "#262626",
+                fill: "#ffffff",
               },
             },
             focus: {

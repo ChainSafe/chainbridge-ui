@@ -77,7 +77,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       }px`,
       border: `1px solid ${palette.additional["gray"][6]}`,
       borderRadius: 2,
-      color: palette.additional["gray"][9],
+      color: "#11396F",
       marginTop: constants.generalUnit,
       marginBottom: constants.generalUnit * 3,
     },
@@ -123,11 +123,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderTopLeftRadius: 0,
       left: -1,
       color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
+      backgroundColor: "#DBEAFE",
       borderColor: palette.additional["gray"][6],
       "&:hover": {
         borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
+        backgroundColor: "#607894",
         color: palette.common.white.main,
       },
       "&:focus": {
@@ -185,7 +185,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > *": {
         display: "block",
         width: "50%",
-        color: palette.additional["gray"][8],
+        color: "#607894",
         marginBottom: constants.generalUnit / 2,
         "&:nth-child(even)": {
           textAlign: "right",

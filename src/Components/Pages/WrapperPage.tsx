@@ -38,7 +38,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       width: "100%",
     },
     blurb: {
-      color: palette.common.black.main,
+      color: "#607894",
     },
     connectButton: {
       margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
@@ -59,6 +59,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     changeButton: {
       cursor: "pointer",
+      color: "#7C99B9",
     },
     networkName: {
       padding: `${constants.generalUnit * 2}px ${
@@ -66,7 +67,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       }px`,
       border: `1px solid ${palette.additional["gray"][6]}`,
       borderRadius: 2,
-      color: palette.additional["gray"][9],
+      color: "#11396F",
       marginTop: constants.generalUnit,
       marginBottom: constants.generalUnit * 3,
     },
@@ -109,11 +110,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderTopLeftRadius: 0,
       left: -1,
       color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
+      backgroundColor: "#DBEAFE",
       borderColor: palette.additional["gray"][6],
       "&:hover": {
         borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
+        backgroundColor: "#607894",
         color: palette.common.white.main,
       },
       "&:focus": {
@@ -184,7 +185,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         textAlign: "right",
       },
     },
-    submitButtonArea: {},
+    submitButtonArea: {
+      color: "#607894",
+    },
   })
 );
 

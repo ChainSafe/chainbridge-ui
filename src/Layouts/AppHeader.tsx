@@ -36,6 +36,7 @@ const useStyles = makeStyles(
       logo: {
         height: constants.generalUnit * 5,
         width: constants.generalUnit * 5,
+        marginRight: constants.generalUnit,
         "& svg, & img": {
           maxHeight: "100%",
           maxWidth: "100%",
@@ -81,9 +82,10 @@ const AppHeader: React.FC<IAppHeader> = () => {
     <header className={clsx(classes.root)}>
       <div className={classes.left}>
         {/* ADD LOGO HERE */}
-        {/* <div className={classes.logo}>
-        </div> */}
-        <Typography variant="h4">ChainBridge Token Swap</Typography>
+        <div className={classes.logo}>
+          <img src="./favicon.png" alt="Astar" />
+        </div>
+        <Typography variant="h4">AstarBridge Token Swap</Typography>
       </div>
       <section className={classes.state}>
         {!isReady ? (
