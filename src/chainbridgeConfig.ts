@@ -2,6 +2,9 @@ import ETHIcon from "./media/tokens/eth.svg";
 // import WETHIcon from "./media/tokens/weth.svg";
 import CEREIcon from "./media/tokens/cere-token.svg";
 
+const cereTokenName = "CERE Network";
+const cereTokenSymbol = "CERE";
+
 export type TokenConfig = {
   address: string;
   name?: string;
@@ -67,8 +70,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       tokens: [
         {
           address: process.env.REACT_APP_POLYGON_ERC20_TOKEN_ADDRESS as string,
-          name: "CERENETWORK",
-          symbol: "CERE",
+          name: cereTokenName,
+          symbol: cereTokenSymbol,
           imageUri: CEREIcon,
           resourceId:
             "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
@@ -114,8 +117,8 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       tokens: [
         {
           address: process.env.REACT_APP_ETHEREUM_ERC20_TOKEN_ADDRESS as string,
-          name: "CERENETWORK",
-          symbol: "CERE",
+          name: cereTokenName,
+          symbol: cereTokenSymbol,
           imageUri: CEREIcon,
           resourceId:
             "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
