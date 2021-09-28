@@ -2,7 +2,7 @@
 
 ## vNext
 
--
+- Refactored environment variables.
 
 ## v0.3.0
 
