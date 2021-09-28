@@ -10,10 +10,10 @@ export enum ProposalStatus {
 
 export type DepositRecord = {
   fromAddress?: string;
-  fromChainId?: number;
+  fromDomainId?: number;
   fromNetworkName?: string;
   toAddress?: string;
-  toChainId?: number;
+  toDomainId?: number;
   toNetworkName?: string;
   tokenAddress?: string;
   amount?: BigNumber;
@@ -40,10 +40,10 @@ export type AddTransferPayload = {
   depositNonce: number;
   transferDetails: {
     fromAddress: string;
-    fromChainId: number;
+    fromDomainId: number;
     fromNetworkName: string;
     toAddress: string;
-    toChainId: number;
+    toDomainId: number;
     toNetworkName: string;
     tokenAddress?: string;
     amount?: BigNumber;
@@ -57,9 +57,9 @@ export type AddTransferPayload = {
 export type AddProposalPayload = {
   depositNonce: number;
   transferDetails: {
-    fromChainId: number;
+    fromDomainId: number;
     fromNetworkName: string;
-    toChainId: number;
+    toDomainId: number;
     toNetworkName: string;
     resourceId: string;
   };
@@ -75,9 +75,9 @@ export type AddProposalPayload = {
 export type AddVotePayload = {
   depositNonce: number;
   transferDetails: {
-    fromChainId: number;
+    fromDomainId: number;
     fromNetworkName: string;
-    toChainId: number;
+    toDomainId: number;
     toNetworkName: string;
     resourceId: string;
   };

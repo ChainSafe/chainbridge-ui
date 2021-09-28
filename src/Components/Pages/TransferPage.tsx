@@ -305,7 +305,7 @@ const TransferPage = () => {
             const supplies = await checkSupplies(
               parseFloat(value),
               preflightDetails.token,
-              destinationChainConfig.chainId
+              destinationChainConfig.domainId
             );
             return Boolean(supplies);
           }
@@ -421,10 +421,10 @@ const TransferPage = () => {
                 disabled={!homeConfig}
                 options={destinationChains.map((dc) => ({
                   label: dc.name,
-                  value: dc.chainId,
+                  value: dc.domainId,
                 }))}
                 onChange={(value) => setDestinationChain(value)}
-                value={destinationChainConfig?.chainId}
+                value={destinationChainConfig?.domainId}
               />
             </section>
             <section className={classes.currencySection}>
