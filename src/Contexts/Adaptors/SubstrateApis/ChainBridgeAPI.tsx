@@ -18,10 +18,10 @@ export const submitDeposit = (
   api: ApiPromise,
   amount: number,
   recipient: string,
-  destinationChainId: number
+  destinationDomainId: number
 ) => {
   const subChainConfig = chainbridgeConfig.chains.find(
-    (c) => c.chainId !== destinationChainId
+    (c) => c.domainId !== destinationDomainId
   ) as SubstrateBridgeConfig;
 
   return api.tx[subChainConfig.transferPalletName][
@@ -33,6 +33,6 @@ export const submitDeposit = (
       )
       .toString(10),
     recipient,
-    destinationChainId
+    destinationDomainId
   );
 };

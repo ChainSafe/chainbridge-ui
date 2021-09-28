@@ -20,9 +20,9 @@ interface IChainbridgeContextProps {
 type ChainbridgeContext = {
   homeConfig: BridgeConfig | undefined;
   connect: () => Promise<void>;
-  handleSetHomeChain: (chainId: number) => void;
-  setDestinationChain: (chainId: number | undefined) => void;
-  destinationChains: Array<{ chainId: number; name: string }>;
+  handleSetHomeChain: (domainId: number) => void;
+  setDestinationChain: (domainId: number | undefined) => void;
+  destinationChains: Array<{ domainId: number; name: string }>;
   destinationChainConfig?: BridgeConfig;
   deposit(
     amount: number,
@@ -46,11 +46,11 @@ type ChainbridgeContext = {
   nativeTokenBalance: number | undefined;
   isReady: boolean | undefined;
   address: string | undefined;
-  chainId?: number;
+  domainId?: number;
   checkSupplies?: (
     amount: number,
     tokenAddress: string,
-    destinationChainId: number
+    destinationDomainId: number
   ) => Promise<boolean | undefined>;
 };
 
@@ -74,7 +74,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     depositVotes,
     homeChainConfig,
     destinationChains,
-    chainId,
+    domainId,
   } = useNetworkManager();
 
   const {
@@ -116,7 +116,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
           amount,
           recipient,
           tokenAddress,
-          destinationChainConfig.chainId
+          destinationChainConfig.domainId
         );
       }
     },
@@ -126,13 +126,13 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
   const checkSupplies = async (
     amount: number,
     tokenAddress: string,
-    destinationChainId: number
+    destinationDomainId: number
   ) => {
     if (handleCheckSupplies && chainConfig && destinationChainConfig) {
       return await handleCheckSupplies(
         amount,
         tokenAddress,
-        destinationChainId
+        destinationDomainId
       );
     }
   };
@@ -165,7 +165,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         nativeTokenBalance: nativeTokenBalance,
         tokens,
         address,
-        chainId,
+        domainId,
         checkSupplies,
       }}
     >

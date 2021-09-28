@@ -55,7 +55,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
             const parsedLog = bridgeContract.interface.parseLog(dl);
             const depositRecord = await erc20HandlerContract.getDepositRecord(
               parsedLog.args.depositNonce,
-              parsedLog.args.destinationChainID
+              parsedLog.args.destinationDomainID
             );
 
             transfersDispatch({
@@ -66,14 +66,14 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   fromAddress: depositRecord._depositer,
                   depositBlockNumber: dl.blockNumber,
                   depositTransactionHash: dl.transactionHash,
-                  fromChainId: bridge.chainId,
+                  fromDomainId: bridge.domainId,
                   fromNetworkName: bridge.name,
                   timestamp: (await provider.getBlock(dl.blockNumber))
                     .timestamp,
-                  toChainId: parsedLog.args.destinationChainID,
+                  toDomainId: parsedLog.args.destinationDomainID,
                   toNetworkName:
                     chainbridgeConfig.chains.find(
-                      (c) => c.chainId === parsedLog.args.destinationChainID
+                      (c) => c.domainId === parsedLog.args.destinationDomainID
                     )?.name || "",
                   toAddress: depositRecord._destinationRecipientAddress,
                   tokenAddress: depositRecord._tokenAddress,
@@ -87,14 +87,14 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           bridgeContract.on(
             depositFilter,
             async (
-              destChainId: number,
+              destDomainId: number,
               resourceId: string,
               depositNonce: ethers.BigNumber,
               tx: Event
             ) => {
               const depositRecord = await erc20HandlerContract.getDepositRecord(
                 depositNonce,
-                destChainId
+                destDomainId
               );
 
               transfersDispatch({
@@ -105,14 +105,14 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                     fromAddress: depositRecord._depositer,
                     depositBlockNumber: tx.blockNumber,
                     depositTransactionHash: tx.transactionHash,
-                    fromChainId: bridge.chainId,
+                    fromDomainId: bridge.domainId,
                     fromNetworkName: bridge.name,
                     timestamp: (await provider.getBlock(tx.blockNumber))
                       .timestamp,
-                    toChainId: destChainId,
+                    toDomainId: destDomainId,
                     toNetworkName:
                       chainbridgeConfig.chains.find(
-                        (c) => c.chainId === destChainId
+                        (c) => c.domainId === destDomainId
                       )?.name || "",
                     toAddress: depositRecord._destinationRecipientAddress,
                     tokenAddress: depositRecord._tokenAddress,
@@ -143,12 +143,12 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                 depositNonce: parsedLog.args.depositNonce.toNumber(),
                 transferDetails: {
                   resourceId: parsedLog.args.resourceID,
-                  fromChainId: parsedLog.args.originChainID,
+                  fromDomainId: parsedLog.args.originDomainID,
                   fromNetworkName:
                     chainbridgeConfig.chains.find(
-                      (c) => c.chainId === parsedLog.args.originChainID
+                      (c) => c.domainId === parsedLog.args.originDomainID
                     )?.name || "",
-                  toChainId: bridge.chainId,
+                  toDomainId: bridge.domainId,
                   toNetworkName: bridge.name,
                 },
                 proposalEventDetails: {
@@ -168,7 +168,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           bridgeContract.on(
             proposalEventFilter,
             async (
-              originChainId: number,
+              originDomainId: number,
               depositNonce: BigNumber,
               status: number,
               resourceId: string,
@@ -181,12 +181,12 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   depositNonce: depositNonce.toNumber(),
                   transferDetails: {
                     resourceId: resourceId,
-                    fromChainId: originChainId,
+                    fromDomainId: originDomainId,
                     fromNetworkName:
                       chainbridgeConfig.chains.find(
-                        (c) => c.chainId === originChainId
+                        (c) => c.domainId === originDomainId
                       )?.name || "",
-                    toChainId: bridge.chainId,
+                    toDomainId: bridge.domainId,
                     toNetworkName: bridge.name,
                   },
                   proposalEventDetails: {
@@ -221,12 +221,12 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                 depositNonce: parsedLog.args.depositNonce.toNumber(),
                 transferDetails: {
                   resourceId: parsedLog.args.resourceID,
-                  fromChainId: parsedLog.args.originChainID,
+                  fromDomainId: parsedLog.args.originDomainID,
                   fromNetworkName:
                     chainbridgeConfig.chains.find(
-                      (c) => c.chainId === parsedLog.args.originChainID
+                      (c) => c.domainId === parsedLog.args.originDomainID
                     )?.name || "",
-                  toChainId: bridge.chainId,
+                  toDomainId: bridge.domainId,
                   toNetworkName: bridge.name,
                 },
                 voteDetails: {
@@ -246,7 +246,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
           bridgeContract.on(
             proposalVoteFilter,
             async (
-              originChainId: number,
+              originDomainId: number,
               depositNonce: BigNumber,
               status: number, // TODO: Confirm wether this is actually being used
               resourceId: string,
@@ -258,12 +258,12 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
                   depositNonce: depositNonce.toNumber(),
                   transferDetails: {
                     resourceId: resourceId,
-                    fromChainId: originChainId,
+                    fromDomainId: originDomainId,
                     fromNetworkName:
                       chainbridgeConfig.chains.find(
-                        (c) => c.chainId === originChainId
+                        (c) => c.domainId === originDomainId
                       )?.name || "",
-                    toChainId: bridge.chainId,
+                    toDomainId: bridge.domainId,
                     toNetworkName: bridge.name,
                   },
                   voteDetails: {

@@ -103,7 +103,7 @@ export const EVMHomeAdaptorProvider = ({
       const chain = homeChains.find((chain) => chain.networkId === network);
       setNetworkId(network);
       if (chain) {
-        handleSetHomeChain(chain.chainId);
+        handleSetHomeChain(chain.domainId);
       }
     }
   }, [handleSetHomeChain, homeChains, network, setNetworkId]);
@@ -252,11 +252,11 @@ export const EVMHomeAdaptorProvider = ({
     async (
       amount: number,
       tokenAddress: string,
-      destinationChainId: number
+      destinationDomainId: number
     ) => {
       if (homeChainConfig) {
         const destinationChain = chainbridgeConfig.chains.find(
-          (c) => c.chainId === destinationChainId
+          (c) => c.domainId === destinationDomainId
         );
         const token = homeChainConfig.tokens.find(
           (token) => token.address === tokenAddress
@@ -285,7 +285,7 @@ export const EVMHomeAdaptorProvider = ({
       amount: number,
       recipient: string,
       tokenAddress: string,
-      destinationChainId: number
+      destinationDomainId: number
     ) => {
       if (!homeChainConfig || !homeBridge) {
         console.error("Home bridge contract is not instantiated");
@@ -298,7 +298,7 @@ export const EVMHomeAdaptorProvider = ({
       }
 
       const destinationChain = chainbridgeConfig.chains.find(
-        (c) => c.chainId === destinationChainId
+        (c) => c.domainId === destinationDomainId
       );
       if (destinationChain?.type === "Substrate") {
         recipient = `0x${Buffer.from(decodeAddress(recipient)).toString(
@@ -380,7 +380,7 @@ export const EVMHomeAdaptorProvider = ({
         }
         homeBridge.once(
           homeBridge.filters.Deposit(
-            destinationChainId,
+            destinationDomainId,
             token.resourceId,
             null
           ),
@@ -391,10 +391,15 @@ export const EVMHomeAdaptorProvider = ({
         );
 
         await (
-          await homeBridge.deposit(destinationChainId, token.resourceId, data, {
-            gasPrice: gasPriceCompatibility,
-            value: utils.parseUnits((bridgeFee || 0).toString(), 18),
-          })
+          await homeBridge.deposit(
+            destinationDomainId,
+            token.resourceId,
+            data,
+            {
+              gasPrice: gasPriceCompatibility,
+              value: utils.parseUnits((bridgeFee || 0).toString(), 18),
+            }
+          )
         ).wait();
 
         return Promise.resolve();

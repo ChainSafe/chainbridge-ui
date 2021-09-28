@@ -52,15 +52,15 @@ interface NetworkManagerContext {
   networkId: number;
   setNetworkId: (id: number) => void;
 
-  chainId?: number;
+  domainId?: number;
 
   homeChainConfig: BridgeConfig | undefined;
   destinationChainConfig: BridgeConfig | undefined;
 
-  destinationChains: Array<{ chainId: number; name: string }>;
+  destinationChains: Array<{ domainId: number; name: string }>;
   homeChains: BridgeConfig[];
-  handleSetHomeChain: (chainId: number | undefined) => void;
-  setDestinationChain: (chainId: number | undefined) => void;
+  handleSetHomeChain: (domainId: number | undefined) => void;
+  setDestinationChain: (domainId: number | undefined) => void;
 
   transactionStatus?: TransactionStatus;
   setTransactionStatus: (message: TransactionStatus | undefined) => void;
@@ -112,26 +112,26 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   );
 
   const handleSetHomeChain = useCallback(
-    (chainId: number | undefined) => {
-      if (!chainId && chainId !== 0) {
+    (domainId: number | undefined) => {
+      if (!domainId && domainId !== 0) {
         setHomeChainConfig(undefined);
         return;
       }
-      const chain = homeChains.find((c) => c.chainId === chainId);
+      const chain = homeChains.find((c) => c.domainId === domainId);
 
       if (chain) {
         setHomeChainConfig(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter(
             (bridgeConfig: BridgeConfig) =>
-              bridgeConfig.chainId !== chain.chainId
+              bridgeConfig.domainId !== chain.domainId
           )
         );
         if (chainbridgeConfig.chains.length === 2) {
           setDestinationChain(
             chainbridgeConfig.chains.find(
               (bridgeConfig: BridgeConfig) =>
-                bridgeConfig.chainId !== chain.chainId
+                bridgeConfig.domainId !== chain.domainId
             )
           );
         }
@@ -157,11 +157,11 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   }, [walletType]);
 
   const handleSetDestination = useCallback(
-    (chainId: number | undefined) => {
-      if (chainId === undefined) {
+    (domainId: number | undefined) => {
+      if (domainId === undefined) {
         setDestinationChain(undefined);
       } else if (homeChainConfig && !depositNonce) {
-        const chain = destinationChains.find((c) => c.chainId === chainId);
+        const chain = destinationChains.find((c) => c.domainId === domainId);
         if (!chain) {
           throw new Error("Invalid destination chain selected");
         }
@@ -204,7 +204,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   return (
     <NetworkManagerContext.Provider
       value={{
-        chainId: homeChainConfig?.chainId,
+        domainId: homeChainConfig?.domainId,
         networkId,
         setNetworkId,
         homeChainConfig,
@@ -247,7 +247,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
               amount: number,
               recipient: string,
               tokenAddress: string,
-              destinationChainId: number
+              destinationDomainId: number
             ) => undefined,
             setDepositAmount: () => undefined,
             tokens: {},

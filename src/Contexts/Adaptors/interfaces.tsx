@@ -34,7 +34,7 @@ export interface HomeChainAdaptorContext {
     amount: number,
     recipient: string,
     tokenAddress: string,
-    destinationChainId: number
+    destinationDomainId: number
   ): Promise<void>;
 
   relayerThreshold: number | undefined;
@@ -62,7 +62,7 @@ export interface HomeChainAdaptorContext {
   handleCheckSupplies?: (
     amount: number,
     tokenAddress: string,
-    destinationChainId: number
+    destinationDomainId: number
   ) => Promise<boolean | undefined>;
 
   tokens: Tokens;
