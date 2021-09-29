@@ -215,6 +215,12 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                     {m}
                   </Typography>
                 );
+              } else if (typeof m === "object" && m.message !== undefined) {
+                return (
+                  <Typography className={classes.vote} component="p" key={i}>
+                    {m.message}
+                  </Typography>
+                );
               } else {
                 return (
                   <Typography className={classes.vote} component="p" key={i}>
