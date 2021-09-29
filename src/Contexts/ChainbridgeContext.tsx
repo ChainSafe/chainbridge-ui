@@ -8,7 +8,6 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import {
   TransactionStatus,
   useNetworkManager,
-  Vote,
   TransitMessage,
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";

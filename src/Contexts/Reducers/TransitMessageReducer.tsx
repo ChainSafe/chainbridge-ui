@@ -1,4 +1,4 @@
-import { Vote, TransitMessage } from "../NetworkManagerContext";
+import { TransitMessage } from "../NetworkManagerContext";
 
 export type AddMessageAction = { type: "addMessage"; payload: TransitMessage };
 export type ResetAction = { type: "resetMessages" };
