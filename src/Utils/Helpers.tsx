@@ -11,11 +11,11 @@ import celoUSD, {
   ReactComponent as CeloTokenIcon,
 } from "../media/tokens/cusd.svg";
 
-import { ReactComponent as EthIcon } from "../media/networks/eth.svg";
-import { ReactComponent as CeloUSD } from "../media/networks/celo.svg";
-import { ReactComponent as EtcIcon } from "../media/networks/etc.svg";
-import { ReactComponent as CosmosIcon } from "../media/networks/cosmos.svg";
-import { ReactComponent as EthermintIcon } from "../media/networks/ethermint.svg";
+import EthIcon from "../media/networks/eth.svg";
+import CeloUSD from "../media/networks/celo.svg";
+import EtcIcon from "../media/networks/etc.svg";
+import CosmosIcon from "../media/networks/cosmos.svg";
+import EthermintIcon from "../media/networks/ethermint.svg";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   DepositRecord,
@@ -75,8 +75,21 @@ export const PredefinedIcons: any = {
   celoUSD: celoUSD,
 };
 
+const PredefinedNetworkIcons: any = {
+  EthIcon: EthIcon,
+  CeloUSD: CeloUSD,
+  EtcIcon: EtcIcon,
+  CosmosIcon: CosmosIcon,
+  EthermintIcon: EthermintIcon,
+};
+
 export const showImageUrl = (url?: string) =>
   url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
+
+export const showImageUrlNetworkIcons = (url?: string) =>
+  url && PredefinedNetworkIcons[url]
+    ? PredefinedNetworkIcons[url]
+    : PredefinedIcons[url!];
 
 // TODO: for now just ERC20 token Icon
 export const getTokenIcon = () => {
@@ -171,7 +184,7 @@ export const computeTransferDetails = (
   const {
     timestamp,
     fromAddress,
-    proposals,
+    proposalEvents,
     amount,
     fromNetworkName,
     toNetworkName,
@@ -179,7 +192,7 @@ export const computeTransferDetails = (
     fromChainId,
     toChainId,
     status: proposalStatus,
-    votes,
+    voteEvents,
     id,
   } = txDetails;
 
@@ -197,42 +210,123 @@ export const computeTransferDetails = (
 
   const formatedAmount = computeAndFormatAmount(amount!);
 
-  const timelineMessages =
-    proposalStatus !== 1
-      ? proposals.map((proposal) => {
-          switch (proposal.proposalStatus) {
-            case 1:
-              return {
-                message: "Waiting for more votes...",
+  let timelineMessages = [];
+
+  if (!proposalEvents.length && !voteEvents.length) {
+    timelineMessages = [
+      {
+        message: "Deposit submitted",
+        time: formatDateTimeline(timestamp!),
+      },
+    ];
+  } else {
+    const votesMessages = voteEvents.map((vote) => ({
+      message: `confirmed by ${shortenAddress(vote.by)}`,
+      time: formatDateTimeline(vote.timestamp),
+    }));
+
+    switch (proposalEvents.length) {
+      case 1: {
+        const firstMessage = {
+          message: "Deposit submitted",
+          time: formatDateTimeline(proposalEvents[0].timestamp),
+        };
+        const createdBy = {
+          message: `Proposal created by ${shortenAddress(
+            proposalEvents[0].by
+          )}`,
+          time: formatDateTimeline(proposalEvents[0].timestamp),
+        };
+
+        let waitingForMoreVotesMsg = {
+          message: "Waiting for more votes",
+          time: formatDateTimeline(proposalEvents[0].timestamp),
+        };
+
+        if (!voteEvents.length) {
+          return (timelineMessages = [
+            firstMessage,
+            createdBy,
+            waitingForMoreVotesMsg,
+          ] as any);
+        } else {
+          timelineMessages = [
+            firstMessage,
+            createdBy,
+            ...votesMessages,
+            waitingForMoreVotesMsg,
+          ];
+
+          return timelineMessages as any;
+        }
+      }
+      default: {
+        timelineMessages = proposalEvents.reduce((acc: any, proposal, idx) => {
+          if (idx === 0) {
+            acc = [
+              {
+                message: "Deposit submitted",
                 time: formatDateTimeline(proposal.timestamp),
-              };
-            case 2:
-              return {
-                message: `Waiting for execution`,
+              },
+              {
+                message: `Proposal created by ${shortenAddress(proposal.by)}`,
                 time: formatDateTimeline(proposal.timestamp),
-                votes: votes.map((vote) => ({
-                  message: `Confirmed by ${shortenAddress(vote.by)}`,
-                  time: formatDateTimeline(vote.timestamp),
-                })),
-              };
-            case 3:
-              return {
-                message: "Completed!",
-                time: formatDateTimeline(proposal.timestamp),
-              };
-            case 4:
-              return {
-                message: "Canceled",
-                time: formatTransferDate(proposal.timestamp),
-              };
+              },
+              ...votesMessages,
+            ];
+            return acc;
           }
-        })
-      : [
-          {
-            message: "Proposal submitted",
-            time: formatDateTimeline(timestamp!),
-          },
-        ];
+
+          if (proposalStatus === 4) {
+            acc = [
+              ...acc,
+              {
+                message: `Proposal cancel by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: "Transfer canceled",
+                time: formatDateTimeline(proposal.timestamp),
+              },
+            ];
+            return acc;
+          } else if (proposalStatus === 2) {
+            console.log("STATUS 2");
+            acc = [
+              ...acc,
+              {
+                message: `Proposal passed by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: "Waiting for execution",
+                time: formatDateTimeline(proposal.timestamp),
+              },
+            ];
+            return acc;
+          } else if (proposalStatus === 3 && proposal.proposalStatus === 3) {
+            acc = [
+              ...acc,
+              {
+                message: `Proposal passed by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: `Proposal executed by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: `Transfer executed on ${getNetworkName(toChainId)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+            ];
+            return acc;
+          }
+          return acc;
+        }, []);
+      }
+    }
+  }
 
   return {
     id,
@@ -244,8 +338,8 @@ export const computeTransferDetails = (
     depositTxHashShortened,
     fromChainId,
     toChainId,
-    votes,
-    proposals,
+    voteEvents,
+    proposalEvents,
     proposalStatus,
     timelineMessages,
     fromIcon,

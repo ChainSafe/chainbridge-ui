@@ -70,6 +70,7 @@ const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
     explorerTableContainer: {
       display: "flex",
       justifyContent: "center",
+      marginBottom: "100px",
     },
     explorerTable: {
       marginTop: 29,
@@ -78,7 +79,7 @@ const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
       background: "#FAFAFA",
       minWidth: 955,
       width: "100%",
-      height: 685,
+      height: "100%",
     },
   })
 );
@@ -117,25 +118,19 @@ const ExplorerPage = () => {
 
   const handleOpenModal = (txId: string | undefined) => () => {
     const txDetail = transfers.find((tx) => tx.id === txId);
-    //TODO: check type definitions
-    // @ts-ignore
-    const { proposals } = txDetail;
-    let colorSchemaForTransferStatus;
-    if (!proposals.length) {
-      colorSchemaForTransferStatus = getColorSchemaTransferStatus(undefined);
-      setPillColorStatus(colorSchemaForTransferStatus);
-    } else {
-      colorSchemaForTransferStatus = getColorSchemaTransferStatus(
-        proposals[0].proposalStatus
-      );
-      setPillColorStatus(colorSchemaForTransferStatus);
-    }
+
+    const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
+      txDetail?.status
+    );
+
+    setPillColorStatus(colorSchemaForTransferStatus);
 
     explorerDispatcher({
       type: "setTransferDetails",
       payload: txDetail!,
     });
     setActive(true);
+    window.history.replaceState({}, "", `/explorer/list/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -143,6 +138,7 @@ const ExplorerPage = () => {
     explorerDispatcher({
       type: "cleanTransferDetails",
     });
+    window.history.replaceState({}, "", "/explorer/list");
   };
 
   const handleTimelineButtonClick = () =>

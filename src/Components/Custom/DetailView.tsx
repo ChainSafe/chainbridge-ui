@@ -14,6 +14,7 @@ import {
   getProposalStatus,
   getRandomSeed,
   showImageUrl,
+  showImageUrlNetworkIcons,
 } from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 
@@ -60,7 +61,11 @@ type DetailView = {
     | "customGreyBar"
     | "time"
     | "secondElementGreybar"
-    | "buttonTimelineContainerClicked",
+    | "buttonTimelineContainerClicked"
+    | "transferDetailExpandedDesktop"
+    | "timelineSection"
+    | "transferCancelColor"
+    | "waitingForColor",
     string
   >;
 };
@@ -89,7 +94,8 @@ const DetailView = ({
             classes.transferDetails,
             timelineButtonClicked
               ? classes.transferDetailExpanded
-              : classes.transferDetailNotExpanded
+              : classes.transferDetailNotExpanded,
+            timelineMessages.length > 3 && classes.transferDetailExpandedDesktop
           )}
         >
           <div className={classes.closeButton}>
@@ -156,7 +162,9 @@ const DetailView = ({
                   <span>
                     <img
                       className={classes.imageToken}
-                      src={showImageUrl(fromIcon?.tokens[0].imageUri!)}
+                      src={showImageUrlNetworkIcons(
+                        fromIcon?.tokens[0].imageUri!
+                      )}
                       alt={fromIcon?.tokens[0].symbol}
                     />
                   </span>
@@ -171,7 +179,9 @@ const DetailView = ({
                   <span>
                     <img
                       className={classes.imageToken}
-                      src={showImageUrl(fromIcon?.tokens[0].imageUri!)}
+                      src={showImageUrlNetworkIcons(
+                        fromIcon?.tokens[0].imageUri!
+                      )}
                       alt={fromIcon?.tokens[0].symbol}
                     />
                   </span>
@@ -215,9 +225,9 @@ const DetailView = ({
                   Transfer Timeline
                 </Typography>
               </div>
-              <div>
-                {timelineMessages.map((msg, idx) => {
-                  if ("votes" in msg) {
+              <div className={classes.timelineSection}>
+                {timelineMessages.map((msg, idx, self) => {
+                  if (idx === 1) {
                     return (
                       <>
                         <div className={classes.messageContainer}>
@@ -258,52 +268,55 @@ const DetailView = ({
                             View full timeline
                           </button>
                         </div>
-                        {msg.votes.map((vote: any, idx: number) => {
-                          return (
-                            <div
-                              className={clsx(
-                                classes.messageContainer,
-                                timelineButtonClicked
-                                  ? classes.messageNotCollapsed
-                                  : classes.messageCollapsed
-                              )}
-                            >
-                              <p className={classes.messages}>
-                                <span>
-                                  <div
-                                    className={clsx(
-                                      classes.dot,
-                                      classes.greenDot
-                                    )}
-                                  />
-                                  <span>{vote.message}</span>
-                                </span>
-                                <span className={classes.time}>
-                                  {vote.time}
-                                </span>
-                              </p>
-                              <div
-                                className={clsx(
-                                  classes.greyBar,
-                                  timelineButtonClicked && classes.customGreyBar
-                                )}
-                              />
-                            </div>
-                          );
-                        })}
                       </>
+                    );
+                  } else if (idx === self.length - 1) {
+                    return (
+                      <div
+                        className={clsx(
+                          classes.messageContainer,
+                          idx === timelineMessages.length - 1 &&
+                            classes.lastMessage
+                        )}
+                      >
+                        <p className={classes.messages}>
+                          <span>
+                            <div
+                              className={clsx(classes.dot, classes.greenDot)}
+                            />
+                            {msg.message}
+                          </span>
+                          <span className={classes.time}>{msg.time}</span>
+                        </p>
+                        {idx !== timelineMessages.length - 1 && (
+                          <div className={classes.greyBar} />
+                        )}
+                      </div>
                     );
                   }
                   return (
                     <div
                       className={clsx(
                         classes.messageContainer,
+                        timelineButtonClicked
+                          ? classes.messageNotCollapsed
+                          : classes.messageCollapsed,
                         idx === timelineMessages.length - 1 &&
                           classes.lastMessage
                       )}
                     >
                       <p className={classes.messages}>
-                        <span>
+                        <span
+                          className={clsx(
+                            transferDetails.proposalStatus === 4 &&
+                              idx === timelineMessages.length - 1 &&
+                              classes.transferCancelColor,
+                            (transferDetails.proposalStatus === 1 ||
+                              transferDetails.proposalStatus === 2) &&
+                              idx === timelineMessages.length - 1 &&
+                              classes.waitingForColor
+                          )}
+                        >
                           <div
                             className={clsx(classes.dot, classes.greenDot)}
                           />

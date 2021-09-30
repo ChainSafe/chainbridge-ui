@@ -24,6 +24,7 @@ import {
   computeAndFormatAmount,
   showImageUrl,
   computeIconsToUse,
+  showImageUrlNetworkIcons,
 } from "../../Utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 import DetailView from "./DetailView";
@@ -130,15 +131,20 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       [breakpoints.down("sm")]: {
         minWidth: 411,
       },
-      transition: "heigth 0.5s ease-out",
     },
+    transferDetailExpandedDesktop: {},
     transferDetailExpanded: {
-      height: 900,
+      height: 960,
       transition: "height 0.5s ease-out",
     },
     transferDetailNotExpanded: {
-      height: 731,
-      transition: "height 0.5s ease-out",
+      [breakpoints.down("sm")]: {
+        height: 700,
+        transition: "height 0.5s ease-out",
+      },
+    },
+    timelineSection: {
+      paddingBottom: 15,
     },
     closeButton: {
       display: "flex",
@@ -287,7 +293,6 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     lastMessage: {
       visibility: "visible",
-      marginTop: 10,
     },
     messages: {
       display: "grid",
@@ -316,11 +321,14 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     greyBar: {
       border: "0.2px solid #E8E8E8",
-      height: 32,
+      height: 37,
       width: 0.3,
       position: "absolute",
-      top: 21,
+      top: 27,
       left: 2.5,
+      "& div:first-child": {
+        height: 45,
+      },
     },
     imageToken: {
       height: 27,
@@ -384,6 +392,12 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     secondElementGreybar: {
       height: 64,
+    },
+    transferCancelColor: {
+      color: "#F5222D",
+    },
+    waitingForColor: {
+      color: "#BFBFBF",
     },
   })
 );
@@ -460,7 +474,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
               <span>
                 <img
                   className={classes.imageToken}
-                  src={showImageUrl(fromIcon?.tokens[0].imageUri!)}
+                  src={showImageUrlNetworkIcons(fromIcon?.tokens[0].imageUri!)}
                   alt={fromIcon?.tokens[0].symbol}
                 />
                 <span>{transfer.fromNetworkName} to</span>
@@ -468,7 +482,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
               <span>
                 <img
                   className={classes.imageToken}
-                  src={showImageUrl(toIcon?.tokens[0].imageUri!)}
+                  src={showImageUrlNetworkIcons(toIcon?.tokens[0].imageUri!)}
                   alt={fromIcon?.tokens[0].symbol}
                 />
                 <span>{transfer.toNetworkName}</span>

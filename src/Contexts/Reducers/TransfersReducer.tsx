@@ -28,6 +28,7 @@ type Proposal = {
   proposalEventTransactionHash?: string;
   proposalEventBlockNumber: number;
   timestamp: number;
+  by: string;
 };
 
 export type DepositRecord = {
@@ -43,8 +44,8 @@ export type DepositRecord = {
   timestamp?: number;
   depositTransactionHash?: string;
   depositBlockNumber?: number;
-  proposals: Array<Proposal>;
-  votes: Array<Vote>;
+  proposalEvents: Array<Proposal>;
+  voteEvents: Array<Vote>;
   status: number;
 };
 
@@ -140,8 +141,8 @@ export type TransferDetails = {
   fromChainId?: number;
   toChainId?: number;
   proposalStatus: number;
-  votes: Array<Vote>;
-  proposals: Array<Proposal>;
+  voteEvents: Array<Vote>;
+  proposalEvents: Array<Proposal>;
   timelineMessages: Array<any>;
   fromIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
   toIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
@@ -190,8 +191,8 @@ export function transfersReducer(
         depositTxHashShortened: "",
         fromChainId: 0,
         toChainId: 0,
-        votes: [],
-        proposals: [],
+        voteEvents: [],
+        proposalEvents: [],
         timelineMessages: [],
         fromIcon: undefined,
         toIcon: undefined,
