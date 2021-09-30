@@ -3,6 +3,7 @@
 ## vNext
 
 - Refactored environment variables.
+- Updated rpc url for cere blockchain.
 
 ## v0.3.0
 
