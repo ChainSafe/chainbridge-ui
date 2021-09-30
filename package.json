@@ -6,7 +6,7 @@
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",
-    "@chainsafe/chainbridge-contracts": "1.0.5",
+    "@chainsafe/chainbridge-contracts": "2.0.0",
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
     "@chainsafe/web3-context": "1.2.0",
