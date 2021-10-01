@@ -151,7 +151,9 @@ const DetailView = ({
                   Sent
                 </Typography>
                 <div>
-                  <p>{transferDetails.formatedAmount} Ether</p>
+                  <p>
+                    {transferDetails.formatedAmount} {fromIcon?.tokens[0].name}
+                  </p>
                 </div>
               </div>
               <div className={classes.fromDetailView}>
