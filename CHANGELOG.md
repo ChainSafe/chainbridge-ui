@@ -4,6 +4,7 @@
 
 - Refactored environment variables.
 - Updated rpc url for Cere Network.
+- Configured sentry DSN and auth token
 
 ## v0.3.0
 
