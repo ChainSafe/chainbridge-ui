@@ -50,7 +50,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
             class=""
           >
             <span>
-              Jan 19, 5:56PM
+              Jan 19, 11:56PM
             </span>
             <h2
               class="makeStyles-root-22 makeStyles-h2-24"
@@ -118,7 +118,8 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
               <div>
                 <p>
                   1.0
-                   Ether
+                   
+                  an ERC20
                 </p>
               </div>
             </div>
@@ -223,7 +224,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    5:56pm
+                    11:56pm
                   </span>
                 </p>
                 <div
@@ -245,7 +246,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    5:56pm
+                    11:56pm
                   </span>
                 </p>
                 <div
@@ -279,7 +280,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    5:56pm
+                    11:56pm
                   </span>
                 </p>
                 <div
@@ -303,7 +304,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    5:56pm
+                    11:56pm
                   </span>
                 </p>
                 <div
@@ -327,7 +328,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    5:56pm
+                    11:56pm
                   </span>
                 </p>
                 <div
@@ -351,7 +352,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    5:56pm
+                    11:56pm
                   </span>
                 </p>
                 <div
@@ -373,7 +374,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    5:56pm
+                    11:56pm
                   </span>
                 </p>
               </div>

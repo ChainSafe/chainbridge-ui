@@ -178,7 +178,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                 <td
                   class="makeStyles-cellRow-142 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
-                  Jan 19, 5:55PM
+                  Jan 19, 11:55PM
                 </td>
                 <td
                   class="makeStyles-root-203 makeStyles-alignCenter-205"
@@ -272,7 +272,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                 <td
                   class="makeStyles-cellRow-142 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
-                  Jan 19, 5:56PM
+                  Jan 19, 11:56PM
                 </td>
                 <td
                   class="makeStyles-root-203 makeStyles-alignCenter-205"

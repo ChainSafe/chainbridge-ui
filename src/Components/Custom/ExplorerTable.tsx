@@ -318,14 +318,15 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     greenDot: {
       background: "#73D13D",
+      borderColor: "#73D13D",
     },
     greyBar: {
       border: "0.2px solid #E8E8E8",
       height: 37,
       width: 0.3,
       position: "absolute",
-      top: 27,
-      left: 2.5,
+      top: 19,
+      left: 3,
       "& div:first-child": {
         height: 45,
       },
@@ -391,7 +392,7 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       },
     },
     secondElementGreybar: {
-      height: 64,
+      height: 77,
     },
     transferCancelColor: {
       color: "#F5222D",
