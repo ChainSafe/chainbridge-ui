@@ -3,11 +3,16 @@
 exports[`DetailView renders correctly and match Snapshot 1`] = `
 <div>
   <article
-    class="makeStyles-root-1 active"
+    class="makeStyles-root-1 closable active"
   >
     <section
       class="makeStyles-inner-2 md"
     >
+      <div
+        class="makeStyles-closeIcon-3 none"
+      >
+        close
+      </div>
       <section
         class=""
       >
@@ -45,7 +50,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
             class=""
           >
             <span>
-              Jan 19, 5:52PM
+              Jan 19, 5:56PM
             </span>
             <h2
               class="makeStyles-root-22 makeStyles-h2-24"
@@ -81,7 +86,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    0x284D...bF0B3E
+                    0x6DAC...DeEfC6
                   </span>
                 </div>
               </div>
@@ -95,7 +100,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
               <p
                 class=""
               >
-                No status
+                Executed
               </p>
             </div>
           </section>
@@ -127,13 +132,11 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
               </span>
               <div>
                 <span>
-                  <span
-                    class="makeStyles-root-12 makeStyles-sizeMedium-19"
-                  >
-                    <svg>
-                      eth.svg
-                    </svg>
-                  </span>
+                  <img
+                    alt="ERC20"
+                    class=""
+                    src="eth.svg"
+                  />
                 </span>
                 <span>
                   EVM Celo Testnet
@@ -150,13 +153,11 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
               </span>
               <div>
                 <span>
-                  <span
-                    class="makeStyles-root-12 makeStyles-sizeMedium-19"
-                  >
-                    <svg>
-                      eth.svg
-                    </svg>
-                  </span>
+                  <img
+                    alt="ERC20"
+                    class=""
+                    src="eth.svg"
+                  />
                 </span>
                 <span>
                   Ethereum - Rinkeby
@@ -186,8 +187,195 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                       hashTx.svg
                     </svg>
                   </span>
-                  0x8a36...f8b255
+                  0xd615...fbb189
                 </span>
+              </div>
+            </div>
+          </section>
+          <hr />
+          <section
+            class=""
+          >
+            <div>
+              <h2
+                class="makeStyles-root-22 makeStyles-h2-24"
+              >
+                Transfer Timeline
+              </h2>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class=""
+              >
+                <p
+                  class=""
+                >
+                  <span
+                    class=""
+                  >
+                    <div
+                      class=""
+                    />
+                    Deposit submitted
+                  </span>
+                  <span
+                    class=""
+                  >
+                    5:56pm
+                  </span>
+                </p>
+                <div
+                  class=""
+                />
+              </div>
+              <div
+                class=""
+              >
+                <p
+                  class=""
+                >
+                  <span>
+                    <div
+                      class=""
+                    />
+                    Proposal created by 0xb7d5...dD949A
+                  </span>
+                  <span
+                    class=""
+                  >
+                    5:56pm
+                  </span>
+                </p>
+                <div
+                  class=""
+                />
+              </div>
+              <div
+                class=""
+              >
+                <hr />
+                <button
+                  class=""
+                >
+                  View full timeline
+                </button>
+              </div>
+              <div
+                class=""
+              >
+                <p
+                  class=""
+                >
+                  <span
+                    class=""
+                  >
+                    <div
+                      class=""
+                    />
+                    confirmed by 0xb7d5...dD949A
+                  </span>
+                  <span
+                    class=""
+                  >
+                    5:56pm
+                  </span>
+                </p>
+                <div
+                  class=""
+                />
+              </div>
+              <div
+                class=""
+              >
+                <p
+                  class=""
+                >
+                  <span
+                    class=""
+                  >
+                    <div
+                      class=""
+                    />
+                    confirmed by 0x010f...Be6208
+                  </span>
+                  <span
+                    class=""
+                  >
+                    5:56pm
+                  </span>
+                </p>
+                <div
+                  class=""
+                />
+              </div>
+              <div
+                class=""
+              >
+                <p
+                  class=""
+                >
+                  <span
+                    class=""
+                  >
+                    <div
+                      class=""
+                    />
+                    Proposal passed by 0x010f...Be6208
+                  </span>
+                  <span
+                    class=""
+                  >
+                    5:56pm
+                  </span>
+                </p>
+                <div
+                  class=""
+                />
+              </div>
+              <div
+                class=""
+              >
+                <p
+                  class=""
+                >
+                  <span
+                    class=""
+                  >
+                    <div
+                      class=""
+                    />
+                    Proposal executed by 0x010f...Be6208
+                  </span>
+                  <span
+                    class=""
+                  >
+                    5:56pm
+                  </span>
+                </p>
+                <div
+                  class=""
+                />
+              </div>
+              <div
+                class=""
+              >
+                <p
+                  class=""
+                >
+                  <span>
+                    <div
+                      class=""
+                    />
+                    Transfer executed on Mainnet
+                  </span>
+                  <span
+                    class=""
+                  >
+                    5:56pm
+                  </span>
+                </p>
               </div>
             </div>
           </section>

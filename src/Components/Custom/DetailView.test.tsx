@@ -3,7 +3,7 @@ import { ThemeSwitcher } from "@chainsafe/common-theme";
 import { render } from "@testing-library/react";
 import { lightTheme } from "../../Themes/LightTheme";
 import { computeTransferDetails } from "../../Utils/Helpers";
-import { testResponse } from "../../Utils/TestUtils";
+import { runtimeTestingConfig, testResponse } from "../../Utils/TestUtils";
 import DetailView from "./DetailView";
 
 describe("DetailView", () => {
@@ -46,7 +46,12 @@ describe("DetailView", () => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <DetailView
           active={true}
-          transferDetails={computeTransferDetails(testResponse[0] as any)}
+          transferDetails={computeTransferDetails(
+            testResponse[1] as any,
+            runtimeTestingConfig.CHAINBRIDGE.chains as any
+          )}
+          handleTimelineButtonClick={jest.fn()}
+          timelineButtonClicked={false}
           handleClose={jest.fn()}
           classes={{
             transferDetailContainer: "",
@@ -68,6 +73,28 @@ describe("DetailView", () => {
             closeButton: "",
             statusSection: "",
             transferDetails: "",
+            waitingForColor: "",
+            transferCancelColor: "",
+            timelineSection: "",
+            transferDetailExpandedDesktop: "",
+            buttonTimelineContainerClicked: "",
+            secondElementGreybar: "",
+            time: "",
+            customGreyBar: "",
+            lastMessage: "",
+            buttonTimelineContainer: "",
+            messageNotCollapsed: "",
+            messageCollapsed: "",
+            transferDetailNotExpanded: "",
+            transferDetailExpanded: "",
+            timelineButtonClicked: "",
+            timelineButton: "",
+            imageToken: "",
+            messageContainer: "",
+            messages: "",
+            greyBar: "",
+            greenDot: "",
+            dot: "",
           }}
         />
       </ThemeSwitcher>

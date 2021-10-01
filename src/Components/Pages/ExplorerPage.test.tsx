@@ -61,7 +61,7 @@ describe("ExplorerPage", () => {
       })),
     });
   });
-  it("renders correctly and math Snapshot", async () => {
+  it("renders correctly and match Snapshot", async () => {
     let theContainer: any;
     await act(async () => {
       const { container } = await render(

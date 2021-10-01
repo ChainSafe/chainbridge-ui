@@ -180,9 +180,9 @@ const DetailView = ({
                     <img
                       className={classes.imageToken}
                       src={showImageUrlNetworkIcons(
-                        fromIcon?.tokens[0].imageUri!
+                        toIcon?.tokens[0].imageUri!
                       )}
-                      alt={fromIcon?.tokens[0].symbol}
+                      alt={toIcon?.tokens[0].symbol}
                     />
                   </span>
                   <span>{transferDetails?.toNetworkName}</span>

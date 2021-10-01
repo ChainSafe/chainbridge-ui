@@ -244,20 +244,21 @@ export const computeTransferDetails = (
         };
 
         if (!voteEvents.length) {
-          return (timelineMessages = [
+          timelineMessages = [
             firstMessage,
             createdBy,
             waitingForMoreVotesMsg,
-          ] as any);
+          ] as any;
+          break;
         } else {
           timelineMessages = [
             firstMessage,
             createdBy,
             ...votesMessages,
             waitingForMoreVotesMsg,
-          ];
+          ] as any;
 
-          return timelineMessages as any;
+          break;
         }
       }
       default: {
@@ -291,7 +292,6 @@ export const computeTransferDetails = (
             ];
             return acc;
           } else if (proposalStatus === 2) {
-            console.log("STATUS 2");
             acc = [
               ...acc,
               {
@@ -324,6 +324,7 @@ export const computeTransferDetails = (
           }
           return acc;
         }, []);
+        break;
       }
     }
   }
