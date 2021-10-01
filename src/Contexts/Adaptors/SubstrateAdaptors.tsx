@@ -390,6 +390,7 @@ export const SubstrateDestinationAdaptorProvider = ({
               payload: {
                 address: "Substrate Relayer",
                 signed: "Confirmed",
+                order: parseFloat(`1.${depositVotes + 1}`),
               },
             });
           }

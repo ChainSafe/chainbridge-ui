@@ -8,7 +8,7 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import {
   TransactionStatus,
   useNetworkManager,
-  Vote,
+  TransitMessage,
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
 import NetworkSelectModal from "../Modules/NetworkSelectModal";
@@ -35,7 +35,7 @@ type ChainbridgeContext = {
   depositNonce?: string;
   depositAmount?: number;
   bridgeFee?: number;
-  inTransitMessages: Array<string | Vote>;
+  inTransitMessages: Array<TransitMessage>;
   transferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
