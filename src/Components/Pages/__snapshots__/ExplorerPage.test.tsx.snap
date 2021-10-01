@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
+exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
 <div>
   <div
     class="makeStyles-root-11 makeStyles-container-30 makeStyles-justify-center-19 makeStyles-flex-wrap-wrap-28 makeStyles-grid-lg-12-80"
@@ -138,59 +138,59 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
           class="makeStyles-explorerTable-10"
         >
           <table
-            class="makeStyles-root-164 makeStyles-fullWidth-165 makeStyles-root-137"
+            class="makeStyles-root-186 makeStyles-fullWidth-187 makeStyles-root-137"
           >
             <thead
-              class="makeStyles-root-169"
+              class="makeStyles-root-191"
             >
               <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
+                class="makeStyles-root-192 makeStyles-row-138 classic"
               >
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-194 makeStyles-alignCenter-196"
                 >
                   Date
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-194 makeStyles-alignCenter-196"
                 >
                   From
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-194 makeStyles-alignCenter-196"
                 >
                   Transfer
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-194 makeStyles-alignCenter-196"
                 >
                   Value
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-194 makeStyles-alignCenter-196"
                 />
               </tr>
             </thead>
             <tbody>
               <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
+                class="makeStyles-root-192 makeStyles-row-138 classic"
               >
                 <td
-                  class="makeStyles-cellRow-142 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-cellRow-142 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
-                  Jan 19, 5:52PM
+                  Jan 19, 11:55PM
                 </td>
                 <td
-                  class="makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <div
                     class="makeStyles-accountAddress-140"
                   >
                     <article
-                      class="makeStyles-root-185 makeStyles-avatar-146 circle small"
+                      class="makeStyles-root-207 makeStyles-avatar-146 circle small"
                     >
                       <canvas
-                        class="identicon makeStyles-root-186"
+                        class="identicon makeStyles-root-208"
                         height="60"
                         style="width: 60px; height: 60px;"
                         width="60"
@@ -202,31 +202,26 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-row-138 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <div>
                     <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
+                      <img
+                        alt="ERC20"
+                        class="makeStyles-imageToken-173"
+                        src="eth.svg"
+                      />
                       <span>
                         EVM Celo Testnet
                          to
                       </span>
                     </span>
                     <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                       
+                      <img
+                        alt="ERC20"
+                        class="makeStyles-imageToken-173"
+                        src="eth.svg"
+                      />
                       <span>
                         Ethereum - Rinkeby
                       </span>
@@ -234,20 +229,16 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-row-138 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <span
                     class="makeStyles-amountInfo-144"
                   >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg
-                        class="makeStyles-tokenIcon-143"
-                      >
-                        eth.svg
-                      </svg>
-                    </span>
+                    <img
+                      alt=""
+                      class="makeStyles-imageToken-173"
+                      src="eth.png"
+                    />
                     <span>
                       1.0
                        ETH
@@ -255,7 +246,7 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-row-138 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <div
                     class="makeStyles-viewDetailsInfo-145"
@@ -268,7 +259,7 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                       </svg>
                     </span>
                     <button
-                      class="makeStyles-root-187 makeStyles-primary-188 medium"
+                      class="makeStyles-root-209 makeStyles-primary-210 medium"
                     >
                       View Details
                     </button>
@@ -276,127 +267,24 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                 </td>
               </tr>
               <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
+                class="makeStyles-root-192 makeStyles-row-138 classic"
               >
                 <td
-                  class="makeStyles-cellRow-142 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-cellRow-142 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
-                  Jan 19, 5:55PM
+                  Jan 19, 11:56PM
                 </td>
                 <td
-                  class="makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <div
                     class="makeStyles-accountAddress-140"
                   >
                     <article
-                      class="makeStyles-root-185 makeStyles-avatar-146 circle small"
+                      class="makeStyles-root-207 makeStyles-avatar-146 circle small"
                     >
                       <canvas
-                        class="identicon makeStyles-root-186"
-                        height="60"
-                        style="width: 60px; height: 60px;"
-                        width="60"
-                      />
-                    </article>
-                    <span>
-                      0x284D...bF0B3E
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                      <span>
-                        EVM Celo Testnet
-                         to
-                      </span>
-                    </span>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                       
-                      <span>
-                        Ethereum - Rinkeby
-                      </span>
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <span
-                    class="makeStyles-amountInfo-144"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg
-                        class="makeStyles-tokenIcon-143"
-                      >
-                        eth.svg
-                      </svg>
-                    </span>
-                    <span>
-                      1.0
-                       ETH
-                    </span>
-                  </span>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-viewDetailsInfo-145"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg>
-                        directional.svg
-                      </svg>
-                    </span>
-                    <button
-                      class="makeStyles-root-187 makeStyles-primary-188 medium"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
-              >
-                <td
-                  class="makeStyles-cellRow-142 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  Jan 19, 5:56PM
-                </td>
-                <td
-                  class="makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-accountAddress-140"
-                  >
-                    <article
-                      class="makeStyles-root-185 makeStyles-avatar-146 circle small"
-                    >
-                      <canvas
-                        class="identicon makeStyles-root-186"
+                        class="identicon makeStyles-root-208"
                         height="60"
                         style="width: 60px; height: 60px;"
                         width="60"
@@ -408,31 +296,26 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-row-138 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <div>
                     <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
+                      <img
+                        alt="ERC20"
+                        class="makeStyles-imageToken-173"
+                        src="eth.svg"
+                      />
                       <span>
                         EVM Celo Testnet
                          to
                       </span>
                     </span>
                     <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                       
+                      <img
+                        alt="ERC20"
+                        class="makeStyles-imageToken-173"
+                        src="eth.svg"
+                      />
                       <span>
                         Ethereum - Rinkeby
                       </span>
@@ -440,20 +323,16 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-row-138 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <span
                     class="makeStyles-amountInfo-144"
                   >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg
-                        class="makeStyles-tokenIcon-143"
-                      >
-                        eth.svg
-                      </svg>
-                    </span>
+                    <img
+                      alt=""
+                      class="makeStyles-imageToken-173"
+                      src="eth.png"
+                    />
                     <span>
                       1.0
                        ETH
@@ -461,7 +340,7 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
+                  class="makeStyles-row-138 makeStyles-root-203 makeStyles-alignCenter-205"
                 >
                   <div
                     class="makeStyles-viewDetailsInfo-145"
@@ -474,419 +353,7 @@ exports[`ExplorerPage renders correctly and math Snapshot 1`] = `
                       </svg>
                     </span>
                     <button
-                      class="makeStyles-root-187 makeStyles-primary-188 medium"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
-              >
-                <td
-                  class="makeStyles-cellRow-142 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  Jan 19, 6:07PM
-                </td>
-                <td
-                  class="makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-accountAddress-140"
-                  >
-                    <article
-                      class="makeStyles-root-185 makeStyles-avatar-146 circle small"
-                    >
-                      <canvas
-                        class="identicon makeStyles-root-186"
-                        height="60"
-                        style="width: 60px; height: 60px;"
-                        width="60"
-                      />
-                    </article>
-                    <span>
-                      0x284D...bF0B3E
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                      <span>
-                        EVM Celo Testnet
-                         to
-                      </span>
-                    </span>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                       
-                      <span>
-                        Ethereum - Rinkeby
-                      </span>
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <span
-                    class="makeStyles-amountInfo-144"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg
-                        class="makeStyles-tokenIcon-143"
-                      >
-                        eth.svg
-                      </svg>
-                    </span>
-                    <span>
-                      2.0
-                       ETH
-                    </span>
-                  </span>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-viewDetailsInfo-145"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg>
-                        directional.svg
-                      </svg>
-                    </span>
-                    <button
-                      class="makeStyles-root-187 makeStyles-primary-188 medium"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
-              >
-                <td
-                  class="makeStyles-cellRow-142 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  Jan 19, 5:53PM
-                </td>
-                <td
-                  class="makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-accountAddress-140"
-                  >
-                    <article
-                      class="makeStyles-root-185 makeStyles-avatar-146 circle small"
-                    >
-                      <canvas
-                        class="identicon makeStyles-root-186"
-                        height="60"
-                        style="width: 60px; height: 60px;"
-                        width="60"
-                      />
-                    </article>
-                    <span>
-                      0x42Da...4fe25b
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                      <span>
-                        Ethereum - Rinkeby
-                         to
-                      </span>
-                    </span>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                       
-                      <span>
-                        EVM Celo Testnet
-                      </span>
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <span
-                    class="makeStyles-amountInfo-144"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg
-                        class="makeStyles-tokenIcon-143"
-                      >
-                        eth.svg
-                      </svg>
-                    </span>
-                    <span>
-                      2.0
-                       ETH
-                    </span>
-                  </span>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-viewDetailsInfo-145"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg>
-                        directional.svg
-                      </svg>
-                    </span>
-                    <button
-                      class="makeStyles-root-187 makeStyles-primary-188 medium"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
-              >
-                <td
-                  class="makeStyles-cellRow-142 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  Jan 19, 5:53PM
-                </td>
-                <td
-                  class="makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-accountAddress-140"
-                  >
-                    <article
-                      class="makeStyles-root-185 makeStyles-avatar-146 circle small"
-                    >
-                      <canvas
-                        class="identicon makeStyles-root-186"
-                        height="60"
-                        style="width: 60px; height: 60px;"
-                        width="60"
-                      />
-                    </article>
-                    <span>
-                      0x42Da...4fe25b
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                      <span>
-                        Ethereum - Rinkeby
-                         to
-                      </span>
-                    </span>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                       
-                      <span>
-                        EVM Celo Testnet
-                      </span>
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <span
-                    class="makeStyles-amountInfo-144"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg
-                        class="makeStyles-tokenIcon-143"
-                      >
-                        eth.svg
-                      </svg>
-                    </span>
-                    <span>
-                      1.0
-                       ETH
-                    </span>
-                  </span>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-viewDetailsInfo-145"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg>
-                        directional.svg
-                      </svg>
-                    </span>
-                    <button
-                      class="makeStyles-root-187 makeStyles-primary-188 medium"
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr
-                class="makeStyles-root-170 makeStyles-row-138 classic"
-              >
-                <td
-                  class="makeStyles-cellRow-142 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  Jan 19, 6:07PM
-                </td>
-                <td
-                  class="makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-accountAddress-140"
-                  >
-                    <article
-                      class="makeStyles-root-185 makeStyles-avatar-146 circle small"
-                    >
-                      <canvas
-                        class="identicon makeStyles-root-186"
-                        height="60"
-                        style="width: 60px; height: 60px;"
-                        width="60"
-                      />
-                    </article>
-                    <span>
-                      0x42Da...4fe25b
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                      <span>
-                        Ethereum - Rinkeby
-                         to
-                      </span>
-                    </span>
-                    <span>
-                      <span
-                        class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                      >
-                        <svg>
-                          eth.svg
-                        </svg>
-                      </span>
-                       
-                      <span>
-                        EVM Celo Testnet
-                      </span>
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <span
-                    class="makeStyles-amountInfo-144"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg
-                        class="makeStyles-tokenIcon-143"
-                      >
-                        eth.svg
-                      </svg>
-                    </span>
-                    <span>
-                      1.0
-                       ETH
-                    </span>
-                  </span>
-                </td>
-                <td
-                  class="makeStyles-row-138 makeStyles-root-181 makeStyles-alignCenter-183"
-                >
-                  <div
-                    class="makeStyles-viewDetailsInfo-145"
-                  >
-                    <span
-                      class="makeStyles-root-127 makeStyles-sizeMedium-134"
-                    >
-                      <svg>
-                        directional.svg
-                      </svg>
-                    </span>
-                    <button
-                      class="makeStyles-root-187 makeStyles-primary-188 medium"
+                      class="makeStyles-root-209 makeStyles-primary-210 medium"
                     >
                       View Details
                     </button>

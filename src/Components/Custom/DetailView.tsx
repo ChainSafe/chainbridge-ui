@@ -8,14 +8,22 @@ import {
   Avatar,
   Blockies,
 } from "@chainsafe/common-components";
+import clsx from "clsx";
 import { TransferDetails } from "../../Contexts/Reducers/TransfersReducer";
-import { getIcon, getRandomSeed } from "../../Utils/Helpers";
+import {
+  getProposalStatus,
+  getRandomSeed,
+  showImageUrl,
+  showImageUrlNetworkIcons,
+} from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 
 type DetailView = {
   active: boolean;
   transferDetails: TransferDetails;
   handleClose: () => void;
+  handleTimelineButtonClick: () => void;
+  timelineButtonClicked: boolean;
   classes: Record<
     | "transferDetailContainer"
     | "transferDetails"
@@ -35,7 +43,29 @@ type DetailView = {
     | "bridgeSection"
     | "transactionHashSection"
     | "colTitles"
-    | "transferTimeline",
+    | "transferTimeline"
+    | "dot"
+    | "greenDot"
+    | "greyBar"
+    | "messages"
+    | "messageContainer"
+    | "imageToken"
+    | "timelineButton"
+    | "timelineButtonClicked"
+    | "transferDetailExpanded"
+    | "transferDetailNotExpanded"
+    | "messageCollapsed"
+    | "messageNotCollapsed"
+    | "buttonTimelineContainer"
+    | "lastMessage"
+    | "customGreyBar"
+    | "time"
+    | "secondElementGreybar"
+    | "buttonTimelineContainerClicked"
+    | "transferDetailExpandedDesktop"
+    | "timelineSection"
+    | "transferCancelColor"
+    | "waitingForColor",
     string
   >;
 };
@@ -45,18 +75,29 @@ const DetailView = ({
   transferDetails,
   handleClose,
   classes,
+  handleTimelineButtonClick,
+  timelineButtonClicked,
 }: DetailView) => {
-  const FromChainIcon = getIcon(transferDetails?.fromChainId);
-  const ToChainIcon = getIcon(transferDetails?.toChainId);
+  const { timelineMessages, fromIcon, toIcon } = transferDetails;
+
   return (
     (!Object.values(transferDetails).includes("") && (
       <Modal
         active={active}
-        // setActive={setActive}
+        setActive={handleClose}
         className={classes.transferDetailContainer}
         maxWidth="md"
+        closePosition="none"
       >
-        <section className={classes.transferDetails}>
+        <section
+          className={clsx(
+            classes.transferDetails,
+            timelineButtonClicked
+              ? classes.transferDetailExpanded
+              : classes.transferDetailNotExpanded,
+            timelineMessages.length > 3 && classes.transferDetailExpandedDesktop
+          )}
+        >
           <div className={classes.closeButton}>
             <Button onClick={handleClose}>
               <SvgIcon color="primary">
@@ -99,7 +140,7 @@ const DetailView = ({
                   Status
                 </Typography>
                 <p className={classes.proposalStatusPill}>
-                  {transferDetails.proposalStatus}
+                  {getProposalStatus(transferDetails.proposalStatus)}
                 </p>
               </div>
             </section>
@@ -110,7 +151,9 @@ const DetailView = ({
                   Sent
                 </Typography>
                 <div>
-                  <p>{transferDetails.formatedAmount} Ether</p>
+                  <p>
+                    {transferDetails.formatedAmount} {fromIcon?.tokens[0].name}
+                  </p>
                 </div>
               </div>
               <div className={classes.fromDetailView}>
@@ -119,9 +162,13 @@ const DetailView = ({
                 </Typography>
                 <div>
                   <span>
-                    <SvgIcon>
-                      <FromChainIcon />
-                    </SvgIcon>
+                    <img
+                      className={classes.imageToken}
+                      src={showImageUrlNetworkIcons(
+                        fromIcon?.tokens[0].imageUri!
+                      )}
+                      alt={fromIcon?.tokens[0].symbol}
+                    />
                   </span>
                   <span>{transferDetails?.fromNetworkName}</span>
                 </div>
@@ -132,9 +179,13 @@ const DetailView = ({
                 </Typography>
                 <div>
                   <span>
-                    <SvgIcon>
-                      <ToChainIcon />
-                    </SvgIcon>
+                    <img
+                      className={classes.imageToken}
+                      src={showImageUrlNetworkIcons(
+                        toIcon?.tokens[0].imageUri!
+                      )}
+                      alt={toIcon?.tokens[0].symbol}
+                    />
                   </span>
                   <span>{transferDetails?.toNetworkName}</span>
                 </div>
@@ -168,15 +219,121 @@ const DetailView = ({
                 </div>
               </div>
             </section>
-            {/* <hr /> */}
+            <hr />
             {/* Transfer timeline section */}
-            {/* <section className={classes.transferTimeline}>
-            <div>
-              <Typography variant="h2" component="h2">
-                Transfer Timeline
-              </Typography>
-            </div>
-          </section> */}
+            <section className={classes.transferTimeline}>
+              <div>
+                <Typography variant="h2" component="h2">
+                  Transfer Timeline
+                </Typography>
+              </div>
+              <div className={classes.timelineSection}>
+                {timelineMessages.map((msg, idx, self) => {
+                  if (idx === 1) {
+                    return (
+                      <>
+                        <div className={classes.messageContainer}>
+                          <p className={classes.messages}>
+                            <span>
+                              <div
+                                className={clsx(classes.dot, classes.greenDot)}
+                              />
+                              {msg.message}
+                            </span>
+                            <span className={classes.time}>{msg.time}</span>
+                          </p>
+                          <div
+                            className={clsx(
+                              classes.greyBar,
+                              idx === 1 &&
+                                !timelineButtonClicked &&
+                                classes.secondElementGreybar
+                            )}
+                          />
+                        </div>
+                        <div
+                          className={clsx(
+                            classes.buttonTimelineContainer,
+                            timelineButtonClicked &&
+                              classes.buttonTimelineContainerClicked
+                          )}
+                        >
+                          <hr />
+                          <button
+                            onClick={handleTimelineButtonClick}
+                            className={clsx(
+                              classes.timelineButton,
+                              timelineButtonClicked &&
+                                classes.timelineButtonClicked
+                            )}
+                          >
+                            View full timeline
+                          </button>
+                        </div>
+                      </>
+                    );
+                  } else if (idx === self.length - 1) {
+                    return (
+                      <div
+                        className={clsx(
+                          classes.messageContainer,
+                          idx === timelineMessages.length - 1 &&
+                            classes.lastMessage
+                        )}
+                      >
+                        <p className={classes.messages}>
+                          <span>
+                            <div
+                              className={clsx(classes.dot, classes.greenDot)}
+                            />
+                            {msg.message}
+                          </span>
+                          <span className={classes.time}>{msg.time}</span>
+                        </p>
+                        {idx !== timelineMessages.length - 1 && (
+                          <div className={classes.greyBar} />
+                        )}
+                      </div>
+                    );
+                  }
+                  return (
+                    <div
+                      className={clsx(
+                        classes.messageContainer,
+                        timelineButtonClicked
+                          ? classes.messageNotCollapsed
+                          : classes.messageCollapsed,
+                        idx === timelineMessages.length - 1 &&
+                          classes.lastMessage
+                      )}
+                    >
+                      <p className={classes.messages}>
+                        <span
+                          className={clsx(
+                            transferDetails.proposalStatus === 4 &&
+                              idx === timelineMessages.length - 1 &&
+                              classes.transferCancelColor,
+                            (transferDetails.proposalStatus === 1 ||
+                              transferDetails.proposalStatus === 2) &&
+                              idx === timelineMessages.length - 1 &&
+                              classes.waitingForColor
+                          )}
+                        >
+                          <div
+                            className={clsx(classes.dot, classes.greenDot)}
+                          />
+                          {msg.message}
+                        </span>
+                        <span className={classes.time}>{msg.time}</span>
+                      </p>
+                      {idx !== timelineMessages.length - 1 && (
+                        <div className={classes.greyBar} />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
           </section>
         </section>
       </Modal>

@@ -70,6 +70,7 @@ const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
     explorerTableContainer: {
       display: "flex",
       justifyContent: "center",
+      marginBottom: "100px",
     },
     explorerTable: {
       marginTop: 29,
@@ -78,7 +79,7 @@ const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
       background: "#FAFAFA",
       minWidth: 955,
       width: "100%",
-      height: 685,
+      height: "100%",
     },
   })
 );
@@ -93,7 +94,13 @@ type PreflightDetails = {
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
   const { explorerDispatcher, explorerState } = explorerContext;
-  const { chains, transfers, network, transferDetails } = explorerState;
+  const {
+    chains,
+    transfers,
+    network,
+    transferDetails,
+    timelineButtonClicked,
+  } = explorerState;
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
@@ -111,25 +118,19 @@ const ExplorerPage = () => {
 
   const handleOpenModal = (txId: string | undefined) => () => {
     const txDetail = transfers.find((tx) => tx.id === txId);
-    //TODO: check type definitions
-    // @ts-ignore
-    const { proposals } = txDetail;
-    let colorSchemaForTransferStatus;
-    if (!proposals.length) {
-      colorSchemaForTransferStatus = getColorSchemaTransferStatus(undefined);
-      setPillColorStatus(colorSchemaForTransferStatus);
-    } else {
-      colorSchemaForTransferStatus = getColorSchemaTransferStatus(
-        proposals[0].proposalStatus
-      );
-      setPillColorStatus(colorSchemaForTransferStatus);
-    }
+
+    const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
+      txDetail?.status
+    );
+
+    setPillColorStatus(colorSchemaForTransferStatus);
 
     explorerDispatcher({
       type: "setTransferDetails",
       payload: txDetail!,
     });
     setActive(true);
+    window.history.replaceState({}, "", `/explorer/list/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -137,7 +138,11 @@ const ExplorerPage = () => {
     explorerDispatcher({
       type: "cleanTransferDetails",
     });
+    window.history.replaceState({}, "", "/explorer/list");
   };
+
+  const handleTimelineButtonClick = () =>
+    explorerDispatcher({ type: "timelineButtonClick" });
 
   return (
     <Grid lg={12} justifyContent="center" flexWrap="wrap">
@@ -183,6 +188,9 @@ const ExplorerPage = () => {
               handleClose={handleClose}
               transferDetails={transferDetails || {}}
               pillColorStatus={pillColorStatus}
+              chains={chains}
+              handleTimelineButtonClick={handleTimelineButtonClick}
+              timelineButtonClicked={timelineButtonClicked}
             />
           </div>
         </div>

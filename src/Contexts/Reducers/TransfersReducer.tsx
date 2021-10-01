@@ -13,8 +13,26 @@ export enum ProposalStatus {
   Cancelled,
 }
 
+type Vote = {
+  voteStatus: boolean;
+  voteTransactionHash?: string;
+  voteBlockNumber: number;
+  timestamp: number;
+  dataHash: string;
+  by: string;
+};
+
+type Proposal = {
+  proposalStatus: ProposalStatus;
+  dataHash?: string;
+  proposalEventTransactionHash?: string;
+  proposalEventBlockNumber: number;
+  timestamp: number;
+  by: string;
+};
+
 export type DepositRecord = {
-  id?: string;
+  id: string;
   fromAddress?: string;
   fromChainId?: number;
   fromNetworkName?: string;
@@ -26,20 +44,9 @@ export type DepositRecord = {
   timestamp?: number;
   depositTransactionHash?: string;
   depositBlockNumber?: number;
-  proposals: Array<{
-    proposalStatus: ProposalStatus;
-    dataHash?: string;
-    proposalEventTransactionHash?: string;
-    proposalEventBlockNumber: number;
-    timestamp: number;
-  }>;
-  votes: Array<{
-    voteStatus: boolean;
-    voteTransactionHash?: string;
-    voteBlockNumber: number;
-    timestamp: number;
-    dataHash: string;
-  }>;
+  proposalEvents: Array<Proposal>;
+  voteEvents: Array<Vote>;
+  status: number;
 };
 
 export type AddTransferPayload = {
@@ -100,12 +107,19 @@ export type TransferResponse = {
   transfers: Array<DepositRecord>;
 };
 
+type TokenForDetailsView = {
+  fromIcon: EvmBridgeConfig | SubstrateBridgeConfig;
+  toIcon: EvmBridgeConfig | SubstrateBridgeConfig;
+};
+
 export type Action =
   | { type: "fetchTransfers"; payload: Array<DepositRecord> }
   | { type: "error" }
   | { type: "selectNetwork"; payload: number }
   | { type: "setTransferDetails"; payload: DepositRecord }
-  | { type: "cleanTransferDetails" };
+  | { type: "cleanTransferDetails" }
+  | { type: "setTokenIconsForDetailView"; payload: TokenForDetailsView }
+  | { type: "timelineButtonClick" };
 
 export type Transfers = {
   [depositNonce: number]: DepositRecord;
@@ -117,15 +131,21 @@ type NetworkSelection = {
 };
 
 export type TransferDetails = {
+  id: string;
   formatedTransferDate: string;
   addressShortened: string;
-  proposalStatus: string;
   formatedAmount: string;
   fromNetworkName?: string;
   toNetworkName?: string;
   depositTxHashShortened: string;
   fromChainId?: number;
   toChainId?: number;
+  proposalStatus: number;
+  voteEvents: Array<Vote>;
+  proposalEvents: Array<Proposal>;
+  timelineMessages: Array<any>;
+  fromIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+  toIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
 };
 
 export type ExplorerState = {
@@ -134,6 +154,7 @@ export type ExplorerState = {
   network: NetworkSelection;
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
   transferDetails: TransferDetails;
+  timelineButtonClicked: boolean;
 };
 
 export function transfersReducer(
@@ -153,21 +174,51 @@ export function transfersReducer(
       const { name, chainId } = networkSelected!;
       return { ...explorerState, network: { name, chainId } };
     case "setTransferDetails":
-      const transferDetails = computeTransferDetails(action.payload);
+      const transferDetails = computeTransferDetails(
+        action.payload,
+        explorerState.chains
+      );
       return { ...explorerState, transferDetails };
     case "cleanTransferDetails":
       const cleanedTransferDetails = {
+        id: "",
         formatedTransferDate: "",
         addressShortened: "",
-        proposalStatus: "",
+        proposalStatus: 0,
         formatedAmount: "",
         fromNetworkName: "",
         toNetworkName: "",
         depositTxHashShortened: "",
         fromChainId: 0,
         toChainId: 0,
+        voteEvents: [],
+        proposalEvents: [],
+        timelineMessages: [],
+        fromIcon: undefined,
+        toIcon: undefined,
       };
-      return { ...explorerState, transferDetails: cleanedTransferDetails };
+      return {
+        ...explorerState,
+        transferDetails: cleanedTransferDetails,
+        timelineButtonClicked: false,
+      };
+    case "setTokenIconsForDetailView":
+      const {
+        payload: { fromIcon, toIcon },
+      } = action;
+      return {
+        ...explorerState,
+        transferDetails: {
+          ...explorerState.transferDetails,
+          fromIcon,
+          toIcon,
+        },
+      };
+    case "timelineButtonClick":
+      return {
+        ...explorerState,
+        timelineButtonClicked: !explorerState.timelineButtonClicked,
+      };
     default:
       return explorerState;
   }

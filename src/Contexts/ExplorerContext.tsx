@@ -32,16 +32,23 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
     network: { name: "", chainId: 0 },
     chains,
     transferDetails: {
+      id: "",
       formatedTransferDate: "",
       addressShortened: "",
-      proposalStatus: "",
+      proposalStatus: 0,
       formatedAmount: "",
       fromNetworkName: "",
       toNetworkName: "",
       depositTxHashShortened: "",
       fromChainId: 0,
       toChainId: 0,
+      voteEvents: [],
+      proposalEvents: [],
+      timelineMessages: [],
+      fromIcon: undefined,
+      toIcon: undefined,
     },
+    timelineButtonClicked: false,
   };
 
   const [explorerState, explorerDispatcher] = useReducer(

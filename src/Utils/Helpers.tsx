@@ -11,16 +11,17 @@ import celoUSD, {
   ReactComponent as CeloTokenIcon,
 } from "../media/tokens/cusd.svg";
 
-import { ReactComponent as EthIcon } from "../media/networks/eth.svg";
-import { ReactComponent as CeloUSD } from "../media/networks/celo.svg";
-import { ReactComponent as EtcIcon } from "../media/networks/etc.svg";
-import { ReactComponent as CosmosIcon } from "../media/networks/cosmos.svg";
-import { ReactComponent as EthermintIcon } from "../media/networks/ethermint.svg";
+import EthIcon from "../media/networks/eth.svg";
+import CeloUSD from "../media/networks/celo.svg";
+import EtcIcon from "../media/networks/etc.svg";
+import CosmosIcon from "../media/networks/cosmos.svg";
+import EthermintIcon from "../media/networks/ethermint.svg";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   DepositRecord,
   TransferDetails,
 } from "../Contexts/Reducers/TransfersReducer";
+import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
 const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
 const { hexToU8a, isHex } = require("@polkadot/util");
 
@@ -74,28 +75,25 @@ export const PredefinedIcons: any = {
   celoUSD: celoUSD,
 };
 
-export const getIcon = (chainId: number | undefined) => {
-  switch (chainId) {
-    case 1:
-    case 3:
-    case 4:
-    case 5:
-    case 42:
-      return EthIcon;
-    case 42220:
-    case 44787:
-    case 62320:
-      return CeloUSD;
-    case 61:
-      return EthIcon;
-    default:
-      return EthIcon;
-  }
+const PredefinedNetworkIcons: any = {
+  EthIcon: EthIcon,
+  CeloUSD: CeloUSD,
+  EtcIcon: EtcIcon,
+  CosmosIcon: CosmosIcon,
+  EthermintIcon: EthermintIcon,
 };
+
+export const showImageUrl = (url?: string) =>
+  url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
+
+export const showImageUrlNetworkIcons = (url?: string) =>
+  url && PredefinedNetworkIcons[url]
+    ? PredefinedNetworkIcons[url]
+    : PredefinedIcons[url!];
 
 // TODO: for now just ERC20 token Icon
 export const getTokenIcon = () => {
-  return EthTokenIcon;
+  return PredefinedIcons["ETHIcon"];
 };
 
 export const formatTransferDate = (transferDate: number | undefined) =>
@@ -166,28 +164,43 @@ export const computeAndFormatAmount = (amount: string) => {
   return formatAmount(toBigNumber);
 };
 
+const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
+
+export const computeIconsToUse = (
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>,
+  fromChainId: number,
+  toChainId: number
+) => {
+  const fromIcon = chains.find((chain) => chain.chainId === fromChainId);
+  const toIcon = chains.find((chain) => chain.chainId === toChainId);
+
+  return { fromIcon, toIcon };
+};
+
 export const computeTransferDetails = (
-  txDetails: DepositRecord
+  txDetails: DepositRecord,
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>
 ): TransferDetails => {
   const {
     timestamp,
     fromAddress,
-    proposals,
+    proposalEvents,
     amount,
     fromNetworkName,
     toNetworkName,
     depositTransactionHash,
     fromChainId,
     toChainId,
+    status: proposalStatus,
+    voteEvents,
+    id,
   } = txDetails;
 
-  let proposalStatus;
-
-  if (proposals.length) {
-    proposalStatus = getProposalStatus(proposals[0].proposalStatus);
-  } else {
-    proposalStatus = getProposalStatus(undefined);
-  }
+  const { fromIcon, toIcon } = computeIconsToUse(
+    chains,
+    fromChainId!,
+    toChainId!
+  );
 
   const formatedTransferDate = formatTransferDate(timestamp);
 
@@ -197,15 +210,140 @@ export const computeTransferDetails = (
 
   const formatedAmount = computeAndFormatAmount(amount!);
 
+  let timelineMessages = [];
+
+  if (!proposalEvents.length && !voteEvents.length) {
+    timelineMessages = [
+      {
+        message: "Deposit submitted",
+        time: formatDateTimeline(timestamp!),
+      },
+    ];
+  } else {
+    const votesMessages = voteEvents.map((vote) => ({
+      message: `confirmed by ${shortenAddress(vote.by)}`,
+      time: formatDateTimeline(vote.timestamp),
+    }));
+
+    switch (proposalEvents.length) {
+      case 1: {
+        const firstMessage = {
+          message: "Deposit submitted",
+          time: formatDateTimeline(proposalEvents[0].timestamp),
+        };
+        const createdBy = {
+          message: `Proposal created by ${shortenAddress(
+            proposalEvents[0].by
+          )}`,
+          time: formatDateTimeline(proposalEvents[0].timestamp),
+        };
+
+        let waitingForMoreVotesMsg = {
+          message: "Waiting for more votes",
+          time: formatDateTimeline(proposalEvents[0].timestamp),
+        };
+
+        if (!voteEvents.length) {
+          timelineMessages = [
+            firstMessage,
+            createdBy,
+            waitingForMoreVotesMsg,
+          ] as any;
+          break;
+        } else {
+          timelineMessages = [
+            firstMessage,
+            createdBy,
+            ...votesMessages,
+            waitingForMoreVotesMsg,
+          ] as any;
+
+          break;
+        }
+      }
+      default: {
+        timelineMessages = proposalEvents.reduce((acc: any, proposal, idx) => {
+          if (idx === 0) {
+            acc = [
+              {
+                message: "Deposit submitted",
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: `Proposal created by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              ...votesMessages,
+            ];
+            return acc;
+          }
+
+          if (proposalStatus === 4) {
+            acc = [
+              ...acc,
+              {
+                message: `Proposal cancel by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: "Transfer canceled",
+                time: formatDateTimeline(proposal.timestamp),
+              },
+            ];
+            return acc;
+          } else if (proposalStatus === 2) {
+            acc = [
+              ...acc,
+              {
+                message: `Proposal passed by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: "Waiting for execution",
+                time: formatDateTimeline(proposal.timestamp),
+              },
+            ];
+            return acc;
+          } else if (proposalStatus === 3 && proposal.proposalStatus === 3) {
+            acc = [
+              ...acc,
+              {
+                message: `Proposal passed by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: `Proposal executed by ${shortenAddress(proposal.by)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+              {
+                message: `Transfer executed on ${getNetworkName(toChainId)}`,
+                time: formatDateTimeline(proposal.timestamp),
+              },
+            ];
+            return acc;
+          }
+          return acc;
+        }, []);
+        break;
+      }
+    }
+  }
+
   return {
+    id,
     formatedTransferDate,
     addressShortened,
-    proposalStatus,
     formatedAmount,
     fromNetworkName,
     toNetworkName,
     depositTxHashShortened,
     fromChainId,
     toChainId,
+    voteEvents,
+    proposalEvents,
+    proposalStatus,
+    timelineMessages,
+    fromIcon,
+    toIcon,
   };
 };

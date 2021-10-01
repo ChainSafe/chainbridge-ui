@@ -18,14 +18,20 @@ import {
 } from "../../Contexts/Reducers/TransfersReducer";
 import {
   formatTransferDate,
-  getIcon,
   getRandomSeed,
   getTokenIcon,
   shortenAddress,
   computeAndFormatAmount,
+  showImageUrl,
+  computeIconsToUse,
+  showImageUrlNetworkIcons,
 } from "../../Utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 import DetailView from "./DetailView";
+import {
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
+} from "../../chainbridgeConfig";
 
 type PillColorSchema = {
   pillColorSchema: {
@@ -122,10 +128,23 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     transferDetails: {
       minWidth: 768,
       width: "100%",
-      height: 731,
       [breakpoints.down("sm")]: {
         minWidth: 411,
       },
+    },
+    transferDetailExpandedDesktop: {},
+    transferDetailExpanded: {
+      height: 960,
+      transition: "height 0.5s ease-out",
+    },
+    transferDetailNotExpanded: {
+      [breakpoints.down("sm")]: {
+        height: 700,
+        transition: "height 0.5s ease-out",
+      },
+    },
+    timelineSection: {
+      paddingBottom: 15,
     },
     closeButton: {
       display: "flex",
@@ -262,7 +281,125 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
         },
       },
     },
-    transferTimeline: {},
+    transferTimeline: {
+      "& > div:first-child": {
+        marginBottom: 22,
+      },
+    },
+    messageContainer: {
+      display: "grid",
+      gridTemplateRows: "1fr 0.5fr",
+      position: "relative",
+    },
+    lastMessage: {
+      visibility: "visible",
+    },
+    messages: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      height: 30,
+      fontSize: 14,
+      // marginBottom: 20,
+      fontWeight: 400,
+      color: "#595959",
+      "& > span": {
+        display: "flex",
+        alignItems: "center",
+        "& > div": {
+          marginRight: 5,
+        },
+      },
+    },
+    dot: {
+      border: "1px solid",
+      borderRadius: "50%",
+      height: 8,
+      width: 8,
+    },
+    greenDot: {
+      background: "#73D13D",
+      borderColor: "#73D13D",
+    },
+    greyBar: {
+      border: "0.2px solid #E8E8E8",
+      height: 37,
+      width: 0.3,
+      position: "absolute",
+      top: 19,
+      left: 3,
+      "& div:first-child": {
+        height: 45,
+      },
+    },
+    imageToken: {
+      height: 27,
+      width: 27,
+    },
+    timelineButton: {
+      display: "block",
+      [breakpoints.down("sm")]: {
+        borderRadius: 16,
+        width: 114,
+        display: "flex",
+        alignSelf: "center",
+        justifySelf: "center",
+        border: "1px solid #D9D9D9",
+        fontSize: 14,
+        zIndex: 10,
+      },
+    },
+    timelineButtonClicked: {
+      display: "none",
+    },
+    messageCollapsed: {
+      [breakpoints.down("sm")]: {
+        display: "none",
+      },
+    },
+    messageNotCollapsed: {
+      [breakpoints.down("sm")]: {
+        display: "grid",
+        marginBottom: 10,
+      },
+    },
+    buttonTimelineContainer: {
+      display: "none",
+      [breakpoints.down("sm")]: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        "& > hr": {
+          position: "absolute",
+          width: 325,
+          zIndex: 0,
+          border: "0.2px solid #E8E8E8",
+        },
+      },
+    },
+    buttonTimelineContainerClicked: {
+      "& > hr": {
+        display: "none",
+      },
+    },
+    customGreyBar: {
+      top: 29,
+      height: 39,
+    },
+    time: {
+      [breakpoints.down("sm")]: {
+        display: "flex",
+        justifySelf: "center",
+      },
+    },
+    secondElementGreybar: {
+      height: 77,
+    },
+    transferCancelColor: {
+      color: "#F5222D",
+    },
+    waitingForColor: {
+      color: "#BFBFBF",
+    },
   })
 );
 
@@ -275,16 +412,21 @@ type ExplorerTable = {
   setActive: (state: boolean) => void;
   transferDetails: TransferDetails;
   pillColorStatus: { borderColor: string; background: string };
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  handleTimelineButtonClick: () => void;
+  timelineButtonClicked: boolean;
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
   transactionList,
   active,
-  setActive,
   handleOpenModal,
   handleClose,
   transferDetails,
   pillColorStatus,
+  chains,
+  handleTimelineButtonClick,
+  timelineButtonClicked,
 }: ExplorerTable) => {
   const classes = useStyles({
     pillColorSchema: pillColorStatus,
@@ -292,12 +434,16 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
-      const { amount } = transfer;
+      const { amount, fromChainId, toChainId } = transfer;
       const fromAddressShortened = shortenAddress(transfer.fromAddress ?? "");
 
-      const FromChainIcon = getIcon(transfer.fromChainId);
-      const ToChainIcon = getIcon(transfer.toChainId);
-      const TokenIcon = getTokenIcon();
+      const { fromIcon, toIcon } = computeIconsToUse(
+        chains,
+        fromChainId!,
+        toChainId!
+      );
+
+      const tokenIcon = getTokenIcon();
 
       const randomString = getRandomSeed();
 
@@ -327,24 +473,30 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell className={classes.row}>
             <div>
               <span>
-                <SvgIcon>
-                  <FromChainIcon />
-                </SvgIcon>
+                <img
+                  className={classes.imageToken}
+                  src={showImageUrlNetworkIcons(fromIcon?.tokens[0].imageUri!)}
+                  alt={fromIcon?.tokens[0].symbol}
+                />
                 <span>{transfer.fromNetworkName} to</span>
               </span>
               <span>
-                <SvgIcon>
-                  <ToChainIcon />
-                </SvgIcon>{" "}
+                <img
+                  className={classes.imageToken}
+                  src={showImageUrlNetworkIcons(toIcon?.tokens[0].imageUri!)}
+                  alt={fromIcon?.tokens[0].symbol}
+                />
                 <span>{transfer.toNetworkName}</span>
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
-              <SvgIcon>
-                <TokenIcon className={classes.tokenIcon} />
-              </SvgIcon>
+              <img
+                src={showImageUrl(tokenIcon!)}
+                alt=""
+                className={classes.imageToken}
+              />
               <span>{amountFormated} ETH</span>
             </span>
           </TableCell>
@@ -380,6 +532,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           transferDetails={transferDetails}
           handleClose={handleClose}
           classes={classes}
+          handleTimelineButtonClick={handleTimelineButtonClick}
+          timelineButtonClicked={timelineButtonClicked}
         />
       </>
     </Table>
