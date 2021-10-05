@@ -26,6 +26,7 @@ if (
     dsn: process.env.REACT_APP_SENTRY_DSN_URL,
     release: process.env.REACT_APP_SENTRY_RELEASE,
   });
+  console.log("Sentry logging is initialized");
 }
 
 const App: React.FC<{}> = () => {
