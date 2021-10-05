@@ -6,8 +6,9 @@ name: Docker build and push
 on:
   push:
     branches:
-    # when main branch receives a push
+      # when main branch receives a push
       - main
+      - explorer-develop
     # when any of these versions receive a push
     tags:
       - "v*.*.*"
@@ -20,13 +21,13 @@ jobs:
   build-and-deploy:
     name: Docker Deployment
     runs-on: ubuntu-latest
-#    # requires these jobs to run first
-#    needs: [test, e2e, lint]
+    #    # requires these jobs to run first
+    #    needs: [test, e2e, lint]
     # if check not passed, job will be skipped
     if: github.ref == 'refs/heads/main' || contains(github.ref, '/tags/v')
     # list steps
     steps:
-    # prepares docker images
+      # prepares docker images
       - name: Prepare
         id: prep
         run: |
