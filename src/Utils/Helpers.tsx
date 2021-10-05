@@ -89,7 +89,7 @@ export const showImageUrl = (url?: string) =>
 export const showImageUrlNetworkIcons = (url?: string) =>
   url && PredefinedNetworkIcons[url]
     ? PredefinedNetworkIcons[url]
-    : PredefinedIcons[url!];
+    : PredefinedIcons[url!] || url;
 
 // TODO: for now just ERC20 token Icon
 export const getTokenIcon = () => {
