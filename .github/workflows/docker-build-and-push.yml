@@ -29,6 +29,8 @@ jobs:
     # if check not passed, job will be skipped
     if: github.ref == 'refs/heads/main' || contains(github.ref, '/tags/v')
     # list steps
+    environment:
+      name: build
     steps:
       # prepares docker images
       - name: Prepare
@@ -69,7 +71,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.prep.outputs.tags }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
