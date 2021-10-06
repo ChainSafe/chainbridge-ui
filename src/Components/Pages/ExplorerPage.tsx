@@ -153,7 +153,7 @@ const ExplorerPage = () => {
               <Typography component="h2" variant="h2">
                 Transfers on
               </Typography>
-              <div className={classes.networkSelectorContainer}>
+              {/* <div className={classes.networkSelectorContainer}>
                 <SelectInput
                   className={classes.networkSelector}
                   options={renderOptions()}
@@ -167,16 +167,16 @@ const ExplorerPage = () => {
                   placeholder="Select network"
                   disabled={!chains.length}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
-          <div className={classes.searchInput}>
+          {/* <div className={classes.searchInput}>
             <TextInput
               placeholder={"Search by deposit hash"}
               LeftIcon={SearchIcon}
               onChange={() => {}}
             />
-          </div>
+          </div> */}
         </section>
         <div className={classes.explorerTableContainer}>
           <div className={classes.explorerTable}>
