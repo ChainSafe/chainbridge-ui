@@ -118,10 +118,10 @@ const AppWrapper: React.FC<IAppWrapper> = ({ children }: IAppWrapper) => {
               <GlobalSvg />
               <Typography variant="h5">Transfer</Typography>
             </NavLink>
-            <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
+            {/* <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
               <GiftSvg />
               <Typography variant="h5">Wrap token</Typography>
-            </NavLink>
+            </NavLink> */}
           </section>
           <div className={classes.pageArea}>{children}</div>
         </section>

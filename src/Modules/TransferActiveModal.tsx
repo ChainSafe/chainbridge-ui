@@ -246,7 +246,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </strong>
             </Typography>
             <section className={classes.buttons}>
-              <Button
+              {/* <Button
                 onClick={() =>
                   destinationChainConfig &&
                   (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
@@ -268,7 +268,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 // }
               >
                 View transaction
-              </Button>
+              </Button> */}
               <Button
                 size="small"
                 className={classes.button}

@@ -15,7 +15,7 @@ const FilesRoutes = () => {
   return (
     <Switch>
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
-      <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
+      {/* <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} /> */}
       <Route exact path={ROUTE_LINKS.Explore}>
         <ExplorerProvider>
           <ExplorerPage />
