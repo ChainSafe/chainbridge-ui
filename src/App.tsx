@@ -24,6 +24,7 @@ if (
 ) {
   init({
     dsn: process.env.REACT_APP_SENTRY_DSN_URL,
+    environment: process.env.REACT_APP_SENTRY_ENV,
     release: process.env.REACT_APP_SENTRY_RELEASE,
   });
   console.log("Sentry logging is initialized");
