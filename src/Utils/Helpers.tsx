@@ -97,7 +97,7 @@ export const getTokenIcon = () => {
 };
 
 export const formatTransferDate = (transferDate: number | undefined) =>
-  dayjs(transferDate).format("MMM D, h:mmA");
+  transferDate ? dayjs(transferDate * 1000).format("MMM D, h:mmA") : "";
 
 export const formatAmount = (amount: BigNumberish) =>
   ethers.utils.formatUnits(amount);
