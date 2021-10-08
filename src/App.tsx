@@ -7,7 +7,7 @@ import {
   ToasterProvider,
 } from "@chainsafe/common-components";
 
-import Routes from "./Components/Routes";
+import ChainbridgeRoutes from "./Components/Routes";
 import { lightTheme } from "./Themes/LightTheme";
 import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
 import AppWrapper from "./Layouts/AppWrapper";
@@ -29,6 +29,9 @@ if (
 }
 
 const App: React.FC<{}> = () => {
+  const {
+    __RUNTIME_CONFIG__: { UI: { wrapTokenPage = false } = {} },
+  } = window;
   const tokens = chainbridgeConfig.chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
@@ -87,8 +90,8 @@ const App: React.FC<{}> = () => {
             <NetworkManagerProvider>
               <ChainbridgeProvider>
                 <Router>
-                  <AppWrapper>
-                    <Routes />
+                  <AppWrapper wrapTokenPage={wrapTokenPage}>
+                    <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
                   </AppWrapper>
                 </Router>
               </ChainbridgeProvider>
