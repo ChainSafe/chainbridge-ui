@@ -9,6 +9,7 @@ export const ROUTE_LINKS = {
   Transfer: "/transfer",
   Wrap: "/wrap",
   Explorer: "/explorer/list",
+  ExplorerDetailed: "/explorer/list/:txId",
 };
 
 const FilesRoutes = () => {
@@ -17,6 +18,11 @@ const FilesRoutes = () => {
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
       <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
       <Route exact path={ROUTE_LINKS.Explorer} component={ExplorerPage}>
+        <ExplorerProvider>
+          <ExplorerPage />
+        </ExplorerProvider>
+      </Route>
+      <Route exact path={ROUTE_LINKS.ExplorerDetailed} component={ExplorerPage}>
         <ExplorerProvider>
           <ExplorerPage />
         </ExplorerProvider>

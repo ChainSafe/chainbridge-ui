@@ -6,6 +6,7 @@ import {
   Typography,
   SearchIcon,
   Grid,
+  useHistory,
 } from "@chainsafe/common-components";
 import ExplorerTable from "../Custom/ExplorerTable";
 import { getColorSchemaTransferStatus } from "../../Utils/Helpers";
@@ -96,11 +97,7 @@ const ExplorerPage = () => {
   const { explorerDispatcher, explorerState } = explorerContext;
   const {
     chains,
-    transfers,
-    network,
-    transferDetails,
-    timelineButtonClicked,
-  } = explorerState;
+  const { redirect } = useHistory();
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
@@ -130,7 +127,7 @@ const ExplorerPage = () => {
       payload: txDetail!,
     });
     setActive(true);
-    window.history.replaceState({}, "", `/explorer/list/${txDetail?.id}`);
+    redirect(`/explorer/list/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -138,7 +135,7 @@ const ExplorerPage = () => {
     explorerDispatcher({
       type: "cleanTransferDetails",
     });
-    window.history.replaceState({}, "", "/explorer/list");
+    redirect("/explorer/list");
   };
 
   const handleTimelineButtonClick = () =>
