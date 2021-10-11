@@ -113,8 +113,6 @@ type TokenForDetailsView = {
 };
 
 export type Action =
-  | { type: "fetchTransfers"; payload: Array<DepositRecord> }
-  | { type: "error" }
   | { type: "selectNetwork"; payload: number }
   | { type: "setTransferDetails"; payload: DepositRecord }
   | { type: "cleanTransferDetails" }
@@ -151,21 +149,21 @@ export type TransferDetails = {
 export type ExplorerState = {
   transfers: Array<DepositRecord>;
   error: boolean;
-  network: NetworkSelection;
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+};
+
+export type ExplorerPageState = {
+  network: NetworkSelection;
   transferDetails: TransferDetails;
   timelineButtonClicked: boolean;
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
 export function transfersReducer(
-  explorerState: ExplorerState,
+  explorerState: ExplorerPageState,
   action: Action
-): ExplorerState {
+): ExplorerPageState {
   switch (action.type) {
-    case "fetchTransfers":
-      return { ...explorerState, transfers: action.payload };
-    case "error":
-      return { ...explorerState, error: true };
     case "selectNetwork":
       const { chains } = explorerState;
       const networkSelected = chains.find(
