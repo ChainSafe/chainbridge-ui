@@ -23,8 +23,10 @@ import {
   shortenAddress,
   computeAndFormatAmount,
   showImageUrl,
-  computeIconsToUse,
+  selectChains,
+  selectToken,
   showImageUrlNetworkIcons,
+  getNetworkIcon,
 } from "../../Utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 import DetailView from "./DetailView";
@@ -335,6 +337,11 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       height: 27,
       width: 27,
     },
+    imageValueToken: {
+      height: 27,
+      width: 27,
+      marginRight: 5,
+    },
     timelineButton: {
       display: "block",
       [breakpoints.down("sm")]: {
@@ -437,11 +444,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const { amount, fromChainId, toChainId } = transfer;
       const fromAddressShortened = shortenAddress(transfer.fromAddress ?? "");
 
-      const { fromIcon, toIcon } = computeIconsToUse(
+      const { fromChain, toChain } = selectChains(
         chains,
         fromChainId!,
         toChainId!
       );
+
+      const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
+      const toToken = selectToken(fromChain, transfer.destinationTokenAddress);
 
       const tokenIcon = getTokenIcon();
 
@@ -475,16 +485,16 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
               <span>
                 <img
                   className={classes.imageToken}
-                  src={showImageUrlNetworkIcons(fromIcon?.tokens[0].imageUri!)}
-                  alt={fromIcon?.tokens[0].symbol}
+                  src={getNetworkIcon(fromChain)}
+                  alt="fromChain"
                 />
                 <span>{transfer.fromNetworkName} to</span>
               </span>
               <span>
                 <img
                   className={classes.imageToken}
-                  src={showImageUrlNetworkIcons(toIcon?.tokens[0].imageUri!)}
-                  alt={fromIcon?.tokens[0].symbol}
+                  src={getNetworkIcon(toChain)}
+                  alt={fromToken?.symbol}
                 />
                 <span>{transfer.toNetworkName}</span>
               </span>
@@ -493,19 +503,21 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
               <img
-                src={showImageUrl(tokenIcon!)}
-                alt=""
-                className={classes.imageToken}
+                className={classes.imageValueToken}
+                src={showImageUrlNetworkIcons(fromToken?.imageUri!)}
+                alt={fromToken?.symbol}
               />
-              <span>{amountFormated} ETH</span>
+              <span>
+                {amountFormated} {fromToken?.name}
+              </span>
             </span>
           </TableCell>
           <TableCell className={classes.row}>
             <div className={classes.viewDetailsInfo}>
-              <SvgIcon>
-                <DirectionalIcon />
-              </SvgIcon>
               <Button onClick={handleOpenModal(transfer.id)}>
+                <SvgIcon>
+                  <DirectionalIcon />
+                </SvgIcon>
                 View Details
               </Button>
             </div>

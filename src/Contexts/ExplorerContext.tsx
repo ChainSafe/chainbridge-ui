@@ -45,8 +45,8 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
       voteEvents: [],
       proposalEvents: [],
       timelineMessages: [],
-      fromIcon: undefined,
-      toIcon: undefined,
+      fromChain: undefined,
+      toChain: undefined,
     },
     timelineButtonClicked: false,
   };

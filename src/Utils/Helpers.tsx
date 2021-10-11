@@ -12,16 +12,18 @@ import celoUSD, {
 } from "../media/tokens/cusd.svg";
 
 import EthIcon from "../media/networks/eth.svg";
-import CeloUSD from "../media/networks/celo.svg";
+import CeloIcon from "../media/networks/celo.svg";
 import EtcIcon from "../media/networks/etc.svg";
 import CosmosIcon from "../media/networks/cosmos.svg";
 import EthermintIcon from "../media/networks/ethermint.svg";
+import PolkadotIcon from "../media/networks/polkadot.svg";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   DepositRecord,
   TransferDetails,
 } from "../Contexts/Reducers/TransfersReducer";
 import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
+import { isCelo } from "../Contexts/Adaptors/EVMAdaptors/helpers";
 const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
 const { hexToU8a, isHex } = require("@polkadot/util");
 
@@ -77,7 +79,7 @@ export const PredefinedIcons: any = {
 
 const PredefinedNetworkIcons: any = {
   EthIcon: EthIcon,
-  CeloUSD: CeloUSD,
+  CeloUSD: CeloIcon,
   EtcIcon: EtcIcon,
   CosmosIcon: CosmosIcon,
   EthermintIcon: EthermintIcon,
@@ -91,9 +93,33 @@ export const showImageUrlNetworkIcons = (url?: string) =>
     ? PredefinedNetworkIcons[url]
     : PredefinedIcons[url!] || url;
 
+export const selectToken = (
+  config: EvmBridgeConfig | SubstrateBridgeConfig | undefined,
+  tokenAddress: string
+) => config?.tokens.find((token) => token.address === tokenAddress);
+
 // TODO: for now just ERC20 token Icon
 export const getTokenIcon = () => {
   return PredefinedIcons["ETHIcon"];
+};
+
+export const getNetworkIcon = (
+  config: EvmBridgeConfig | SubstrateBridgeConfig | undefined
+) => {
+  if (config === undefined) {
+    return undefined;
+  }
+  if (config.type === "Ethereum") {
+    if (isCelo(config.networkId)) {
+      return CeloIcon;
+    } else {
+      return EthIcon;
+    }
+    // } else if (config.type === "Cosmos") {
+    //   return CosmosIcon
+  } else if (config.type === "Substrate") {
+    return PolkadotIcon;
+  }
 };
 
 export const formatTransferDate = (transferDate: number | undefined) =>
@@ -166,15 +192,15 @@ export const computeAndFormatAmount = (amount: string) => {
 
 const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
 
-export const computeIconsToUse = (
+export const selectChains = (
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>,
   fromChainId: number,
   toChainId: number
 ) => {
-  const fromIcon = chains.find((chain) => chain.chainId === fromChainId);
-  const toIcon = chains.find((chain) => chain.chainId === toChainId);
+  const fromChain = chains.find((chain) => chain.chainId === fromChainId);
+  const toChain = chains.find((chain) => chain.chainId === toChainId);
 
-  return { fromIcon, toIcon };
+  return { fromChain, toChain };
 };
 
 export const computeTransferDetails = (
@@ -196,11 +222,7 @@ export const computeTransferDetails = (
     id,
   } = txDetails;
 
-  const { fromIcon, toIcon } = computeIconsToUse(
-    chains,
-    fromChainId!,
-    toChainId!
-  );
+  const { fromChain, toChain } = selectChains(chains, fromChainId!, toChainId!);
 
   const formatedTransferDate = formatTransferDate(timestamp);
 
@@ -343,7 +365,7 @@ export const computeTransferDetails = (
     proposalEvents,
     proposalStatus,
     timelineMessages,
-    fromIcon,
-    toIcon,
+    fromChain,
+    toChain,
   };
 };

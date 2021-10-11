@@ -47,6 +47,8 @@ export type DepositRecord = {
   proposalEvents: Array<Proposal>;
   voteEvents: Array<Vote>;
   status: number;
+  sourceTokenAddress: string;
+  destinationTokenAddress: string;
 };
 
 export type AddTransferPayload = {
@@ -108,8 +110,8 @@ export type TransferResponse = {
 };
 
 type TokenForDetailsView = {
-  fromIcon: EvmBridgeConfig | SubstrateBridgeConfig;
-  toIcon: EvmBridgeConfig | SubstrateBridgeConfig;
+  fromChain: EvmBridgeConfig | SubstrateBridgeConfig;
+  toChain: EvmBridgeConfig | SubstrateBridgeConfig;
 };
 
 export type Action =
@@ -144,8 +146,8 @@ export type TransferDetails = {
   voteEvents: Array<Vote>;
   proposalEvents: Array<Proposal>;
   timelineMessages: Array<any>;
-  fromIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
-  toIcon: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+  fromChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+  toChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
 };
 
 export type ExplorerState = {
@@ -194,8 +196,8 @@ export function transfersReducer(
         voteEvents: [],
         proposalEvents: [],
         timelineMessages: [],
-        fromIcon: undefined,
-        toIcon: undefined,
+        fromChain: undefined,
+        toChain: undefined,
       };
       return {
         ...explorerState,
@@ -204,14 +206,14 @@ export function transfersReducer(
       };
     case "setTokenIconsForDetailView":
       const {
-        payload: { fromIcon, toIcon },
+        payload: { fromChain, toChain },
       } = action;
       return {
         ...explorerState,
         transferDetails: {
           ...explorerState.transferDetails,
-          fromIcon,
-          toIcon,
+          fromChain: fromChain,
+          toChain,
         },
       };
     case "timelineButtonClick":

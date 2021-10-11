@@ -22,8 +22,8 @@ describe("ComputeTransfersDetails", () => {
       "proposalEvents",
       "proposalStatus",
       "timelineMessages",
-      "fromIcon",
-      "toIcon",
+      "fromChain",
+      "toChain",
     ];
 
     const transferDetails = computeTransferDetails(

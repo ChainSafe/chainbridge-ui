@@ -78,7 +78,7 @@ const DetailView = ({
   handleTimelineButtonClick,
   timelineButtonClicked,
 }: DetailView) => {
-  const { timelineMessages, fromIcon, toIcon } = transferDetails;
+  const { timelineMessages, fromChain: fromChain, toChain } = transferDetails;
 
   return (
     (!Object.values(transferDetails).includes("") && (
@@ -152,7 +152,7 @@ const DetailView = ({
                 </Typography>
                 <div>
                   <p>
-                    {transferDetails.formatedAmount} {fromIcon?.tokens[0].name}
+                    {transferDetails.formatedAmount} {fromChain?.tokens[0].name}
                   </p>
                 </div>
               </div>
@@ -165,9 +165,9 @@ const DetailView = ({
                     <img
                       className={classes.imageToken}
                       src={showImageUrlNetworkIcons(
-                        fromIcon?.tokens[0].imageUri!
+                        fromChain?.tokens[0].imageUri!
                       )}
-                      alt={fromIcon?.tokens[0].symbol}
+                      alt={fromChain?.tokens[0].symbol}
                     />
                   </span>
                   <span>{transferDetails?.fromNetworkName}</span>
@@ -182,9 +182,9 @@ const DetailView = ({
                     <img
                       className={classes.imageToken}
                       src={showImageUrlNetworkIcons(
-                        toIcon?.tokens[0].imageUri!
+                        toChain?.tokens[0].imageUri!
                       )}
-                      alt={toIcon?.tokens[0].symbol}
+                      alt={toChain?.tokens[0].symbol}
                     />
                   </span>
                   <span>{transferDetails?.toNetworkName}</span>

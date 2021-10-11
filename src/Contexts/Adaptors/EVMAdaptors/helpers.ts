@@ -7,7 +7,7 @@ import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 
 import { EvmBridgeConfig, TokenConfig } from "../../../chainbridgeConfig";
 
-const isCelo = (networkId?: number) =>
+export const isCelo = (networkId?: number) =>
   [42220, 44787, 62320].includes(networkId ?? 0);
 
 export function getProvider(destinationChainConfig?: any) {
