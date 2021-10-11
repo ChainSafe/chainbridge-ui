@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   SelectInput,
@@ -6,10 +6,15 @@ import {
   Typography,
   SearchIcon,
   Grid,
+  useHistory,
 } from "@chainsafe/common-components";
 import ExplorerTable from "../Custom/ExplorerTable";
 import { getColorSchemaTransferStatus } from "../../Utils/Helpers";
 import { useExplorer } from "../../Contexts/ExplorerContext";
+import {
+  ExplorerPageState,
+  transfersReducer,
+} from "../../Contexts/Reducers/TransfersReducer";
 
 const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
   createStyles({
@@ -93,14 +98,38 @@ type PreflightDetails = {
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
-  const { explorerDispatcher, explorerState } = explorerContext;
-  const {
+  const { explorerState } = explorerContext;
+  const { chains, transfers } = explorerState;
+
+  const initState: ExplorerPageState = {
+    network: { name: "", chainId: 0 },
+    transferDetails: {
+      id: "",
+      formatedTransferDate: "",
+      addressShortened: "",
+      proposalStatus: 0,
+      formatedAmount: "",
+      fromNetworkName: "",
+      toNetworkName: "",
+      depositTxHashShortened: "",
+      fromChainId: 0,
+      toChainId: 0,
+      voteEvents: [],
+      proposalEvents: [],
+      timelineMessages: [],
+      fromChain: undefined,
+      toChain: undefined,
+    },
+    timelineButtonClicked: false,
     chains,
-    transfers,
-    network,
-    transferDetails,
-    timelineButtonClicked,
-  } = explorerState;
+  };
+
+  const [explorerPageState, explorerPageDispatcher] = useReducer(
+    transfersReducer,
+    initState
+  );
+
+  const { redirect } = useHistory();
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
@@ -125,24 +154,44 @@ const ExplorerPage = () => {
 
     setPillColorStatus(colorSchemaForTransferStatus);
 
-    explorerDispatcher({
+    explorerPageDispatcher({
       type: "setTransferDetails",
       payload: txDetail!,
     });
     setActive(true);
-    window.history.replaceState({}, "", `/explorer/list/${txDetail?.id}`);
+    redirect(`/explorer/list/${txDetail?.id}`);
   };
 
   const handleClose = () => {
     setActive(false);
-    explorerDispatcher({
+    explorerPageDispatcher({
       type: "cleanTransferDetails",
     });
-    window.history.replaceState({}, "", "/explorer/list");
+    redirect("/explorer/list");
   };
 
   const handleTimelineButtonClick = () =>
-    explorerDispatcher({ type: "timelineButtonClick" });
+    explorerPageDispatcher({ type: "timelineButtonClick" });
+
+  useEffect(() => {
+    const {
+      location: { href },
+    } = window;
+
+    const activeTx = transfers.find((item) => href.includes(item.id));
+
+    if (activeTx !== undefined) {
+      const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
+        activeTx?.status
+      );
+      setPillColorStatus(colorSchemaForTransferStatus);
+      explorerPageDispatcher({
+        type: "setTransferDetails",
+        payload: activeTx,
+      });
+      setActive(true);
+    }
+  }, [transfers]);
 
   return (
     <Grid lg={12} justifyContent="center" flexWrap="wrap">
@@ -186,11 +235,11 @@ const ExplorerPage = () => {
               setActive={setActive}
               handleOpenModal={handleOpenModal}
               handleClose={handleClose}
-              transferDetails={transferDetails || {}}
+              transferDetails={explorerPageState.transferDetails || {}}
               pillColorStatus={pillColorStatus}
               chains={chains}
               handleTimelineButtonClick={handleTimelineButtonClick}
-              timelineButtonClicked={timelineButtonClicked}
+              timelineButtonClicked={explorerPageState.timelineButtonClicked}
             />
           </div>
         </div>

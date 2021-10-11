@@ -1,7 +1,11 @@
-import { Action, DepositRecord } from "../Contexts/Reducers/TransfersReducer";
+import {
+  DepositRecord,
+  ExplorerState,
+} from "../Contexts/Reducers/TransfersReducer";
 
 export const fetchTransfers = async (
-  transferDistpach: React.Dispatch<Action>
+  setState: React.SetStateAction<any>,
+  state: ExplorerState
 ): Promise<any> => {
   const {
     __RUNTIME_CONFIG__: { INDEXER_URL },
@@ -9,14 +13,15 @@ export const fetchTransfers = async (
   try {
     const response = await fetch(`${INDEXER_URL}/transfers`);
     const transfers: Array<DepositRecord> = await response.json();
-    return transferDistpach({
-      type: "fetchTransfers",
-      payload: transfers,
+    setState({
+      ...state,
+      transfers,
     });
   } catch (error) {
     console.log("ERROR", error);
-    return transferDistpach({
-      type: "error",
+    setState({
+      ...state,
+      error: true,
     });
   }
 };

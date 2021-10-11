@@ -1,9 +1,5 @@
-import React, { useContext, useEffect, useReducer } from "react";
-import {
-  Action,
-  ExplorerState,
-  transfersReducer,
-} from "./Reducers/TransfersReducer";
+import React, { useContext, useEffect, useState } from "react";
+import { ExplorerState } from "./Reducers/TransfersReducer";
 import { fetchTransfers } from "../Services/ExplorerService";
 
 interface IExplorerContextProps {
@@ -12,7 +8,6 @@ interface IExplorerContextProps {
 
 type ExplorerContext = {
   explorerState: ExplorerState;
-  explorerDispatcher: React.Dispatch<Action>;
 };
 
 const ExplorerContext = React.createContext<ExplorerContext | undefined>(
@@ -26,45 +21,20 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
     },
   } = window;
 
-  const initState: ExplorerState = {
+  const [state, setState] = useState<ExplorerState>({
     transfers: [],
     error: false,
-    network: { name: "", chainId: 0 },
     chains,
-    transferDetails: {
-      id: "",
-      formatedTransferDate: "",
-      addressShortened: "",
-      proposalStatus: 0,
-      formatedAmount: "",
-      fromNetworkName: "",
-      toNetworkName: "",
-      depositTxHashShortened: "",
-      fromChainId: 0,
-      toChainId: 0,
-      voteEvents: [],
-      proposalEvents: [],
-      timelineMessages: [],
-      fromChain: undefined,
-      toChain: undefined,
-    },
-    timelineButtonClicked: false,
-  };
-
-  const [explorerState, explorerDispatcher] = useReducer(
-    transfersReducer,
-    initState
-  );
+  });
 
   useEffect(() => {
-    fetchTransfers(explorerDispatcher);
+    fetchTransfers(setState, state);
   }, []);
 
   return (
     <ExplorerContext.Provider
       value={{
-        explorerState,
-        explorerDispatcher,
+        explorerState: state,
       }}
     >
       {children}
