@@ -2,6 +2,8 @@ import React, { useCallback, useContext } from "react";
 import {
   BridgeConfig,
   chainbridgeConfig,
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
   TokenConfig,
 } from "../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
@@ -15,6 +17,7 @@ import NetworkSelectModal from "../Modules/NetworkSelectModal";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
+  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 }
 
 type ChainbridgeContext = {
@@ -52,13 +55,17 @@ type ChainbridgeContext = {
     tokenAddress: string,
     destinationChainId: number
   ) => Promise<boolean | undefined>;
+  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
   undefined
 );
 
-const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
+const ChainbridgeProvider = ({
+  children,
+  chains,
+}: IChainbridgeContextProps) => {
   const {
     handleSetHomeChain,
     destinationChainConfig,
@@ -167,8 +174,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         address,
         chainId,
         checkSupplies,
+        chains,
       }}
     >
+      {/*TODO: we should remove this on refactor task. Context provider single responsibility is to provide share state */}
       <NetworkSelectModal />
       {children}
     </ChainbridgeContext.Provider>
