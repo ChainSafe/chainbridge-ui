@@ -45,5 +45,7 @@ export type ChainbridgeConfig = {
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
+export type UIConfig = { wrapTokenPage: boolean };
+
 export const chainbridgeConfig: ChainbridgeConfig =
   window.__RUNTIME_CONFIG__.CHAINBRIDGE;
