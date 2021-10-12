@@ -30,7 +30,10 @@ if (
 
 const App: React.FC<{}> = () => {
   const {
-    __RUNTIME_CONFIG__: { UI: { wrapTokenPage = false } = {} },
+    __RUNTIME_CONFIG__: {
+      UI: { wrapTokenPage = false } = {},
+      CHAINBRIDGE: { chains },
+    },
   } = window;
   const tokens = chainbridgeConfig.chains
     .filter((c) => c.type === "Ethereum")
@@ -88,7 +91,7 @@ const App: React.FC<{}> = () => {
             gasPriceSetting="fast"
           >
             <NetworkManagerProvider>
-              <ChainbridgeProvider>
+              <ChainbridgeProvider chains={chains}>
                 <Router>
                   <AppWrapper wrapTokenPage={wrapTokenPage}>
                     <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
