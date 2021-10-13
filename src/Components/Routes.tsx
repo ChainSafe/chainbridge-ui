@@ -8,7 +8,8 @@ import { ExplorerProvider } from "../Contexts/ExplorerContext";
 export const ROUTE_LINKS = {
   Transfer: "/transfer",
   Wrap: "/wrap",
-  Explore: "/explore",
+  Explorer: "/explorer/list",
+  ExplorerDetailed: "/explorer/list/:txId",
 };
 
 interface IChainbridgeRoutes {
@@ -19,6 +20,12 @@ const ChainbridgeRoutes: React.FC<IChainbridgeRoutes> = ({ wrapTokenPage }) => {
   return (
     <Switch>
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
+      <Route exact path={ROUTE_LINKS.Explorer} component={ExplorerPage}>
+        <ExplorerProvider>
+          <ExplorerPage />
+        </ExplorerProvider>
+      </Route>
+      <Route exact path={ROUTE_LINKS.ExplorerDetailed} component={ExplorerPage}>
       {wrapTokenPage && (
         <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
       )}

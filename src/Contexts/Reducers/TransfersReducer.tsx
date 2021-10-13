@@ -1,4 +1,9 @@
 import { BigNumber } from "@ethersproject/bignumber";
+import {
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
+} from "../../chainbridgeConfig";
+import { computeTransferDetails } from "../../Utils/Helpers";
 
 export enum ProposalStatus {
   Inactive,
@@ -8,7 +13,26 @@ export enum ProposalStatus {
   Cancelled,
 }
 
+type Vote = {
+  voteStatus: boolean;
+  voteTransactionHash?: string;
+  voteBlockNumber: number;
+  timestamp: number;
+  dataHash: string;
+  by: string;
+};
+
+type Proposal = {
+  proposalStatus: ProposalStatus;
+  dataHash?: string;
+  proposalEventTransactionHash?: string;
+  proposalEventBlockNumber: number;
+  timestamp: number;
+  by: string;
+};
+
 export type DepositRecord = {
+  id: string;
   fromAddress?: string;
   fromChainId?: number;
   fromNetworkName?: string;
@@ -16,24 +40,15 @@ export type DepositRecord = {
   toChainId?: number;
   toNetworkName?: string;
   tokenAddress?: string;
-  amount?: BigNumber;
+  amount?: string;
   timestamp?: number;
   depositTransactionHash?: string;
   depositBlockNumber?: number;
-  proposalEvents: Array<{
-    proposalStatus: ProposalStatus;
-    dataHash?: string;
-    proposalEventTransactionHash?: string;
-    proposalEventBlockNumber: number;
-    timestamp: number;
-  }>;
-  votes: Array<{
-    voteStatus: boolean;
-    voteTransactionHash?: string;
-    voteBlockNumber: number;
-    timestamp: number;
-    dataHash: string;
-  }>;
+  proposalEvents: Array<Proposal>;
+  voteEvents: Array<Vote>;
+  status: number;
+  sourceTokenAddress: string;
+  destinationTokenAddress: string;
 };
 
 export type AddTransferPayload = {
@@ -90,79 +105,121 @@ export type AddVotePayload = {
   };
 };
 
+export type TransferResponse = {
+  transfers: Array<DepositRecord>;
+};
+
+type TokenForDetailsView = {
+  fromChain: EvmBridgeConfig | SubstrateBridgeConfig;
+  toChain: EvmBridgeConfig | SubstrateBridgeConfig;
+};
+
+export type Action =
+  | { type: "selectNetwork"; payload: number }
+  | { type: "setTransferDetails"; payload: DepositRecord }
+  | { type: "cleanTransferDetails" }
+  | { type: "setTokenIconsForDetailView"; payload: TokenForDetailsView }
+  | { type: "timelineButtonClick" };
+
 export type Transfers = {
   [depositNonce: number]: DepositRecord;
 };
 
-export function transfersReducer(
-  transfers: Transfers,
-  action:
-    | {
-        type: "addTransfer";
-        payload: AddTransferPayload;
-      }
-    | {
-        type: "addProposalEvent";
-        payload: AddProposalPayload;
-      }
-    | {
-        type: "addVote";
-        payload: AddVotePayload;
-      }
-): Transfers {
-  switch (action.type) {
-    case "addTransfer": {
-      const currentProposals =
-        transfers[action.payload.depositNonce]?.proposalEvents || [];
-      const currentVotes = transfers[action.payload.depositNonce]?.votes || [];
+type NetworkSelection = {
+  name: string;
+  chainId: number;
+};
 
+export type TransferDetails = {
+  id: string;
+  formatedTransferDate: string;
+  addressShortened: string;
+  formatedAmount: string;
+  fromNetworkName?: string;
+  toNetworkName?: string;
+  depositTxHashShortened: string;
+  fromChainId?: number;
+  toChainId?: number;
+  proposalStatus: number;
+  voteEvents: Array<Vote>;
+  proposalEvents: Array<Proposal>;
+  timelineMessages: Array<any>;
+  fromChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+  toChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+};
+
+export type ExplorerState = {
+  transfers: Array<DepositRecord>;
+  error: boolean;
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+};
+
+export type ExplorerPageState = {
+  network: NetworkSelection;
+  transferDetails: TransferDetails;
+  timelineButtonClicked: boolean;
+  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+};
+
+export function transfersReducer(
+  explorerState: ExplorerPageState,
+  action: Action
+): ExplorerPageState {
+  switch (action.type) {
+    case "selectNetwork":
+      const { chains } = explorerState;
+      const networkSelected = chains.find(
+        ({ chainId }) => chainId === action.payload
+      );
+      const { name, chainId } = networkSelected!;
+      return { ...explorerState, network: { name, chainId } };
+    case "setTransferDetails":
+      const transferDetails = computeTransferDetails(
+        action.payload,
+        explorerState.chains
+      );
+      return { ...explorerState, transferDetails };
+    case "cleanTransferDetails":
+      const cleanedTransferDetails = {
+        id: "",
+        formatedTransferDate: "",
+        addressShortened: "",
+        proposalStatus: 0,
+        formatedAmount: "",
+        fromNetworkName: "",
+        toNetworkName: "",
+        depositTxHashShortened: "",
+        fromChainId: 0,
+        toChainId: 0,
+        voteEvents: [],
+        proposalEvents: [],
+        timelineMessages: [],
+        fromChain: undefined,
+        toChain: undefined,
+      };
       return {
-        ...transfers,
-        [action.payload.depositNonce]: {
-          ...transfers[action.payload.depositNonce],
-          ...action.payload.transferDetails,
-          proposalEvents: [
-            {
-              proposalStatus: ProposalStatus.Inactive,
-              proposalEventBlockNumber:
-                action.payload.transferDetails.depositBlockNumber,
-              proposalEventTransactionHash:
-                action.payload.transferDetails.depositTransactionHash,
-              timestamp: action.payload.transferDetails.timestamp,
-            },
-            ...currentProposals,
-          ],
-          votes: [...currentVotes],
+        ...explorerState,
+        transferDetails: cleanedTransferDetails,
+        timelineButtonClicked: false,
+      };
+    case "setTokenIconsForDetailView":
+      const {
+        payload: { fromChain, toChain },
+      } = action;
+      return {
+        ...explorerState,
+        transferDetails: {
+          ...explorerState.transferDetails,
+          fromChain: fromChain,
+          toChain,
         },
       };
-    }
-    case "addProposalEvent": {
-      const currentProposals =
-        transfers[action.payload.depositNonce]?.proposalEvents || [];
+    case "timelineButtonClick":
       return {
-        ...transfers,
-        [action.payload.depositNonce]: {
-          ...transfers[action.payload.depositNonce],
-          ...action.payload.transferDetails,
-          proposalEvents: [
-            ...currentProposals,
-            action.payload.proposalEventDetails,
-          ],
-        },
+        ...explorerState,
+        timelineButtonClicked: !explorerState.timelineButtonClicked,
       };
-    }
-    case "addVote": {
-      const currentVotes = transfers[action.payload.depositNonce]?.votes || [];
-      return {
-        ...transfers,
-        [action.payload.depositNonce]: {
-          ...transfers[action.payload.depositNonce],
-          ...action.payload.transferDetails,
-          votes: [...currentVotes, action.payload.voteDetails],
-        },
-      };
-    }
     default:
-      return transfers;
+      return explorerState;
   }
 }

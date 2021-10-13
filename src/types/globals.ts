@@ -5,6 +5,7 @@ declare global {
     __RUNTIME_CONFIG__: {
       UI: UIConfig;
       CHAINBRIDGE: ChainbridgeConfig;
+      INDEXER_URL: string;
     };
   }
 }
