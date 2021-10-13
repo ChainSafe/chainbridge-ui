@@ -5,6 +5,7 @@ export type TokenConfig = {
   imageUri?: string;
   resourceId: string;
   isNativeWrappedToken?: boolean;
+  decimals?: number;
 };
 
 export type ChainType = "Ethereum" | "Substrate";
@@ -43,6 +44,8 @@ export type SubstrateBridgeConfig = BridgeConfig & {
 export type ChainbridgeConfig = {
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
+
+export type UIConfig = { wrapTokenPage: boolean };
 
 export const chainbridgeConfig: ChainbridgeConfig =
   window.__RUNTIME_CONFIG__.CHAINBRIDGE;

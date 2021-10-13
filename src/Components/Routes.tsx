@@ -12,17 +12,24 @@ export const ROUTE_LINKS = {
   ExplorerDetailed: "/explorer/list/:txId",
 };
 
-const FilesRoutes = () => {
+interface IChainbridgeRoutes {
+  wrapTokenPage?: boolean;
+}
+
+const ChainbridgeRoutes: React.FC<IChainbridgeRoutes> = ({ wrapTokenPage }) => {
   return (
     <Switch>
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
-      <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
       <Route exact path={ROUTE_LINKS.Explorer} component={ExplorerPage}>
         <ExplorerProvider>
           <ExplorerPage />
         </ExplorerProvider>
       </Route>
       <Route exact path={ROUTE_LINKS.ExplorerDetailed} component={ExplorerPage}>
+      {wrapTokenPage && (
+        <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
+      )}
+      <Route exact path={ROUTE_LINKS.Explore}>
         <ExplorerProvider>
           <ExplorerPage />
         </ExplorerProvider>
@@ -34,4 +41,4 @@ const FilesRoutes = () => {
   );
 };
 
-export default FilesRoutes;
+export default ChainbridgeRoutes;

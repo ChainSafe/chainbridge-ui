@@ -215,6 +215,12 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                     {m}
                   </Typography>
                 );
+              } else if (typeof m === "object" && m.message !== undefined) {
+                return (
+                  <Typography className={classes.vote} component="p" key={i}>
+                    {m.message}
+                  </Typography>
+                );
               } else {
                 return (
                   <Typography className={classes.vote} component="p" key={i}>
@@ -240,7 +246,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </strong>
             </Typography>
             <section className={classes.buttons}>
-              <Button
+              {/* <Button
                 onClick={() =>
                   destinationChainConfig &&
                   (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
@@ -262,7 +268,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 // }
               >
                 View transaction
-              </Button>
+              </Button> */}
               <Button
                 size="small"
                 className={classes.button}
