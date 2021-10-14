@@ -12,7 +12,8 @@ export const fetchTransfers = async (
   } = window;
   try {
     const response = await fetch(`${INDEXER_URL}/transfers`);
-    const transfers: Array<DepositRecord> = await response.json();
+    const responseParsed = await response.json();
+    const transfers: Array<DepositRecord> = responseParsed.transfers;
     setState({
       ...state,
       transfers,
