@@ -7,6 +7,7 @@ import {
   SearchIcon,
   Grid,
   useHistory,
+  Button,
 } from "@chainsafe/common-components";
 import ExplorerTable from "../Custom/ExplorerTable";
 import { getColorSchemaTransferStatus } from "../../Utils/Helpers";
@@ -86,6 +87,14 @@ const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
       width: "100%",
       height: "100%",
     },
+    paginationPanel: {
+      display: "flex",
+      justifyContent: "flex-end",
+      padding: "25px 16px 0",
+    },
+    paginationButtons: {
+      marginLeft: "10px",
+    },
   })
 );
 
@@ -98,8 +107,8 @@ type PreflightDetails = {
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
-  const { explorerState } = explorerContext;
-  const { chains, transfers } = explorerState;
+  const { explorerState, loadMore } = explorerContext;
+  const { chains, transfers, pageInfo, isLoading } = explorerState;
 
   const initState: ExplorerPageState = {
     network: { name: "", chainId: 0 },
@@ -241,6 +250,32 @@ const ExplorerPage = () => {
               handleTimelineButtonClick={handleTimelineButtonClick}
               timelineButtonClicked={explorerPageState.timelineButtonClicked}
             />
+            <div className={classes.paginationPanel}>
+              <Button
+                onClick={() =>
+                  loadMore({
+                    before: pageInfo?.startCursor,
+                    last: "10",
+                  })
+                }
+                className={classes.paginationButtons}
+                disabled={!pageInfo?.hasPreviousPage || isLoading}
+              >
+                ← Previous
+              </Button>
+              <Button
+                onClick={() =>
+                  loadMore({
+                    after: pageInfo?.endCursor,
+                    first: "10",
+                  })
+                }
+                className={classes.paginationButtons}
+                disabled={!pageInfo?.hasNextPage || isLoading}
+              >
+                Next →
+              </Button>
+            </div>
           </div>
         </div>
       </section>
