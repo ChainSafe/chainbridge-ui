@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ExplorerState } from "./Reducers/TransfersReducer";
+import { ExplorerState, PaginationParams } from "./Reducers/TransfersReducer";
 import { fetchTransfers } from "../Services/ExplorerService";
+
+const DEFAULT_PAGINATION_OPTIONS = { first: "10" };
 
 interface IExplorerContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -8,6 +10,7 @@ interface IExplorerContextProps {
 
 type ExplorerContext = {
   explorerState: ExplorerState;
+  loadMore: (options: PaginationParams) => void;
 };
 
 const ExplorerContext = React.createContext<ExplorerContext | undefined>(
@@ -22,19 +25,23 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
   } = window;
 
   const [state, setState] = useState<ExplorerState>({
+    isLoading: false,
     transfers: [],
     error: false,
     chains,
   });
 
   useEffect(() => {
-    fetchTransfers(setState, state);
+    fetchTransfers(setState, state, DEFAULT_PAGINATION_OPTIONS);
   }, []);
+  const loadMore = (options: PaginationParams) =>
+    fetchTransfers(setState, state, options);
 
   return (
     <ExplorerContext.Provider
       value={{
         explorerState: state,
+        loadMore,
       }}
     >
       {children}
