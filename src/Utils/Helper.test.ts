@@ -27,7 +27,7 @@ describe("ComputeTransfersDetails", () => {
     ];
 
     const transferDetails = computeTransferDetails(
-      testResponse[1] as any,
+      testResponse.transfers[1] as any,
       runtimeTestingConfig.CHAINBRIDGE.chains as any
     );
     const keys = Object.keys(transferDetails);
@@ -67,14 +67,14 @@ describe("ComputeTransfersDetails", () => {
 
   it("Should return timelineMessages with Transfer executed message if status is 3", () => {
     const transferDetails = computeTransferDetails(
-      testResponse[1] as any,
+      testResponse.transfers[1] as any,
       runtimeTestingConfig.CHAINBRIDGE.chains as any
     );
 
     const { timelineMessages } = transferDetails;
     const lastMessage = timelineMessages[timelineMessages.length - 1];
 
-    const lengthOfVoteEvents = testResponse[1].voteEvents.length;
+    const lengthOfVoteEvents = testResponse.transfers[1].voteEvents.length;
 
     expect(timelineMessages.length).toEqual(lengthOfVoteEvents + 5);
     expect(lastMessage.message.includes("Transfer executed")).toBe(true);
@@ -82,7 +82,7 @@ describe("ComputeTransfersDetails", () => {
 
   it("Should return Deposit submitted if proposalEvents and voteEvents are empty", () => {
     const tx = {
-      ...testResponse[1],
+      ...testResponse.transfers[1],
       status: 1,
       proposalEvents: [],
       voteEvents: [],
@@ -100,9 +100,9 @@ describe("ComputeTransfersDetails", () => {
 
   it("Should return a Waiting for more votes as last message if there is one proposalEvent", () => {
     const tx = {
-      ...testResponse[1],
+      ...testResponse.transfers[1],
       status: 1,
-      proposalEvents: [testResponse[1].proposalEvents[0] as any],
+      proposalEvents: [testResponse.transfers[1].proposalEvents[0] as any],
     };
 
     const transferDetails = computeTransferDetails(

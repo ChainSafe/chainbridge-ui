@@ -47,7 +47,7 @@ describe("DetailView", () => {
         <DetailView
           active={true}
           transferDetails={computeTransferDetails(
-            testResponse[1] as any,
+            testResponse.transfers[1] as any,
             runtimeTestingConfig.CHAINBRIDGE.chains as any
           )}
           handleTimelineButtonClick={jest.fn()}
