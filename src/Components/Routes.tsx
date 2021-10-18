@@ -23,12 +23,12 @@ const ChainbridgeRoutes: React.FC<IChainbridgeRoutes> = ({ wrapTokenPage }) => {
       {wrapTokenPage && (
         <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
       )}
-      <Route exact path={ROUTE_LINKS.Explorer} component={ExplorerPage}>
+      <Route exact path={ROUTE_LINKS.Explorer}>
         <ExplorerProvider>
           <ExplorerPage />
         </ExplorerProvider>
       </Route>
-      <Route exact path={ROUTE_LINKS.ExplorerDetailed} component={ExplorerPage}>
+      <Route exact path={ROUTE_LINKS.ExplorerDetailed}>
         <ExplorerProvider>
           <ExplorerPage />
         </ExplorerProvider>
