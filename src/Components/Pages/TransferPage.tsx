@@ -23,10 +23,7 @@ import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
 import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
-import { PredefinedIcons } from "../../Utils/Helpers";
-
-const showImageUrl = (url?: string) =>
-  url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
+import { showImageUrl } from "../../Utils/Helpers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({

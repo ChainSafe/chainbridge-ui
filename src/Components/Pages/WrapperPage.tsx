@@ -21,6 +21,7 @@ import { ROUTE_LINKS } from "../Routes";
 import SimpleTokenInput from "../Custom/SimpleTokenInput";
 import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
+import { showImageUrl } from "../../Utils/Helpers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -436,7 +437,7 @@ const MainPage = () => {
                     label: (
                       <div className={classes.tokenItem}>
                         <img
-                          src={wrapTokenConfig?.imageUri}
+                          src={showImageUrl(wrapTokenConfig?.imageUri)}
                           alt={wrapTokenConfig?.symbol}
                         />
                         <span>{wrapTokenConfig?.symbol || "wETH"}</span>
