@@ -133,11 +133,11 @@ type NetworkSelection = {
 export type TransferDetails = {
   id: string;
   formatedTransferDate: string;
-  addressShortened: string;
+  fromAddress?: string;
   formatedAmount: string;
   fromNetworkName?: string;
   toNetworkName?: string;
-  depositTxHashShortened: string;
+  depositTransactionHash?: string;
   fromChainId?: number;
   toChainId?: number;
   proposalStatus: number;
@@ -199,12 +199,12 @@ export function transfersReducer(
       const cleanedTransferDetails = {
         id: "",
         formatedTransferDate: "",
-        addressShortened: "",
+        fromAddress: "",
         proposalStatus: 0,
         formatedAmount: "",
         fromNetworkName: "",
         toNetworkName: "",
-        depositTxHashShortened: "",
+        depositTransactionHash: "",
         fromChainId: 0,
         toChainId: 0,
         voteEvents: [],

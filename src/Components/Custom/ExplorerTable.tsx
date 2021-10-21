@@ -198,6 +198,9 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
         },
       },
     },
+    proposalStatus: {
+      gridColumn: "3",
+    },
     sentAndFromSection: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr 1fr",
@@ -298,7 +301,7 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     messages: {
       display: "grid",
-      gridTemplateColumns: "1fr 1fr",
+      gridTemplateColumns: "6fr 1fr",
       height: 30,
       fontSize: 14,
       // marginBottom: 20,
@@ -442,7 +445,6 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
       const { amount, fromChainId, toChainId } = transfer;
-      const fromAddressShortened = shortenAddress(transfer.fromAddress ?? "");
 
       const { fromChain, toChain } = selectChains(
         chains,
@@ -477,7 +479,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
                   bgColor={"white"}
                 />
               </Avatar>
-              <span>{fromAddressShortened}</span>
+              <span>{transfer.fromAddress}</span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>

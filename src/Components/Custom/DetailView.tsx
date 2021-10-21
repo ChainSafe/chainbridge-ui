@@ -9,6 +9,7 @@ import {
   Blockies,
 } from "@chainsafe/common-components";
 import clsx from "clsx";
+import { useExplorer } from "../../Contexts/ExplorerContext";
 import { TransferDetails } from "../../Contexts/Reducers/TransfersReducer";
 import {
   getProposalStatus,
@@ -30,6 +31,7 @@ type DetailView = {
     | "transferDetailSection"
     | "headerSection"
     | "statusSection"
+    | "proposalStatus"
     | "accountAddress"
     | "avatar"
     | "proposalStatusPill"
@@ -77,7 +79,14 @@ const DetailView = ({
   handleTimelineButtonClick,
   timelineButtonClicked,
 }: DetailView) => {
-  const { timelineMessages, fromChain: fromChain, toChain } = transferDetails;
+  const { timelineMessages, fromChain, toChain } = transferDetails;
+  console.log("🚀 ~ file: DetailView.tsx ~ line 83 ~ fromChain", fromChain);
+  console.log(
+    "🚀 ~ file: DetailView.tsx ~ line 81 ~ transferDetails",
+    transferDetails
+  );
+  // const explorerContext = useExplorer();
+  // const { explorerState } = explorerContext;
 
   return (
     (!Object.values(transferDetails).includes("") && (
@@ -129,12 +138,12 @@ const DetailView = ({
                       />
                     </Avatar>
                     <span className={classes.fromAddressDetails}>
-                      {transferDetails.addressShortened}
+                      {transferDetails.fromAddress}
                     </span>
                   </div>
                 </div>
               </div>
-              <div>
+              <div className={classes.proposalStatus}>
                 <Typography variant="body1" className={classes.colTitles}>
                   Status
                 </Typography>
@@ -213,7 +222,7 @@ const DetailView = ({
                     <SvgIcon>
                       <HashTxIcon />
                     </SvgIcon>
-                    {transferDetails.depositTxHashShortened}
+                    {transferDetails.depositTransactionHash}
                   </span>
                 </div>
               </div>
