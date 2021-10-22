@@ -11,11 +11,11 @@ describe("ComputeTransfersDetails", () => {
     const expectedKeys = [
       "id",
       "formatedTransferDate",
-      "addressShortened",
+      "fromAddress",
       "formatedAmount",
       "fromNetworkName",
       "toNetworkName",
-      "depositTxHashShortened",
+      "depositTransactionHash",
       "fromChainId",
       "toChainId",
       "voteEvents",

@@ -32,77 +32,77 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
           class="makeStyles-explorerTable-10"
         >
           <table
-            class="makeStyles-root-164 makeStyles-fullWidth-165 makeStyles-root-114"
+            class="makeStyles-root-165 makeStyles-fullWidth-166 makeStyles-root-114"
           >
             <thead
-              class="makeStyles-root-169"
+              class="makeStyles-root-170"
             >
               <tr
-                class="makeStyles-root-170 makeStyles-row-115 classic"
+                class="makeStyles-root-171 makeStyles-row-115 classic"
               >
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-173 makeStyles-alignCenter-175"
                 >
                   Date
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-173 makeStyles-alignCenter-175"
                 >
                   From
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-173 makeStyles-alignCenter-175"
                 >
                   Transfer
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-173 makeStyles-alignCenter-175"
                 >
                   Value
                 </td>
                 <td
-                  class="makeStyles-root-172 makeStyles-alignCenter-174"
+                  class="makeStyles-root-173 makeStyles-alignCenter-175"
                 />
               </tr>
             </thead>
             <tbody>
               <tr
-                class="makeStyles-root-170 makeStyles-row-115 classic"
+                class="makeStyles-root-171 makeStyles-row-115 classic"
               >
                 <td
-                  class="makeStyles-cellRow-119 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-cellRow-119 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   Sep 1, 6:53PM
                 </td>
                 <td
-                  class="makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <div
                     class="makeStyles-accountAddress-117"
                   >
                     <article
-                      class="makeStyles-root-193 makeStyles-avatar-123 circle small"
+                      class="makeStyles-root-194 makeStyles-avatar-123 circle small"
                     >
                       <canvas
-                        class="identicon makeStyles-root-194"
+                        class="identicon makeStyles-root-195"
                         height="60"
                         style="width: 60px; height: 60px;"
                         width="60"
                       />
                     </article>
                     <span>
-                      0x284D...bF0B3E
+                      0x284D2Cb760D5A952f9Ea61fd3179F98a2CbF0B3E
                     </span>
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <div>
                     <span>
                       <img
                         alt="fromChain"
-                        class="makeStyles-imageToken-150"
+                        class="makeStyles-imageToken-151"
                       />
                       <span>
                         EVM Celo Testnet
@@ -111,7 +111,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                     </span>
                     <span>
                       <img
-                        class="makeStyles-imageToken-150"
+                        class="makeStyles-imageToken-151"
                       />
                       <span>
                         Ethereum - Rinkeby
@@ -120,13 +120,13 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <span
                     class="makeStyles-amountInfo-121"
                   >
                     <img
-                      class="makeStyles-imageValueToken-151"
+                      class="makeStyles-imageValueToken-152"
                     />
                     <span>
                       1.0
@@ -135,16 +135,16 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <div
                     class="makeStyles-viewDetailsInfo-122"
                   >
                     <button
-                      class="makeStyles-root-181 makeStyles-primary-182 medium"
+                      class="makeStyles-root-182 makeStyles-primary-183 medium"
                     >
                       <span
-                        class="makeStyles-root-195 makeStyles-sizeMedium-202"
+                        class="makeStyles-root-196 makeStyles-sizeMedium-203"
                       >
                         <svg>
                           directional.svg
@@ -156,42 +156,42 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                 </td>
               </tr>
               <tr
-                class="makeStyles-root-170 makeStyles-row-115 classic"
+                class="makeStyles-root-171 makeStyles-row-115 classic"
               >
                 <td
-                  class="makeStyles-cellRow-119 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-cellRow-119 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   Sep 2, 4:06PM
                 </td>
                 <td
-                  class="makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <div
                     class="makeStyles-accountAddress-117"
                   >
                     <article
-                      class="makeStyles-root-193 makeStyles-avatar-123 circle small"
+                      class="makeStyles-root-194 makeStyles-avatar-123 circle small"
                     >
                       <canvas
-                        class="identicon makeStyles-root-194"
+                        class="identicon makeStyles-root-195"
                         height="60"
                         style="width: 60px; height: 60px;"
                         width="60"
                       />
                     </article>
                     <span>
-                      0x6DAC...DeEfC6
+                      0x6DACDc98FbB776B67278274B508bC76588DeEfC6
                     </span>
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <div>
                     <span>
                       <img
                         alt="fromChain"
-                        class="makeStyles-imageToken-150"
+                        class="makeStyles-imageToken-151"
                       />
                       <span>
                         EVM Celo Testnet
@@ -200,7 +200,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                     </span>
                     <span>
                       <img
-                        class="makeStyles-imageToken-150"
+                        class="makeStyles-imageToken-151"
                       />
                       <span>
                         Ethereum - Rinkeby
@@ -209,13 +209,13 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <span
                     class="makeStyles-amountInfo-121"
                   >
                     <img
-                      class="makeStyles-imageValueToken-151"
+                      class="makeStyles-imageValueToken-152"
                     />
                     <span>
                       1.0
@@ -224,16 +224,16 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-189 makeStyles-alignCenter-191"
+                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
                 >
                   <div
                     class="makeStyles-viewDetailsInfo-122"
                   >
                     <button
-                      class="makeStyles-root-181 makeStyles-primary-182 medium"
+                      class="makeStyles-root-182 makeStyles-primary-183 medium"
                     >
                       <span
-                        class="makeStyles-root-195 makeStyles-sizeMedium-202"
+                        class="makeStyles-root-196 makeStyles-sizeMedium-203"
                       >
                         <svg>
                           directional.svg
@@ -250,13 +250,13 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
             class="makeStyles-paginationPanel-11"
           >
             <button
-              class="makeStyles-root-181 makeStyles-paginationButtons-12 makeStyles-primary-182 makeStyles-disabled-188 medium"
+              class="makeStyles-root-182 makeStyles-paginationButtons-12 makeStyles-primary-183 makeStyles-disabled-189 medium"
               disabled=""
             >
               ← Previous
             </button>
             <button
-              class="makeStyles-root-181 makeStyles-paginationButtons-12 makeStyles-primary-182 medium"
+              class="makeStyles-root-182 makeStyles-paginationButtons-12 makeStyles-primary-183 medium"
             >
               Next →
             </button>

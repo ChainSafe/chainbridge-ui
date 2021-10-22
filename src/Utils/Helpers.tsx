@@ -226,10 +226,6 @@ export const computeTransferDetails = (
 
   const formatedTransferDate = formatTransferDate(timestamp);
 
-  const addressShortened = shortenAddress(fromAddress!);
-
-  const depositTxHashShortened = shortenAddress(depositTransactionHash!);
-
   const formatedAmount = computeAndFormatAmount(amount!);
 
   let timelineMessages = [];
@@ -243,8 +239,9 @@ export const computeTransferDetails = (
     ];
   } else {
     const votesMessages = voteEvents.map((vote) => ({
-      message: `confirmed by ${shortenAddress(vote.by)}`,
+      message: `confirmed by`,
       time: formatDateTimeline(vote.timestamp),
+      by: vote.by,
     }));
 
     switch (proposalEvents.length) {
@@ -254,10 +251,9 @@ export const computeTransferDetails = (
           time: formatDateTimeline(proposalEvents[0].timestamp),
         };
         const createdBy = {
-          message: `Proposal created by ${shortenAddress(
-            proposalEvents[0].by
-          )}`,
+          message: `Proposal created by`,
           time: formatDateTimeline(proposalEvents[0].timestamp),
+          by: proposalEvents[0].by,
         };
 
         let waitingForMoreVotesMsg = {
@@ -292,8 +288,9 @@ export const computeTransferDetails = (
                 time: formatDateTimeline(proposal.timestamp),
               },
               {
-                message: `Proposal created by ${shortenAddress(proposal.by)}`,
+                message: `Proposal created by`,
                 time: formatDateTimeline(proposal.timestamp),
+                by: proposalEvents[0].by,
               },
               ...votesMessages,
             ];
@@ -304,8 +301,9 @@ export const computeTransferDetails = (
             acc = [
               ...acc,
               {
-                message: `Proposal cancel by ${shortenAddress(proposal.by)}`,
+                message: `Proposal cancel by`,
                 time: formatDateTimeline(proposal.timestamp),
+                by: proposalEvents[0].by,
               },
               {
                 message: "Transfer canceled",
@@ -317,8 +315,9 @@ export const computeTransferDetails = (
             acc = [
               ...acc,
               {
-                message: `Proposal passed by ${shortenAddress(proposal.by)}`,
+                message: `Proposal passed by`,
                 time: formatDateTimeline(proposal.timestamp),
+                by: proposalEvents[0].by,
               },
               {
                 message: "Waiting for execution",
@@ -330,12 +329,14 @@ export const computeTransferDetails = (
             acc = [
               ...acc,
               {
-                message: `Proposal passed by ${shortenAddress(proposal.by)}`,
+                message: `Proposal passed by`,
                 time: formatDateTimeline(proposal.timestamp),
+                by: proposalEvents[0].by,
               },
               {
-                message: `Proposal executed by ${shortenAddress(proposal.by)}`,
+                message: `Proposal executed by`,
                 time: formatDateTimeline(proposal.timestamp),
+                by: proposalEvents[0].by,
               },
               {
                 message: `Transfer executed on ${getNetworkName(toChainId)}`,
@@ -354,11 +355,11 @@ export const computeTransferDetails = (
   return {
     id,
     formatedTransferDate,
-    addressShortened,
+    fromAddress,
     formatedAmount,
     fromNetworkName,
     toNetworkName,
-    depositTxHashShortened,
+    depositTransactionHash,
     fromChainId,
     toChainId,
     voteEvents,
