@@ -9,7 +9,6 @@ import {
   Blockies,
 } from "@chainsafe/common-components";
 import clsx from "clsx";
-import { useExplorer } from "../../Contexts/ExplorerContext";
 import { TransferDetails } from "../../Contexts/Reducers/TransfersReducer";
 import {
   getProposalStatus,
@@ -71,6 +70,21 @@ type DetailView = {
   >;
 };
 
+const AdressOrLink = ({
+  msg,
+  blockExplorer,
+}: {
+  msg: any;
+  blockExplorer?: string;
+}) =>
+  blockExplorer ? (
+    <a target="_blank" href={`${blockExplorer}/address/${msg.by}`}>
+      {msg.by}
+    </a>
+  ) : (
+    <>{msg.by}</>
+  );
+
 const DetailView = ({
   active,
   transferDetails,
@@ -80,13 +94,6 @@ const DetailView = ({
   timelineButtonClicked,
 }: DetailView) => {
   const { timelineMessages, fromChain, toChain } = transferDetails;
-  console.log("🚀 ~ file: DetailView.tsx ~ line 83 ~ fromChain", fromChain);
-  console.log(
-    "🚀 ~ file: DetailView.tsx ~ line 81 ~ transferDetails",
-    transferDetails
-  );
-  // const explorerContext = useExplorer();
-  // const { explorerState } = explorerContext;
 
   return (
     (!Object.values(transferDetails).includes("") && (
@@ -137,9 +144,19 @@ const DetailView = ({
                         bgColor={"white"}
                       />
                     </Avatar>
-                    <span className={classes.fromAddressDetails}>
-                      {transferDetails.fromAddress}
-                    </span>
+                    {fromChain?.blockExplorer ? (
+                      <a
+                        target="_blank"
+                        className={classes.fromAddressDetails}
+                        href={`${fromChain.blockExplorer}/address/${transferDetails.fromAddress}`}
+                      >
+                        {transferDetails.fromAddress}
+                      </a>
+                    ) : (
+                      <span className={classes.fromAddressDetails}>
+                        {transferDetails.fromAddress}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -218,12 +235,24 @@ const DetailView = ({
                   <Typography variant="body1" className={classes.colTitles}>
                     Transaction Hash
                   </Typography>
-                  <span>
-                    <SvgIcon>
-                      <HashTxIcon />
-                    </SvgIcon>
-                    {transferDetails.depositTransactionHash}
-                  </span>
+                  {fromChain?.blockExplorer ? (
+                    <a
+                      target="_blank"
+                      href={`${fromChain.blockExplorer}/tx/${transferDetails.depositTransactionHash}`}
+                    >
+                      <SvgIcon>
+                        <HashTxIcon />
+                      </SvgIcon>
+                      {transferDetails.depositTransactionHash}
+                    </a>
+                  ) : (
+                    <span>
+                      <SvgIcon>
+                        <HashTxIcon />
+                      </SvgIcon>
+                      {transferDetails.depositTransactionHash}
+                    </span>
+                  )}
                 </div>
               </div>
             </section>
@@ -247,6 +276,11 @@ const DetailView = ({
                                 className={clsx(classes.dot, classes.greenDot)}
                               />
                               {msg.message}
+                              &nbsp;
+                              <AdressOrLink
+                                msg={msg}
+                                blockExplorer={toChain?.blockExplorer}
+                              />
                             </span>
                             <span className={classes.time}>{msg.time}</span>
                           </p>
@@ -295,6 +329,11 @@ const DetailView = ({
                               className={clsx(classes.dot, classes.greenDot)}
                             />
                             {msg.message}
+                            &nbsp;
+                            <AdressOrLink
+                              msg={msg}
+                              blockExplorer={toChain?.blockExplorer}
+                            />
                           </span>
                           <span className={classes.time}>{msg.time}</span>
                         </p>
@@ -331,7 +370,13 @@ const DetailView = ({
                             className={clsx(classes.dot, classes.greenDot)}
                           />
                           {msg.message}
+                          &nbsp;
+                          <AdressOrLink
+                            msg={msg}
+                            blockExplorer={toChain?.blockExplorer}
+                          />
                         </span>
+
                         <span className={classes.time}>{msg.time}</span>
                       </p>
                       {idx !== timelineMessages.length - 1 && (

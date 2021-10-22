@@ -39,6 +39,7 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   transferPalletName: string;
   transferFunctionName: string;
   typesFileName: string;
+  blockExplorer?: string;
 };
 
 export type ChainbridgeConfig = {

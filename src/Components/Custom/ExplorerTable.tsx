@@ -269,6 +269,7 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     fromAddressDetails: {
       fontSize: 16,
+      textDecoration: "none",
     },
     bridgeSection: {
       display: "grid",
@@ -279,10 +280,11 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       "& > div": {
         display: "flex",
         flexDirection: "column",
-        "& > span:nth-child(2)": {
+        "& > span:nth-child(2), & > a:nth-child(2)": {
           marginTop: 12,
           fontSize: 14,
           display: "flex",
+          textDecoration: "none",
         },
       },
     },
@@ -313,6 +315,10 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
         "& > div": {
           marginRight: 5,
         },
+      },
+      "& a": {
+        textDecoration: "none",
+        color: "#595959",
       },
     },
     dot: {

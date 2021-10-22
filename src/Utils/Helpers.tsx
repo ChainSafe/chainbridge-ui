@@ -239,7 +239,7 @@ export const computeTransferDetails = (
     ];
   } else {
     const votesMessages = voteEvents.map((vote) => ({
-      message: `confirmed by ${vote.by}`,
+      message: `confirmed by`,
       time: formatDateTimeline(vote.timestamp),
       by: vote.by,
     }));
@@ -251,7 +251,7 @@ export const computeTransferDetails = (
           time: formatDateTimeline(proposalEvents[0].timestamp),
         };
         const createdBy = {
-          message: `Proposal created by ${proposalEvents[0].by}`,
+          message: `Proposal created by`,
           time: formatDateTimeline(proposalEvents[0].timestamp),
           by: proposalEvents[0].by,
         };
@@ -288,7 +288,7 @@ export const computeTransferDetails = (
                 time: formatDateTimeline(proposal.timestamp),
               },
               {
-                message: `Proposal created by ${proposal.by}`,
+                message: `Proposal created by`,
                 time: formatDateTimeline(proposal.timestamp),
                 by: proposalEvents[0].by,
               },
@@ -301,7 +301,7 @@ export const computeTransferDetails = (
             acc = [
               ...acc,
               {
-                message: `Proposal cancel by ${proposal.by}`,
+                message: `Proposal cancel by`,
                 time: formatDateTimeline(proposal.timestamp),
                 by: proposalEvents[0].by,
               },
@@ -315,7 +315,7 @@ export const computeTransferDetails = (
             acc = [
               ...acc,
               {
-                message: `Proposal passed by ${proposal.by}`,
+                message: `Proposal passed by`,
                 time: formatDateTimeline(proposal.timestamp),
                 by: proposalEvents[0].by,
               },
@@ -329,12 +329,12 @@ export const computeTransferDetails = (
             acc = [
               ...acc,
               {
-                message: `Proposal passed by ${proposal.by}`,
+                message: `Proposal passed by`,
                 time: formatDateTimeline(proposal.timestamp),
                 by: proposalEvents[0].by,
               },
               {
-                message: `Proposal executed by ${proposal.by}`,
+                message: `Proposal executed by`,
                 time: formatDateTimeline(proposal.timestamp),
                 by: proposalEvents[0].by,
               },
