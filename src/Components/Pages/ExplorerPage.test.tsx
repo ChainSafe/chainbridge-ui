@@ -52,6 +52,7 @@ describe("ExplorerPage", () => {
         value: jest.fn(() => ({
           json: async () => testResponse,
         })),
+        loadMore: jest.fn(),
       },
     });
     // NOTE: this is here because of the Blockies component

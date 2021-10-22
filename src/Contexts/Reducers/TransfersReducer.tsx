@@ -149,9 +149,25 @@ export type TransferDetails = {
 };
 
 export type ExplorerState = {
+  isLoading: boolean;
   transfers: Array<DepositRecord>;
+  pageInfo?: PageInfo;
   error: boolean;
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+};
+
+export type PageInfo = {
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  startCursor: string;
+  endCursor: string;
+};
+
+export type PaginationParams = {
+  first?: string;
+  last?: string;
+  before?: string;
+  after?: string;
 };
 
 export type ExplorerPageState = {
