@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.4.1
+
+- Renamed Cere Networks
+
 ## v0.4.0
 
 - Refactored environment variables.
