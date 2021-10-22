@@ -86,7 +86,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   <span
                     class=""
                   >
-                    0x6DAC...DeEfC6
+                    0x6DACDc98FbB776B67278274B508bC76588DeEfC6
                   </span>
                 </div>
               </div>
@@ -188,7 +188,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                       hashTx.svg
                     </svg>
                   </span>
-                  0xd615...fbb189
+                  0xd6158cf5602f1fa22791e00218d269c7620c82bdcdfdd0f0f309de4784fbb189
                 </span>
               </div>
             </div>
@@ -220,6 +220,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                       class=""
                     />
                     Deposit submitted
+                     
                   </span>
                   <span
                     class=""
@@ -241,7 +242,9 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    Proposal created by 0xb7d5...dD949A
+                    Proposal created by
+                     
+                    0xb7d584fE0085fEb275FAc27deaCddA404AdD949A
                   </span>
                   <span
                     class=""
@@ -275,7 +278,9 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    confirmed by 0xb7d5...dD949A
+                    confirmed by
+                     
+                    0xb7d584fE0085fEb275FAc27deaCddA404AdD949A
                   </span>
                   <span
                     class=""
@@ -299,7 +304,9 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    confirmed by 0x010f...Be6208
+                    confirmed by
+                     
+                    0x010f478794f9b1917f9d2d31865f516729Be6208
                   </span>
                   <span
                     class=""
@@ -323,7 +330,9 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    Proposal passed by 0x010f...Be6208
+                    Proposal passed by
+                     
+                    0xb7d584fE0085fEb275FAc27deaCddA404AdD949A
                   </span>
                   <span
                     class=""
@@ -347,7 +356,9 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    Proposal executed by 0x010f...Be6208
+                    Proposal executed by
+                     
+                    0xb7d584fE0085fEb275FAc27deaCddA404AdD949A
                   </span>
                   <span
                     class=""
@@ -370,6 +381,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                       class=""
                     />
                     Transfer executed on Mainnet
+                     
                   </span>
                   <span
                     class=""
