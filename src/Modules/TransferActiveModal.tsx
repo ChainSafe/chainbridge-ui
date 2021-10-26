@@ -136,11 +136,13 @@ const useStyles = makeStyles(
 interface ITransferActiveModalProps {
   open: boolean;
   close: () => void;
+  handleClick: (txHash: string) => () => void;
 }
 
 const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   open,
   close,
+  handleClick,
 }: ITransferActiveModalProps) => {
   const classes = useStyles();
   const {
@@ -246,18 +248,13 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </strong>
             </Typography>
             <section className={classes.buttons}>
-              {/* <Button
-                onClick={() =>
+              <Button
+                onClick={() => {
                   destinationChainConfig &&
-                  (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
-                  transferTxHash &&
-                  window.open(
-                    `${
-                      (destinationChainConfig as EvmBridgeConfig).blockExplorer
-                    }/${transferTxHash}`,
-                    "_blank"
-                  )
-                }
+                    (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
+                    transferTxHash &&
+                    handleClick(transferTxHash!);
+                }}
                 size="small"
                 className={classes.button}
                 variant="outline"
@@ -268,7 +265,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 // }
               >
                 View transaction
-              </Button> */}
+              </Button>
               <Button
                 size="small"
                 className={classes.button}

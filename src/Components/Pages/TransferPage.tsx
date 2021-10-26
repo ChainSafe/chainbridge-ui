@@ -8,6 +8,7 @@ import {
   Typography,
   QuestionCircleSvg,
   SelectInput,
+  useHistory,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
@@ -223,6 +224,8 @@ const TransferPage = () => {
     tokenAmount: 0,
     tokenSymbol: "",
   });
+
+  const { redirect } = useHistory();
 
   useEffect(() => {
     if (walletType !== "select" && walletConnecting === true) {
@@ -558,7 +561,11 @@ const TransferPage = () => {
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
+      <TransferActiveModal
+        open={!!transactionStatus}
+        close={resetDeposit}
+        handleClick={handleClick}
+      />
       {/* This is here due to requiring router */}
       <NetworkUnsupportedModal />
     </article>

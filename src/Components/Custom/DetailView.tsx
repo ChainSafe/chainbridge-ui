@@ -16,6 +16,7 @@ import {
   showImageUrlNetworkIcons,
 } from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
+import AddressOrLink from "./AddressOrLink";
 
 type DetailView = {
   active: boolean;
@@ -69,21 +70,6 @@ type DetailView = {
     string
   >;
 };
-
-const AdressOrLink = ({
-  msg,
-  blockExplorer,
-}: {
-  msg: any;
-  blockExplorer?: string;
-}) =>
-  blockExplorer ? (
-    <a target="_blank" href={`${blockExplorer}/address/${msg.by}`}>
-      {msg.by}
-    </a>
-  ) : (
-    <>{msg.by}</>
-  );
 
 const DetailView = ({
   active,
@@ -277,7 +263,7 @@ const DetailView = ({
                               />
                               {msg.message}
                               &nbsp;
-                              <AdressOrLink
+                              <AddressOrLink
                                 msg={msg}
                                 blockExplorer={toChain?.blockExplorer}
                               />
@@ -330,7 +316,7 @@ const DetailView = ({
                             />
                             {msg.message}
                             &nbsp;
-                            <AdressOrLink
+                            <AddressOrLink
                               msg={msg}
                               blockExplorer={toChain?.blockExplorer}
                             />
@@ -371,7 +357,7 @@ const DetailView = ({
                           />
                           {msg.message}
                           &nbsp;
-                          <AdressOrLink
+                          <AddressOrLink
                             msg={msg}
                             blockExplorer={toChain?.blockExplorer}
                           />

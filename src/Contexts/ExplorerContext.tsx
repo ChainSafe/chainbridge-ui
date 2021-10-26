@@ -11,6 +11,7 @@ interface IExplorerContextProps {
 type ExplorerContext = {
   explorerState: ExplorerState;
   loadMore: (options: PaginationParams) => void;
+  setExplorerStateContext: any;
 };
 
 const ExplorerContext = React.createContext<ExplorerContext | undefined>(
@@ -34,6 +35,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
   useEffect(() => {
     fetchTransfers(setState, state, DEFAULT_PAGINATION_OPTIONS);
   }, []);
+
   const loadMore = (options: PaginationParams) =>
     fetchTransfers(setState, state, options);
 
@@ -42,6 +44,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
       value={{
         explorerState: state,
         loadMore,
+        setExplorerStateContext: setState,
       }}
     >
       {children}
