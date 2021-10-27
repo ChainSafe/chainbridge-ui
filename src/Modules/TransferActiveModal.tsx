@@ -136,7 +136,7 @@ const useStyles = makeStyles(
 interface ITransferActiveModalProps {
   open: boolean;
   close: () => void;
-  handleClick: (txHash: string) => () => void;
+  handleClick: (txHash: string) => void;
 }
 
 const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({

@@ -17,12 +17,12 @@ import AddressOrLink from "./AddressOrLink";
 import { useStyles } from "../Custom/ExplorerTable/styles";
 
 type TransferDetailView = {
-  transferDetails: TransferDetails | {};
+  transferDetails: TransferDetails;
 };
 
 const TransferDetailView = ({ transferDetails }: TransferDetailView) => {
   const classes = useStyles({
-    pillColorSchema: transferDetails!.pillColorStatus,
+    pillColorSchema: transferDetails.pillColorStatus,
   });
   const { timelineMessages, fromChain, toChain } = transferDetails!;
 
@@ -188,6 +188,7 @@ const TransferDetailView = ({ transferDetails }: TransferDetailView) => {
                         </span>
                         <span className={classes.time}>{msg.time}</span>
                       </p>
+                      <div className={classes.greyBar} />
                     </div>
                   </>
                 );

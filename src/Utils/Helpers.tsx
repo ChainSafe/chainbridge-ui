@@ -229,6 +229,7 @@ export const computeTransferDetails = (
   const formatedAmount = computeAndFormatAmount(amount!);
 
   const pillColorStatus = getColorSchemaTransferStatus(proposalStatus);
+
   let timelineMessages = [];
 
   if (!proposalEvents.length && !voteEvents.length) {

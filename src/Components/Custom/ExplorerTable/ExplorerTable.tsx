@@ -65,7 +65,6 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
       const { amount, fromChainId, toChainId } = transfer;
-      console.log("TRANSFER", transfer);
 
       const { fromChain, toChain } = selectChains(
         chains,
