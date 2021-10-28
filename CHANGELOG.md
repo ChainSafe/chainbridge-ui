@@ -2,7 +2,7 @@
 
 ## vNext
 
-- ...
+- Added cross link on header
 
 ## v0.4.1
 
