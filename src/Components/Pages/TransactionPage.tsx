@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "@chainsafe/common-components";
+import { makeStyles, createStyles } from "@chainsafe/common-theme";
 import { useExplorer } from "../../Contexts/ExplorerContext";
 import TransferDetailView from "../Custom/TransferDetailView";
 import { fetchTransaction } from "../../Services/ExplorerService";
@@ -9,8 +10,19 @@ import {
   TransferDetails,
 } from "../../Contexts/Reducers/TransfersReducer";
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    transferDetailViewContainer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+    },
+  })
+);
+
 const TransactionPage = () => {
   const { redirect } = useHistory();
+  const classes = useStyles();
   const explorerContext = useExplorer();
   const {
     explorerState: { chains },
@@ -38,7 +50,7 @@ const TransactionPage = () => {
   }, [transaction]);
 
   return (
-    <div>
+    <div className={classes.transferDetailViewContainer}>
       {transferDetailed && (
         <TransferDetailView transferDetails={transferDetailed!} />
       )}

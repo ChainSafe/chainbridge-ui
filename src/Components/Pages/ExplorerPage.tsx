@@ -162,6 +162,7 @@ const ExplorerPage = () => {
       ...explorerState,
       transferDetails: txDetail,
     });
+    redirect(`/explorer/transaction/detail-view/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -169,7 +170,7 @@ const ExplorerPage = () => {
     explorerPageDispatcher({
       type: "cleanTransferDetails",
     });
-    redirect("/explorer/list");
+    redirect("/explorer/transaction/list");
   };
 
   const handleTimelineButtonClick = () =>

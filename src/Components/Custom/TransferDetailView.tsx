@@ -23,6 +23,7 @@ type TransferDetailView = {
 const TransferDetailView = ({ transferDetails }: TransferDetailView) => {
   const classes = useStyles({
     pillColorSchema: transferDetails.pillColorStatus,
+    transferDetailPage: true,
   });
   const { timelineMessages, fromChain, toChain } = transferDetails!;
 

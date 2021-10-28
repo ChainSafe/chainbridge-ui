@@ -1,10 +1,11 @@
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 
-type PillColorSchema = {
+type CustomProperties = {
   pillColorSchema: {
     borderColor: string;
     background: string;
   };
+  transferDetailPage?: boolean;
 };
 
 export const useStyles = makeStyles(({ breakpoints }: ITheme) =>
@@ -94,7 +95,7 @@ export const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     transferDetails: {
       minWidth: 768,
-      width: "100%",
+      width: ({ transferDetailPage }) => (transferDetailPage ? "50%" : "100%"),
       [breakpoints.down("sm")]: {
         minWidth: 411,
       },
@@ -219,16 +220,16 @@ export const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       display: "flex",
       justifyContent: "center",
       borderRadius: 16,
-      background: ({ pillColorSchema }: PillColorSchema) =>
+      background: ({ pillColorSchema }: CustomProperties) =>
         pillColorSchema.background,
-      border: ({ pillColorSchema }: PillColorSchema) =>
+      border: ({ pillColorSchema }: CustomProperties) =>
         `1px solid ${pillColorSchema.borderColor}`,
       width: 75,
       height: 22,
       fontSize: 14,
       padding: "0px 8px 0px 8px",
       margin: "10px 0px",
-      color: ({ pillColorSchema }: PillColorSchema) =>
+      color: ({ pillColorSchema }: CustomProperties) =>
         pillColorSchema.borderColor,
       fontWeight: 400,
     },

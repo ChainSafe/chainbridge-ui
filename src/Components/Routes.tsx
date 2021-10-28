@@ -9,9 +9,9 @@ import { ExplorerProvider } from "../Contexts/ExplorerContext";
 export const ROUTE_LINKS = {
   Transfer: "/transfer",
   Wrap: "/wrap",
-  Explorer: "/explorer/list",
-  ExplorerDetailed: "/explorer/detail-view/:txId",
-  TransactionPage: "/explorer/list/:txHash",
+  Explorer: "/explorer/transaction/list",
+  ExplorerDetailed: "/explorer/transaction/detail-view/:txId",
+  TransactionPage: "/explorer/transaction/:txHash",
 };
 
 interface IChainbridgeRoutes {

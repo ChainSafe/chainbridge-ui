@@ -7,7 +7,7 @@ import { useChainbridge } from "../Contexts/ChainbridgeContext";
 
 const ROUTE_LINKS_HEADERS = [
   { route: "/transfer", label: "Transfer" },
-  { route: "/explorer/list", label: "Explorer" },
+  { route: "/explorer/transaction/list", label: "Explorer" },
 ];
 
 const useStyles = makeStyles(
