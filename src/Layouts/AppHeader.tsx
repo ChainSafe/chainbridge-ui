@@ -104,7 +104,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
       <div className={classes.rightWrapper}>
         <section className={classes.link}>
           <a
-            href="https://cere-network.gitbook.io/cere-network/mainnet/network-details"
+            href="https://cere-network.gitbook.io/cere-network/"
             target="_blank"
             rel="noopener noreferrer"
           >
