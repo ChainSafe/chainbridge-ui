@@ -239,7 +239,7 @@ export const computeTransferDetails = (
     ];
   } else {
     const votesMessages = voteEvents.map((vote) => ({
-      message: `confirmed by`,
+      message: `Confirmed by`,
       time: formatDateTimeline(vote.timestamp),
       by: vote.by,
     }));

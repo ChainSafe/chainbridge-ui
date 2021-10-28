@@ -134,9 +134,8 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
               <div>
                 <span>
                   <img
-                    alt="ERC20"
+                    alt="fromChain"
                     class=""
-                    src="eth.svg"
                   />
                 </span>
                 <span>
@@ -155,9 +154,8 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
               <div>
                 <span>
                   <img
-                    alt="ERC20"
+                    alt="fromChain"
                     class=""
-                    src="eth.svg"
                   />
                 </span>
                 <span>
@@ -278,7 +276,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    confirmed by
+                    Confirmed by
                      
                     0xb7d584fE0085fEb275FAc27deaCddA404AdD949A
                   </span>
@@ -304,7 +302,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    confirmed by
+                    Confirmed by
                      
                     0x010f478794f9b1917f9d2d31865f516729Be6208
                   </span>
@@ -380,7 +378,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                     <div
                       class=""
                     />
-                    Transfer executed on Mainnet
+                    Transfer executed on Ethereum - Goerli
                      
                   </span>
                   <span
