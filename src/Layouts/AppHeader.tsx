@@ -69,6 +69,12 @@ const useStyles = makeStyles(
         display: "flex",
         flexDirection: "column",
       },
+      rightWrapper: {
+        display: "flex",
+      },
+      link: {
+        paddingRight: 10,
+      },
     });
   }
 );
@@ -95,30 +101,42 @@ const AppHeader: React.FC<IAppHeader> = () => {
           </Typography>
         </NavLink>
       </div>
-      <section className={classes.state}>
-        {!isReady ? (
-          <Typography variant="h5">No wallet connected</Typography>
-        ) : (
-          <>
-            <div className={classes.mainInfo}>
-              <div className={classes.accountInfo}>
-                <span className={classes.indicator} />
-                <Typography variant="h5" className={classes.address}>
-                  {address && shortenAddress(address)}
-                </Typography>
-              </div>
-              <Typography variant="h5" className={classes.address}>
-                <div>
-                  <span>connected to </span>
-                  <span>
+      <div className={classes.rightWrapper}>
+        <section className={classes.link}>
+          <a
+            style={{ textDecoration: "none" }}
+            href="https://cere-network.gitbook.io/cere-network/mainnet/network-details"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Typography variant="h5">Cere Network Homepage</Typography>
+          </a>
+        </section>
+        <section className={classes.state}>
+          {!isReady ? (
+              <Typography variant="h5">No wallet connected</Typography>
+          ) : (
+              <>
+                <div className={classes.mainInfo}>
+                  <div className={classes.accountInfo}>
+                    <span className={classes.indicator} />
+                    <Typography variant="h5" className={classes.address}>
+                      {address && shortenAddress(address)}
+                    </Typography>
+                  </div>
+                  <Typography variant="h5" className={classes.address}>
+                    <div>
+                      <span>connected to </span>
+                      <span>
                     <strong>{homeConfig?.name}</strong>
                   </span>
+                    </div>
+                  </Typography>
                 </div>
-              </Typography>
-            </div>
-          </>
-        )}
-      </section>
+              </>
+          )}
+        </section>
+      </div>
     </header>
   );
 };
