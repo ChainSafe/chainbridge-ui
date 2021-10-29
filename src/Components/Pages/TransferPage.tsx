@@ -320,6 +320,12 @@ const TransferPage = () => {
       .required("Please add a receiving address"),
   });
 
+  const handleClick = (txHash: string) => {
+    const url = `/explorer/transaction/${txHash}`;
+
+    redirect(url);
+  };
+
   return (
     <article className={classes.root}>
       <div className={classes.walletArea}>
