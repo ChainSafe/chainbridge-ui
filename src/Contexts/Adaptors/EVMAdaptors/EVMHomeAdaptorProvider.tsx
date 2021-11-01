@@ -318,7 +318,7 @@ export const EVMHomeAdaptorProvider = ({
         ) {
           if (
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
-            token.isDoubleApprove
+            token.isDoubleApproval
           ) {
             //We need to reset the user's allowance to 0 before we give them a new allowance
             //TODO Should we alert the user this is happening here?
