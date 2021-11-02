@@ -67,7 +67,6 @@ const useStyles = makeStyles(
       },
       mainInfo: {
         display: "flex",
-        flexDirection: "column",
       },
       rightWrapper: {
         display: "flex",
@@ -120,26 +119,26 @@ const AppHeader: React.FC<IAppHeader> = () => {
         </section>
         <section className={classes.state}>
           {!isReady ? (
-              <Typography variant="h5">No wallet connected</Typography>
+            <Typography variant="h5">No wallet connected</Typography>
           ) : (
-              <>
-                <div className={classes.mainInfo}>
-                  <div className={classes.accountInfo}>
-                    <span className={classes.indicator} />
-                    <Typography variant="h5" className={classes.address}>
-                      {address && shortenAddress(address)}
-                    </Typography>
-                  </div>
+            <>
+              <div className={classes.mainInfo}>
+                <div className={classes.accountInfo}>
+                  <span className={classes.indicator} />
                   <Typography variant="h5" className={classes.address}>
-                    <div>
-                      <span>connected to </span>
-                      <span>
-                    <strong>{homeConfig?.name}</strong>
-                  </span>
-                    </div>
+                    {address && shortenAddress(address)}
                   </Typography>
                 </div>
-              </>
+                <Typography variant="h5" className={classes.address}>
+                  <div>
+                    <span>connected to </span>
+                    <span>
+                      <strong>{homeConfig?.name}</strong>
+                    </span>
+                  </div>
+                </Typography>
+              </div>
+            </>
           )}
         </section>
       </div>

@@ -27,8 +27,8 @@ const useStyles = makeStyles(
         },
       },
       inner: {
-        paddingTop: (constants.navItemHeight as number) * 2,
-        paddingBottom: (constants.navItemHeight as number) * 2,
+        paddingTop: constants.navItemHeight as number,
+        paddingBottom: constants.navItemHeight as number,
       },
       cta: {
         display: "block",
