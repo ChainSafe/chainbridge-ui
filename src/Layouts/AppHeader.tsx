@@ -108,7 +108,7 @@ const AppHeader: React.FC<IAppHeader> = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Typography variant="h5">Cere Network Homepage</Typography>
+            <Typography variant="h5">DDC Wiki</Typography>
           </a>
         </section>
         <section className={classes.state}>
