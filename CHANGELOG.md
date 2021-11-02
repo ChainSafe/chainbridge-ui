@@ -3,6 +3,7 @@
 ## vNext
 
 - Added cross link on header
+- Updated favicon and icon
 
 ## v0.4.1
 
