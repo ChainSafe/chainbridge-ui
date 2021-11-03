@@ -110,7 +110,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
                   src={getNetworkIcon(fromChain)}
                   alt="fromChain"
                 />
-                <span>{transfer.fromNetworkName} to</span>
+                <span>{fromChain?.name ?? "Unknown chain"} to</span>
               </span>
               <span>
                 <img
@@ -118,7 +118,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
                   src={getNetworkIcon(toChain)}
                   alt={fromToken?.symbol}
                 />
-                <span>{transfer.toNetworkName}</span>
+                <span>{toChain?.name ?? "Unknown chain"}</span>
               </span>
             </div>
           </TableCell>

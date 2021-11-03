@@ -180,7 +180,7 @@ const DetailView = ({
                       alt="fromChain"
                     />
                   </span>
-                  <span>{transferDetails?.fromNetworkName}</span>
+                  <span>{fromChain?.name}</span>
                 </div>
               </div>
               <div className={classes.toDetailView}>
@@ -195,7 +195,7 @@ const DetailView = ({
                       alt="fromChain"
                     />
                   </span>
-                  <span>{transferDetails?.toNetworkName}</span>
+                  <span>{toChain?.name}</span>
                 </div>
               </div>
             </section>
