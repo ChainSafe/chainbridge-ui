@@ -10,6 +10,7 @@ export type TokenConfig = {
   resourceId: string;
   isNativeWrappedToken?: boolean;
   decimals?: number;
+  isDoubleApproval?: boolean;
 };
 
 export type ChainType = "Ethereum" | "Substrate";
