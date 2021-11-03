@@ -98,10 +98,11 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       typesFileName: "bridgeTypes.json",
       tokens: [
         {
-          address: "substrate-native",
-          name: "CFG",
-          symbol: "CFG",
-          resourceId: "substrate-native",
+          address: "cere-native",
+          name: cereTokenName,
+          symbol: cereTokenSymbol,
+          imageUri: CEREIcon,
+          resourceId: "cere-native",
           decimals: cereTokenDecimals,
         },
       ],
