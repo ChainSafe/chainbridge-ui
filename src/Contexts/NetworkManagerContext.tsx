@@ -88,6 +88,9 @@ interface NetworkManagerContext {
 
   setTransferTxHash: (input: string) => void;
   transferTxHash: string;
+
+  setHomeTransferTxHash: (input: string) => void;
+  homeTransferTxHash: string;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -111,6 +114,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   );
 
   const [transferTxHash, setTransferTxHash] = useState<string>("");
+  const [homeTransferTxHash, setHomeTransferTxHash] = useState<string>("");
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
   >(undefined);
@@ -237,6 +241,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         tokensDispatch,
         setTransferTxHash,
         transferTxHash,
+        setHomeTransferTxHash,
+        homeTransferTxHash,
       }}
     >
       {walletType === "Ethereum" ? (

@@ -146,6 +146,7 @@ export type TransferDetails = {
   timelineMessages: Array<any>;
   fromChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
   toChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+  pillColorStatus: { borderColor: string; background: string };
 };
 
 export type ExplorerState = {
@@ -154,6 +155,8 @@ export type ExplorerState = {
   pageInfo?: PageInfo;
   error: boolean;
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  transferDetails?: TransferDetails;
+  pillColorStatus?: { borderColor: string; background: string };
 };
 
 export type PageInfo = {
@@ -212,6 +215,7 @@ export function transfersReducer(
         timelineMessages: [],
         fromChain: undefined,
         toChain: undefined,
+        pillColorStatus: { borderColor: "", background: "" },
       };
       return {
         ...explorerState,

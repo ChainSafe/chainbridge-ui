@@ -40,6 +40,8 @@ type ChainbridgeContext = {
   bridgeFee?: number;
   inTransitMessages: Array<TransitMessage>;
   transferTxHash?: string;
+  setHomeTransferTxHash: (input: string) => void;
+  homeTransferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
   wrapToken: (value: number) => Promise<string>;
@@ -74,6 +76,8 @@ const ChainbridgeProvider = ({
     setDepositNonce,
     setDepositVotes,
     transferTxHash,
+    setHomeTransferTxHash,
+    homeTransferTxHash,
     inTransitMessages,
     tokensDispatch,
     transactionStatus,
@@ -163,6 +167,8 @@ const ChainbridgeProvider = ({
         inTransitMessages,
         depositAmount: depositAmount,
         transferTxHash: transferTxHash,
+        homeTransferTxHash: homeTransferTxHash,
+        setHomeTransferTxHash,
         selectedToken: selectedToken,
         // TODO: Confirm if EVM specific
         wrapToken,

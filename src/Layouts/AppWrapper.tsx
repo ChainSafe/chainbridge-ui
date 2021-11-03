@@ -137,13 +137,13 @@ const AppWrapper: React.FC<IAppWrapper> = ({
   const indexerEnabled = "INDEXER_URL" in __RUNTIME_CONFIG__;
 
   useEffect(() => {
-    if (location.pathname.includes("/explorer/list") && !indexerEnabled) {
+    if (location.pathname.includes("/explorer") && !indexerEnabled) {
       redirect("/transfer");
     }
   }, []);
 
   useEffect(() => {
-    if (location.pathname.includes("/explorer/list")) {
+    if (location.pathname.includes("/explorer")) {
       return setEnableNavTabs(false);
     }
     return setEnableNavTabs(true);

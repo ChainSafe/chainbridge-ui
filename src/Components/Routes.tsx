@@ -3,13 +3,15 @@ import { Switch, Route, Redirect } from "@chainsafe/common-components";
 import TransferPage from "./Pages/TransferPage";
 import WrapperPage from "./Pages/WrapperPage";
 import ExplorerPage from "./Pages/ExplorerPage";
+import TransactionPage from "./Pages/TransactionPage";
 import { ExplorerProvider } from "../Contexts/ExplorerContext";
 
 export const ROUTE_LINKS = {
   Transfer: "/transfer",
   Wrap: "/wrap",
-  Explorer: "/explorer/list",
-  ExplorerDetailed: "/explorer/list/:txId",
+  Explorer: "/explorer/transaction/list",
+  ExplorerDetailed: "/explorer/transaction/detail-view/:txId",
+  TransactionPage: "/explorer/transaction/:txHash",
 };
 
 interface IChainbridgeRoutes {
@@ -33,6 +35,12 @@ const ChainbridgeRoutes: React.FC<IChainbridgeRoutes> = ({ wrapTokenPage }) => {
           <ExplorerPage />
         </ExplorerProvider>
       </Route>
+      <Route exact path={ROUTE_LINKS.TransactionPage}>
+        <ExplorerProvider>
+          <TransactionPage />
+        </ExplorerProvider>
+      </Route>
+
       <Route exact path="/">
         <Redirect to={ROUTE_LINKS.Transfer} />
       </Route>

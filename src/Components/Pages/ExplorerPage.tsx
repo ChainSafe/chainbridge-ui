@@ -9,8 +9,7 @@ import {
   useHistory,
   Button,
 } from "@chainsafe/common-components";
-import ExplorerTable from "../Custom/ExplorerTable";
-import { getColorSchemaTransferStatus } from "../../Utils/Helpers";
+import { ExplorerTable } from "../Custom";
 import { useExplorer } from "../../Contexts/ExplorerContext";
 import {
   ExplorerPageState,
@@ -107,7 +106,7 @@ type PreflightDetails = {
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
-  const { explorerState, loadMore } = explorerContext;
+  const { explorerState, loadMore, setExplorerStateContext } = explorerContext;
   const { chains, transfers, pageInfo, isLoading } = explorerState;
 
   const initState: ExplorerPageState = {
@@ -128,6 +127,7 @@ const ExplorerPage = () => {
       timelineMessages: [],
       fromChain: undefined,
       toChain: undefined,
+      pillColorStatus: { borderColor: "", background: "" },
     },
     timelineButtonClicked: false,
     chains,
@@ -142,10 +142,6 @@ const ExplorerPage = () => {
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
-  const [pillColorStatus, setPillColorStatus] = useState({
-    borderColor: "",
-    background: "",
-  });
 
   const renderOptions = () => {
     return chains.map(({ chainId, name }) => ({
@@ -157,18 +153,16 @@ const ExplorerPage = () => {
   const handleOpenModal = (txId: string | undefined) => () => {
     const txDetail = transfers.find((tx) => tx.id === txId);
 
-    const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
-      txDetail?.status
-    );
-
-    setPillColorStatus(colorSchemaForTransferStatus);
-
     explorerPageDispatcher({
       type: "setTransferDetails",
       payload: txDetail!,
     });
     setActive(true);
-    redirect(`/explorer/list/${txDetail?.id}`);
+    setExplorerStateContext({
+      ...explorerState,
+      transferDetails: txDetail,
+    });
+    redirect(`/explorer/transaction/detail-view/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -176,7 +170,7 @@ const ExplorerPage = () => {
     explorerPageDispatcher({
       type: "cleanTransferDetails",
     });
-    redirect("/explorer/list");
+    redirect("/explorer/transaction/list");
   };
 
   const handleTimelineButtonClick = () =>
@@ -190,10 +184,6 @@ const ExplorerPage = () => {
     const activeTx = transfers.find((item) => href.includes(item.id));
 
     if (activeTx !== undefined) {
-      const colorSchemaForTransferStatus = getColorSchemaTransferStatus(
-        activeTx?.status
-      );
-      setPillColorStatus(colorSchemaForTransferStatus);
       explorerPageDispatcher({
         type: "setTransferDetails",
         payload: activeTx,
@@ -245,7 +235,6 @@ const ExplorerPage = () => {
               handleOpenModal={handleOpenModal}
               handleClose={handleClose}
               transferDetails={explorerPageState.transferDetails || {}}
-              pillColorStatus={pillColorStatus}
               chains={chains}
               handleTimelineButtonClick={handleTimelineButtonClick}
               timelineButtonClicked={explorerPageState.timelineButtonClicked}
