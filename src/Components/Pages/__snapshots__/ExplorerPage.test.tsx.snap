@@ -105,7 +105,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                         class="makeStyles-imageToken-151"
                       />
                       <span>
-                        EVM Celo Testnet
+                        Ethereum - Rinkeby
                          to
                       </span>
                     </span>
@@ -114,7 +114,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                         class="makeStyles-imageToken-151"
                       />
                       <span>
-                        Ethereum - Rinkeby
+                        Ethereum - Goerli
                       </span>
                     </span>
                   </div>
@@ -194,7 +194,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                         class="makeStyles-imageToken-151"
                       />
                       <span>
-                        EVM Celo Testnet
+                        Ethereum - Rinkeby
                          to
                       </span>
                     </span>
@@ -203,7 +203,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                         class="makeStyles-imageToken-151"
                       />
                       <span>
-                        Ethereum - Rinkeby
+                        Ethereum - Goerli
                       </span>
                     </span>
                   </div>

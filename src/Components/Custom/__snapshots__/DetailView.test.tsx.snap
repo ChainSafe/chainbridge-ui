@@ -139,7 +139,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   />
                 </span>
                 <span>
-                  EVM Celo Testnet
+                  Ethereum - Rinkeby
                 </span>
               </div>
             </div>
@@ -159,7 +159,7 @@ exports[`DetailView renders correctly and match Snapshot 1`] = `
                   />
                 </span>
                 <span>
-                  Ethereum - Rinkeby
+                  Ethereum - Goerli
                 </span>
               </div>
             </div>
