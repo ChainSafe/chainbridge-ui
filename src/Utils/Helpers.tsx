@@ -241,7 +241,7 @@ export const computeTransferDetails = (
     ];
   } else {
     const votesMessages = voteEvents.map((vote) => ({
-      message: `confirmed by`,
+      message: `Confirmed by`,
       time: formatDateTimeline(vote.timestamp),
       by: vote.by,
     }));
@@ -341,7 +341,7 @@ export const computeTransferDetails = (
                 by: proposalEvents[0].by,
               },
               {
-                message: `Transfer executed on ${getNetworkName(toChainId)}`,
+                message: `Transfer executed on ${toChain?.name}`,
                 time: formatDateTimeline(proposal.timestamp),
               },
             ];

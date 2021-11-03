@@ -14,7 +14,7 @@ window.__RUNTIME_CONFIG__ = {
         tokens: [
           {
             address: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
-            name: "an ERC20 (cUSD)",
+            name: "cUSD",
             symbol: "ERC20",
             imageUri: "ETHIcon",
             resourceId:
@@ -35,7 +35,7 @@ window.__RUNTIME_CONFIG__ = {
         tokens: [
           {
             address: "0xe09523d86d9b788BCcb580d061605F31FCe69F51",
-            name: "an ERC20",
+            name: "cUSD",
             symbol: "ERC20",
             imageUri: "WETHIcon",
             resourceId:
