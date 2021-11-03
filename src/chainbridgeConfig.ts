@@ -4,6 +4,7 @@ import CEREIcon from "./media/tokens/cere-token.svg";
 
 const cereTokenName = "CERE Network";
 const cereTokenSymbol = "CERE";
+const cereTokenDecimals = 10;
 
 export type TokenConfig = {
   address: string;
@@ -63,7 +64,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       networkId: +((process.env
         .REACT_APP_POLYGON_NETWORK_ID as unknown) as number),
       name: process.env.REACT_APP_POLYGON_NETWORK_NAME as string,
-      decimals: 10,
+      decimals: cereTokenDecimals,
       bridgeAddress: process.env.REACT_APP_POLYGON_BRIDGE_ADDRESS as string,
       erc20HandlerAddress: process.env
         .REACT_APP_POLYGON_ERC20_HANDLER_ADDRESS as string,
@@ -78,6 +79,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: CEREIcon,
           resourceId:
             "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+          decimals: cereTokenDecimals,
         },
       ],
     },
@@ -85,7 +87,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       chainId: 1,
       networkId: 2,
       name: process.env.REACT_APP_CERE_NETWORK_NAME as string,
-      decimals: 10,
+      decimals: cereTokenDecimals,
       rpcUrl: process.env.REACT_APP_CERE_RPC_URL as string,
       type: "Substrate",
       nativeTokenSymbol: "CERE",
@@ -100,6 +102,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           name: "CFG",
           symbol: "CFG",
           resourceId: "substrate-native",
+          decimals: cereTokenDecimals,
         },
       ],
       destinationChain: true,
@@ -110,7 +113,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
       networkId: +((process.env
         .REACT_APP_ETHEREUM_NETWORK_ID as unknown) as number),
       name: process.env.REACT_APP_ETHEREUM_NETWORK_NAME as string,
-      decimals: 10,
+      decimals: cereTokenDecimals,
       bridgeAddress: process.env.REACT_APP_ETHEREUM_BRIDGE_ADDRESS as string,
       erc20HandlerAddress: process.env
         .REACT_APP_ETHEREUM_ERC20_HANDLER_ADDRESS as string,
@@ -125,6 +128,7 @@ export const chainbridgeConfig: ChainbridgeConfig = {
           imageUri: CEREIcon,
           resourceId:
             "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+          decimals: cereTokenDecimals,
         },
       ],
     },
