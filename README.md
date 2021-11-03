@@ -70,6 +70,7 @@ type TokenConfig = {
   resourceId: string; // The resourceId to be used when transferring tokens of this type.
   isNativeWrappedToken?: boolean // Flag to indicate that this is a wrapped native token (eg wETH on Ethereum). If this flag is not set for any of the tokens provided for this chain, wrapping functionality will be unavailable on that network.
   decimals?: number;
+  isDoubleApproval?: boolean; // The token (eg USDT) will request approval twice to defend from the attack on approve/trasferFrom  methods
 };
 ```
 
