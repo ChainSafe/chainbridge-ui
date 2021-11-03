@@ -27,12 +27,14 @@ import ETHIcon from "../../media/tokens/eth.svg";
 import WETHIcon from "../../media/tokens/weth.svg";
 import DAIIcon from "../../media/tokens/dai.svg";
 import celoUSD from "../../media/tokens/cusd.svg";
+import CEREIcon from "../../media/tokens/cere-token.svg";
 
 const PredefinedIcons: any = {
   ETHIcon: ETHIcon,
   WETHIcon: WETHIcon,
   DAIIcon: DAIIcon,
   celoUSD: celoUSD,
+  CEREIcon: CEREIcon,
 };
 
 const showImageUrl = (url?: string) =>
