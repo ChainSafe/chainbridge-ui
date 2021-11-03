@@ -1,48 +1,14 @@
-import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
-import {
-  Table,
-  TableHead,
-  TableCell,
-  TableBody,
-  TableRow,
-  TableHeadCell,
-  SvgIcon,
-  Button,
-  Avatar,
-  Blockies,
-} from "@chainsafe/common-components";
-import {
-  DepositRecord,
-  TransferDetails,
-} from "../../Contexts/Reducers/TransfersReducer";
-import {
-  formatTransferDate,
-  getRandomSeed,
-  getTokenIcon,
-  shortenAddress,
-  computeAndFormatAmount,
-  showImageUrl,
-  selectChains,
-  selectToken,
-  showImageUrlNetworkIcons,
-  getNetworkIcon,
-} from "../../Utils/Helpers";
-import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
-import DetailView from "./DetailView";
-import {
-  EvmBridgeConfig,
-  SubstrateBridgeConfig,
-} from "../../chainbridgeConfig";
 
-type PillColorSchema = {
+type CustomProperties = {
   pillColorSchema: {
     borderColor: string;
     background: string;
   };
+  transferDetailPage?: boolean;
 };
 
-const useStyles = makeStyles(({ breakpoints }: ITheme) =>
+export const useStyles = makeStyles(({ breakpoints }: ITheme) =>
   createStyles({
     root: {
       display: "table",
@@ -129,7 +95,7 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     transferDetails: {
       minWidth: 768,
-      width: "100%",
+      width: ({ transferDetailPage }) => (transferDetailPage ? "50%" : "100%"),
       [breakpoints.down("sm")]: {
         minWidth: 411,
       },
@@ -254,16 +220,16 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
       display: "flex",
       justifyContent: "center",
       borderRadius: 16,
-      background: ({ pillColorSchema }: PillColorSchema) =>
+      background: ({ pillColorSchema }: CustomProperties) =>
         pillColorSchema.background,
-      border: ({ pillColorSchema }: PillColorSchema) =>
+      border: ({ pillColorSchema }: CustomProperties) =>
         `1px solid ${pillColorSchema.borderColor}`,
       width: 75,
       height: 22,
       fontSize: 14,
       padding: "0px 8px 0px 8px",
       margin: "10px 0px",
-      color: ({ pillColorSchema }: PillColorSchema) =>
+      color: ({ pillColorSchema }: CustomProperties) =>
         pillColorSchema.borderColor,
       fontWeight: 400,
     },
@@ -418,146 +384,3 @@ const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
   })
 );
-
-// TODO: just for mocking purposes
-type ExplorerTable = {
-  transactionList: DepositRecord[];
-  handleOpenModal: (fromAddress: string | undefined) => () => void;
-  handleClose: () => void;
-  active: boolean;
-  setActive: (state: boolean) => void;
-  transferDetails: TransferDetails;
-  pillColorStatus: { borderColor: string; background: string };
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
-  handleTimelineButtonClick: () => void;
-  timelineButtonClicked: boolean;
-};
-
-const ExplorerTable: React.FC<ExplorerTable> = ({
-  transactionList,
-  active,
-  handleOpenModal,
-  handleClose,
-  transferDetails,
-  pillColorStatus,
-  chains,
-  handleTimelineButtonClick,
-  timelineButtonClicked,
-}: ExplorerTable) => {
-  const classes = useStyles({
-    pillColorSchema: pillColorStatus,
-  });
-
-  const renderTransferList = (transferData: DepositRecord[]) =>
-    transferData.map((transfer: DepositRecord, idx: number) => {
-      const { amount, fromChainId, toChainId } = transfer;
-
-      const { fromChain, toChain } = selectChains(
-        chains,
-        fromChainId!,
-        toChainId!
-      );
-
-      const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
-      const toToken = selectToken(fromChain, transfer.destinationTokenAddress);
-
-      const tokenIcon = getTokenIcon();
-
-      const randomString = getRandomSeed();
-
-      const transferDateFormated = formatTransferDate(transfer.timestamp);
-
-      //TODO check how to work better with BG and bigint
-      const amountFormated = computeAndFormatAmount(amount!);
-
-      return (
-        <TableRow className={classes.row} key={transfer.id}>
-          <TableCell className={classes.cellRow}>
-            {transferDateFormated}
-          </TableCell>
-          <TableCell>
-            <div className={classes.accountAddress}>
-              <Avatar size="small" className={classes.avatar}>
-                <Blockies
-                  seed={randomString}
-                  size={15}
-                  color={"pink"}
-                  bgColor={"white"}
-                />
-              </Avatar>
-              <span>{transfer.fromAddress}</span>
-            </div>
-          </TableCell>
-          <TableCell className={classes.row}>
-            <div>
-              <span>
-                <img
-                  className={classes.imageToken}
-                  src={getNetworkIcon(fromChain)}
-                  alt="fromChain"
-                />
-                <span>{transfer.fromNetworkName} to</span>
-              </span>
-              <span>
-                <img
-                  className={classes.imageToken}
-                  src={getNetworkIcon(toChain)}
-                  alt={fromToken?.symbol}
-                />
-                <span>{transfer.toNetworkName}</span>
-              </span>
-            </div>
-          </TableCell>
-          <TableCell className={classes.row}>
-            <span className={classes.amountInfo}>
-              <img
-                className={classes.imageValueToken}
-                src={showImageUrlNetworkIcons(fromToken?.imageUri!)}
-                alt={fromToken?.symbol}
-              />
-              <span>
-                {amountFormated} {fromToken?.name}
-              </span>
-            </span>
-          </TableCell>
-          <TableCell className={classes.row}>
-            <div className={classes.viewDetailsInfo}>
-              <Button onClick={handleOpenModal(transfer.id)}>
-                <SvgIcon>
-                  <DirectionalIcon />
-                </SvgIcon>
-                View Details
-              </Button>
-            </div>
-          </TableCell>
-        </TableRow>
-      );
-    });
-
-  return (
-    <Table fullWidth={true} className={classes.root}>
-      <TableHead>
-        <TableRow className={classes.row}>
-          <TableHeadCell>Date</TableHeadCell>
-          <TableHeadCell>From</TableHeadCell>
-          <TableHeadCell>Transfer</TableHeadCell>
-          <TableHeadCell>Value</TableHeadCell>
-          <TableHeadCell></TableHeadCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>{renderTransferList(transactionList)}</TableBody>
-      <>
-        <DetailView
-          active={active}
-          transferDetails={transferDetails}
-          handleClose={handleClose}
-          classes={classes}
-          handleTimelineButtonClick={handleTimelineButtonClick}
-          timelineButtonClicked={timelineButtonClicked}
-        />
-      </>
-    </Table>
-  );
-};
-
-export default ExplorerTable;

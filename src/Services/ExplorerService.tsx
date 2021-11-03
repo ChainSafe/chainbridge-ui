@@ -4,6 +4,10 @@ import {
   PageInfo,
 } from "../Contexts/Reducers/TransfersReducer";
 
+const {
+  __RUNTIME_CONFIG__: { INDEXER_URL },
+} = window;
+
 export const fetchTransfers = async (
   setState: React.SetStateAction<any>,
   state: ExplorerState,
@@ -14,9 +18,6 @@ export const fetchTransfers = async (
     after?: string;
   }
 ): Promise<any> => {
-  const {
-    __RUNTIME_CONFIG__: { INDEXER_URL },
-  } = window;
   try {
     setState({
       ...state,
@@ -42,5 +43,21 @@ export const fetchTransfers = async (
       error: true,
       isLoading: false,
     });
+  }
+};
+
+export const fetchTransaction = async (
+  txHash: string,
+  setState: React.SetStateAction<any>
+) => {
+  try {
+    const response = await fetch(
+      `${INDEXER_URL}/transfers/byTransactionHash/${txHash}`
+    );
+    const responseParsed = await response.json();
+    setState(responseParsed);
+  } catch (error) {
+    console.error("Error getting one transaction", error);
+    return error;
   }
 };

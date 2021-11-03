@@ -136,11 +136,13 @@ const useStyles = makeStyles(
 interface ITransferActiveModalProps {
   open: boolean;
   close: () => void;
+  handleClick: (txHash: string) => void;
 }
 
 const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   open,
   close,
+  handleClick,
 }: ITransferActiveModalProps) => {
   const classes = useStyles();
   const {
@@ -152,6 +154,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     destinationChainConfig,
     depositAmount,
     transferTxHash,
+    homeTransferTxHash,
     selectedToken,
     tokens,
   } = useChainbridge();
@@ -207,34 +210,56 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             </Typography>
           </div>
         ) : transactionStatus === "In Transit" ? (
-          <div className={classes.sendingCopy}>
-            {inTransitMessages.map((m, i) => {
-              if (typeof m === "string") {
-                return (
-                  <Typography className={classes.vote} component="p" key={i}>
-                    {m}
-                  </Typography>
-                );
-              } else if (typeof m === "object" && m.message !== undefined) {
-                return (
-                  <Typography className={classes.vote} component="p" key={i}>
-                    {m.message}
-                  </Typography>
-                );
-              } else {
-                return (
-                  <Typography className={classes.vote} component="p" key={i}>
-                    <span>Vote casted by {m.address}</span>
-                    <span>{m.signed}</span>
-                  </Typography>
-                );
-              }
-            })}
-            <Typography className={classes.warning}>
-              This should take a few minutes. <br />
-              Please do not refresh or leave the page.
-            </Typography>
-          </div>
+          <>
+            <div className={classes.sendingCopy}>
+              {inTransitMessages.map((m, i) => {
+                if (typeof m === "string") {
+                  return (
+                    <Typography className={classes.vote} component="p" key={i}>
+                      {m}
+                    </Typography>
+                  );
+                } else if (typeof m === "object" && m.message !== undefined) {
+                  return (
+                    <Typography className={classes.vote} component="p" key={i}>
+                      {m.message}
+                    </Typography>
+                  );
+                } else {
+                  return (
+                    <Typography className={classes.vote} component="p" key={i}>
+                      <span>Vote casted by {m.address}</span>
+                      <span>{m.signed}</span>
+                    </Typography>
+                  );
+                }
+              })}
+              <Typography className={classes.warning}>
+                This should take a few minutes. <br />
+                Please do not refresh or leave the page.
+              </Typography>
+            </div>
+            <section className={classes.buttons}>
+              <Button
+                onClick={() => {
+                  homeConfig &&
+                    (homeConfig as EvmBridgeConfig).blockExplorer &&
+                    homeTransferTxHash &&
+                    handleClick(homeTransferTxHash!);
+                }}
+                size="small"
+                className={classes.button}
+                variant="outline"
+                // disabled={
+                //   !destinationChain ||
+                //   !destinationChain.blockExplorer ||
+                //   !transferTxHash
+                // }
+              >
+                View transaction
+              </Button>
+            </section>
+          </>
         ) : transactionStatus === "Transfer Completed" ? (
           <>
             <Typography className={classes.receipt} component="p">
@@ -246,18 +271,13 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </strong>
             </Typography>
             <section className={classes.buttons}>
-              {/* <Button
-                onClick={() =>
-                  destinationChainConfig &&
-                  (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
-                  transferTxHash &&
-                  window.open(
-                    `${
-                      (destinationChainConfig as EvmBridgeConfig).blockExplorer
-                    }/${transferTxHash}`,
-                    "_blank"
-                  )
-                }
+              <Button
+                onClick={() => {
+                  homeConfig &&
+                    (homeConfig as EvmBridgeConfig).blockExplorer &&
+                    homeTransferTxHash &&
+                    handleClick(homeTransferTxHash!);
+                }}
                 size="small"
                 className={classes.button}
                 variant="outline"
@@ -268,7 +288,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 // }
               >
                 View transaction
-              </Button> */}
+              </Button>
               <Button
                 size="small"
                 className={classes.button}
@@ -286,7 +306,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             </Typography>
             {homeConfig &&
               (homeConfig as EvmBridgeConfig).blockExplorer &&
-              transferTxHash && (
+              homeTransferTxHash && (
                 <Button
                   onClick={() =>
                     window.open(
