@@ -14,6 +14,7 @@ import {
   getProposalStatus,
   getRandomSeed,
   showImageUrlNetworkIcons,
+  getNetworkIcon,
 } from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 
@@ -189,10 +190,8 @@ const DetailView = ({
                   <span>
                     <img
                       className={classes.imageToken}
-                      src={showImageUrlNetworkIcons(
-                        fromChain?.tokens[0].imageUri!
-                      )}
-                      alt={fromChain?.tokens[0].symbol}
+                      src={getNetworkIcon(fromChain)}
+                      alt="fromChain"
                     />
                   </span>
                   <span>{transferDetails?.fromNetworkName}</span>
@@ -206,10 +205,8 @@ const DetailView = ({
                   <span>
                     <img
                       className={classes.imageToken}
-                      src={showImageUrlNetworkIcons(
-                        toChain?.tokens[0].imageUri!
-                      )}
-                      alt={toChain?.tokens[0].symbol}
+                      src={getNetworkIcon(toChain)}
+                      alt="fromChain"
                     />
                   </span>
                   <span>{transferDetails?.toNetworkName}</span>
