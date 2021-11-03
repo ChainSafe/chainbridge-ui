@@ -49,14 +49,9 @@ export const EVMDestinationAdaptorProvider = ({
       depositNonce
     ) {
       destinationBridge.on(
-        destinationBridge.filters.ProposalEvent(
-          homeChainConfig.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null,
-          null
-        ),
-        (originChainId, depositNonce, status, resourceId, dataHash, tx) => {
+        destinationBridge.filters.ProposalEvent(null, null, null, null),
+        // @ts-ignore
+        (originDomainId, depositNonce, status, dataHash, tx) => {
           switch (BigNumber.from(status).toNumber()) {
             case 1:
               tokensDispatch({
@@ -83,13 +78,9 @@ export const EVMDestinationAdaptorProvider = ({
       );
 
       destinationBridge.on(
-        destinationBridge.filters.ProposalVote(
-          homeChainConfig.chainId,
-          BigNumber.from(depositNonce),
-          null,
-          null
-        ),
-        async (originChainId, depositNonce, status, resourceId, tx) => {
+        destinationBridge.filters.ProposalVote(null, null, null, null),
+        // @ts-ignore
+        async (originDomainId, depositNonce, status, dataHash, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
           if (txReceipt.status === 1) {
             setDepositVotes(depositVotes + 1);
