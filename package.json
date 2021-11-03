@@ -69,7 +69,9 @@
     "start:evm-example": "docker-compose -f ./docker-compose-node.yml up -V",
     "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",
     "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh",
-    "setup:copy-dev-config": "./scripts/copy-dev-config.sh"
+    "setup:copy-dev-config": "./scripts/copy-dev-config.sh",
+    "setup:copy-stage-config": "./scripts/copy-stage-config.sh",
+    "setup:copy-prod-config": "./scripts/copy-prod-config.sh"
   },
   "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {
