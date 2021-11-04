@@ -21,6 +21,8 @@ export const EVMDestinationAdaptorProvider = ({
     setTransferTxHash,
     setDepositVotes,
     depositVotes,
+    inTransitMessages,
+    transactionStatus,
   } = useNetworkManager();
 
   const [destinationBridge, setDestinationBridge] = useState<
@@ -46,7 +48,8 @@ export const EVMDestinationAdaptorProvider = ({
       homeChainConfig?.chainId !== null &&
       homeChainConfig?.chainId !== undefined &&
       destinationBridge &&
-      depositNonce
+      depositNonce &&
+      !inTransitMessages.txIsDone
     ) {
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(null, null, null, null),
@@ -82,10 +85,17 @@ export const EVMDestinationAdaptorProvider = ({
         // @ts-ignore
         async (originDomainId, depositNonce, status, dataHash, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
-          if (txReceipt.status === 1) {
+          if (status === 1) {
             setDepositVotes(depositVotes + 1);
           }
-          tokensDispatch({
+
+          if (transactionStatus === "Transfer Completed") {
+            return tokensDispatch({
+              type: "setTransactionIsDone",
+            });
+          }
+
+          return tokensDispatch({
             type: "addMessage",
             payload: {
               address: String(txReceipt.from),

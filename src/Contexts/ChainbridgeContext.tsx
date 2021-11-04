@@ -12,6 +12,7 @@ import {
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
 import NetworkSelectModal from "../Modules/NetworkSelectModal";
+import { TransitState } from "./Reducers/TransitMessageReducer";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -35,7 +36,7 @@ type ChainbridgeContext = {
   depositNonce?: string;
   depositAmount?: number;
   bridgeFee?: number;
-  inTransitMessages: Array<string | Vote>;
+  inTransitMessages: TransitState;
   transferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;

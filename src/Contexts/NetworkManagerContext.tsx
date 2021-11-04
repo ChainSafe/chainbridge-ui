@@ -26,6 +26,7 @@ import {
   AddMessageAction,
   ResetAction,
   transitMessageReducer,
+  TransitState,
 } from "./Reducers/TransitMessageReducer";
 
 interface INetworkManagerProviderProps {
@@ -64,7 +65,7 @@ interface NetworkManagerContext {
 
   transactionStatus?: TransactionStatus;
   setTransactionStatus: (message: TransactionStatus | undefined) => void;
-  inTransitMessages: Array<string | Vote>;
+  inTransitMessages: TransitState;
 
   setDepositVotes: (input: number) => void;
   depositVotes: number;
@@ -108,7 +109,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
-    []
+    { txIsDone: false, transitMessage: [] }
   );
 
   const handleSetHomeChain = useCallback(

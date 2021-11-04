@@ -208,7 +208,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
           </div>
         ) : transactionStatus === "In Transit" ? (
           <div className={classes.sendingCopy}>
-            {inTransitMessages.map((m, i) => {
+            {inTransitMessages.transitMessage.map((m, i) => {
               if (typeof m === "string") {
                 return (
                   <Typography className={classes.vote} component="p" key={i}>
