@@ -24,6 +24,7 @@ describe("ComputeTransfersDetails", () => {
       "timelineMessages",
       "fromChain",
       "toChain",
+      "pillColorStatus",
     ];
 
     const transferDetails = computeTransferDetails(

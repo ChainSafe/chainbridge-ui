@@ -32,59 +32,59 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
           class="makeStyles-explorerTable-10"
         >
           <table
-            class="makeStyles-root-165 makeStyles-fullWidth-166 makeStyles-root-114"
+            class="makeStyles-root-166 makeStyles-fullWidth-167 makeStyles-root-114"
           >
             <thead
-              class="makeStyles-root-170"
+              class="makeStyles-root-171"
             >
               <tr
-                class="makeStyles-root-171 makeStyles-row-115 classic"
+                class="makeStyles-root-172 makeStyles-row-115 classic"
               >
                 <td
-                  class="makeStyles-root-173 makeStyles-alignCenter-175"
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
                 >
                   Date
                 </td>
                 <td
-                  class="makeStyles-root-173 makeStyles-alignCenter-175"
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
                 >
                   From
                 </td>
                 <td
-                  class="makeStyles-root-173 makeStyles-alignCenter-175"
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
                 >
                   Transfer
                 </td>
                 <td
-                  class="makeStyles-root-173 makeStyles-alignCenter-175"
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
                 >
                   Value
                 </td>
                 <td
-                  class="makeStyles-root-173 makeStyles-alignCenter-175"
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
                 />
               </tr>
             </thead>
             <tbody>
               <tr
-                class="makeStyles-root-171 makeStyles-row-115 classic"
+                class="makeStyles-root-172 makeStyles-row-115 classic"
               >
                 <td
-                  class="makeStyles-cellRow-119 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-cellRow-119 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   Sep 1, 6:53PM
                 </td>
                 <td
-                  class="makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <div
                     class="makeStyles-accountAddress-117"
                   >
                     <article
-                      class="makeStyles-root-194 makeStyles-avatar-123 circle small"
+                      class="makeStyles-root-195 makeStyles-avatar-123 circle small"
                     >
                       <canvas
-                        class="identicon makeStyles-root-195"
+                        class="identicon makeStyles-root-196"
                         height="60"
                         style="width: 60px; height: 60px;"
                         width="60"
@@ -96,7 +96,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <div>
                     <span>
@@ -120,7 +120,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <span
                     class="makeStyles-amountInfo-121"
@@ -135,16 +135,16 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <div
                     class="makeStyles-viewDetailsInfo-122"
                   >
                     <button
-                      class="makeStyles-root-182 makeStyles-primary-183 medium"
+                      class="makeStyles-root-183 makeStyles-primary-184 medium"
                     >
                       <span
-                        class="makeStyles-root-196 makeStyles-sizeMedium-203"
+                        class="makeStyles-root-197 makeStyles-sizeMedium-204"
                       >
                         <svg>
                           directional.svg
@@ -156,24 +156,24 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                 </td>
               </tr>
               <tr
-                class="makeStyles-root-171 makeStyles-row-115 classic"
+                class="makeStyles-root-172 makeStyles-row-115 classic"
               >
                 <td
-                  class="makeStyles-cellRow-119 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-cellRow-119 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   Sep 2, 4:06PM
                 </td>
                 <td
-                  class="makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <div
                     class="makeStyles-accountAddress-117"
                   >
                     <article
-                      class="makeStyles-root-194 makeStyles-avatar-123 circle small"
+                      class="makeStyles-root-195 makeStyles-avatar-123 circle small"
                     >
                       <canvas
-                        class="identicon makeStyles-root-195"
+                        class="identicon makeStyles-root-196"
                         height="60"
                         style="width: 60px; height: 60px;"
                         width="60"
@@ -185,7 +185,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <div>
                     <span>
@@ -209,7 +209,7 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </div>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <span
                     class="makeStyles-amountInfo-121"
@@ -224,16 +224,16 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="makeStyles-row-115 makeStyles-root-190 makeStyles-alignCenter-192"
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
                 >
                   <div
                     class="makeStyles-viewDetailsInfo-122"
                   >
                     <button
-                      class="makeStyles-root-182 makeStyles-primary-183 medium"
+                      class="makeStyles-root-183 makeStyles-primary-184 medium"
                     >
                       <span
-                        class="makeStyles-root-196 makeStyles-sizeMedium-203"
+                        class="makeStyles-root-197 makeStyles-sizeMedium-204"
                       >
                         <svg>
                           directional.svg
@@ -250,13 +250,13 @@ exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
             class="makeStyles-paginationPanel-11"
           >
             <button
-              class="makeStyles-root-182 makeStyles-paginationButtons-12 makeStyles-primary-183 makeStyles-disabled-189 medium"
+              class="makeStyles-root-183 makeStyles-paginationButtons-12 makeStyles-primary-184 makeStyles-disabled-190 medium"
               disabled=""
             >
               ← Previous
             </button>
             <button
-              class="makeStyles-root-182 makeStyles-paginationButtons-12 makeStyles-primary-183 medium"
+              class="makeStyles-root-183 makeStyles-paginationButtons-12 makeStyles-primary-184 medium"
             >
               Next →
             </button>
