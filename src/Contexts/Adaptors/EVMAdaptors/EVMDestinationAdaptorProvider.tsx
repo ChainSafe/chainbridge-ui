@@ -53,7 +53,6 @@ export const EVMDestinationAdaptorProvider = ({
     ) {
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(null, null, null, null),
-        // @ts-ignore
         (originDomainId, depositNonce, status, dataHash, tx) => {
           switch (BigNumber.from(status).toNumber()) {
             case 1:
@@ -82,7 +81,6 @@ export const EVMDestinationAdaptorProvider = ({
 
       destinationBridge.on(
         destinationBridge.filters.ProposalVote(null, null, null, null),
-        // @ts-ignore
         async (originDomainId, depositNonce, status, dataHash, tx) => {
           const txReceipt = await tx.getTransactionReceipt();
           if (status === 1) {
