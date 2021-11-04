@@ -2,19 +2,22 @@ import React, { useCallback, useContext } from "react";
 import {
   BridgeConfig,
   chainbridgeConfig,
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
   TokenConfig,
 } from "../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import {
   TransactionStatus,
   useNetworkManager,
-  Vote,
+  TransitMessage,
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
 import NetworkSelectModal from "../Modules/NetworkSelectModal";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
+  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 }
 
 type ChainbridgeContext = {
@@ -35,7 +38,7 @@ type ChainbridgeContext = {
   depositNonce?: string;
   depositAmount?: number;
   bridgeFee?: number;
-  inTransitMessages: Array<string | Vote>;
+  inTransitMessages: Array<TransitMessage>;
   transferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
@@ -47,13 +50,22 @@ type ChainbridgeContext = {
   isReady: boolean | undefined;
   address: string | undefined;
   chainId?: number;
+  checkSupplies?: (
+    amount: number,
+    tokenAddress: string,
+    destinationChainId: number
+  ) => Promise<boolean | undefined>;
+  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
   undefined
 );
 
-const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
+const ChainbridgeProvider = ({
+  children,
+  chains,
+}: IChainbridgeContextProps) => {
   const {
     handleSetHomeChain,
     destinationChainConfig,
@@ -89,6 +101,7 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     tokens,
     wrapToken,
     unwrapToken,
+    handleCheckSupplies,
   } = useHomeBridge();
 
   const resetDeposit = () => {
@@ -116,6 +129,20 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     },
     [deposit, destinationChainConfig, chainConfig]
   );
+
+  const checkSupplies = async (
+    amount: number,
+    tokenAddress: string,
+    destinationChainId: number
+  ) => {
+    if (handleCheckSupplies && chainConfig && destinationChainConfig) {
+      return await handleCheckSupplies(
+        amount,
+        tokenAddress,
+        destinationChainId
+      );
+    }
+  };
 
   return (
     <ChainbridgeContext.Provider
@@ -146,8 +173,11 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         tokens,
         address,
         chainId,
+        checkSupplies,
+        chains,
       }}
     >
+      {/*TODO: we should remove this on refactor task. Context provider single responsibility is to provide share state */}
       <NetworkSelectModal />
       {children}
     </ChainbridgeContext.Provider>

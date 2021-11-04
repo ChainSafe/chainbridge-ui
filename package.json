@@ -1,10 +1,11 @@
 {
   "name": "@Cerebellum-Network/chainbridge-ui",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
+    "@celo-tools/celo-ethers-wrapper": "^0.0.5",
     "@chainsafe/chainbridge-contracts": "1.0.5",
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
@@ -24,7 +25,7 @@
     "bnc-onboard": "1.26.1",
     "clsx": "^1.1.1",
     "dayjs": "^1.9.1",
-    "ethers": "5.0.32",
+    "ethers": "^5.4.5",
     "formik": "^2.2.0",
     "history": "^5.0.0",
     "react": "^16.13.1",
@@ -52,7 +53,7 @@
     "typescript": "^4.0.3"
   },
   "scripts": {
-    "start": "craco --max_old_space_size=2048 start",
+    "start": "yarn setup:copy-dev-config && craco --max_old_space_size=2048 start",
     "build": "craco --max_old_space_size=2048 build",
     "sentry": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); node scripts/sentry.js)",
     "release": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); yarn build && node scripts/sentry.js)",
@@ -65,8 +66,12 @@
     "start:tunnel": "./ngrok http https://localhost:3000",
     "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V",
     "start:centrifuge": "docker-compose -f ./docker-compose-centrifuge.yml up -V",
+    "start:evm-example": "docker-compose -f ./docker-compose-node.yml up -V",
     "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",
-    "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh"
+    "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh",
+    "setup:copy-dev-config": "./scripts/copy-dev-config.sh",
+    "setup:copy-stage-config": "./scripts/copy-stage-config.sh",
+    "setup:copy-prod-config": "./scripts/copy-prod-config.sh"
   },
   "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {

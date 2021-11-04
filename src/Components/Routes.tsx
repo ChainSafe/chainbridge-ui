@@ -9,7 +9,11 @@ export const ROUTE_LINKS = {
   Explore: "/explore",
 };
 
-const FilesRoutes = () => {
+interface IChainbridgeRoutes {
+  wrapTokenPage?: boolean;
+}
+
+const ChainbridgeRoutes: React.FC<IChainbridgeRoutes> = ({ wrapTokenPage }) => {
   return (
     <Switch>
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
@@ -25,4 +29,4 @@ const FilesRoutes = () => {
   );
 };
 
-export default FilesRoutes;
+export default ChainbridgeRoutes;

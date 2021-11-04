@@ -140,7 +140,8 @@ export const SubstrateHomeAdaptorProvider = ({
           } = result.toJSON() as any;
           setTokens({
             [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
-              decimals: homeChainConfig.decimals,
+              decimals:
+                homeChainConfig.tokens[0].decimals ?? homeChainConfig.decimals,
               balance: parseInt(
                 utils.formatUnits(balance, homeChainConfig.decimals)
               ),
@@ -311,6 +312,7 @@ export const SubstrateHomeAdaptorProvider = ({
         nativeTokenBalance: 0,
         accounts: accounts,
         selectAccount: selectAccount,
+        handleCheckSupplies: undefined,
       }}
     >
       {children}
@@ -388,6 +390,7 @@ export const SubstrateDestinationAdaptorProvider = ({
               payload: {
                 address: "Substrate Relayer",
                 signed: "Confirmed",
+                order: parseFloat(`1.${depositVotes + 1}`),
               },
             });
           }

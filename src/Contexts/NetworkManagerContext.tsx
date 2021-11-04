@@ -36,7 +36,19 @@ export type WalletType = ChainType | "select" | "unset";
 
 export type Vote = {
   address: string;
-  signed: "Confirmed" | "Rejected";
+  signed?: "Confirmed" | "Rejected";
+  order?: string;
+  message?: string;
+  eventType?: "Vote";
+};
+
+export type TransitMessage = {
+  address: string;
+  message?: string;
+  proposalStatus?: number;
+  order: number;
+  signed?: "Confirmed" | "Rejected";
+  eventType?: "Proposal" | "Vote";
 };
 
 export type TransactionStatus =
@@ -64,7 +76,7 @@ interface NetworkManagerContext {
 
   transactionStatus?: TransactionStatus;
   setTransactionStatus: (message: TransactionStatus | undefined) => void;
-  inTransitMessages: Array<string | Vote>;
+  inTransitMessages: Array<TransitMessage>;
 
   setDepositVotes: (input: number) => void;
   depositVotes: number;
