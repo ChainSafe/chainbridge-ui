@@ -13,7 +13,7 @@ export type ChainType = "Ethereum" | "Substrate";
 
 export type BridgeConfig = {
   networkId?: number;
-  chainId: number;
+  domainId: number;
   name: string;
   rpcUrl: string;
   type: ChainType;
@@ -47,7 +47,10 @@ export type ChainbridgeConfig = {
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
-export type UIConfig = { wrapTokenPage: boolean };
+export type UIConfig = {
+  wrapTokenPage: boolean;
+  transactionAutoUpdateInterval: number;
+};
 
 export const chainbridgeConfig: ChainbridgeConfig =
   window.__RUNTIME_CONFIG__.CHAINBRIDGE;
