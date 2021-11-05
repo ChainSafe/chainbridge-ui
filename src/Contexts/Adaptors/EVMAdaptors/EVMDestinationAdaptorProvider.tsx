@@ -54,22 +54,6 @@ export const EVMDestinationAdaptorProvider = ({
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(null, null, null, null),
         async (originDomainId, depositNonce, status, dataHash, tx) => {
-          //   switch (BigNumber.from(status).toNumber()) {
-          // destinationBridge.filters.ProposalEvent(
-          //   homeChainConfig.chainId,
-          //   BigNumber.from(depositNonce),
-          //   null,
-          //   null,
-          //   null
-          // ),
-          // async (
-          //   originChainId,
-          //   depositNonce,
-          //   status,
-          //   resourceId,
-          //   dataHash,
-          //   tx
-          // ) => {
           const txReceipt = await tx.getTransactionReceipt();
           const proposalStatus = BigNumber.from(status).toNumber();
           switch (proposalStatus) {
