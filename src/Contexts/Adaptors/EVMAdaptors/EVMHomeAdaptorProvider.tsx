@@ -16,15 +16,9 @@ import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
+import { getNetworkName } from "../../../Utils/Helpers";
 
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
-
-const resetAllowanceLogicFor = [
-  "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
-  "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", //cUSD CELO
-  // "0xe09523d86d9b788BCcb580d061605F31FCe69F51", //сTST CELO cUSD on Rinkeby
-  //Add other offending tokens here
-];
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -43,37 +37,6 @@ export const EVMHomeAdaptorProvider = ({
     resetOnboard,
   } = useWeb3();
 
-  const getNetworkName = (id: any) => {
-    switch (Number(id)) {
-      case 5:
-        return "Localhost";
-      case 1:
-        return "Mainnet";
-      case 3:
-        return "Ropsten";
-      case 4:
-        return "Rinkeby";
-      // case 5:
-      //   return "Goerli";
-      case 6:
-        return "Kotti";
-      case 42:
-        return "Kovan";
-      case 61:
-        return "Ethereum Classic - Mainnet";
-      case 42220:
-        return "CELO - Mainnet";
-      case 44787:
-        return "CELO - Alfajores Testnet";
-      case 62320:
-        return "CELO - Baklava Testnet";
-      case 1749641142:
-        return "Besu";
-      default:
-        return "Other";
-    }
-  };
-
   const {
     homeChainConfig,
     setTransactionStatus,
@@ -81,6 +44,7 @@ export const EVMHomeAdaptorProvider = ({
     handleSetHomeChain,
     homeChains,
     setNetworkId,
+    setHomeTransferTxHash,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -346,13 +310,16 @@ export const EVMHomeAdaptorProvider = ({
           address,
           (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
         );
-
+        console.log(
+          "🚀  currentAllowance",
+          utils.formatUnits(currentAllowance, erc20Decimals)
+        );
         if (
           Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
         ) {
           if (
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
-            resetAllowanceLogicFor.includes(tokenAddress)
+            token.isDoubleApproval
           ) {
             //We need to reset the user's allowance to 0 before we give them a new allowance
             //TODO Should we alert the user this is happening here?
@@ -380,16 +347,10 @@ export const EVMHomeAdaptorProvider = ({
         }
         homeBridge.once(
           homeBridge.filters.Deposit(null, null, null, address, null, null),
-          (
-            destinationDomainId,
-            resourceId,
-            depositNonce,
-            user,
-            data,
-            ...rest
-          ) => {
+          (destinationDomainId, resourceId, depositNonce, user, data, tx) => {
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
+            setHomeTransferTxHash(tx.transactionHash);
           }
         );
 

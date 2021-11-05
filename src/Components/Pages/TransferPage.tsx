@@ -8,6 +8,7 @@ import {
   Typography,
   QuestionCircleSvg,
   SelectInput,
+  useHistory,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
@@ -23,20 +24,7 @@ import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
 import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
-import ETHIcon from "../../media/tokens/eth.svg";
-import WETHIcon from "../../media/tokens/weth.svg";
-import DAIIcon from "../../media/tokens/dai.svg";
-import celoUSD from "../../media/tokens/cusd.svg";
-
-const PredefinedIcons: any = {
-  ETHIcon: ETHIcon,
-  WETHIcon: WETHIcon,
-  DAIIcon: DAIIcon,
-  celoUSD: celoUSD,
-};
-
-const showImageUrl = (url?: string) =>
-  url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
+import { showImageUrl } from "../../Utils/Helpers";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -237,6 +225,8 @@ const TransferPage = () => {
     tokenSymbol: "",
   });
 
+  const { redirect } = useHistory();
+
   useEffect(() => {
     if (walletType !== "select" && walletConnecting === true) {
       setWalletConnecting(false);
@@ -329,6 +319,12 @@ const TransferPage = () => {
       })
       .required("Please add a receiving address"),
   });
+
+  const handleClick = (txHash: string) => {
+    const url = `/explorer/transaction/${txHash}`;
+
+    redirect(url);
+  };
 
   return (
     <article className={classes.root}>
@@ -571,7 +567,11 @@ const TransferPage = () => {
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
+      <TransferActiveModal
+        open={!!transactionStatus}
+        close={resetDeposit}
+        handleClick={handleClick}
+      />
       {/* This is here due to requiring router */}
       <NetworkUnsupportedModal />
     </article>

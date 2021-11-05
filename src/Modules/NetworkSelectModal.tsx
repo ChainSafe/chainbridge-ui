@@ -32,7 +32,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) => {
 
 const NetworkSelectModal = () => {
   const classes = useStyles();
-  const { isReady } = useChainbridge();
+  const { isReady, chains } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();
 
   return (
@@ -50,12 +50,20 @@ const NetworkSelectModal = () => {
             Please select a wallet type
           </Typography>
           <section className={classes.buttons}>
-            <Button onClick={() => setWalletType("Ethereum")}>
-              Use Ethereum wallet
-            </Button>
-            <Button onClick={() => setWalletType("Substrate")}>
-              Use Substrate wallet
-            </Button>
+            {chains?.every((item) => item.type === "Ethereum") ? (
+              <Button onClick={() => setWalletType("Ethereum")}>
+                Use Ethereum wallet
+              </Button>
+            ) : (
+              <>
+                <Button onClick={() => setWalletType("Ethereum")}>
+                  Use Ethereum wallet
+                </Button>
+                <Button onClick={() => setWalletType("Substrate")}>
+                  Use Substrate wallet
+                </Button>
+              </>
+            )}
           </section>
         </>
       )}

@@ -1,4 +1,5 @@
 window.__RUNTIME_CONFIG__ = {
+  INDEXER__URL: "http://localhost:8000",
   CHAINBRIDGE: {
     chains: [
       {

@@ -3,24 +3,44 @@ import { Switch, Route, Redirect } from "@chainsafe/common-components";
 import TransferPage from "./Pages/TransferPage";
 import WrapperPage from "./Pages/WrapperPage";
 import ExplorerPage from "./Pages/ExplorerPage";
+import TransactionPage from "./Pages/TransactionPage";
 import { ExplorerProvider } from "../Contexts/ExplorerContext";
 
 export const ROUTE_LINKS = {
   Transfer: "/transfer",
   Wrap: "/wrap",
-  Explore: "/explore",
+  Explorer: "/explorer/transaction/list",
+  ExplorerDetailed: "/explorer/transaction/detail-view/:txId",
+  TransactionPage: "/explorer/transaction/:txHash",
 };
 
-const FilesRoutes = () => {
+interface IChainbridgeRoutes {
+  wrapTokenPage?: boolean;
+}
+
+const ChainbridgeRoutes: React.FC<IChainbridgeRoutes> = ({ wrapTokenPage }) => {
   return (
     <Switch>
       <Route exact path={ROUTE_LINKS.Transfer} component={TransferPage} />
-      <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
-      <Route exact path={ROUTE_LINKS.Explore}>
+      {wrapTokenPage && (
+        <Route exact path={ROUTE_LINKS.Wrap} component={WrapperPage} />
+      )}
+      <Route exact path={ROUTE_LINKS.Explorer}>
         <ExplorerProvider>
           <ExplorerPage />
         </ExplorerProvider>
       </Route>
+      <Route exact path={ROUTE_LINKS.ExplorerDetailed}>
+        <ExplorerProvider>
+          <ExplorerPage />
+        </ExplorerProvider>
+      </Route>
+      <Route exact path={ROUTE_LINKS.TransactionPage}>
+        <ExplorerProvider>
+          <TransactionPage />
+        </ExplorerProvider>
+      </Route>
+
       <Route exact path="/">
         <Redirect to={ROUTE_LINKS.Transfer} />
       </Route>
@@ -28,4 +48,4 @@ const FilesRoutes = () => {
   );
 };
 
-export default FilesRoutes;
+export default ChainbridgeRoutes;

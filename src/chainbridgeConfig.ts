@@ -6,6 +6,7 @@ export type TokenConfig = {
   resourceId: string;
   isNativeWrappedToken?: boolean;
   decimals?: number;
+  isDoubleApproval?: boolean;
 };
 
 export type ChainType = "Ethereum" | "Substrate";
@@ -39,11 +40,14 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   transferPalletName: string;
   transferFunctionName: string;
   typesFileName: string;
+  blockExplorer?: string;
 };
 
 export type ChainbridgeConfig = {
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
+
+export type UIConfig = { wrapTokenPage: boolean };
 
 export const chainbridgeConfig: ChainbridgeConfig =
   window.__RUNTIME_CONFIG__.CHAINBRIDGE;

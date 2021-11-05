@@ -2,13 +2,15 @@ import React, { useCallback, useContext } from "react";
 import {
   BridgeConfig,
   chainbridgeConfig,
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
   TokenConfig,
 } from "../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import {
   TransactionStatus,
   useNetworkManager,
-  Vote,
+  TransitMessage,
 } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
 import NetworkSelectModal from "../Modules/NetworkSelectModal";
@@ -16,6 +18,7 @@ import { TransitState } from "./Reducers/TransitMessageReducer";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
+  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 }
 
 type ChainbridgeContext = {
@@ -38,6 +41,8 @@ type ChainbridgeContext = {
   bridgeFee?: number;
   inTransitMessages: TransitState;
   transferTxHash?: string;
+  setHomeTransferTxHash: (input: string) => void;
+  homeTransferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
   wrapToken: (value: number) => Promise<string>;
@@ -53,13 +58,17 @@ type ChainbridgeContext = {
     tokenAddress: string,
     destinationChainId: number
   ) => Promise<boolean | undefined>;
+  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
   undefined
 );
 
-const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
+const ChainbridgeProvider = ({
+  children,
+  chains,
+}: IChainbridgeContextProps) => {
   const {
     handleSetHomeChain,
     destinationChainConfig,
@@ -68,6 +77,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
     setDepositNonce,
     setDepositVotes,
     transferTxHash,
+    setHomeTransferTxHash,
+    homeTransferTxHash,
     inTransitMessages,
     tokensDispatch,
     transactionStatus,
@@ -157,6 +168,8 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         inTransitMessages,
         depositAmount: depositAmount,
         transferTxHash: transferTxHash,
+        homeTransferTxHash: homeTransferTxHash,
+        setHomeTransferTxHash,
         selectedToken: selectedToken,
         // TODO: Confirm if EVM specific
         wrapToken,
@@ -168,8 +181,10 @@ const ChainbridgeProvider = ({ children }: IChainbridgeContextProps) => {
         address,
         chainId,
         checkSupplies,
+        chains,
       }}
     >
+      {/*TODO: we should remove this on refactor task. Context provider single responsibility is to provide share state */}
       <NetworkSelectModal />
       {children}
     </ChainbridgeContext.Provider>

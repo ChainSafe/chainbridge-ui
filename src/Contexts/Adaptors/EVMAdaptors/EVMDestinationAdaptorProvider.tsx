@@ -53,18 +53,48 @@ export const EVMDestinationAdaptorProvider = ({
     ) {
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(null, null, null, null),
-        (originDomainId, depositNonce, status, dataHash, tx) => {
-          switch (BigNumber.from(status).toNumber()) {
+        async (originDomainId, depositNonce, status, dataHash, tx) => {
+          //   switch (BigNumber.from(status).toNumber()) {
+          // destinationBridge.filters.ProposalEvent(
+          //   homeChainConfig.chainId,
+          //   BigNumber.from(depositNonce),
+          //   null,
+          //   null,
+          //   null
+          // ),
+          // async (
+          //   originChainId,
+          //   depositNonce,
+          //   status,
+          //   resourceId,
+          //   dataHash,
+          //   tx
+          // ) => {
+          const txReceipt = await tx.getTransactionReceipt();
+          const proposalStatus = BigNumber.from(status).toNumber();
+          switch (proposalStatus) {
             case 1:
               tokensDispatch({
                 type: "addMessage",
-                payload: `Proposal created on ${destinationChainConfig.name}`,
+                payload: {
+                  address: String(txReceipt.from),
+                  message: `Proposal created on ${destinationChainConfig.name}`,
+                  proposalStatus: proposalStatus,
+                  order: proposalStatus,
+                  eventType: "Proposal",
+                },
               });
               break;
             case 2:
               tokensDispatch({
                 type: "addMessage",
-                payload: `Proposal has passed. Executing...`,
+                payload: {
+                  address: String(txReceipt.from),
+                  message: `Proposal has passed. Executing...`,
+                  proposalStatus: proposalStatus,
+                  order: proposalStatus,
+                  eventType: "Proposal",
+                },
               });
               break;
             case 3:
@@ -98,6 +128,10 @@ export const EVMDestinationAdaptorProvider = ({
             payload: {
               address: String(txReceipt.from),
               signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
+              order: parseFloat(
+                `1.${txReceipt.transactionIndex}${depositVotes + 1}$`
+              ),
+              eventType: "Vote",
             },
           });
         }
