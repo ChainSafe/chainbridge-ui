@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useInterval from "@use-it/interval";
 import { useHistory } from "@chainsafe/common-components";
 import { makeStyles, createStyles } from "@chainsafe/common-theme";
 import { useExplorer } from "../../Contexts/ExplorerContext";
@@ -21,26 +22,44 @@ const useStyles = makeStyles(() =>
 );
 
 const TransactionPage = () => {
+  const {
+    __RUNTIME_CONFIG__: {
+      UI: { transactionAutoUpdateInterval },
+    },
+  } = window;
   const { redirect } = useHistory();
   const classes = useStyles();
   const explorerContext = useExplorer();
   const {
     explorerState: { chains },
   } = explorerContext;
-  const [transaction, setTransaction] = useState({});
+  const [transaction, setTransaction] = useState<DepositRecord | undefined>();
+  const [delay, setDelay] = useState<null | number>(
+    transactionAutoUpdateInterval ?? 5000
+  );
   const [
     transferDetailed,
     setTransferDetailed,
   ] = useState<TransferDetails | null>(null);
-
+  const urlSplited = window.location.pathname.split("/");
+  const txHash = urlSplited[urlSplited.length - 1];
   useEffect(() => {
-    const urlSplited = window.location.pathname.split("/");
-    const txHash = urlSplited[urlSplited.length - 1];
     fetchTransaction(txHash, setTransaction);
   }, []);
 
+  useInterval(() => {
+    fetchTransaction(txHash, setTransaction);
+    console.log("This will run every", transactionAutoUpdateInterval);
+    console.log(transaction);
+    if (transaction && (transaction.status === 3 || transaction.status === 4)) {
+      console.log("transaction status", transaction.status);
+      console.log("stopping requests");
+      setDelay(null);
+    }
+  }, delay);
+
   useEffect(() => {
-    if (Object.keys(transaction).length) {
+    if (transaction && Object.keys(transaction).length) {
       const txDetail = computeTransferDetails(
         transaction as DepositRecord,
         chains

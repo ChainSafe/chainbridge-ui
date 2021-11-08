@@ -34,10 +34,10 @@ type Proposal = {
 export type DepositRecord = {
   id: string;
   fromAddress?: string;
-  fromChainId?: number;
+  fromDomainId?: number;
   fromNetworkName?: string;
   toAddress?: string;
-  toChainId?: number;
+  toDomainId?: number;
   toNetworkName?: string;
   tokenAddress?: string;
   amount?: string;
@@ -55,10 +55,10 @@ export type AddTransferPayload = {
   depositNonce: number;
   transferDetails: {
     fromAddress: string;
-    fromChainId: number;
+    fromDomainId: number;
     fromNetworkName: string;
     toAddress: string;
-    toChainId: number;
+    toDomainId: number;
     toNetworkName: string;
     tokenAddress?: string;
     amount?: BigNumber;
@@ -72,9 +72,9 @@ export type AddTransferPayload = {
 export type AddProposalPayload = {
   depositNonce: number;
   transferDetails: {
-    fromChainId: number;
+    fromDomainId: number;
     fromNetworkName: string;
-    toChainId: number;
+    toDomainId: number;
     toNetworkName: string;
     resourceId: string;
   };
@@ -90,9 +90,9 @@ export type AddProposalPayload = {
 export type AddVotePayload = {
   depositNonce: number;
   transferDetails: {
-    fromChainId: number;
+    fromDomainId: number;
     fromNetworkName: string;
-    toChainId: number;
+    toDomainId: number;
     toNetworkName: string;
     resourceId: string;
   };
@@ -127,7 +127,7 @@ export type Transfers = {
 
 type NetworkSelection = {
   name: string;
-  chainId: number;
+  domainId: number;
 };
 
 export type TransferDetails = {
@@ -138,8 +138,8 @@ export type TransferDetails = {
   fromNetworkName?: string;
   toNetworkName?: string;
   depositTransactionHash?: string;
-  fromChainId?: number;
-  toChainId?: number;
+  fromDomainId?: number;
+  toDomainId?: number;
   proposalStatus: number;
   voteEvents: Array<Vote>;
   proposalEvents: Array<Proposal>;
@@ -188,10 +188,10 @@ export function transfersReducer(
     case "selectNetwork":
       const { chains } = explorerState;
       const networkSelected = chains.find(
-        ({ chainId }) => chainId === action.payload
+        ({ domainId }) => domainId === action.payload
       );
-      const { name, chainId } = networkSelected!;
-      return { ...explorerState, network: { name, chainId } };
+      const { name, domainId } = networkSelected!;
+      return { ...explorerState, network: { name, domainId } };
     case "setTransferDetails":
       const transferDetails = computeTransferDetails(
         action.payload,
@@ -208,8 +208,8 @@ export function transfersReducer(
         fromNetworkName: "",
         toNetworkName: "",
         depositTransactionHash: "",
-        fromChainId: 0,
-        toChainId: 0,
+        fromDomainId: 0,
+        toDomainId: 0,
         voteEvents: [],
         proposalEvents: [],
         timelineMessages: [],

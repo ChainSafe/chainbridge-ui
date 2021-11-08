@@ -194,11 +194,11 @@ const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
 
 export const selectChains = (
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>,
-  fromChainId: number,
-  toChainId: number
+  fromDomainId: number,
+  toDomainId: number
 ) => {
-  const fromChain = chains.find((chain) => chain.chainId === fromChainId);
-  const toChain = chains.find((chain) => chain.chainId === toChainId);
+  const fromChain = chains.find((chain) => chain.domainId === fromDomainId);
+  const toChain = chains.find((chain) => chain.domainId === toDomainId);
 
   return { fromChain, toChain };
 };
@@ -215,14 +215,18 @@ export const computeTransferDetails = (
     fromNetworkName,
     toNetworkName,
     depositTransactionHash,
-    fromChainId,
-    toChainId,
+    fromDomainId,
+    toDomainId,
     status: proposalStatus,
     voteEvents,
     id,
   } = txDetails;
 
-  const { fromChain, toChain } = selectChains(chains, fromChainId!, toChainId!);
+  const { fromChain, toChain } = selectChains(
+    chains,
+    fromDomainId!,
+    toDomainId!
+  );
 
   const formatedTransferDate = formatTransferDate(timestamp);
 
@@ -362,8 +366,8 @@ export const computeTransferDetails = (
     fromNetworkName,
     toNetworkName,
     depositTransactionHash,
-    fromChainId,
-    toChainId,
+    fromDomainId,
+    toDomainId,
     voteEvents,
     proposalEvents,
     proposalStatus,

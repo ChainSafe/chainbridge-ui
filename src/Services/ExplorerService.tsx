@@ -4,10 +4,6 @@ import {
   PageInfo,
 } from "../Contexts/Reducers/TransfersReducer";
 
-const {
-  __RUNTIME_CONFIG__: { INDEXER_URL },
-} = window;
-
 export const fetchTransfers = async (
   setState: React.SetStateAction<any>,
   state: ExplorerState,
@@ -18,6 +14,9 @@ export const fetchTransfers = async (
     after?: string;
   }
 ): Promise<any> => {
+  const {
+    __RUNTIME_CONFIG__: { INDEXER_URL },
+  } = window;
   try {
     setState({
       ...state,
@@ -50,6 +49,9 @@ export const fetchTransaction = async (
   txHash: string,
   setState: React.SetStateAction<any>
 ) => {
+  const {
+    __RUNTIME_CONFIG__: { INDEXER_URL },
+  } = window;
   try {
     const response = await fetch(
       `${INDEXER_URL}/transfers/byTransactionHash/${txHash}`
