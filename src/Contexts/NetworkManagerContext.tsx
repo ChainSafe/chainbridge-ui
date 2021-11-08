@@ -25,6 +25,7 @@ import { HomeBridgeContext } from "./HomeBridgeContext";
 import {
   AddMessageAction,
   ResetAction,
+  TxIsDone,
   transitMessageReducer,
   TransitState,
 } from "./Reducers/TransitMessageReducer";
@@ -85,7 +86,7 @@ interface NetworkManagerContext {
   setDepositNonce: (input: string | undefined) => void;
   depositNonce: string | undefined;
 
-  tokensDispatch: Dispatch<AddMessageAction | ResetAction>;
+  tokensDispatch: Dispatch<AddMessageAction | ResetAction | TxIsDone>;
 
   setTransferTxHash: (input: string) => void;
   transferTxHash: string;
