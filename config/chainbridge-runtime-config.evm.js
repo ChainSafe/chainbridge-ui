@@ -3,7 +3,7 @@ window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
     chains: [
       {
-        chainId: 0,
+        domainId: 0,
         networkId: 4,
         name: "Ethereum - Rinkeby",
         decimals: 18,
@@ -24,7 +24,7 @@ window.__RUNTIME_CONFIG__ = {
         ],
       },
       {
-        chainId: 1,
+        domainId: 1,
         networkId: 5,
         name: "Ethereum - Goerli",
         decimals: 18,

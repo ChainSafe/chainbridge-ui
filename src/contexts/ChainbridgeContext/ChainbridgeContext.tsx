@@ -23,9 +23,9 @@ interface IChainbridgeContextProps {
 type ChainbridgeContext = {
   homeConfig: BridgeConfig | undefined;
   connect: () => Promise<void>;
-  handleSetHomeChain: (chainId: number) => void;
-  setDestinationChain: (chainId: number | undefined) => void;
-  destinationChains: Array<{ chainId: number; name: string }>;
+  handleSetHomeChain: (domainId: number) => void;
+  setDestinationChain: (domainId: number | undefined) => void;
+  destinationChains: Array<{ domainId: number; name: string }>;
   destinationChainConfig?: BridgeConfig;
   deposit(
     amount: number,
@@ -51,7 +51,7 @@ type ChainbridgeContext = {
   nativeTokenBalance: number | undefined;
   isReady: boolean | undefined;
   address: string | undefined;
-  chainId?: number;
+  domainId?: number;
   checkSupplies?: (
     amount: number,
     tokenAddress: string,
@@ -85,7 +85,7 @@ const ChainbridgeProvider = ({
     depositVotes,
     homeChainConfig,
     destinationChains,
-    chainId,
+    domainId,
   } = useNetworkManager();
 
   const {
@@ -127,7 +127,7 @@ const ChainbridgeProvider = ({
           amount,
           recipient,
           tokenAddress,
-          destinationChainConfig.chainId
+          destinationChainConfig.domainId
         );
       }
     },
@@ -178,7 +178,7 @@ const ChainbridgeProvider = ({
         nativeTokenBalance: nativeTokenBalance,
         tokens,
         address,
-        chainId,
+        domainId,
         checkSupplies,
         chains,
       }}

@@ -80,7 +80,7 @@ const App: React.FC<{}> = () => {
               },
               subscriptions: {
                 network: (network) =>
-                  network && console.log("chainId: ", network),
+                  network && console.log("domainId: ", network),
                 balance: (amount) =>
                   amount && console.log("balance: ", utils.formatEther(amount)),
               },
