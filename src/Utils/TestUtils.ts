@@ -3,7 +3,7 @@ export const runtimeTestingConfig = {
     INDEXER_URL: "http://localhost:8000",
     chains: [
       {
-        chainId: 0,
+        domainId: 0,
         name: "Ethereum - Rinkeby",
         tokens: [
           {
@@ -14,7 +14,7 @@ export const runtimeTestingConfig = {
         ],
       },
       {
-        chainId: 1,
+        domainId: 1,
         name: "Ethereum - Goerli",
         tokens: [
           {
@@ -41,9 +41,9 @@ export const testResponse = {
       depositNonce: 25,
       resourceId:
         "0x0000000000000000000000000000000000000000000000000000000000000000",
-      fromChainId: 0,
+      fromDomainId: 0,
       fromNetworkName: "EVM Celo Testnet",
-      toChainId: 1,
+      toDomainId: 1,
       toNetworkName: "Ethereum - Rinkeby",
       fromAddress: "0x284D2Cb760D5A952f9Ea61fd3179F98a2CbF0B3E",
       toAddress: "0x42da3ba8c586f6fe9ef6ed1d09423eb73e4fe25b",
@@ -124,9 +124,9 @@ export const testResponse = {
       depositNonce: 26,
       resourceId:
         "0x0000000000000000000000000000000000000000000000000000000000000000",
-      fromChainId: 0,
+      fromDomainId: 0,
       fromNetworkName: "EVM Celo Testnet",
-      toChainId: 1,
+      toDomainId: 1,
       toNetworkName: "Ethereum - Rinkeby",
       fromAddress: "0x6DACDc98FbB776B67278274B508bC76588DeEfC6",
       toAddress: "0x6dacdc98fbb776b67278274b508bc76588deefc6",
@@ -210,9 +210,9 @@ export const canceledTransfer = {
   depositNonce: 24,
   resourceId:
     "0x0000000000000000000000000000000000000000000000000000000000000000",
-  fromChainId: 0,
+  fromDomainId: 0,
   fromNetworkName: "EVM Celo Testnet",
-  toChainId: 1,
+  toDomainId: 1,
   toNetworkName: "Ethereum - Rinkeby",
   fromAddress: "0x284D2Cb760D5A952f9Ea61fd3179F98a2CbF0B3E",
   toAddress: "0x42da3ba8c586f6fe9ef6ed1d09423eb73e4fe25b",

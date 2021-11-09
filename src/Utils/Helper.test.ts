@@ -16,14 +16,15 @@ describe("ComputeTransfersDetails", () => {
       "fromNetworkName",
       "toNetworkName",
       "depositTransactionHash",
-      "fromChainId",
-      "toChainId",
+      "fromDomainId",
+      "toDomainId",
       "voteEvents",
       "proposalEvents",
       "proposalStatus",
       "timelineMessages",
       "fromChain",
       "toChain",
+      "pillColorStatus",
     ];
 
     const transferDetails = computeTransferDetails(

@@ -103,11 +103,11 @@ export const SubstrateHomeAdaptorProvider = ({
       const currentId = Number(
         api.consts[
           (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
-        ].chainIdentity.toHuman()
+        ].domainIdentity.toHuman()
       );
-      if (homeChainConfig?.chainId !== currentId) {
+      if (homeChainConfig?.domainId !== currentId) {
         const correctConfig = homeChains.find(
-          (item) => item.chainId === currentId
+          (item) => item.domainId === currentId
         );
         if (correctConfig) {
           handleSetHomeChain(currentId);
@@ -187,7 +187,7 @@ export const SubstrateHomeAdaptorProvider = ({
                 setAddress(injectedAccounts[0].address);
               }
               handleSetHomeChain(
-                homeChains.find((item) => item.type === "Substrate")?.chainId
+                homeChains.find((item) => item.type === "Substrate")?.domainId
               );
             })
             .catch(console.error);

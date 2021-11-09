@@ -45,8 +45,8 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (
       destinationChainConfig &&
-      homeChainConfig?.chainId !== null &&
-      homeChainConfig?.chainId !== undefined &&
+      homeChainConfig?.domainId !== null &&
+      homeChainConfig?.domainId !== undefined &&
       destinationBridge &&
       depositNonce &&
       !inTransitMessages.txIsDone

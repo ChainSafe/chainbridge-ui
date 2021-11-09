@@ -110,7 +110,7 @@ const ExplorerPage = () => {
   const { chains, transfers, pageInfo, isLoading } = explorerState;
 
   const initState: ExplorerPageState = {
-    network: { name: "", chainId: 0 },
+    network: { name: "", domainId: 0 },
     transferDetails: {
       id: "",
       formatedTransferDate: "",
@@ -120,8 +120,8 @@ const ExplorerPage = () => {
       fromNetworkName: "",
       toNetworkName: "",
       depositTransactionHash: "",
-      fromChainId: 0,
-      toChainId: 0,
+      fromDomainId: 0,
+      toDomainId: 0,
       voteEvents: [],
       proposalEvents: [],
       timelineMessages: [],
@@ -144,9 +144,9 @@ const ExplorerPage = () => {
   const [active, setActive] = useState(false);
 
   const renderOptions = () => {
-    return chains.map(({ chainId, name }) => ({
+    return chains.map(({ domainId, name }) => ({
       label: name,
-      value: chainId,
+      value: domainId,
     }));
   };
 
