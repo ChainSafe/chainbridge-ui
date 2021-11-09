@@ -1,15 +1,8 @@
 import dayjs from "dayjs";
 import ETHIcon from "../media/tokens/eth.png";
-import { ReactComponent as EthTokenIcon } from "../media/tokens/eth.svg";
-import WETHIcon, {
-  ReactComponent as WETHTokenIcon,
-} from "../media/tokens/weth.svg";
-import DAIIcon, {
-  ReactComponent as DaiTokenIcon,
-} from "../media/tokens/dai.svg";
-import celoUSD, {
-  ReactComponent as CeloTokenIcon,
-} from "../media/tokens/cusd.svg";
+import WETHIcon from "../media/tokens/weth.svg";
+import DAIIcon from "../media/tokens/dai.svg";
+import celoUSD from "../media/tokens/cusd.svg";
 
 import EthIcon from "../media/networks/eth.svg";
 import CeloIcon from "../media/networks/celo.svg";

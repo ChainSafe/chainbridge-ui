@@ -7,11 +7,7 @@ import {
   TokenConfig,
 } from "../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import {
-  TransactionStatus,
-  useNetworkManager,
-  TransitMessage,
-} from "./NetworkManagerContext";
+import { TransactionStatus, useNetworkManager } from "./NetworkManagerContext";
 import { useHomeBridge } from "./HomeBridgeContext";
 import NetworkSelectModal from "../Modules/NetworkSelectModal";
 import { TransitState } from "./Reducers/TransitMessageReducer";

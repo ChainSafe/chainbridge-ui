@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useInterval from "@use-it/interval";
-import { useHistory } from "@chainsafe/common-components";
 import { makeStyles, createStyles } from "@chainsafe/common-theme";
 import { useExplorer } from "../../Contexts/ExplorerContext";
 import TransferDetailView from "../Custom/TransferDetailView";
@@ -27,7 +26,6 @@ const TransactionPage = () => {
       UI: { transactionAutoUpdateInterval },
     },
   } = window;
-  const { redirect } = useHistory();
   const classes = useStyles();
   const explorerContext = useExplorer();
   const {

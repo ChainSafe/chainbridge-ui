@@ -1,10 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
-  SelectInput,
-  TextInput,
   Typography,
-  SearchIcon,
   Grid,
   useHistory,
   Button,

@@ -13,7 +13,6 @@ import { TransferDetails } from "../../Contexts/Reducers/TransfersReducer";
 import {
   getProposalStatus,
   getRandomSeed,
-  showImageUrlNetworkIcons,
   getNetworkIcon,
 } from "../../Utils/Helpers";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";

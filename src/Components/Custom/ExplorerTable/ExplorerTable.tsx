@@ -18,10 +18,7 @@ import {
 import {
   formatTransferDate,
   getRandomSeed,
-  getTokenIcon,
-  shortenAddress,
   computeAndFormatAmount,
-  showImageUrl,
   selectChains,
   selectToken,
   showImageUrlNetworkIcons,
@@ -73,9 +70,6 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       );
       console.log(fromChain, toChain);
       const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
-      const toToken = selectToken(fromChain, transfer.destinationTokenAddress);
-
-      const tokenIcon = getTokenIcon();
 
       const randomString = getRandomSeed();
 
