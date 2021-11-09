@@ -43,14 +43,14 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (
       destinationChainConfig &&
-      homeChainConfig?.chainId !== null &&
-      homeChainConfig?.chainId !== undefined &&
+      homeChainConfig?.domainId !== null &&
+      homeChainConfig?.domainId !== undefined &&
       destinationBridge &&
       depositNonce
     ) {
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(
-          homeChainConfig.chainId,
+          homeChainConfig.domainId,
           BigNumber.from(depositNonce),
           null,
           null,
@@ -105,7 +105,7 @@ export const EVMDestinationAdaptorProvider = ({
 
       destinationBridge.on(
         destinationBridge.filters.ProposalVote(
-          homeChainConfig.chainId,
+          homeChainConfig.domainId,
           BigNumber.from(depositNonce),
           null,
           null

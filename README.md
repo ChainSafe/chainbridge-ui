@@ -51,7 +51,7 @@ Update the configs for the bridge in `src/chainbridgeContext.ts`. There should b
 ```
 export type BridgeConfig = {
   networkId?: number; // The networkId of this chain.
-  chainId: number; // The bridge's chainId.
+  domainId: number; // The bridge's domainId.
   name: string; // The human readable name of this chain.
   rpcUrl: string; // An RPC URL for this chain.
   type: ChainType; // The type of chain.

@@ -64,14 +64,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
-      const { amount, fromChainId, toChainId } = transfer;
+      const { amount, fromDomainId, toDomainId } = transfer;
 
       const { fromChain, toChain } = selectChains(
         chains,
-        fromChainId!,
-        toChainId!
+        fromDomainId!,
+        toDomainId!
       );
-
+      console.log(fromChain, toChain);
       const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
       const toToken = selectToken(fromChain, transfer.destinationTokenAddress);
 

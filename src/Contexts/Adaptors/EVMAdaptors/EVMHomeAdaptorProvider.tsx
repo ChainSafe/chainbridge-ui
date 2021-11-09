@@ -67,7 +67,7 @@ export const EVMHomeAdaptorProvider = ({
       const chain = homeChains.find((chain) => chain.networkId === network);
       setNetworkId(network);
       if (chain) {
-        handleSetHomeChain(chain.chainId);
+        handleSetHomeChain(chain.domainId);
       }
     }
   }, [handleSetHomeChain, homeChains, network, setNetworkId]);
@@ -226,7 +226,7 @@ export const EVMHomeAdaptorProvider = ({
     ) => {
       if (homeChainConfig) {
         const destinationChain = chainbridgeConfig.chains.find(
-          (c) => c.chainId === destinationChainId
+          (c) => c.domainId === destinationChainId
         );
         const token = homeChainConfig.tokens.find(
           (token) => token.address === tokenAddress
@@ -268,7 +268,7 @@ export const EVMHomeAdaptorProvider = ({
       }
 
       const destinationChain = chainbridgeConfig.chains.find(
-        (c) => c.chainId === destinationChainId
+        (c) => c.domainId === destinationChainId
       );
       if (destinationChain?.type === "Substrate") {
         recipient = `0x${Buffer.from(decodeAddress(recipient)).toString(

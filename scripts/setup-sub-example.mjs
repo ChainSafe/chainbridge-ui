@@ -10,8 +10,8 @@ const addRelayer = (relayer) => {
   return api.tx.sudo.sudo(api.tx.chainBridge.addRelayer(relayer));
 };
 
-const whitelistChain = (chainId) => {
-  return api.tx.sudo.sudo(api.tx.chainBridge.whitelistChain(chainId));
+const whitelistChain = (domainId) => {
+  return api.tx.sudo.sudo(api.tx.chainBridge.whitelistChain(domainId));
 };
 
 const registerResource = (rId, method) => {
