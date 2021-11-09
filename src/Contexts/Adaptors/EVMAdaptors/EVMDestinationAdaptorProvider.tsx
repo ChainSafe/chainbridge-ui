@@ -1,6 +1,6 @@
 import React from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { BigNumber } from "ethers";
+import { BigNumber, Event } from "ethers";
 import { useEffect, useState } from "react";
 import { EvmBridgeConfig } from "../../../chainbridgeConfig";
 import { useNetworkManager } from "../../NetworkManagerContext";
@@ -53,7 +53,13 @@ export const EVMDestinationAdaptorProvider = ({
     ) {
       destinationBridge.on(
         destinationBridge.filters.ProposalEvent(null, null, null, null),
-        async (originDomainId, depositNonce, status, dataHash, tx) => {
+        async (
+          originDomainId: number,
+          depositNonce: number,
+          status: number,
+          dataHash: string,
+          tx: Event
+        ) => {
           const txReceipt = await tx.getTransactionReceipt();
           const proposalStatus = BigNumber.from(status).toNumber();
           switch (proposalStatus) {
@@ -95,7 +101,13 @@ export const EVMDestinationAdaptorProvider = ({
 
       destinationBridge.on(
         destinationBridge.filters.ProposalVote(null, null, null, null),
-        async (originDomainId, depositNonce, status, dataHash, tx) => {
+        async (
+          originDomainId: number,
+          depositNonce: number,
+          status: number,
+          dataHash: string,
+          tx: Event
+        ) => {
           const txReceipt = await tx.getTransactionReceipt();
           if (status === 1) {
             setDepositVotes(depositVotes + 1);
