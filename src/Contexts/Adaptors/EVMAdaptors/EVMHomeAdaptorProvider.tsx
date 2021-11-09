@@ -82,6 +82,12 @@ export const EVMHomeAdaptorProvider = ({
       onboard
         .walletSelect("metamask")
         .then((success) => {
+          if (window.ethereum) {
+            window.ethereum.on("chainChanged", (ch: any) => {
+              window.location.reload();
+            });
+          }
+
           setWalletSelected(success);
           if (success) {
             checkIsReady()
