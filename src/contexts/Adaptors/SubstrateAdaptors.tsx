@@ -100,10 +100,12 @@ export const SubstrateHomeAdaptorProvider = ({
 
   const confirmChainID = useCallback(async () => {
     if (api) {
+      console.log(api.consts);
+      console.log((homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName);
       const currentId = Number(
         api.consts[
           (homeChainConfig as SubstrateBridgeConfig).chainbridgePalletName
-        ].domainIdentity.toHuman()
+        ].chainId.toHuman()
       );
       if (homeChainConfig?.domainId !== currentId) {
         const correctConfig = homeChains.find(
@@ -372,7 +374,7 @@ export const SubstrateDestinationAdaptorProvider = ({
               "phase=" +
               phase.toString()
           );
-          console.log(event.meta.documentation.toString());
+          //console.log(event.meta.documentation.toString());
           // loop through each of the parameters, displaying the type and data
           event.data.forEach((data, index) => {
             console.log(types[index].type + ";" + data.toString());

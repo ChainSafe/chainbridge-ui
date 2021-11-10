@@ -231,7 +231,7 @@ export const computeTransferDetails = (
 
   const pillColorStatus = getColorSchemaTransferStatus(proposalStatus);
 
-  let timelineMessages = [];
+  let timelineMessages:any=[];
 
   if (!proposalEvents.length && !voteEvents.length) {
     timelineMessages = [

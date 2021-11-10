@@ -121,7 +121,7 @@ export async function getPriceCompatibility(
   homeChainConfig: any,
   gasPrice: number
 ) {
-  let gasPriceCompatibility = undefined;
+  let gasPriceCompatibility:undefined|string = undefined;
   if (provider) {
     const hasMaxPrice = await detectEIP1559MaxFeePerGas(provider);
     if (!hasMaxPrice) {
