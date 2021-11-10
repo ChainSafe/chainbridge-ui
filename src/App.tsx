@@ -7,11 +7,10 @@ import {
   ToasterProvider,
 } from "@chainsafe/common-components";
 
-import ChainbridgeRoutes from "./Components/Routes";
-import { lightTheme } from "./Themes/LightTheme";
-import { ChainbridgeProvider } from "./Contexts/ChainbridgeContext";
-import AppWrapper from "./Layouts/AppWrapper";
-import { NetworkManagerProvider } from "./Contexts/NetworkManagerContext";
+import { ChainbridgeRoutes } from "./routes";
+import { lightTheme } from "./themes/LightTheme";
+import { ChainbridgeProvider, NetworkManagerProvider } from "./contexts";
+import { AppWrapper } from "./layouts";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
