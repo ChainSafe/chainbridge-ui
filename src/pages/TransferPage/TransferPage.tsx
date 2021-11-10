@@ -118,7 +118,7 @@ const TransferPage = () => {
             const supplies = await checkSupplies(
               parseFloat(value),
               preflightDetails.token,
-              destinationChainConfig.chainId
+              destinationChainConfig.domainId
             );
             return Boolean(supplies);
           }
