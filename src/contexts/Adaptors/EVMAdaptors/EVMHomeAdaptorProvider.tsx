@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { useWeb3 } from "@chainsafe/web3-context";
@@ -9,17 +8,16 @@ import {
   EvmBridgeConfig,
   TokenConfig,
 } from "../../../chainbridgeConfig";
-import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 import { Weth } from "../../../Contracts/Weth";
 import { WethFactory } from "../../../Contracts/WethFactory";
 import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
 import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
-import { decodeAddress } from "@polkadot/util-crypto";
 import { getNetworkName } from "../../../utils/Helpers";
 
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
+import makeDeposit from "./makeDeposit";
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -251,148 +249,19 @@ export const EVMHomeAdaptorProvider = ({
     [homeChainConfig, tokens]
   );
 
-  const deposit = useCallback(
-    async (
-      amount: number,
-      recipient: string,
-      tokenAddress: string,
-      destinationChainId: number
-    ) => {
-      if (!homeChainConfig || !homeBridge) {
-        console.error("Home bridge contract is not instantiated");
-        return;
-      }
-      const signer = provider?.getSigner();
-      if (!address || !signer) {
-        console.log("No signer");
-        return;
-      }
 
-      const destinationChain = chainbridgeConfig.chains.find(
-        (c) => c.domainId === destinationChainId
-      );
-      if (destinationChain?.type === "Substrate") {
-        recipient = `0x${Buffer.from(decodeAddress(recipient)).toString(
-          "hex"
-        )}`;
-      }
-      const token = homeChainConfig.tokens.find(
-        (token) => token.address === tokenAddress
-      );
-
-      if (!token) {
-        console.log("Invalid token selected");
-        return;
-      }
-      setTransactionStatus("Initializing Transfer");
-      setDepositAmount(amount);
-      setSelectedToken(tokenAddress);
-      const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
-      const erc20Decimals = tokens[tokenAddress].decimals;
-
-      const data =
-        "0x" +
-        utils
-          .hexZeroPad(
-            // TODO Wire up dynamic token decimals
-            BigNumber.from(
-              utils.parseUnits(amount.toString(), erc20Decimals)
-            ).toHexString(),
-            32
-          )
-          .substr(2) + // Deposit Amount (32 bytes)
-        utils
-          .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
-          .substr(2) + // len(recipientAddress) (32 bytes)
-        recipient.substr(2); // recipientAddress (?? bytes)
-
-      try {
-        const gasPriceCompatibility = await getPriceCompatibility(
-          provider,
-          homeChainConfig,
-          gasPrice
-        );
-
-        const currentAllowance = await erc20.allowance(
-          address,
-          (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
-        );
-        console.log(
-          "🚀  currentAllowance",
-          utils.formatUnits(currentAllowance, erc20Decimals)
-        );
-        if (
-          Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
-        ) {
-          if (
-            Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
-            token.isDoubleApproval
-          ) {
-            //We need to reset the user's allowance to 0 before we give them a new allowance
-            //TODO Should we alert the user this is happening here?
-            await (
-              await erc20.approve(
-                (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
-                BigNumber.from(utils.parseUnits("0", erc20Decimals)),
-                {
-                  gasPrice: gasPriceCompatibility,
-                }
-              )
-            ).wait(1);
-          }
-          await (
-            await erc20.approve(
-              (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
-              BigNumber.from(
-                utils.parseUnits(amount.toString(), erc20Decimals)
-              ),
-              {
-                gasPrice: gasPriceCompatibility,
-              }
-            )
-          ).wait(1);
-        }
-        homeBridge.once(
-          homeBridge.filters.Deposit(null, null, null, address, null, null),
-          (
-            destinationDomainId: number,
-            resourceId: string,
-            depositNonce: number,
-            user: string,
-            data: string,
-            tx: Event
-          ) => {
-            setDepositNonce(`${depositNonce.toString()}`);
-            setTransactionStatus("In Transit");
-            setHomeTransferTxHash(tx.transactionHash);
-          }
-        );
-
-        await (
-          await homeBridge.deposit(destinationChainId, token.resourceId, data, {
-            gasPrice: gasPriceCompatibility,
-            value: utils.parseUnits((bridgeFee || 0).toString(), 18),
-          })
-        ).wait();
-
-        return Promise.resolve();
-      } catch (error) {
-        console.error(error);
-        setTransactionStatus("Transfer Aborted");
-        setSelectedToken(tokenAddress);
-      }
-    },
-    [
-      homeBridge,
-      address,
-      bridgeFee,
-      homeChainConfig,
-      gasPrice,
-      provider,
-      setDepositNonce,
-      setTransactionStatus,
-      tokens,
-    ]
+  const deposit = makeDeposit(
+    setTransactionStatus,
+    setDepositNonce,
+    setHomeTransferTxHash,
+    setDepositAmount,
+    setSelectedToken,
+    gasPrice,
+    homeChainConfig,
+    homeBridge,
+    provider,
+    address,
+    bridgeFee
   );
 
   const wrapToken = async (value: number): Promise<string> => {
