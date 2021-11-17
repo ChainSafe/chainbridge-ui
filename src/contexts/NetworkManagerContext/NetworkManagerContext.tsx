@@ -24,6 +24,7 @@ import { HomeBridgeContext, DestinationBridgeContext } from "..";
 import {
   AddMessageAction,
   ResetAction,
+  TxIsDone,
   transitMessageReducer,
 } from "../../reducers/TransitMessageReducer";
 
@@ -75,7 +76,7 @@ interface NetworkManagerContext {
 
   transactionStatus?: TransactionStatus;
   setTransactionStatus: (message: TransactionStatus | undefined) => void;
-  inTransitMessages: Array<TransitMessage>;
+  inTransitMessages: TransitState;
 
   setDepositVotes: (input: number) => void;
   depositVotes: number;
@@ -83,7 +84,7 @@ interface NetworkManagerContext {
   setDepositNonce: (input: string | undefined) => void;
   depositNonce: string | undefined;
 
-  tokensDispatch: Dispatch<AddMessageAction | ResetAction>;
+  tokensDispatch: Dispatch<AddMessageAction | ResetAction | TxIsDone>;
 
   setTransferTxHash: (input: string) => void;
   transferTxHash: string;
@@ -123,7 +124,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
-    []
+    { txIsDone: false, transitMessage: [] }
   );
 
   const handleSetHomeChain = useCallback(

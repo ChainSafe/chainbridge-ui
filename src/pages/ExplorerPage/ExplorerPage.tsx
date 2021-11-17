@@ -1,9 +1,6 @@
 import React, { useState, useReducer, useEffect } from "react";
 import {
-  SelectInput,
-  TextInput,
   Typography,
-  SearchIcon,
   Grid,
   useHistory,
   Button,

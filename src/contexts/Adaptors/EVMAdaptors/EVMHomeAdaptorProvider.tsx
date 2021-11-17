@@ -2,7 +2,7 @@
 import React from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { useWeb3 } from "@chainsafe/web3-context";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, utils, Event } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import {
   chainbridgeConfig,
@@ -353,12 +353,15 @@ export const EVMHomeAdaptorProvider = ({
           ).wait(1);
         }
         homeBridge.once(
-          homeBridge.filters.Deposit(
-            destinationChainId,
-            token.resourceId,
-            null
-          ),
-          (destChainId, resourceId, depositNonce, tx) => {
+          homeBridge.filters.Deposit(null, null, null, address, null, null),
+          (
+            destinationDomainId: number,
+            resourceId: string,
+            depositNonce: number,
+            user: string,
+            data: string,
+            tx: Event
+          ) => {
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
             setHomeTransferTxHash(tx.transactionHash);
