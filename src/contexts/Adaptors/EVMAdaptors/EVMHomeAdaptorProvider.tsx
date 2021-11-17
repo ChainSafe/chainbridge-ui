@@ -1,23 +1,17 @@
 import React from "react";
-import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { useWeb3 } from "@chainsafe/web3-context";
-import { BigNumber, utils, Event } from "ethers";
 import { useCallback, useEffect, useState } from "react";
-import {
-  chainbridgeConfig,
-  EvmBridgeConfig,
-  TokenConfig,
-} from "../../../chainbridgeConfig";
-import { Weth } from "../../../Contracts/Weth";
-import { WethFactory } from "../../../Contracts/WethFactory";
-import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
+import { useNetworkManager } from "../../NetworkManagerContext";
 import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
-import { parseUnits } from "ethers/lib/utils";
 import { getNetworkName } from "../../../utils/Helpers";
 
-import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
 import makeDeposit from "./makeDeposit";
+import makeWrappedToken from "./makeWrappedToken";
+import makeUnwrappedToken from "./makeUnwrappedToken";
+import makeHandleCheckSupplies from "./makeHandleCheckSupplies";
+import { useSetBridgeSettingsHook } from "./useSetBridgeSettingsHook";
+import { useConnectWallet } from "./useConnectWallet";
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -46,20 +40,8 @@ export const EVMHomeAdaptorProvider = ({
     setHomeTransferTxHash,
   } = useNetworkManager();
 
-  const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
-  const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
-    undefined
-  );
-  const [bridgeFee, setBridgeFee] = useState<number | undefined>();
-
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("");
-
-  // Contracts
-  const [wrapper, setWrapper] = useState<Weth | undefined>(undefined);
-  const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
-    undefined
-  );
 
   useEffect(() => {
     if (network) {
@@ -71,144 +53,15 @@ export const EVMHomeAdaptorProvider = ({
     }
   }, [handleSetHomeChain, homeChains, network, setNetworkId]);
 
-  const [initialising, setInitialising] = useState(false);
-  const [walletSelected, setWalletSelected] = useState(false);
-  useEffect(() => {
-    if (initialising || homeBridge || !onboard) return;
-    console.log("starting init");
-    setInitialising(true);
-    if (!walletSelected) {
-      onboard
-        .walletSelect("metamask")
-        .then((success) => {
-          if (window.ethereum) {
-            window.ethereum.on("chainChanged", (ch: any) => {
-              window.location.reload();
-            });
-          }
-
-          setWalletSelected(success);
-          if (success) {
-            checkIsReady()
-              .then((success) => {
-                if (success) {
-                  if (homeChainConfig && network && isReady && provider) {
-                    const signer = provider.getSigner();
-                    if (!signer) {
-                      console.log("No signer");
-                      setInitialising(false);
-                      return;
-                    }
-
-                    const bridge = BridgeFactory.connect(
-                      (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                      signer
-                    );
-                    setHomeBridge(bridge);
-
-                    const wrapperToken = homeChainConfig.tokens.find(
-                      (token) => token.isNativeWrappedToken
-                    );
-
-                    if (!wrapperToken) {
-                      setWrapperConfig(undefined);
-                      setWrapper(undefined);
-                    } else {
-                      setWrapperConfig(wrapperToken);
-                      const connectedWeth = WethFactory.connect(
-                        wrapperToken.address,
-                        signer
-                      );
-                      setWrapper(connectedWeth);
-                    }
-                  }
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              })
-              .finally(() => {
-                setInitialising(false);
-              });
-          }
-        })
-        .catch((error) => {
-          setInitialising(false);
-          console.error(error);
-        });
-    } else {
-      checkIsReady()
-        .then((success) => {
-          if (success) {
-            if (homeChainConfig && network && isReady && provider) {
-              const signer = provider.getSigner();
-              if (!signer) {
-                console.log("No signer");
-                setInitialising(false);
-                return;
-              }
-
-              const bridge = BridgeFactory.connect(
-                (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                signer
-              );
-              setHomeBridge(bridge);
-
-              const wrapperToken = homeChainConfig.tokens.find(
-                (token) => token.isNativeWrappedToken
-              );
-
-              if (!wrapperToken) {
-                setWrapperConfig(undefined);
-                setWrapper(undefined);
-              } else {
-                setWrapperConfig(wrapperToken);
-                const connectedWeth = WethFactory.connect(
-                  wrapperToken.address,
-                  signer
-                );
-                setWrapper(connectedWeth);
-              }
-            }
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setInitialising(false);
-        });
-    }
-  }, [
-    initialising,
-    homeChainConfig,
+  const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
     isReady,
-    provider,
     checkIsReady,
-    network,
-    homeBridge,
     onboard,
-    walletSelected,
-  ]);
-
-  useEffect(() => {
-    const getRelayerThreshold = async () => {
-      if (homeBridge) {
-        const threshold = BigNumber.from(
-          await homeBridge._relayerThreshold()
-        ).toNumber();
-        setRelayerThreshold(threshold);
-      }
-    };
-    const getBridgeFee = async () => {
-      if (homeBridge) {
-        const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
-        setBridgeFee(bridgeFee);
-      }
-    };
-    getRelayerThreshold();
-    getBridgeFee();
-  }, [homeBridge]);
+    homeChainConfig,
+    provider,
+    network
+  );
+  const [bridgeFee, relayerThreshold] = useSetBridgeSettingsHook(homeBridge);
 
   const handleConnect = useCallback(async () => {
     if (wallet && wallet.connect && network) {
@@ -217,37 +70,7 @@ export const EVMHomeAdaptorProvider = ({
     }
   }, [wallet, network, onboard]);
 
-  const handleCheckSupplies = useCallback(
-    async (
-      amount: number,
-      tokenAddress: string,
-      destinationChainId: number
-    ) => {
-      if (homeChainConfig) {
-        const destinationChain = chainbridgeConfig.chains.find(
-          (c) => c.domainId === destinationChainId
-        );
-        const token = homeChainConfig.tokens.find(
-          (token) => token.address === tokenAddress
-        );
-
-        if (destinationChain?.type === "Ethereum" && token) {
-          const hasSupplies = await hasTokenSupplies(
-            destinationChain,
-            tokens,
-            token,
-            amount,
-            tokenAddress
-          );
-          if (!hasSupplies) {
-            return false;
-          }
-        }
-        return true;
-      }
-    },
-    [homeChainConfig, tokens]
-  );
+  const handleCheckSupplies = makeHandleCheckSupplies(homeChainConfig);
 
 
   const deposit = makeDeposit(
@@ -264,61 +87,21 @@ export const EVMHomeAdaptorProvider = ({
     bridgeFee
   );
 
-  const wrapToken = async (value: number): Promise<string> => {
-    if (!wrapTokenConfig || !wrapper?.deposit || !homeChainConfig)
-      return "not ready";
+  const wrapToken = makeWrappedToken(
+    gasPrice,
+    homeChainConfig,
+    wrapTokenConfig,
+    wrapper,
+    provider
+  );
 
-    try {
-      const gasPriceCompatibility = await getPriceCompatibility(
-        provider,
-        homeChainConfig,
-        gasPrice
-      );
-
-      const tx = await wrapper.deposit({
-        value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: gasPriceCompatibility,
-      });
-
-      await tx?.wait();
-      if (tx?.hash) {
-        return tx?.hash;
-      } else {
-        return "";
-      }
-    } catch (error) {
-      console.error(error);
-      return "";
-    }
-  };
-
-  const unwrapToken = async (value: number): Promise<string> => {
-    if (!wrapTokenConfig || !wrapper?.withdraw || !homeChainConfig)
-      return "not ready";
-
-    try {
-      const gasPriceCompatibility = await getPriceCompatibility(
-        provider,
-        homeChainConfig,
-        gasPrice
-      );
-
-      const tx = await wrapper.deposit({
-        value: parseUnits(`${value}`, homeChainConfig.decimals),
-        gasPrice: gasPriceCompatibility,
-      });
-
-      await tx?.wait();
-      if (tx?.hash) {
-        return tx?.hash;
-      } else {
-        return "";
-      }
-    } catch (error) {
-      console.error(error);
-      return "";
-    }
-  };
+  const unwrapToken = makeUnwrappedToken(
+    gasPrice,
+    homeChainConfig,
+    wrapTokenConfig,
+    wrapper,
+    provider
+  );
 
   return (
     <HomeBridgeContext.Provider
