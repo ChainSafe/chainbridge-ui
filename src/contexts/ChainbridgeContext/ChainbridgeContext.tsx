@@ -7,6 +7,7 @@ import {
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { TransitState } from "../../reducers/TransitMessageReducer";
 import {
   TransactionStatus,
   useNetworkManager,

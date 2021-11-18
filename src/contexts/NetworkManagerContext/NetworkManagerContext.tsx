@@ -26,6 +26,7 @@ import {
   ResetAction,
   TxIsDone,
   transitMessageReducer,
+  TransitState,
 } from "../../reducers/TransitMessageReducer";
 
 interface INetworkManagerProviderProps {
