@@ -5,15 +5,16 @@ import { BridgeConfig } from "../../../chainbridgeConfig";
 import {
   AddMessageAction,
   ResetAction,
+  TxIsDone,
 } from "../../../reducers/TransitMessageReducer";
-import {TransactionStatus} from "../../NetworkManagerContext"
+import { TransactionStatus } from "../../NetworkManagerContext";
 
 const handleProposalVote = (
   destinationBridge: Bridge,
   homeChainConfig: BridgeConfig,
   depositNonce: string,
   depositVotes: number,
-  tokensDispatch: Dispatch<AddMessageAction | ResetAction>,
+  tokensDispatch: Dispatch<AddMessageAction | ResetAction | TxIsDone>,
   setDepositVotes: (input: number) => void,
   transactionStatus?: TransactionStatus
 ) => {
