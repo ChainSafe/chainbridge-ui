@@ -53,10 +53,8 @@ export function getProvider(destinationChainConfig?: any) {
 
 export async function hasTokenSupplies(
   destinationChain: EvmBridgeConfig,
-  tokens: Tokens,
   token: TokenConfig,
-  amount: number,
-  tokenAddress: string
+  amount: number
 ) {
   const destinationToken = destinationChain?.tokens.find(
     (_token: TokenConfig) => _token.resourceId === token.resourceId
