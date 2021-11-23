@@ -36,12 +36,12 @@ export const EVMHomeAdaptorProvider = ({
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
-    setNetworkId,
-    setHomeTransferTxHash,
   } = useNetworkManager();
 
   const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("");
+  const [networkId, setNetworkId] = useState(0);
+  const [homeTransferTxHash, setHomeTransferTxHash] = useState<string>("");
 
   useEffect(() => {
     if (network) {
@@ -71,7 +71,6 @@ export const EVMHomeAdaptorProvider = ({
   }, [wallet, network, onboard]);
 
   const handleCheckSupplies = makeHandleCheckSupplies(homeChainConfig);
-
 
   const deposit = makeDeposit(
     setTransactionStatus,
@@ -111,6 +110,8 @@ export const EVMHomeAdaptorProvider = ({
           await resetOnboard();
         },
         getNetworkName,
+        networkId,
+        homeTransferTxHash,
         bridgeFee,
         deposit,
         depositAmount,

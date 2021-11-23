@@ -7,6 +7,9 @@ import {
 } from "@chainsafe/common-components";
 import { CustomModal } from "../../components";
 import { useChainbridge } from "../../contexts/ChainbridgeContext/ChainbridgeContext";
+import { useHomeBridge } from "../../contexts/HomeBridgeContext";
+import { useDestinationBridge } from "../../contexts/DestinationBridgeContext";
+
 import { EvmBridgeConfig } from "../../chainbridgeConfig";
 import { useStyles } from "./styles";
 
@@ -24,17 +27,19 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   const classes = useStyles();
   const {
     transactionStatus,
-    depositVotes,
     relayerThreshold,
-    inTransitMessages,
     homeConfig,
     destinationChainConfig,
     depositAmount,
-    transferTxHash,
-    homeTransferTxHash,
     selectedToken,
     tokens,
   } = useChainbridge();
+  const { homeTransferTxHash } = useHomeBridge();
+  const {
+    transferTxHash,
+    depositVotes,
+    inTransitMessages,
+  } = useDestinationBridge();
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
   return (
     <CustomModal
@@ -89,28 +94,41 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         ) : transactionStatus === "In Transit" ? (
           <>
             <div className={classes.sendingCopy}>
-              {inTransitMessages.transitMessage.map((m, i) => {
-                if (typeof m === "string") {
-                  return (
-                    <Typography className={classes.vote} component="p" key={i}>
-                      {m}
-                    </Typography>
-                  );
-                } else if (typeof m === "object" && m.message !== undefined) {
-                  return (
-                    <Typography className={classes.vote} component="p" key={i}>
-                      {m.message}
-                    </Typography>
-                  );
-                } else {
-                  return (
-                    <Typography className={classes.vote} component="p" key={i}>
-                      <span>Vote casted by {m.address}</span>
-                      <span>{m.signed}</span>
-                    </Typography>
-                  );
-                }
-              })}
+              {inTransitMessages &&
+                inTransitMessages.transitMessage.map((m, i) => {
+                  if (typeof m === "string") {
+                    return (
+                      <Typography
+                        className={classes.vote}
+                        component="p"
+                        key={i}
+                      >
+                        {m}
+                      </Typography>
+                    );
+                  } else if (typeof m === "object" && m.message !== undefined) {
+                    return (
+                      <Typography
+                        className={classes.vote}
+                        component="p"
+                        key={i}
+                      >
+                        {m.message}
+                      </Typography>
+                    );
+                  } else {
+                    return (
+                      <Typography
+                        className={classes.vote}
+                        component="p"
+                        key={i}
+                      >
+                        <span>Vote casted by {m.address}</span>
+                        <span>{m.signed}</span>
+                      </Typography>
+                    );
+                  }
+                })}
               <Typography className={classes.warning}>
                 This should take a few minutes. <br />
                 Please do not refresh or leave the page.

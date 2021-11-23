@@ -13,6 +13,7 @@ import {
   useNetworkManager,
 } from "../NetworkManagerContext/NetworkManagerContext";
 import { useHomeBridge } from "../HomeBridgeContext";
+import { useDestinationBridge } from "../DestinationBridgeContext";
 import { NetworkSelectModal } from "../../modules";
 
 interface IChainbridgeContextProps {
@@ -33,14 +34,14 @@ type ChainbridgeContext = {
     tokenAddress: string
   ): Promise<void>;
   resetDeposit(): void;
-  depositVotes: number;
+  // depositVotes: number;
   relayerThreshold?: number;
   depositNonce?: string;
   depositAmount?: number;
   bridgeFee?: number;
-  inTransitMessages: TransitState;
-  transferTxHash?: string;
-  setHomeTransferTxHash: (input: string) => void;
+  // inTransitMessages: TransitState;
+  // transferTxHash?: string;
+  // setHomeTransferTxHash: (input: string) => void;
   homeTransferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
@@ -74,15 +75,15 @@ const ChainbridgeProvider = ({
     setTransactionStatus,
     setDestinationChain,
     setDepositNonce,
-    setDepositVotes,
-    transferTxHash,
-    setHomeTransferTxHash,
-    homeTransferTxHash,
-    inTransitMessages,
-    tokensDispatch,
+    // setDepositVotes,
+    // transferTxHash,
+    // setHomeTransferTxHash,
+    // homeTransferTxHash,
+    // inTransitMessages,
+    // tokensDispatch,
     transactionStatus,
     depositNonce,
-    depositVotes,
+    // depositVotes,
     homeChainConfig,
     destinationChains,
     domainId,
@@ -107,6 +108,8 @@ const ChainbridgeProvider = ({
     unwrapToken,
     handleCheckSupplies,
   } = useHomeBridge();
+
+  const { setDepositVotes, tokensDispatch } = useDestinationBridge();
 
   const resetDeposit = () => {
     chainbridgeConfig.chains.length > 2 && setDestinationChain(undefined);
@@ -159,16 +162,15 @@ const ChainbridgeProvider = ({
         resetDeposit,
         deposit: handleDeposit,
         destinationChainConfig,
-        depositVotes,
+        // depositVotes,
         relayerThreshold,
         depositNonce,
         bridgeFee,
         transactionStatus,
-        inTransitMessages,
+        // inTransitMessages,
         depositAmount: depositAmount,
-        transferTxHash: transferTxHash,
-        homeTransferTxHash: homeTransferTxHash,
-        setHomeTransferTxHash,
+        // homeTransferTxHash: homeTransferTxHash,
+        // setHomeTransferTxHash,
         selectedToken: selectedToken,
         // TODO: Confirm if EVM specific
         wrapToken,

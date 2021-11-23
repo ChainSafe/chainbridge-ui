@@ -1,8 +1,8 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
+import { transitMessageReducer } from "../../../reducers/TransitMessageReducer";
 
 import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
@@ -15,14 +15,16 @@ export const EVMDestinationAdaptorProvider = ({
     depositNonce,
     destinationChainConfig,
     homeChainConfig,
-    tokensDispatch,
     setTransactionStatus,
-    setTransferTxHash,
-    setDepositVotes,
-    depositVotes,
-    inTransitMessages,
     transactionStatus,
   } = useNetworkManager();
+
+  const [transferTxHash, setTransferTxHash] = useState<string>("");
+  const [depositVotes, setDepositVotes] = useState<number>(0);
+  const [inTransitMessages, tokensDispatch] = useReducer(
+    transitMessageReducer,
+    { txIsDone: false, transitMessage: [] }
+  );
 
   const destinationBridge = useDestinationBridgeHook(destinationChainConfig);
 
@@ -35,7 +37,6 @@ export const EVMDestinationAdaptorProvider = ({
       depositNonce &&
       !inTransitMessages.txIsDone
     ) {
-
       handleProposalEvent(
         destinationBridge,
         homeChainConfig,
@@ -75,6 +76,11 @@ export const EVMDestinationAdaptorProvider = ({
   return (
     <DestinationBridgeContext.Provider
       value={{
+        transferTxHash,
+        depositVotes,
+        setDepositVotes,
+        inTransitMessages,
+        tokensDispatch,
         disconnect: async () => {},
       }}
     >
