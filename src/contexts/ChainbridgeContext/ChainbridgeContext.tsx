@@ -13,6 +13,7 @@ import {
 } from "../NetworkManagerContext/NetworkManagerContext";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { NetworkSelectModal } from "../../modules";
+import { TransitState } from "../../reducers/TransitMessageReducer";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
