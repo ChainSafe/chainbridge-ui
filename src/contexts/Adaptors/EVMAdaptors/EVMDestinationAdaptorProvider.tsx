@@ -1,14 +1,12 @@
-// @ts-nocheck
 import React from "react";
-import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { BigNumber, Event } from "ethers";
-import { useEffect, useState } from "react";
-import { EvmBridgeConfig } from "../../../chainbridgeConfig";
+import { useEffect } from "react";
 import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 
-import { getProvider } from "./helpers";
+import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
+import handleProposalEvent from "./handleProposalEvent";
+import handleProposalVote from "./handleProposalVote";
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -26,22 +24,7 @@ export const EVMDestinationAdaptorProvider = ({
     transactionStatus,
   } = useNetworkManager();
 
-  const [destinationBridge, setDestinationBridge] = useState<
-    Bridge | undefined
-  >(undefined);
-
-  useEffect(() => {
-    if (destinationBridge) return;
-    const provider = getProvider(destinationChainConfig);
-
-    if (destinationChainConfig && provider) {
-      const bridge = BridgeFactory.connect(
-        (destinationChainConfig as EvmBridgeConfig).bridgeAddress,
-        provider
-      );
-      setDestinationBridge(bridge);
-    }
-  }, [destinationChainConfig, destinationBridge]);
+  const destinationBridge = useDestinationBridgeHook(destinationChainConfig);
 
   useEffect(() => {
     if (
@@ -52,86 +35,24 @@ export const EVMDestinationAdaptorProvider = ({
       depositNonce &&
       !inTransitMessages.txIsDone
     ) {
-      destinationBridge.on(
-        destinationBridge.filters.ProposalEvent(null, null, null, null),
-        async (
-          originDomainId: number,
-          depositNonce: number,
-          status: number,
-          dataHash: string,
-          tx: Event
-        ) => {
-          const txReceipt = await tx.getTransactionReceipt();
-          const proposalStatus = BigNumber.from(status).toNumber();
-          switch (proposalStatus) {
-            case 1:
-              tokensDispatch({
-                type: "addMessage",
-                payload: {
-                  address: String(txReceipt.from),
-                  message: `Proposal created on ${destinationChainConfig.name}`,
-                  proposalStatus: proposalStatus,
-                  order: proposalStatus,
-                  eventType: "Proposal",
-                },
-              });
-              break;
-            case 2:
-              tokensDispatch({
-                type: "addMessage",
-                payload: {
-                  address: String(txReceipt.from),
-                  message: `Proposal has passed. Executing...`,
-                  proposalStatus: proposalStatus,
-                  order: proposalStatus,
-                  eventType: "Proposal",
-                },
-              });
-              break;
-            case 3:
-              setTransactionStatus("Transfer Completed");
-              setTransferTxHash(tx.transactionHash);
-              break;
-            case 4:
-              setTransactionStatus("Transfer Aborted");
-              setTransferTxHash(tx.transactionHash);
-              break;
-          }
-        }
+      handleProposalEvent(
+        destinationBridge,
+        homeChainConfig,
+        depositNonce,
+        destinationChainConfig,
+        setTransactionStatus,
+        setTransferTxHash,
+        tokensDispatch
       );
 
-      destinationBridge.on(
-        destinationBridge.filters.ProposalVote(null, null, null, null),
-        async (
-          originDomainId: number,
-          depositNonce: number,
-          status: number,
-          dataHash: string,
-          tx: Event
-        ) => {
-          const txReceipt = await tx.getTransactionReceipt();
-          if (status === 1) {
-            setDepositVotes(depositVotes + 1);
-          }
-
-          if (transactionStatus === "Transfer Completed") {
-            return tokensDispatch({
-              type: "setTransactionIsDone",
-            });
-          }
-
-          return tokensDispatch({
-            type: "addMessage",
-            payload: {
-              address: String(txReceipt.from),
-              signed: txReceipt.status === 1 ? "Confirmed" : "Rejected",
-              order: parseFloat(
-                `1.${txReceipt.transactionIndex}${depositVotes + 1}$`
-              ),
-              eventType: "Vote",
-            },
-          });
-        }
+      handleProposalVote(
+        destinationBridge,
+        homeChainConfig,
+        depositNonce,
+        depositVotes,
+        tokensDispatch,
+        setDepositVotes,
+        transactionStatus
       );
     }
     return () => {

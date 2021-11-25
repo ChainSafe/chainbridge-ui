@@ -1,4 +1,1 @@
-export {
-  NetworkManagerProvider,
-  useNetworkManager,
-} from "./NetworkManagerContext";
+export * from "./NetworkManagerContext";

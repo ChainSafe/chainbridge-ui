@@ -7,13 +7,13 @@ import {
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { TransitState } from "../../reducers/TransitMessageReducer";
 import {
   TransactionStatus,
   useNetworkManager,
 } from "../NetworkManagerContext/NetworkManagerContext";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { NetworkSelectModal } from "../../modules";
-import { TransitState } from "../../reducers/TransitMessageReducer";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
