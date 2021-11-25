@@ -7,13 +7,13 @@ import {
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { TransitState } from "../../reducers/TransitMessageReducer";
 import {
   TransactionStatus,
   useNetworkManager,
-  TransitMessage,
 } from "../NetworkManagerContext/NetworkManagerContext";
 import { useHomeBridge } from "../HomeBridgeContext";
-import NetworkSelectModal from "../../modules/NetworkSelectModal";
+import { NetworkSelectModal } from "../../modules";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -38,7 +38,7 @@ type ChainbridgeContext = {
   depositNonce?: string;
   depositAmount?: number;
   bridgeFee?: number;
-  inTransitMessages: Array<TransitMessage>;
+  inTransitMessages: TransitState;
   transferTxHash?: string;
   setHomeTransferTxHash: (input: string) => void;
   homeTransferTxHash?: string;

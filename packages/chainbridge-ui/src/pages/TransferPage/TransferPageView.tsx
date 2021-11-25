@@ -40,7 +40,7 @@ type TransferPageView = {
   preflightModalOpen: boolean;
   tokens: any;
   destinationChains: any;
-  setDestinationChain: (chainId: number | undefined) => void;
+  setDestinationChain: (domainId: number | undefined) => void;
   destinationChainConfig: any;
   showImageUrl: (url: string | undefined) => string;
   preflightDetails: PreflightDetails;
@@ -176,10 +176,10 @@ export default function TransferPageView({
                 disabled={!homeConfig}
                 options={destinationChains.map((dc: any) => ({
                   label: dc.name,
-                  value: dc.chainId,
+                  value: dc.domainId,
                 }))}
                 onChange={(value) => setDestinationChain(value)}
-                value={destinationChainConfig?.chainId}
+                value={destinationChainConfig?.domainId}
               />
             </section>
             <section className={classes.currencySection}>
