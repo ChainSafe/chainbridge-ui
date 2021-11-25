@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { useWeb3 } from "@chainsafe/web3-context";
@@ -18,6 +17,7 @@ import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 import { getNetworkName } from "../../../utils/Helpers";
+import { useWeb3 as useLocalWeb3 } from "../../index";
 
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
 
@@ -36,7 +36,8 @@ export const EVMHomeAdaptorProvider = ({
     ethBalance,
     onboard,
     resetOnboard,
-  } = useWeb3();
+    dispatcher,
+  } = useLocalWeb3();
 
   const {
     homeChainConfig,
@@ -82,7 +83,7 @@ export const EVMHomeAdaptorProvider = ({
     if (!walletSelected) {
       onboard
         .walletSelect("metamask")
-        .then((success) => {
+        .then((success: boolean) => {
           if (window.ethereum) {
             window.ethereum.on("chainChanged", (ch: any) => {
               window.location.reload();
@@ -91,8 +92,8 @@ export const EVMHomeAdaptorProvider = ({
 
           setWalletSelected(success);
           if (success) {
-            checkIsReady()
-              .then((success) => {
+            checkIsReady(onboard, dispatcher)
+              .then((success: boolean) => {
                 if (success) {
                   if (homeChainConfig && network && isReady && provider) {
                     const signer = provider.getSigner();
@@ -134,12 +135,12 @@ export const EVMHomeAdaptorProvider = ({
               });
           }
         })
-        .catch((error) => {
+        .catch((error: any) => {
           setInitialising(false);
           console.error(error);
         });
     } else {
-      checkIsReady()
+      checkIsReady(onboard, dispatcher)
         .then((success) => {
           if (success) {
             if (homeChainConfig && network && isReady && provider) {
@@ -456,7 +457,7 @@ export const EVMHomeAdaptorProvider = ({
       value={{
         connect: handleConnect,
         disconnect: async () => {
-          await resetOnboard();
+          await resetOnboard(dispatcher, onboard!);
         },
         getNetworkName,
         bridgeFee,
