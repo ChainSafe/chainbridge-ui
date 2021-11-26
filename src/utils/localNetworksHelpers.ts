@@ -111,7 +111,6 @@ export const getTokenData = async (
   state: LocalWeb3State,
   spenderAddress: string | undefined
 ) => {
-  console.log("GET TOKEN DATA");
   let tokenContracts: Array<Erc20Detailed> = [];
   networkTokens.forEach(async (token: any) => {
     const signer = await state.provider.getSigner();

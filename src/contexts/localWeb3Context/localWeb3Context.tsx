@@ -7,9 +7,8 @@ import {
   refreshGasPrice,
   signMessage,
   checkIsReady,
-} from "../../utils/LocalNetworksHelpers";
+} from "../../utils/localNetworksHelpers";
 import { Erc20Detailed } from "../../Contracts/Erc20Detailed";
-import { BigNumber as BN } from "bignumber.js";
 import { localWeb3ContextReducer } from "./localWeb3Reducer";
 import {
   LocalWeb3Context,
