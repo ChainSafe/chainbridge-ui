@@ -1,7 +1,12 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
-import { Button, FormikTextInput } from "@chainsafe/common-components";
+// import { Button, FormikTextInput } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import FormHelperText from "@mui/material/FormHelperText";
 
 interface ITokenInput {
   disabled?: boolean;
@@ -13,6 +18,7 @@ interface ITokenInput {
     input?: string;
     button?: string;
   };
+  setValue?: any;
 }
 
 const TokenInput: React.FC<ITokenInput> = ({
@@ -23,33 +29,33 @@ const TokenInput: React.FC<ITokenInput> = ({
   tokenSelectorKey,
   name,
 }: ITokenInput) => {
-  const [, , helpers] = useField(name);
+  // const [, , helpers] = useField(name);
 
-  const { values } = useFormikContext();
+  // const { values } = useFormikContext();
   return (
-    <>
-      <FormikTextInput
+    <Box>
+      <TextField
+        helperText=" "
         className={classNames?.input}
-        disabled={disabled}
         name={name}
         label={label}
       />
-      <Button
-        disabled={
-          disabled || !tokens[(values as Record<string, any>)[tokenSelectorKey]]
-        }
+      {/* <Button
+        // disabled={
+        //   disabled || !tokens[(values as Record<string, any>)[tokenSelectorKey]]
+        // }
         className={classNames?.button}
-        onClick={() => {
-          helpers.setValue(
-            tokens[(values as Record<string, any>)[tokenSelectorKey]].balance
-          );
-        }}
-        variant="outline"
+        // onClick={() => {
+        //   setValue(
+        //     tokens[(values as Record<string, any>)[tokenSelectorKey]].balance
+        //   );
+        // }}
+        variant="outlined"
         type="button"
       >
         MAX
-      </Button>
-    </>
+      </Button> */}
+    </Box>
   );
 };
 

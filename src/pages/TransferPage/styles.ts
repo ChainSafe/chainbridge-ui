@@ -62,12 +62,12 @@ export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       justifyContent: "space-around",
     },
     tokenInputSection: {
-      width: "60%",
+      width: "40%",
     },
     tokenInput: {
-      margin: 0,
+      // margin: 0,
       "& > div": {
-        height: 32,
+        // height: 32,
         "& input": {
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
@@ -97,7 +97,7 @@ export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySelector: {
-      width: "40%",
+      width: "50%",
       paddingRight: constants.generalUnit,
       "& *": {
         cursor: "pointer",

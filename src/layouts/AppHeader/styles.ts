@@ -70,6 +70,7 @@ export const useStyles = makeStyles(
       mainTitle: {},
       headerLinks: {
         marginLeft: 49,
+        display: "flex",
         [breakpoints.down("sm")]: {
           display: "flex",
           flexDirection: "row",

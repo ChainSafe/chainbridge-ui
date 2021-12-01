@@ -1,11 +1,20 @@
 import React from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
+import CssBaseline from "@mui/material/CssBaseline";
+// import {
+//   // CssBaseline,
+//   Router,
+// } from "@chainsafe/common-components";
 import {
-  CssBaseline,
-  Router,
-  ToasterProvider,
-} from "@chainsafe/common-components";
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  NavLink,
+  Link,
+  Redirect,
+  HashRouter,
+} from "react-router-dom";
 
 import { ChainbridgeRoutes } from "./routes";
 import { lightTheme } from "./themes/LightTheme";
@@ -69,37 +78,36 @@ const App: React.FC<{}> = () => {
     >
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
-        <ToasterProvider autoDismiss>
-          <Web3Provider
-            tokensToWatch={tokens}
-            networkIds={[5]}
-            onboardConfig={{
-              dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
-              walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
-              },
-              subscriptions: {
-                network: (network) =>
-                  network && console.log("domainId: ", network),
-                balance: (amount) =>
-                  amount && console.log("balance: ", utils.formatEther(amount)),
-              },
-            }}
-            checkNetwork={false}
-            gasPricePollingInterval={120}
-            gasPriceSetting="fast"
-          >
-            <NetworkManagerProvider>
-              <ChainbridgeProvider chains={chains}>
-                <Router>
-                  <AppWrapper wrapTokenPage={wrapTokenPage}>
-                    <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
-                  </AppWrapper>
-                </Router>
-              </ChainbridgeProvider>
-            </NetworkManagerProvider>
-          </Web3Provider>
-        </ToasterProvider>
+
+        <Web3Provider
+          tokensToWatch={tokens}
+          networkIds={[5]}
+          onboardConfig={{
+            dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
+            walletSelect: {
+              wallets: [{ walletName: "metamask", preferred: true }],
+            },
+            subscriptions: {
+              network: (network) =>
+                network && console.log("domainId: ", network),
+              balance: (amount) =>
+                amount && console.log("balance: ", utils.formatEther(amount)),
+            },
+          }}
+          checkNetwork={false}
+          gasPricePollingInterval={120}
+          gasPriceSetting="fast"
+        >
+          <NetworkManagerProvider>
+            <ChainbridgeProvider chains={chains}>
+              <Router>
+                <AppWrapper wrapTokenPage={wrapTokenPage}>
+                  <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
+                </AppWrapper>
+              </Router>
+            </ChainbridgeProvider>
+          </NetworkManagerProvider>
+        </Web3Provider>
       </ThemeSwitcher>
     </ErrorBoundary>
   );

@@ -1,11 +1,26 @@
-import {
-  NavLink,
-  Typography,
-  useHistory,
-  useLocation,
-} from "@chainsafe/common-components";
+// import {
+//   // NavLink,
+//   // Typography,
+//   useHistory,
+//   useLocation,
+// } from "@chainsafe/common-components";
 import React, { useEffect, useState } from "react";
 import { ReactNode } from "react";
+
+import {
+  Switch,
+  NavLink,
+  Link,
+  useLocation,
+  useHistory,
+  useRouteMatch,
+} from "react-router-dom";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+// import Link from '@mui/material/Link';
+import Typography from "@mui/material/Typography";
+
 import AppHeader from "../AppHeader/AppHeader";
 import { ReactComponent as GlobalSvg } from "../../media/Icons/global.svg";
 import { ReactComponent as GiftSvg } from "../../media/Icons/gift.svg";
@@ -25,7 +40,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({
   const [enableNavTabs, setEnableNavTabs] = useState(true);
 
   const location = useLocation();
-  const { redirect } = useHistory();
+  const history = useHistory();
 
   const { __RUNTIME_CONFIG__ } = window;
 
@@ -33,7 +48,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({
 
   useEffect(() => {
     if (location.pathname.includes("/explorer") && !indexerEnabled) {
-      redirect("/transfer");
+      history.push("/transfer");
     }
   }, []);
 
@@ -44,40 +59,51 @@ const AppWrapper: React.FC<IAppWrapper> = ({
     return setEnableNavTabs(true);
   }, [location]);
 
+  const routeMatch = useRouteMatch([ROUTE_LINKS.Transfer, ROUTE_LINKS.Wrap]);
+  const currentTab = routeMatch?.path;
+
   return (
-    <section className={classes.root}>
+    <div className={classes.root}>
       {enableNavTabs ? (
-        <section className={classes.inner}>
+        <div className={classes.inner}>
           <AppHeader />
-          <section className={classes.content}>
+          <div className={classes.content}>
             {enableNavTabs && (
-              <section className={classes.navTabs}>
-                <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
-                  <GlobalSvg />
-                  <Typography variant="h5">Transfer</Typography>
-                </NavLink>
+              <Tabs value={currentTab}>
+                <Tab
+                  icon={<GlobalSvg />}
+                  iconPosition="start"
+                  label="Transfer"
+                  value={ROUTE_LINKS.Transfer}
+                  to={ROUTE_LINKS.Transfer}
+                  component={Link}
+                />
                 {wrapTokenPage && (
-                  <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-                    <GiftSvg />
-                    <Typography variant="h5">Wrap token</Typography>
-                  </NavLink>
+                  <Tab
+                    icon={<GiftSvg />}
+                    iconPosition="start"
+                    label="Wrap"
+                    value={ROUTE_LINKS.Wrap}
+                    to={ROUTE_LINKS.Wrap}
+                    component={Link}
+                  />
                 )}
-              </section>
+              </Tabs>
             )}
             <div className={classes.pageArea}>{children}</div>
-          </section>
+          </div>
 
           {/* Put CTA here */}
           {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
         </a> */}
-        </section>
+        </div>
       ) : (
-        <section className={classes.explorerMainContent}>
+        <div className={classes.explorerMainContent}>
           <AppHeader />
           <div className={classes.explorerArea}>{children}</div>
-        </section>
+        </div>
       )}
-    </section>
+    </div>
   );
 };
 

@@ -4,8 +4,13 @@ import {
   Button,
   ExclamationCircleInverseSvg,
   Typography,
-  useLocation,
 } from "@chainsafe/common-components";
+import {
+  useHistory,
+  useParams,
+  useRouteMatch,
+  useLocation,
+} from "react-router-dom";
 import { useNetworkManager, useHomeBridge } from "../../contexts";
 import { ROUTE_LINKS } from "../../routes";
 import { chainbridgeConfig } from "../../chainbridgeConfig";

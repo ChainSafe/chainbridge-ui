@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Button,
   Typography,
@@ -32,20 +31,15 @@ import {
   Fees,
 } from "../../components";
 
-import HomeNetworkConnectView from "./HomeNetworkConnectView";
+import HomeNetworkConnectView from "./HomeNetworkConnectView"
 
-import makeValidationSchema from "./makeValidationSchema";
+import makeValidationSchema from "./makeValidationSchema"
 
 export type PreflightDetails = {
   tokenAmount: number;
   token: string;
   tokenSymbol: string;
   receiver: string;
-};
-type Inputs = {
-  token: string;
-  example: string;
-  exampleRequired: string;
 };
 
 const TransferPage = () => {
@@ -97,117 +91,125 @@ const TransferPage = () => {
     homeConfig,
     destinationChainConfig,
     checkSupplies,
-  });
+  })
 
   const handleClick = (txHash: string) => {
     const url = `/explorer/transaction/${txHash}`;
 
     redirect(url);
   };
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: {
-      token: "",
-    },
-  });
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
   return (
     <article className={classes.root}>
       <HomeNetworkConnectView
-        isReady={isReady}
-        accounts={accounts}
-        address={address}
-        classes={classes}
-        walletConnecting={walletConnecting}
-        walletType={walletType}
-        homeConfig={homeConfig}
-        setWalletType={setWalletType}
-        setChangeNetworkOpen={setChangeNetworkOpen}
-        selectAccount={selectAccount}
+          isReady={isReady}
+          accounts={accounts}
+          address={address}
+
+          classes={classes}
+          walletConnecting={walletConnecting}
+          walletType={walletType}
+
+          homeConfig={homeConfig}
+
+          setWalletType={setWalletType}
+          setChangeNetworkOpen={setChangeNetworkOpen}
+          selectAccount={selectAccount}
       />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <SelectInput
-            label="Destination Network"
-            className={classes.generalInput}
-            disabled={!homeConfig}
-            options={destinationChains.map((dc: any) => ({
-              label: dc.name,
-              value: dc.domainId,
-            }))}
-            onChange={(value) => setDestinationChain(value)}
-            value={destinationChainConfig?.domainId}
-          />
-        </section>
-        <section className={classes.currencySection}>
-          <section className={classes.currencySelector}>
-            <TokenSelectInput
-              control={control}
-              rules={{ required: true }}
-              tokens={tokens}
-              name="token"
-              disabled={!destinationChainConfig}
-              label={`Balance: `}
-              className={classes.generalInput}
-              sync={(tokenAddress) => {
-                setPreflightDetails({
-                  ...preflightDetails,
-                  token: tokenAddress,
-                  receiver: "",
-                  tokenAmount: 0,
-                  tokenSymbol: "",
-                });
-              }}
-              setValue={setValue}
-              options={
-                Object.keys(tokens).map((t) => ({
-                  value: t,
-                  label: (
-                    <div className={classes.tokenItem}>
-                      {tokens[t]?.imageUri && (
-                        <img
-                          src={showImageUrl(tokens[t]?.imageUri)}
-                          alt={tokens[t]?.symbol}
-                        />
-                      )}
-                      <span>{tokens[t]?.symbol || t}</span>
-                    </div>
-                  ),
-                })) || []
-              }
-            />
-          </section>
-          <section className={classes.tokenInputSection}>
-            <div className={clsx(classes.tokenInputArea, classes.generalInput)}>
-              <TokenInput
-                classNames={{
-                  input: clsx(classes.tokenInput, classes.generalInput),
-                  button: classes.maxButton,
-                }}
-                tokenSelectorKey="token"
-                tokens={tokens}
-                disabled={
-                  !destinationChainConfig ||
-                  !preflightDetails.token ||
-                  preflightDetails.token === ""
-                }
-                name="tokenAmount"
-                label="Amount to send"
-                setValue={setValue}
+      <Formik
+        initialValues={{
+          tokenAmount: 0,
+          token: "",
+          receiver: "",
+        }}
+        validateOnChange={false}
+        validationSchema={transferSchema}
+        onSubmit={(values) => {
+          setPreflightDetails({
+            ...values,
+            tokenSymbol: tokens[values.token].symbol || "",
+          });
+          setPreflightModalOpen(true);
+        }}
+      >
+        {(props) => (
+          <Form
+            className={clsx(classes.formArea, {
+              disabled: !homeConfig || !address || props.isValidating,
+            })}
+          >
+            <section>
+              <SelectInput
+                label="Destination Network"
+                className={classes.generalInput}
+                disabled={!homeConfig}
+                options={destinationChains.map((dc: any) => ({
+                  label: dc.name,
+                  value: dc.domainId,
+                }))}
+                onChange={(value) => setDestinationChain(value)}
+                value={destinationChainConfig?.domainId}
               />
-            </div>
-          </section>
-        </section>
-        <section>
-          {/* <AddressInput
+            </section>
+            <section className={classes.currencySection}>
+              <section className={classes.currencySelector}>
+                <TokenSelectInput
+                  tokens={tokens}
+                  name="token"
+                  disabled={!destinationChainConfig}
+                  label={`Balance: `}
+                  className={classes.generalInput}
+                  placeholder=""
+                  sync={(tokenAddress) => {
+                    setPreflightDetails({
+                      ...preflightDetails,
+                      token: tokenAddress,
+                      receiver: "",
+                      tokenAmount: 0,
+                      tokenSymbol: "",
+                    });
+                  }}
+                  options={
+                    Object.keys(tokens).map((t) => ({
+                      value: t,
+                      label: (
+                        <div className={classes.tokenItem}>
+                          {tokens[t]?.imageUri && (
+                            <img
+                              src={showImageUrl(tokens[t]?.imageUri)}
+                              alt={tokens[t]?.symbol}
+                            />
+                          )}
+                          <span>{tokens[t]?.symbol || t}</span>
+                        </div>
+                      ),
+                    })) || []
+                  }
+                />
+              </section>
+              <section className={classes.tokenInputSection}>
+                <div
+                  className={clsx(classes.tokenInputArea, classes.generalInput)}
+                >
+                  <TokenInput
+                    classNames={{
+                      input: clsx(classes.tokenInput, classes.generalInput),
+                      button: classes.maxButton,
+                    }}
+                    tokenSelectorKey="token"
+                    tokens={tokens}
+                    disabled={
+                      !destinationChainConfig ||
+                      !preflightDetails.token ||
+                      preflightDetails.token === ""
+                    }
+                    name="tokenAmount"
+                    label="I want to send"
+                  />
+                </div>
+              </section>
+            </section>
+            <section>
+              <AddressInput
                 disabled={!destinationChainConfig}
                 name="receiver"
                 label="Destination Address"
@@ -220,9 +222,9 @@ const TransferPage = () => {
                 sendToSameAccountHelper={
                   destinationChainConfig?.type === homeConfig?.type
                 }
-              /> */}
-        </section>
-        {/* <Fees
+              />
+            </section>
+            <Fees
               amountFormikName="tokenAmount"
               className={classes.fees}
               fee={bridgeFee}
@@ -232,19 +234,21 @@ const TransferPage = () => {
                   ? tokens[preflightDetails.token].symbol
                   : undefined
               }
-            /> */}
-        <section>
-          <Button type="submit" fullsize variant="primary">
-            Start transfer
-          </Button>
-        </section>
-        <section>
-          <QuestionCircleSvg
-            onClick={() => setAboutOpen(true)}
-            className={classes.faqButton}
-          />
-        </section>
-      </form>
+            />
+            <section>
+              <Button type="submit" fullsize variant="primary">
+                Start transfer
+              </Button>
+            </section>
+            <section>
+              <QuestionCircleSvg
+                onClick={() => setAboutOpen(true)}
+                className={classes.faqButton}
+              />
+            </section>
+          </Form>
+        )}
+      </Formik>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
       <ChangeNetworkDrawer
         open={changeNetworkOpen}
