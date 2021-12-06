@@ -256,6 +256,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       selectProvider(walletType, "home", props),
     [walletType]
   );
+
   const DestinationProvider = useCallback(
     (props: INetworkManagerProviderProps) =>
       selectProvider(destinationChainConfig?.type, "destination", props),
