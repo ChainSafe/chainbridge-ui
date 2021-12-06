@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { transitMessageReducer } from "../../../reducers/TransitMessageReducer";
+import { evmDestinationReducer } from "../../../reducers/EvmDestinationReducer";
 
 import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
@@ -19,8 +20,16 @@ export const EVMDestinationAdaptorProvider = ({
     transactionStatus,
   } = useNetworkManager();
 
-  const [transferTxHash, setTransferTxHash] = useState<string>("");
-  const [depositVotes, setDepositVotes] = useState<number>(0);
+  const [state, dispatch] = useReducer(evmDestinationReducer, {
+    transferTxHash: "",
+    depositVotes: 0,
+  });
+  const { transferTxHash, depositVotes } = state;
+  const setTransferTxHash = (transferTxHash: string) =>
+    dispatch({ type: "setTransferTxHash", transferTxHash });
+  const setDepositVotes = (depositVotes: number) =>
+    dispatch({ type: "setDepositVotes", depositVotes });
+
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
     { txIsDone: false, transitMessage: [] }
