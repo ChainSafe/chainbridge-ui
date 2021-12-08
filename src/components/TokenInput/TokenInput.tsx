@@ -1,5 +1,5 @@
 import React from "react";
-import { useField, useFormikContext } from "formik";
+import { useController } from "react-hook-form";
 // import { Button, FormikTextInput } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import FormControl from "@mui/material/FormControl";
@@ -19,6 +19,7 @@ interface ITokenInput {
     button?: string;
   };
   setValue?: any;
+  control?: any;
 }
 
 const TokenInput: React.FC<ITokenInput> = ({
@@ -28,33 +29,36 @@ const TokenInput: React.FC<ITokenInput> = ({
   tokens,
   tokenSelectorKey,
   name,
+  setValue,
+  control,
 }: ITokenInput) => {
-  // const [, , helpers] = useField(name);
-
-  // const { values } = useFormikContext();
+  const { field, fieldState } = useController({ name, control });
   return (
-    <Box>
+    <Box sx={{ mt: 2 }}>
       <TextField
-        helperText=" "
+        disabled={disabled}
+        error={!!fieldState.error}
+        fullWidth
+        helperText={fieldState.error ? fieldState.error.message : undefined}
         className={classNames?.input}
-        name={name}
         label={label}
+        {...field}
+        InputProps={{
+          endAdornment: (
+            <Button
+              disabled={disabled || !tokens[tokenSelectorKey]}
+              className={classNames?.button}
+              onClick={() => {
+                setValue(name, tokens[tokenSelectorKey].balance);
+              }}
+              variant="outlined"
+              type="button"
+            >
+              MAX
+            </Button>
+          ),
+        }}
       />
-      {/* <Button
-        // disabled={
-        //   disabled || !tokens[(values as Record<string, any>)[tokenSelectorKey]]
-        // }
-        className={classNames?.button}
-        // onClick={() => {
-        //   setValue(
-        //     tokens[(values as Record<string, any>)[tokenSelectorKey]].balance
-        //   );
-        // }}
-        variant="outlined"
-        type="button"
-      >
-        MAX
-      </Button> */}
     </Box>
   );
 };

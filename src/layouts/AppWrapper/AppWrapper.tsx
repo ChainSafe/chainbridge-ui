@@ -6,6 +6,7 @@
 // } from "@chainsafe/common-components";
 import React, { useEffect, useState } from "react";
 import { ReactNode } from "react";
+import Paper from "@mui/material/Paper";
 
 import {
   Switch,
@@ -67,7 +68,17 @@ const AppWrapper: React.FC<IAppWrapper> = ({
       {enableNavTabs ? (
         <div className={classes.inner}>
           <AppHeader />
-          <div className={classes.content}>
+          <Paper
+            sx={{
+              margin: `30px auto`,
+              maxWidth: 460,
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+              px: 3,
+            }}
+            elevation={3}
+          >
             {enableNavTabs && (
               <Tabs value={currentTab}>
                 <Tab
@@ -91,7 +102,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({
               </Tabs>
             )}
             <div className={classes.pageArea}>{children}</div>
-          </div>
+          </Paper>
 
           {/* Put CTA here */}
           {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">

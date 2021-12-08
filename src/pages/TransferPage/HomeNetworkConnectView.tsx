@@ -1,5 +1,8 @@
 import React from "react";
-import { Button, Typography, SelectInput } from "@chainsafe/common-components";
+import { SelectInput } from "@chainsafe/common-components";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+
 import { WalletType } from "../../contexts/NetworkManagerContext/NetworkManagerContext";
 import { BridgeConfig } from "../../chainbridgeConfig";
 
@@ -36,8 +39,16 @@ export default function HomeNetworkConnectView({
       <div className={classes.walletArea}>
         {!isReady && (
           <Button
-            className={classes.connectButton}
-            fullsize
+            fullWidth
+            variant="contained"
+            sx={{
+              backgroundColor: "#262626",
+              color: "#ffffff",
+              ":hover": {
+                backgroundColor: "#262626",
+                opacity: 0.9,
+              },
+            }}
             onClick={() => {
               setWalletType("select");
             }}
@@ -66,8 +77,8 @@ export default function HomeNetworkConnectView({
                 </Typography>
               </div>
               <Typography
-                component="h2"
-                variant="h2"
+                component="h5"
+                variant="h5"
                 className={classes.networkName}
               >
                 {homeConfig?.name}

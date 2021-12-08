@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import {
-  Button,
-  Typography,
-  QuestionCircleSvg,
-  SelectInput,
-} from "@chainsafe/common-components";
-import { Form, Formik } from "formik";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Button from "@mui/material/Button";
 import clsx from "clsx";
 
 import { useChainbridge, useHomeBridge } from "../../contexts";
-import { object, string } from "yup";
 import { useHistory } from "@chainsafe/common-components";
-import { utils } from "ethers";
 import { useNetworkManager } from "../../contexts/NetworkManagerContext/NetworkManagerContext";
-import { isValidSubstrateAddress } from "../../utils/Helpers";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -30,6 +24,7 @@ import {
   TokenSelectInput,
   TokenInput,
   Fees,
+  SelectDestinationNetwork,
 } from "../../components";
 
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
@@ -44,8 +39,8 @@ export type PreflightDetails = {
 };
 type Inputs = {
   token: string;
-  example: string;
-  exampleRequired: string;
+  tokenAmount: number;
+  receiver: string;
 };
 
 const TransferPage = () => {
@@ -105,19 +100,26 @@ const TransferPage = () => {
     redirect(url);
   };
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: {
-      token: "",
-    },
-  });
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const { register, handleSubmit, control, setValue, watch, formState } =
+    useForm<Inputs>({
+      resolver: yupResolver(transferSchema),
+      defaultValues: {
+        token: "",
+        tokenAmount: 0,
+        receiver: "",
+      },
+    });
+
+  const watchToken = watch("token", "");
+  const watchAmount = watch("tokenAmount", 0);
+
+  const onSubmit: SubmitHandler<Inputs> = (values) => {
+    setPreflightDetails({
+      ...values,
+      tokenSymbol: tokens[values.token].symbol || "",
+    });
+    setPreflightModalOpen(true);
+  };
 
   return (
     <article className={classes.root}>
@@ -135,26 +137,25 @@ const TransferPage = () => {
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
-          <SelectInput
+          <SelectDestinationNetwork
             label="Destination Network"
-            className={classes.generalInput}
-            disabled={!homeConfig}
+            disabled={!homeConfig || formState.isSubmitting}
             options={destinationChains.map((dc: any) => ({
               label: dc.name,
               value: dc.domainId,
             }))}
-            onChange={(value) => setDestinationChain(value)}
+            onChange={(value: number | undefined) => setDestinationChain(value)}
             value={destinationChainConfig?.domainId}
           />
         </section>
         <section className={classes.currencySection}>
-          <section className={classes.currencySelector}>
+          <section>
             <TokenSelectInput
               control={control}
               rules={{ required: true }}
               tokens={tokens}
               name="token"
-              disabled={!destinationChainConfig}
+              disabled={!destinationChainConfig || formState.isSubmitting}
               label={`Balance: `}
               className={classes.generalInput}
               sync={(tokenAddress) => {
@@ -185,61 +186,75 @@ const TransferPage = () => {
               }
             />
           </section>
-          <section className={classes.tokenInputSection}>
-            <div className={clsx(classes.tokenInputArea, classes.generalInput)}>
+          <section>
+            <div>
               <TokenInput
                 classNames={{
                   input: clsx(classes.tokenInput, classes.generalInput),
                   button: classes.maxButton,
                 }}
-                tokenSelectorKey="token"
+                tokenSelectorKey={watchToken}
                 tokens={tokens}
                 disabled={
                   !destinationChainConfig ||
+                  formState.isSubmitting ||
                   !preflightDetails.token ||
                   preflightDetails.token === ""
                 }
                 name="tokenAmount"
                 label="Amount to send"
                 setValue={setValue}
+                control={control}
               />
             </div>
           </section>
         </section>
         <section>
-          {/* <AddressInput
-                disabled={!destinationChainConfig}
-                name="receiver"
-                label="Destination Address"
-                placeholder="Please enter the receiving address"
-                className={classes.address}
-                classNames={{
-                  input: classes.addressInput,
-                }}
-                senderAddress={`${address}`}
-                sendToSameAccountHelper={
-                  destinationChainConfig?.type === homeConfig?.type
-                }
-              /> */}
+          <AddressInput
+            disabled={!destinationChainConfig || formState.isSubmitting}
+            name="receiver"
+            label="Destination Address"
+            placeholder="Please enter the receiving address"
+            senderAddress={`${address}`}
+            sendToSameAccountHelper={
+              destinationChainConfig?.type === homeConfig?.type
+            }
+            setValue={setValue}
+            control={control}
+          />
         </section>
-        {/* <Fees
-              amountFormikName="tokenAmount"
-              className={classes.fees}
-              fee={bridgeFee}
-              feeSymbol={homeConfig?.nativeTokenSymbol}
-              symbol={
-                preflightDetails && tokens[preflightDetails.token]
-                  ? tokens[preflightDetails.token].symbol
-                  : undefined
-              }
-            /> */}
+        <Fees
+          amountFormikName="tokenAmount"
+          className={classes.fees}
+          fee={bridgeFee}
+          feeSymbol={homeConfig?.nativeTokenSymbol}
+          symbol={
+            preflightDetails && tokens[preflightDetails.token]
+              ? tokens[preflightDetails.token].symbol
+              : undefined
+          }
+          amount={watchAmount}
+        />
         <section>
-          <Button type="submit" fullsize variant="primary">
+          <Button
+            disabled={!destinationChainConfig || formState.isSubmitting}
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              backgroundColor: "#262626",
+              color: "#ffffff",
+              ":hover": {
+                backgroundColor: "#262626",
+                opacity: 0.9,
+              },
+            }}
+          >
             Start transfer
           </Button>
         </section>
         <section>
-          <QuestionCircleSvg
+          <HelpOutlineIcon
             onClick={() => setAboutOpen(true)}
             className={classes.faqButton}
           />
