@@ -32,7 +32,7 @@ export function transitMessageReducer(
         ).values(),
       ];
       const uniqueMessagesSorted = uniqueMessages.sort(
-        (a, b) => a.order - b.order
+        (a, b) => ("order" in a && "order" in b && a.order! - b.order!) || 0
       );
       return { ...transitState, transitMessage: uniqueMessagesSorted };
     case "resetMessages":

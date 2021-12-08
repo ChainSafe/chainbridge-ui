@@ -47,7 +47,7 @@ export type TransitMessage = {
   address: string;
   message?: string;
   proposalStatus?: number;
-  order: number;
+  order?: number;
   signed?: "Confirmed" | "Rejected";
   eventType?: "Proposal" | "Vote";
 };
