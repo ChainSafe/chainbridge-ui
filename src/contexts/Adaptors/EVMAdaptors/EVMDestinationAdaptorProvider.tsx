@@ -1,8 +1,9 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
+import { transitMessageReducer } from "../../../reducers/TransitMessageReducer";
+import { evmDestinationReducer } from "../../../reducers/EvmDestinationReducer";
 
 import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
@@ -15,14 +16,24 @@ export const EVMDestinationAdaptorProvider = ({
     depositNonce,
     destinationChainConfig,
     homeChainConfig,
-    tokensDispatch,
     setTransactionStatus,
-    setTransferTxHash,
-    setDepositVotes,
-    depositVotes,
-    inTransitMessages,
     transactionStatus,
   } = useNetworkManager();
+
+  const [state, dispatch] = useReducer(evmDestinationReducer, {
+    transferTxHash: "",
+    depositVotes: 0,
+  });
+  const { transferTxHash, depositVotes } = state;
+  const setTransferTxHash = (transferTxHash: string) =>
+    dispatch({ type: "setTransferTxHash", transferTxHash });
+  const setDepositVotes = (depositVotes: number) =>
+    dispatch({ type: "setDepositVotes", depositVotes });
+
+  const [inTransitMessages, tokensDispatch] = useReducer(
+    transitMessageReducer,
+    { txIsDone: false, transitMessage: [] }
+  );
 
   const destinationBridge = useDestinationBridgeHook(destinationChainConfig);
 
@@ -35,7 +46,6 @@ export const EVMDestinationAdaptorProvider = ({
       depositNonce &&
       !inTransitMessages.txIsDone
     ) {
-
       handleProposalEvent(
         destinationBridge,
         homeChainConfig,
@@ -75,6 +85,11 @@ export const EVMDestinationAdaptorProvider = ({
   return (
     <DestinationBridgeContext.Provider
       value={{
+        transferTxHash,
+        depositVotes,
+        setDepositVotes,
+        inTransitMessages,
+        tokensDispatch,
         disconnect: async () => {},
       }}
     >
