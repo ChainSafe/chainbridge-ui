@@ -8,7 +8,6 @@ import { ApiPromise } from "@polkadot/api";
 import { VoidFn } from "@polkadot/api/types";
 import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import { BridgeConfig } from "../../../chainbridgeConfig";
 import {
   getRelayerThresholdFunc,
   confirmChainIdFunc,
@@ -93,15 +92,16 @@ export const SubstrateHomeAdaptorProvider = ({
   }, [api, getRelayerThreshold, confirmChainID, homeChainConfig]);
 
   useEffect(() => {
-    if (!homeChainConfig || !address) return;
+    // Comment for the moment
+    // if (!homeChainConfig || !address) return;
     let unsubscribe: VoidFn | undefined;
     if (api) {
       unsubscribe = queryData(
         api,
-        homeChainConfig,
+        homeChainConfig!,
         unsubscribe,
         setTokens,
-        address
+        address!
       );
     }
     return () => {

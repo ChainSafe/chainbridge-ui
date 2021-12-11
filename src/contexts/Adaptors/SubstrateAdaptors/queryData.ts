@@ -1,5 +1,5 @@
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import { ApiPromise } from "@polkadot/api";
+import { ApiPromise, Keyring } from "@polkadot/api";
 import { VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
 import { BridgeConfig } from "../../../chainbridgeConfig";
@@ -12,8 +12,11 @@ const queryData = (
   setTokens: (value: React.SetStateAction<Tokens>) => void,
   address: string
 ): VoidFn | undefined => {
+  // FOR THE PURPOSES OF THE GUIDE, USING ALICE ACCOUNT
+  const keyring = new Keyring({ type: "sr25519" });
+  const ALICE = keyring.addFromUri("//Alice");
   api.query.system
-    .account(address, (result) => {
+    .account(ALICE.address, (result) => {
       const {
         data: { free: balance },
       } = result.toJSON() as any;
