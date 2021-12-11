@@ -121,43 +121,36 @@ const makeDeposit = (
       ).wait(1);
     }
 
-      // TODO do we really need once() here?
-      homeBridge.once(
-        homeBridge.filters.Deposit(null, null, null, address, null, null),
-        (
-          destinationDomainId: number,
-          resourceId: string,
-          depositNonce: number,
-          user: string,
-          data: string,
-          tx: Event
-        ) => {
-          setDepositNonce(`${depositNonce.toString()}`);
-          setTransactionStatus("In Transit");
-          setHomeTransferTxHash(tx.transactionHash);
-        }
-      );
+    // TODO do we really need once() here?
+    homeBridge.once(
+      homeBridge.filters.Deposit(null, null, null, address, null, null),
+      (
+        destinationDomainId: number,
+        resourceId: string,
+        depositNonce: number,
+        user: string,
+        data: string,
+        tx: Event
+      ) => {
+        setDepositNonce(`${depositNonce.toString()}`);
+        setTransactionStatus("In Transit");
+        setHomeTransferTxHash(tx.transactionHash);
+      }
+    );
 
-      await (
-        await homeBridge.deposit(destinationChainId, token.resourceId, data, {
-          gasPrice: gasPriceCompatibility || BigNumber.from(
-            utils.parseUnits(
-              (
-                (homeChainConfig as EvmBridgeConfig).defaultGasPrice || gasPrice
-              ).toString(),
-              9
-            )
-          ).toString(),
-          value: utils.parseUnits((bridgeFee || 0).toString(), 18),
-        })
-      ).wait();
+    await (
+      await homeBridge.deposit(destinationChainId, token.resourceId, data, {
+        gasPrice: gasPriceCompatibility,
+        value: utils.parseUnits((bridgeFee || 0).toString(), 18),
+      })
+    ).wait();
 
-      return Promise.resolve();
-    } catch (error) {
-      console.error(error);
-      setTransactionStatus("Transfer Aborted");
-      setSelectedToken(tokenAddress);
-    }
-  };
+    return Promise.resolve();
+  } catch (error) {
+    console.error(error);
+    setTransactionStatus("Transfer Aborted");
+    setSelectedToken(tokenAddress);
+  }
+};
 
 export default makeDeposit;
