@@ -13,35 +13,36 @@ export default function InTransitBody({
   homeTransferTxHash,
 }: {
   classes: any;
-  inTransitMessages: TransitState;
+  inTransitMessages?: TransitState;
   homeConfig?: BridgeConfig;
   homeTransferTxHash?: string;
 }) {
   return (
     <>
       <Box sx={{ my: 2 }}>
-        {inTransitMessages.transitMessage.map((m, i) => {
-          if (typeof m === "string") {
-            return (
-              <Typography className={classes.vote} component="p" key={i}>
-                {m}
-              </Typography>
-            );
-          } else if (typeof m === "object" && m.message !== undefined) {
-            return (
-              <Typography className={classes.vote} component="p" key={i}>
-                {m.message}
-              </Typography>
-            );
-          } else {
-            return (
-              <Typography className={classes.vote} component="p" key={i}>
-                <span>Vote casted by {m.address}</span>
-                <span>{m.signed}</span>
-              </Typography>
-            );
-          }
-        })}
+        {inTransitMessages &&
+          inTransitMessages.transitMessage.map((m, i) => {
+            if (typeof m === "string") {
+              return (
+                <Typography className={classes.vote} component="p" key={i}>
+                  {m}
+                </Typography>
+              );
+            } else if (typeof m === "object" && m.message !== undefined) {
+              return (
+                <Typography className={classes.vote} component="p" key={i}>
+                  {m.message}
+                </Typography>
+              );
+            } else {
+              return (
+                <Typography className={classes.vote} component="p" key={i}>
+                  <span>Vote casted by {m.address}</span>
+                  <span>{m.signed}</span>
+                </Typography>
+              );
+            }
+          })}
         <Typography className={classes.warning} sx={{ mt: 3, mb: 4 }}>
           This should take a few minutes. <br />
           Please do not refresh or leave the page.

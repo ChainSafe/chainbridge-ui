@@ -12,6 +12,10 @@ import InTransitBody from "./InTransitBody";
 import TransferCompleteBody from "./TransferCompleteBody";
 import ErrorTransferBody from "./ErrorTransferBody";
 
+import { useHomeBridge } from "../../contexts/HomeBridgeContext";
+import { useDestinationBridge } from "../../contexts/DestinationBridgeContext";
+
+import { EvmBridgeConfig } from "../../chainbridgeConfig";
 import { useStyles } from "./styles";
 
 interface ITransferActiveModalProps {
@@ -60,17 +64,16 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   const classes = useStyles();
   const {
     transactionStatus,
-    depositVotes,
     relayerThreshold,
-    inTransitMessages,
     homeConfig,
     destinationChainConfig,
     depositAmount,
-    transferTxHash,
-    homeTransferTxHash,
     selectedToken,
     tokens,
   } = useChainbridge();
+  const { homeTransferTxHash } = useHomeBridge();
+  const { transferTxHash, depositVotes, inTransitMessages } =
+    useDestinationBridge();
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
 
   const getTransactionStateBody = (status?: TransactionStatus) => {
