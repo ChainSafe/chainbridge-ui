@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { createApi } from "../SubstrateApis/ChainBridgeAPI";
@@ -6,6 +6,7 @@ import { IDestinationBridgeProviderProps } from "../interfaces";
 import { ApiPromise } from "@polkadot/api";
 import { UnsubscribePromise } from "@polkadot/api/types";
 import { unsubscribeFunc } from "./";
+import { transitMessageReducerSubstrate } from "../../../reducers/TransitMessageSubstrateReduce";
 
 const SubstrateDestinationAdaptorProvider = ({
   children,
@@ -13,11 +14,17 @@ const SubstrateDestinationAdaptorProvider = ({
   const {
     depositNonce,
     destinationChainConfig,
-    setDepositVotes,
-    depositVotes,
-    tokensDispatch,
     setTransactionStatus,
   } = useNetworkManager();
+
+  const [depositVotes, setDepositVotes] = useState<number>(0);
+  const [inTransitMessages, tokensDispatch] = useReducer(
+    transitMessageReducerSubstrate,
+    {
+      txIsDone: false,
+      transitMessage: [],
+    }
+  );
 
   const [api, setApi] = useState<ApiPromise | undefined>();
 
