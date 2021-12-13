@@ -5,7 +5,7 @@ export const useStyles = makeStyles(
     return createStyles({
       root: {
         display: "flex",
-        position: "fixed",
+        // position: "fixed",
         justifyContent: "space-between",
         padding: `${constants.generalUnit * 2}px ${
           constants.generalUnit * 4

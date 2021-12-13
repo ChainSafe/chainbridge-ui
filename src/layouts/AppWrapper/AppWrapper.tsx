@@ -6,6 +6,7 @@
 // } from "@chainsafe/common-components";
 import React, { useEffect, useState } from "react";
 import { ReactNode } from "react";
+
 import Paper from "@mui/material/Paper";
 
 import {
@@ -21,6 +22,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 // import Link from '@mui/material/Link';
 import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 
 import AppHeader from "../AppHeader/AppHeader";
 import { ReactComponent as GlobalSvg } from "../../media/Icons/global.svg";
@@ -64,45 +66,47 @@ const AppWrapper: React.FC<IAppWrapper> = ({
   const currentTab = routeMatch?.path;
 
   return (
-    <div className={classes.root}>
+    <>
       {enableNavTabs ? (
-        <div className={classes.inner}>
+        <div>
           <AppHeader />
-          <Paper
-            sx={{
-              margin: `30px auto`,
-              maxWidth: 460,
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-              px: 3,
-            }}
-            elevation={3}
-          >
-            {enableNavTabs && (
-              <Tabs value={currentTab}>
-                <Tab
-                  icon={<GlobalSvg />}
-                  iconPosition="start"
-                  label="Transfer"
-                  value={ROUTE_LINKS.Transfer}
-                  to={ROUTE_LINKS.Transfer}
-                  component={Link}
-                />
-                {wrapTokenPage && (
+          <Container>
+            <Paper
+              sx={{
+                margin: `30px auto`,
+                maxWidth: 500,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                px: 3,
+              }}
+              elevation={3}
+            >
+              {enableNavTabs && (
+                <Tabs value={currentTab}>
                   <Tab
-                    icon={<GiftSvg />}
+                    icon={<GlobalSvg />}
                     iconPosition="start"
-                    label="Wrap"
-                    value={ROUTE_LINKS.Wrap}
-                    to={ROUTE_LINKS.Wrap}
+                    label="Transfer"
+                    value={ROUTE_LINKS.Transfer}
+                    to={ROUTE_LINKS.Transfer}
                     component={Link}
                   />
-                )}
-              </Tabs>
-            )}
-            <div className={classes.pageArea}>{children}</div>
-          </Paper>
+                  {wrapTokenPage && (
+                    <Tab
+                      icon={<GiftSvg />}
+                      iconPosition="start"
+                      label="Wrap"
+                      value={ROUTE_LINKS.Wrap}
+                      to={ROUTE_LINKS.Wrap}
+                      component={Link}
+                    />
+                  )}
+                </Tabs>
+              )}
+              <div className={classes.pageArea}>{children}</div>
+            </Paper>
+          </Container>
 
           {/* Put CTA here */}
           {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
@@ -114,7 +118,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({
           <div className={classes.explorerArea}>{children}</div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

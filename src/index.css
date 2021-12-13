@@ -6,6 +6,9 @@ h5,
 h6 {
   color: rgba(255, 255, 255, 1);
 } */
+.bn-onboard-custom {
+  z-index: 1;
+}
 
 /* .bn-onboard-custom.bn-onboard-modal {
   font-family: 'Montserrat';

@@ -37,11 +37,6 @@ export type PreflightDetails = {
   tokenSymbol: string;
   receiver: string;
 };
-type Inputs = {
-  token: string;
-  tokenAmount: number;
-  receiver: string;
-};
 
 const TransferPage = () => {
   const classes = useStyles();
@@ -100,8 +95,8 @@ const TransferPage = () => {
     redirect(url);
   };
 
-  const { register, handleSubmit, control, setValue, watch, formState } =
-    useForm<Inputs>({
+  const { handleSubmit, control, setValue, watch, formState } =
+    useForm<PreflightDetails>({
       resolver: yupResolver(transferSchema),
       defaultValues: {
         token: "",
@@ -113,7 +108,7 @@ const TransferPage = () => {
   const watchToken = watch("token", "");
   const watchAmount = watch("tokenAmount", 0);
 
-  const onSubmit: SubmitHandler<Inputs> = (values) => {
+  const onSubmit: SubmitHandler<PreflightDetails> = (values) => {
     setPreflightDetails({
       ...values,
       tokenSymbol: tokens[values.token].symbol || "",
@@ -122,7 +117,7 @@ const TransferPage = () => {
   };
 
   return (
-    <article className={classes.root}>
+    <div className={classes.root}>
       <HomeNetworkConnectView
         isReady={isReady}
         accounts={accounts}
@@ -291,7 +286,7 @@ const TransferPage = () => {
       />
       {/* This is here due to requiring router */}
       <NetworkUnsupportedModal />
-    </article>
+    </div>
   );
 };
 export default TransferPage;

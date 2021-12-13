@@ -9,3 +9,6 @@ export { default as TokenInput } from "./TokenInput";
 export { default as TokenSelectInput } from "./TokenSelectInput";
 export { default as TransferDetailView } from "./TransferDetailView";
 export { default as SelectDestinationNetwork } from "./SelectDestinationNetwork";
+export { default as WrapTokenSelectInput } from "./WrapTokenSelectInput";
+export { default as WrapTokenInput } from "./WrapTokenInput";
+export { default as TokenBalance } from "./TokenBalance";
