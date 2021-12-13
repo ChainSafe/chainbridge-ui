@@ -79,6 +79,9 @@ const SubstrateDestinationAdaptorProvider = ({
   return (
     <DestinationBridgeContext.Provider
       value={{
+        depositVotes: depositVotes,
+        setDepositVotes: setDepositVotes,
+        tokensDispatch: tokensDispatch,
         disconnect: async () => {
           await api?.disconnect();
         },

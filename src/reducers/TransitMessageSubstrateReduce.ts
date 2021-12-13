@@ -1,18 +1,28 @@
-import { TransitMessage } from "../contexts/NetworkManagerContext/NetworkManagerContext";
+export type TransitMessageSubstrate = {
+  address: string;
+  message?: string;
+  proposalStatus?: number;
+  order?: number;
+  signed?: "Confirmed" | "Rejected";
+  eventType?: "Proposal" | "Vote";
+};
 
-export type AddMessageAction = { type: "addMessage"; payload: TransitMessage };
+export type AddMessageAction = {
+  type: "addMessage";
+  payload: TransitMessageSubstrate;
+};
 export type ResetAction = { type: "resetMessages" };
 export type TxIsDone = { type: "setTransactionIsDone" };
 
 export type TransitState = {
   txIsDone: boolean;
-  transitMessage: Array<TransitMessage>;
+  transitMessage: Array<TransitMessageSubstrate>;
 };
 
 export function transitMessageReducerSubstrate(
   transitState: {
     txIsDone: boolean;
-    transitMessage: Array<TransitMessage>;
+    transitMessage: Array<TransitMessageSubstrate>;
   },
   action: AddMessageAction | ResetAction | TxIsDone
 ): TransitState {
@@ -25,7 +35,7 @@ export function transitMessageReducerSubstrate(
       // Select distinct messages by address and eventType
       const uniqueMessages = [
         ...new Map(
-          messages.map((item: TransitMessage) => [
+          messages.map((item: TransitMessageSubstrate) => [
             item.address + item.eventType,
             item,
           ])

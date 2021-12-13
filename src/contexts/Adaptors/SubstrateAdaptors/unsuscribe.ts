@@ -7,7 +7,7 @@ import {
   AddMessageAction,
   ResetAction,
   TxIsDone,
-} from "../../../reducers/TransitMessageReducer";
+} from "../../../reducers/TransitMessageSubstrateReduce";
 
 const unsuscribe = (
   api: ApiPromise,
