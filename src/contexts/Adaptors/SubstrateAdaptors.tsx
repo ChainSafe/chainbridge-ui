@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useReducer } from "react";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { HomeBridgeContext } from "../HomeBridgeContext";
 import { useNetworkManager } from "../NetworkManagerContext/NetworkManagerContext";
@@ -21,6 +21,7 @@ import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
 import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
+import { transitMessageReducer } from "../../reducers/TransitMessageReducer";
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -323,16 +324,15 @@ export const SubstrateHomeAdaptorProvider = ({
 export const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  const {
-    depositNonce,
-    destinationChainConfig,
-    setDepositVotes,
-    depositVotes,
-    tokensDispatch,
-    setTransactionStatus,
-  } = useNetworkManager();
+  const { depositNonce, destinationChainConfig, setTransactionStatus } =
+    useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
+  const [depositVotes, setDepositVotes] = useState<number>(0);
+  const [inTransitMessages, tokensDispatch] = useReducer(
+    transitMessageReducer,
+    { txIsDone: false, transitMessage: [] }
+  );
 
   const [initiaising, setInitialising] = useState(false);
   useEffect(() => {
@@ -427,9 +427,13 @@ export const SubstrateDestinationAdaptorProvider = ({
   return (
     <DestinationBridgeContext.Provider
       value={{
+        depositVotes,
+        setDepositVotes,
+        tokensDispatch,
         disconnect: async () => {
           await api?.disconnect();
         },
+        inTransitMessages,
       }}
     >
       {children}
