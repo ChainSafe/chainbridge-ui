@@ -49,20 +49,12 @@ export const SubstrateHomeAdaptorProvider = ({
   });
 
   const [initiaising, setInitialising] = useState(false);
-  console.log("INTIALIZING:::::: ===>>", initiaising);
   useEffect(() => {
-    console.log(
-      "USE EFFECT INITIALIZING ::: ===>>",
-      homeChainConfig,
-      initiaising,
-      api
-    );
     // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
     if (!homeChainConfig || initiaising || api) return;
     setInitialising(true);
     createApi(homeChainConfig.rpcUrl)
       .then((api) => {
-        console.log("API ON SUBSTRATE", api);
         setApi(api);
         setInitialising(false);
       })
