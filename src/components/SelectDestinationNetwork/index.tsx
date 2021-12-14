@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import Box from "@mui/material/Box";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -22,7 +21,6 @@ const SelectDestinationNetwork: React.FC<ISelectDestinationNetwork> = ({
   value,
 }: ISelectDestinationNetwork) => {
   const handleChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value as string);
     onChange(event.target.value);
   };
   return (

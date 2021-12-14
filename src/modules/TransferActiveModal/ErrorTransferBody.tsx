@@ -1,5 +1,4 @@
 import React from "react";
-// import { Button, Typography } from "@chainsafe/common-components";
 import { BridgeConfig, EvmBridgeConfig } from "../../chainbridgeConfig";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";

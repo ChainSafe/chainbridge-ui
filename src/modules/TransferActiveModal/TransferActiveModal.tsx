@@ -15,13 +15,11 @@ import ErrorTransferBody from "./ErrorTransferBody";
 import { useHomeBridge } from "../../contexts/HomeBridgeContext";
 import { useDestinationBridge } from "../../contexts/DestinationBridgeContext";
 
-import { EvmBridgeConfig } from "../../chainbridgeConfig";
 import { useStyles } from "./styles";
 
 interface ITransferActiveModalProps {
   open: boolean;
   close: () => void;
-  handleClick: (txHash: string) => void;
 }
 
 const getTransactionStateIndicator = (status?: TransactionStatus) => {
@@ -59,7 +57,6 @@ const getTransactionStateHeader = (
 const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   open,
   close,
-  handleClick,
 }: ITransferActiveModalProps) => {
   const classes = useStyles();
   const {
@@ -156,4 +153,4 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   );
 };
 
-export default TransferActiveModal;
+export default React.memo(TransferActiveModal);

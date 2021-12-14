@@ -1,9 +1,3 @@
-// import {
-//   // NavLink,
-//   // Typography,
-//   useHistory,
-//   useLocation,
-// } from "@chainsafe/common-components";
 import React, { useEffect, useState } from "react";
 import { ReactNode } from "react";
 
@@ -20,7 +14,6 @@ import {
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-// import Link from '@mui/material/Link';
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 

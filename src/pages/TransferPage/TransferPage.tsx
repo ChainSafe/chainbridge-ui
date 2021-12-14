@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import clsx from "clsx";
 
 import { useChainbridge, useHomeBridge } from "../../contexts";
-import { useHistory } from "@chainsafe/common-components";
 import { useNetworkManager } from "../../contexts/NetworkManagerContext/NetworkManagerContext";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
@@ -70,8 +69,6 @@ const TransferPage = () => {
     tokenSymbol: "",
   });
 
-  const { redirect } = useHistory();
-
   useEffect(() => {
     if (walletType !== "select" && walletConnecting === true) {
       setWalletConnecting(false);
@@ -88,12 +85,6 @@ const TransferPage = () => {
     destinationChainConfig,
     checkSupplies,
   });
-
-  const handleClick = (txHash: string) => {
-    const url = `/explorer/transaction/${txHash}`;
-
-    redirect(url);
-  };
 
   const { handleSubmit, control, setValue, watch, formState } =
     useForm<PreflightDetails>({
@@ -279,11 +270,7 @@ const TransferPage = () => {
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
       />
-      <TransferActiveModal
-        open={!!transactionStatus}
-        close={resetDeposit}
-        handleClick={handleClick}
-      />
+      <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
       {/* This is here due to requiring router */}
       <NetworkUnsupportedModal />
     </div>

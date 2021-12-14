@@ -69,18 +69,6 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = (
           <FormHelperText></FormHelperText>
         </FormControl>
       </Box>
-      {/* <Box sx={{ flexGrow: 1 }}>
-        <FormControl fullWidth disabled={true}>
-          <TextField
-            disabled={true}
-            fullWidth
-            variant="standard"
-            label="Balance"
-            helperText=" "
-            value={balance}
-          />
-        </FormControl>
-      </Box> */}
     </Box>
   );
 };
