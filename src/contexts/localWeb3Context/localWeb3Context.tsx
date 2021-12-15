@@ -32,7 +32,7 @@ const LocalProvider = ({
   const [state, dispatcher] = useReducer(localWeb3ContextReducer, {} as any);
 
   useEffect(() => {
-    const initializeOnboard = async () => {
+    const initializeOnboard = async (savedWallet: string) => {
       const checks = [{ checkName: "accounts" }, { checkName: "connect" }];
       if (networkIds && checkNetwork) {
         checks.push({ checkName: "network" });
@@ -127,7 +127,6 @@ const LocalProvider = ({
           },
         });
 
-        const savedWallet = localStorage.getItem("onboard.selectedWallet");
         cacheWalletSelection &&
           savedWallet &&
           onboard.walletSelect(savedWallet);
@@ -142,7 +141,13 @@ const LocalProvider = ({
       }
     };
 
-    initializeOnboard();
+    const savedWallet = localStorage.getItem("onboard.selectedWallet");
+
+    if (!savedWallet) {
+      initializeOnboard("MetaMask");
+    } else {
+      initializeOnboard(savedWallet);
+    }
   }, []);
 
   useEffect(() => {

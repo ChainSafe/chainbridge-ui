@@ -1,12 +1,10 @@
 import React from "react";
 
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { useWeb3 } from "@chainsafe/web3-context";
-import { providers, BigNumber, utils } from "ethers";
-import { useCallback, useEffect, useState } from "react";
+import { providers } from "ethers";
+import { useEffect, useState } from "react";
 import {
   BridgeConfig,
-  chainbridgeConfig,
   EvmBridgeConfig,
   TokenConfig,
 } from "../../../chainbridgeConfig";
