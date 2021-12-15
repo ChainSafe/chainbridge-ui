@@ -28,6 +28,7 @@
     "@sentry/react": "^5.26.0",
     "@types/history": "^4.7.8",
     "@use-it/interval": "^1.0.0",
+    "bignumber.js": "^9.0.1",
     "bnc-onboard": "1.26.1",
     "clsx": "^1.1.1",
     "dayjs": "^1.9.1",

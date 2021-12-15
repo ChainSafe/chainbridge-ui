@@ -2,26 +2,18 @@ import React from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import CssBaseline from "@mui/material/CssBaseline";
-// import {
-//   // CssBaseline,
-//   Router,
-// } from "@chainsafe/common-components";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  NavLink,
-  Link,
-  Redirect,
-  HashRouter,
-} from "react-router-dom";
+
+import { BrowserRouter as Router } from "react-router-dom";
 
 import { ChainbridgeRoutes } from "./routes";
 import { lightTheme } from "./themes/LightTheme";
-import { ChainbridgeProvider, NetworkManagerProvider } from "./contexts";
+import {
+  ChainbridgeProvider,
+  NetworkManagerProvider,
+  LocalProvider,
+} from "./contexts";
 import { AppWrapper } from "./layouts";
 import { chainbridgeConfig } from "./chainbridgeConfig";
-import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
 import "@chainsafe/common-theme/dist/font-faces.css";
 
@@ -43,6 +35,7 @@ const App: React.FC<{}> = () => {
       CHAINBRIDGE: { chains },
     },
   } = window;
+
   const tokens = chainbridgeConfig.chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
@@ -78,25 +71,21 @@ const App: React.FC<{}> = () => {
     >
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
-
-        <Web3Provider
-          tokensToWatch={tokens}
+        <LocalProvider
           networkIds={[5]}
+          checkNetwork={false}
+          tokensToWatch={tokens}
           onboardConfig={{
-            dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
             walletSelect: {
               wallets: [{ walletName: "metamask", preferred: true }],
             },
             subscriptions: {
-              network: (network) =>
+              network: (network: any) =>
                 network && console.log("domainId: ", network),
-              balance: (amount) =>
+              balance: (amount: any) =>
                 amount && console.log("balance: ", utils.formatEther(amount)),
             },
           }}
-          checkNetwork={false}
-          gasPricePollingInterval={120}
-          gasPriceSetting="fast"
         >
           <NetworkManagerProvider>
             <ChainbridgeProvider chains={chains}>
@@ -107,7 +96,7 @@ const App: React.FC<{}> = () => {
               </Router>
             </ChainbridgeProvider>
           </NetworkManagerProvider>
-        </Web3Provider>
+        </LocalProvider>
       </ThemeSwitcher>
     </ErrorBoundary>
   );

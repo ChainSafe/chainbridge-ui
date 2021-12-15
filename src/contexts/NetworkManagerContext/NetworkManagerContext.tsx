@@ -185,7 +185,7 @@ export const NetworkManagerProvider = ({
   const [depositNonce, setDepositNonce] = useState<string | undefined>(
     undefined
   );
-  // const [depositVotes, setDepositVotes] = useState<number>(0);
+  const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
     { txIsDone: false, transitMessage: [] }

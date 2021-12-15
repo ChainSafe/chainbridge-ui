@@ -134,7 +134,10 @@ const TransferPage = () => {
         {(props) => (
           <Form
             className={clsx(classes.formArea, {
-              disabled: !homeConfig || !address || props.isValidating,
+              disabled:
+                walletType !== "Substrate"
+                  ? !homeConfig || !address || props.isValidating
+                  : !homeConfig,
             })}
           >
             <section>

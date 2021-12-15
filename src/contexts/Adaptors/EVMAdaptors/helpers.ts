@@ -1,7 +1,6 @@
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
 import { ethers, utils, BigNumber } from "ethers";
 import { Erc20HandlerFactory } from "@chainsafe/chainbridge-contracts";
-import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 
