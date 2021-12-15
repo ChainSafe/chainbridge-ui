@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Typography,
   QuestionCircleSvg,
   SelectInput,
 } from "@chainsafe/common-components";
-import clsx from "clsx";
 import { Form, Formik } from "formik";
+import clsx from "clsx";
+
+import { useChainbridge, useHomeBridge } from "../../contexts";
+import { object, string } from "yup";
+import { useHistory } from "@chainsafe/common-components";
+import { utils } from "ethers";
+import { useNetworkManager } from "../../contexts/NetworkManagerContext/NetworkManagerContext";
+import { isValidSubstrateAddress } from "../../utils/Helpers";
+import { showImageUrl } from "../../utils/Helpers";
+import { useStyles } from "./styles";
+
 import {
   TransferActiveModal,
   NetworkUnsupportedModal,
@@ -20,133 +30,91 @@ import {
   TokenInput,
   Fees,
 } from "../../components";
-import { WalletType } from "../../contexts/NetworkManagerContext/NetworkManagerContext";
-import { BridgeConfig } from "../../chainbridgeConfig";
-import { PreflightDetails } from "./TransferPage";
 
-type TransferPageView = {
-  isReady: boolean | undefined;
-  classes: any;
-  setWalletType: (walletType: WalletType) => void;
-  walletType: string;
-  walletConnecting: boolean;
-  setChangeNetworkOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  homeConfig: BridgeConfig | undefined;
-  accounts: Array<any> | undefined;
-  selectAccount: any;
-  transferSchema: object;
-  setPreflightDetails: React.Dispatch<React.SetStateAction<PreflightDetails>>;
-  setPreflightModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  preflightModalOpen: boolean;
-  tokens: any;
-  destinationChains: any;
-  setDestinationChain: (domainId: number | undefined) => void;
-  destinationChainConfig: any;
-  showImageUrl: (url: string | undefined) => string;
-  preflightDetails: PreflightDetails;
-  bridgeFee: any;
-  address: string | undefined;
-  aboutOpen: any;
-  setAboutOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  changeNetworkOpen: any;
-  deposit: any;
-  transactionStatus: string | undefined;
-  resetDeposit: () => void;
-  handleClick: (txHash: string) => void;
+import HomeNetworkConnectView from "./HomeNetworkConnectView"
+
+import makeValidationSchema from "./makeValidationSchema"
+
+export type PreflightDetails = {
+  tokenAmount: number;
+  token: string;
+  tokenSymbol: string;
+  receiver: string;
 };
 
-export default function TransferPageView({
-  isReady,
-  classes,
-  setWalletType,
-  walletType,
-  walletConnecting,
-  setChangeNetworkOpen,
-  homeConfig,
-  accounts,
-  selectAccount,
-  transferSchema,
-  setPreflightDetails,
-  setPreflightModalOpen,
-  preflightModalOpen,
-  tokens,
-  destinationChains,
-  setDestinationChain,
-  destinationChainConfig,
-  showImageUrl,
-  preflightDetails,
-  bridgeFee,
-  address,
-  aboutOpen,
-  setAboutOpen,
-  changeNetworkOpen,
-  deposit,
-  transactionStatus,
-  resetDeposit,
-  handleClick,
-}: TransferPageView) {
+const TransferPage = () => {
+  const classes = useStyles();
+  const { walletType, setWalletType } = useNetworkManager();
+
+  const {
+    deposit,
+    setDestinationChain,
+    transactionStatus,
+    resetDeposit,
+    bridgeFee,
+    tokens,
+    isReady,
+    homeConfig,
+    destinationChainConfig,
+    destinationChains,
+    address,
+    checkSupplies,
+  } = useChainbridge();
+
+  const { accounts, selectAccount } = useHomeBridge();
+  const [aboutOpen, setAboutOpen] = useState<boolean>(false);
+  const [walletConnecting, setWalletConnecting] = useState(false);
+  const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
+  const [preflightModalOpen, setPreflightModalOpen] = useState<boolean>(false);
+
+  const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
+    receiver: "",
+    token: "",
+    tokenAmount: 0,
+    tokenSymbol: "",
+  });
+
+  const { redirect } = useHistory();
+
+  useEffect(() => {
+    if (walletType !== "select" && walletConnecting === true) {
+      setWalletConnecting(false);
+    } else if (walletType === "select") {
+      setWalletConnecting(true);
+    }
+  }, [walletType, walletConnecting]);
+
+  const transferSchema = makeValidationSchema({
+    preflightDetails,
+    tokens,
+    bridgeFee,
+    homeConfig,
+    destinationChainConfig,
+    checkSupplies,
+  })
+
+  const handleClick = (txHash: string) => {
+    const url = `/explorer/transaction/${txHash}`;
+
+    redirect(url);
+  };
   return (
     <article className={classes.root}>
-      <div className={classes.walletArea}>
-        {!isReady ? (
-          <Button
-            className={classes.connectButton}
-            fullsize
-            onClick={() => {
-              setWalletType("select");
-            }}
-          >
-            Connect
-          </Button>
-        ) : walletConnecting ? (
-          <section className={classes.connecting}>
-            <Typography component="p" variant="h5">
-              This app requires access to your wallet, <br />
-              please login and authorize access to continue.
-            </Typography>
-          </section>
-        ) : (
-          <section className={classes.connected}>
-            <div>
-              <Typography variant="body1">Home network</Typography>
-              <Typography
-                className={classes.changeButton}
-                variant="body1"
-                onClick={() => setChangeNetworkOpen(true)}
-              >
-                Change
-              </Typography>
-            </div>
-            <Typography
-              component="h2"
-              variant="h2"
-              className={classes.networkName}
-            >
-              {homeConfig?.name}
-            </Typography>
-          </section>
-        )}
-      </div>
-      {isReady &&
-        walletType === "Substrate" &&
-        accounts &&
-        accounts.length > 0 && (
-          <div>
-            <section className={classes.accountSelector}>
-              <SelectInput
-                label="Select account"
-                className={classes.generalInput}
-                options={accounts.map((acc, i) => ({
-                  label: acc.address,
-                  value: i,
-                }))}
-                onChange={(value) => selectAccount && selectAccount(value)}
-                value={accounts.findIndex((v) => v.address === address)}
-                placeholder="Select an account"
-              />
-            </section>
-          </div>
-        )}
+      <HomeNetworkConnectView
+          isReady={isReady}
+          accounts={accounts}
+          address={address}
+
+          classes={classes}
+          walletConnecting={walletConnecting}
+          walletType={walletType}
+
+          homeConfig={homeConfig}
+
+          setWalletType={setWalletType}
+          setChangeNetworkOpen={setChangeNetworkOpen}
+          selectAccount={selectAccount}
+      />
       <Formik
         initialValues={{
           tokenAmount: 0,
@@ -186,27 +154,6 @@ export default function TransferPageView({
               />
             </section>
             <section className={classes.currencySection}>
-              {/* <section>
-              <div
-                className={clsx(classes.tokenInputArea, classes.generalInput)}
-              >
-                <TokenInput
-                  classNames={{
-                    input: clsx(classes.tokenInput, classes.generalInput),
-                    button: classes.maxButton,
-                  }}
-                  tokenSelectorKey="token"
-                  tokens={tokens}
-                  disabled={
-                    !destinationChainConfig ||
-                    !preflightDetails.token ||
-                    preflightDetails.token === ""
-                  }
-                  name="tokenAmount"
-                  label="I want to send"
-                />
-              </div>
-            </sectionbridgeFee> */}
               <section className={classes.currencySelector}>
                 <TokenSelectInput
                   tokens={tokens}
@@ -338,4 +285,5 @@ export default function TransferPageView({
       <NetworkUnsupportedModal />
     </article>
   );
-}
+};
+export default TransferPage;

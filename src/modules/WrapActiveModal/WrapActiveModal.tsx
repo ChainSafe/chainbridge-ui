@@ -1,5 +1,8 @@
 import React from "react";
-import { Button, ProgressBar, Typography } from "@chainsafe/common-components";
+import Button from "@mui/material/Button";
+import LinearProgress from "@mui/material/LinearProgress";
+
+import Typography from "@mui/material/Typography";
 import { CustomModal } from "../../components";
 import { useChainbridge } from "../../contexts/ChainbridgeContext/ChainbridgeContext";
 import { EvmBridgeConfig, TokenConfig } from "../../chainbridgeConfig";
@@ -33,11 +36,20 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
       }}
       active={!!txState}
     >
-      <ProgressBar
-        className={classes.progress}
-        size="small"
-        variant="primary"
-        progress={txState !== "done" ? -1 : 100}
+      <LinearProgress
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          "& > *": {
+            borderRadius: "0 !important",
+            "&  >  *": {
+              borderRadius: "0 !important",
+            },
+          },
+        }}
+        value={txState !== "done" ? -1 : 100}
       />
       <section>
         <div className={classes.stepIndicator}>
@@ -81,7 +93,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
               <Button
                 size="small"
                 className={classes.button}
-                variant="outline"
+                variant="outlined"
                 onClick={() => close()}
               >
                 Start a transfer
@@ -89,7 +101,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
               <Button
                 size="small"
                 className={classes.button}
-                variant="outline"
+                variant="outlined"
                 onClick={() => {
                   close();
                 }}

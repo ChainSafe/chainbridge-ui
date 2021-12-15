@@ -4,8 +4,11 @@ export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       minHeight: constants.generalUnit * 69,
-      padding: constants.generalUnit * 6,
-      overflow: "hidden",
+      // padding: constants.generalUnit * 6,
+      // overflow: "hidden",
+      padding: `${constants.generalUnit * 3}px 0 ${
+        constants.generalUnit * 3
+      }px`,
       position: "relative",
     },
     walletArea: {
@@ -54,10 +57,10 @@ export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySection: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end",
+      // display: "flex",
+      // flexDirection: "row",
+      // justifyContent: "space-between",
+      // alignItems: "flex-end",
       margin: `${constants.generalUnit * 3}px 0`,
     },
     tokenInputArea: {

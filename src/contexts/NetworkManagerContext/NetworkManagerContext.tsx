@@ -163,7 +163,9 @@ function selectProvider(
   return providers[typeKey][direction];
 }
 
-const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
+export const NetworkManagerProvider = ({
+  children,
+}: INetworkManagerProviderProps) => {
   const [walletType, setWalletType] = useState<WalletType>("unset");
 
   const [homeChainConfig, setHomeChainConfig] = useState<
@@ -288,7 +290,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   );
 };
 
-const useNetworkManager = () => {
+export const useNetworkManager = () => {
   const context = useContext(NetworkManagerContext);
   if (context === undefined) {
     throw new Error(
@@ -298,4 +300,4 @@ const useNetworkManager = () => {
   return context;
 };
 
-export { NetworkManagerProvider, useNetworkManager };
+// export { NetworkManagerProvider, useNetworkManager };

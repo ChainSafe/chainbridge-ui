@@ -68,15 +68,23 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         fromDomainId!,
         toDomainId!
       );
-      console.log(fromChain, toChain);
+      // console.log(fromChain, toChain);
       const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
+      console.log(
+        "🚀 ~ file: ExplorerTable.tsx ~ line 73 ~ transferData.map ~ transfer.sourceTokenAddress",
+        transfer.sourceTokenAddress
+      );
+      console.log(
+        "🚀 ~ file: ExplorerTable.tsx ~ line 73 ~ transferData.map ~ fromToken",
+        fromToken
+      );
 
       const randomString = getRandomSeed();
 
       const transferDateFormated = formatTransferDate(transfer.timestamp);
 
       //TODO check how to work better with BG and bigint
-      const amountFormated = computeAndFormatAmount(amount!);
+      const amountFormated = computeAndFormatAmount(amount ?? "0");
 
       return (
         <TableRow className={classes.row} key={transfer.id}>

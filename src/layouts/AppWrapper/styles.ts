@@ -16,8 +16,8 @@ export const useStyles = makeStyles(
         },
       },
       inner: {
-        paddingTop: (constants.navItemHeight as number) * 2,
-        paddingBottom: (constants.navItemHeight as number) * 2,
+        // paddingTop: (constants.navItemHeight as number) * 2,
+        // paddingBottom: (constants.navItemHeight as number) * 2,
       },
       cta: {
         display: "block",
@@ -37,7 +37,8 @@ export const useStyles = makeStyles(
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
-        borderRadius: 4,
+        // border: "1px solid black",
+        // borderRadius: 4,
       },
       explorerMainContent: {
         width: "100%",
@@ -48,8 +49,6 @@ export const useStyles = makeStyles(
         height: "100%",
         width: "100%",
         overflow: "hidden",
-        border: `1px solid ${palette.additional["gray"][7]}`,
-        borderRadius: 4,
       },
       explorerArea: {
         width: "100%",
