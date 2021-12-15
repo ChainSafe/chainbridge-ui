@@ -46,7 +46,6 @@ export const checkIsReady = async (
   dispatcher: (action: Actions) => void
 ) => {
   const isReady = await onboard?.walletCheck();
-  console.log("IS READY", isReady);
   dispatcher({
     type: "setIsReady",
     payload: !!isReady,

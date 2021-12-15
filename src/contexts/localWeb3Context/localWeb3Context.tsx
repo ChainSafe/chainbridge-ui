@@ -38,7 +38,6 @@ const LocalProvider = ({
         checks.push({ checkName: "network" });
       }
 
-      console.log("NETWORKS IDS", networkIds);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const { chainId } = await provider.getNetwork();
 
@@ -176,8 +175,6 @@ const LocalProvider = ({
     isReady,
     gasPrice,
   }: LocalWeb3State = state;
-
-  console.log("ADDRESS RENDER", address);
 
   let onboardState;
   if (onboard !== undefined && "getState" in onboard) {
