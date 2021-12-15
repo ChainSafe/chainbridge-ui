@@ -6,7 +6,6 @@ export const localWeb3ContextReducer = (
 ): LocalWeb3State => {
   switch (action.type) {
     case "addToken":
-      console.log("ADD TOKEN");
       return {
         ...state,
         tokens: {
@@ -60,7 +59,6 @@ export const localWeb3ContextReducer = (
         network: action.payload,
       };
     case "setOnBoard":
-      console.log("ONBOARD", action.payload);
       return {
         ...state,
         onboard: action.payload,
