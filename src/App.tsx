@@ -1,11 +1,9 @@
 import React from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
-import {
-  CssBaseline,
-  Router,
-  ToasterProvider,
-} from "@chainsafe/common-components";
+import CssBaseline from "@mui/material/CssBaseline";
+
+import { BrowserRouter as Router } from "react-router-dom";
 
 import { ChainbridgeRoutes } from "./routes";
 import { lightTheme } from "./themes/LightTheme";
@@ -73,34 +71,32 @@ const App: React.FC<{}> = () => {
     >
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
-        <ToasterProvider autoDismiss>
-          <LocalProvider
-            networkIds={[5]}
-            checkNetwork={false}
-            tokensToWatch={tokens}
-            onboardConfig={{
-              walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
-              },
-              subscriptions: {
-                network: (network: any) =>
-                  network && console.log("domainId: ", network),
-                balance: (amount: any) =>
-                  amount && console.log("balance: ", utils.formatEther(amount)),
-              },
-            }}
-          >
-            <NetworkManagerProvider>
-              <ChainbridgeProvider chains={chains}>
-                <Router>
-                  <AppWrapper wrapTokenPage={wrapTokenPage}>
-                    <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
-                  </AppWrapper>
-                </Router>
-              </ChainbridgeProvider>
-            </NetworkManagerProvider>
-          </LocalProvider>
-        </ToasterProvider>
+        <LocalProvider
+          networkIds={[5]}
+          checkNetwork={false}
+          tokensToWatch={tokens}
+          onboardConfig={{
+            walletSelect: {
+              wallets: [{ walletName: "metamask", preferred: true }],
+            },
+            subscriptions: {
+              network: (network: any) =>
+                network && console.log("domainId: ", network),
+              balance: (amount: any) =>
+                amount && console.log("balance: ", utils.formatEther(amount)),
+            },
+          }}
+        >
+          <NetworkManagerProvider>
+            <ChainbridgeProvider chains={chains}>
+              <Router>
+                <AppWrapper wrapTokenPage={wrapTokenPage}>
+                  <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
+                </AppWrapper>
+              </Router>
+            </ChainbridgeProvider>
+          </NetworkManagerProvider>
+        </LocalProvider>
       </ThemeSwitcher>
     </ErrorBoundary>
   );

@@ -11,11 +11,8 @@ import { transitMessageReducerSubstrate } from "../../../reducers/TransitMessage
 const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  const {
-    depositNonce,
-    destinationChainConfig,
-    setTransactionStatus,
-  } = useNetworkManager();
+  const { depositNonce, destinationChainConfig, setTransactionStatus } =
+    useNetworkManager();
 
   const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(

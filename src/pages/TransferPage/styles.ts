@@ -3,7 +3,9 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      padding: constants.generalUnit * 6,
+      padding: `${constants.generalUnit * 3}px 0 ${
+        constants.generalUnit * 3
+      }px`,
       position: "relative",
     },
     walletArea: {
@@ -49,35 +51,35 @@ export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     currencySection: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end",
+      // display: "flex",
+      // flexDirection: "row",
+      // justifyContent: "space-between",
+      // alignItems: "flex-end",
       margin: `${constants.generalUnit * 3}px 0`,
     },
     tokenInputArea: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-end",
-      justifyContent: "space-around",
+      // display: "flex",
+      // flexDirection: "row",
+      // alignItems: "flex-end",
+      // justifyContent: "space-around",
     },
     tokenInputSection: {
-      width: "60%",
+      // width: "50%",
     },
     tokenInput: {
-      margin: 0,
-      "& > div": {
-        height: 32,
-        "& input": {
-          borderBottomRightRadius: 0,
-          borderTopRightRadius: 0,
-          borderRight: 0,
-        },
-      },
-      "& span:last-child.error": {
-        position: "absolute",
-        width: "calc(100% + 62px)",
-      },
+      // // margin: 0,
+      // "& > div": {
+      //   // height: 32,
+      //   "& input": {
+      //     borderBottomRightRadius: 0,
+      //     borderTopRightRadius: 0,
+      //     borderRight: 0,
+      //   },
+      // },
+      // "& span:last-child.error": {
+      //   position: "absolute",
+      //   width: "calc(100% + 62px)",
+      // },
     },
     maxButton: {
       height: 32,
@@ -90,14 +92,14 @@ export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "&:hover": {
         borderColor: palette.additional["gray"][6],
         backgroundColor: palette.additional["gray"][7],
-        color: palette.common.white.main,
+        // color: palette.common.white.main,
       },
       "&:focus": {
         borderColor: palette.additional["gray"][6],
       },
     },
     currencySelector: {
-      width: "40%",
+      // width: "50%",
       paddingRight: constants.generalUnit,
       "& *": {
         cursor: "pointer",

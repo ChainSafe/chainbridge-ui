@@ -207,7 +207,6 @@ const LocalProvider = ({
 };
 
 const useWeb3 = () => {
-  console.log("useLocalWeb3");
   const context = React.useContext(LocalProviderContext);
   if (context === undefined) {
     throw new Error("useOnboard must be used within a OnboardProvider");

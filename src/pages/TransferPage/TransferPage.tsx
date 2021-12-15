@@ -1,13 +1,34 @@
 import React, { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Button from "@mui/material/Button";
+import clsx from "clsx";
+
 import { useChainbridge, useHomeBridge } from "../../contexts";
-import { object, string } from "yup";
-import { useHistory } from "@chainsafe/common-components";
-import { utils } from "ethers";
 import { useNetworkManager } from "../../contexts/NetworkManagerContext/NetworkManagerContext";
-import { isValidSubstrateAddress } from "../../utils/Helpers";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
-import TransferPageView from "./TransferPageView";
+
+import {
+  TransferActiveModal,
+  NetworkUnsupportedModal,
+  PreflightModalTransfer,
+  ChangeNetworkDrawer,
+  AboutDrawer,
+} from "../../modules";
+import {
+  AddressInput,
+  TokenSelectInput,
+  TokenInput,
+  Fees,
+  SelectDestinationNetwork,
+} from "../../components";
+
+import HomeNetworkConnectView from "./HomeNetworkConnectView";
+
+import makeValidationSchema from "./makeValidationSchema";
 
 export type PreflightDetails = {
   tokenAmount: number;
@@ -48,8 +69,6 @@ const TransferPage = () => {
     tokenSymbol: "",
   });
 
-  const { redirect } = useHistory();
-
   useEffect(() => {
     if (walletType !== "select" && walletConnecting === true) {
       setWalletConnecting(false);
@@ -58,128 +77,203 @@ const TransferPage = () => {
     }
   }, [walletType, walletConnecting]);
 
-  const selectedToken = homeConfig?.tokens.find(
-    (token) => token.address === preflightDetails.token
-  );
-
-  const DECIMALS =
-    selectedToken && selectedToken.decimals ? selectedToken.decimals : 18;
-
-  const REGEX =
-    DECIMALS > 0
-      ? new RegExp(`^[0-9]{1,18}(.[0-9]{1,${DECIMALS}})?$`)
-      : new RegExp(`^[0-9]{1,18}?$`);
-
-  const transferSchema = object().shape({
-    tokenAmount: string()
-      .test("Token selected", "Please select a token", (value) => {
-        if (
-          !!value &&
-          preflightDetails &&
-          tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance !== undefined
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .test("InputValid", "Input invalid", (value) => {
-        try {
-          return REGEX.test(`${value}`);
-        } catch (error) {
-          console.error(error);
-          return false;
-        }
-      })
-      .test("Max", "Insufficent funds", (value) => {
-        if (
-          value &&
-          preflightDetails &&
-          tokens[preflightDetails.token] &&
-          tokens[preflightDetails.token].balance
-        ) {
-          if (homeConfig?.type === "Ethereum") {
-            return parseFloat(value) <= tokens[preflightDetails.token].balance;
-          } else {
-            return (
-              parseFloat(value + (bridgeFee || 0)) <=
-              tokens[preflightDetails.token].balance
-            );
-          }
-        }
-        return false;
-      })
-      .test(
-        "Bridge Supplies",
-        "Not enough tokens on the destination chain. Please contact support.",
-        async (value) => {
-          if (checkSupplies && destinationChainConfig && value) {
-            const supplies = await checkSupplies(
-              parseFloat(value),
-              preflightDetails.token,
-              destinationChainConfig.domainId
-            );
-            return Boolean(supplies);
-          }
-          return false;
-        }
-      )
-      .test("Min", "Less than minimum", (value) => {
-        if (value) {
-          return parseFloat(value) > 0;
-        }
-        return false;
-      })
-      .required("Please set a value"),
-    token: string().required("Please select a token"),
-    receiver: string()
-      .test("Valid address", "Please add a valid address", (value) => {
-        if (destinationChainConfig?.type === "Substrate") {
-          return isValidSubstrateAddress(value as string);
-        }
-        return utils.isAddress(value as string);
-      })
-      .required("Please add a receiving address"),
+  const transferSchema = makeValidationSchema({
+    preflightDetails,
+    tokens,
+    bridgeFee,
+    homeConfig,
+    destinationChainConfig,
+    checkSupplies,
   });
 
-  const handleClick = (txHash: string) => {
-    const url = `/explorer/transaction/${txHash}`;
+  const { handleSubmit, control, setValue, watch, formState } =
+    useForm<PreflightDetails>({
+      resolver: yupResolver(transferSchema),
+      defaultValues: {
+        token: "",
+        tokenAmount: 0,
+        receiver: "",
+      },
+    });
 
-    redirect(url);
+  const watchToken = watch("token", "");
+  const watchAmount = watch("tokenAmount", 0);
+
+  const onSubmit: SubmitHandler<PreflightDetails> = (values) => {
+    setPreflightDetails({
+      ...values,
+      tokenSymbol: tokens[values.token].symbol || "",
+    });
+    setPreflightModalOpen(true);
   };
 
   return (
-    <TransferPageView
-      isReady={isReady}
-      classes={classes}
-      setWalletType={setWalletType}
-      walletType={walletType}
-      walletConnecting={walletConnecting}
-      setChangeNetworkOpen={setChangeNetworkOpen}
-      homeConfig={homeConfig}
-      accounts={accounts}
-      selectAccount={selectAccount}
-      transferSchema={transferSchema}
-      setPreflightDetails={setPreflightDetails}
-      setPreflightModalOpen={setPreflightModalOpen}
-      preflightModalOpen={preflightModalOpen}
-      tokens={tokens}
-      destinationChains={destinationChains}
-      setDestinationChain={setDestinationChain}
-      destinationChainConfig={destinationChainConfig}
-      showImageUrl={showImageUrl}
-      preflightDetails={preflightDetails}
-      bridgeFee={bridgeFee}
-      address={address}
-      aboutOpen={aboutOpen}
-      setAboutOpen={setAboutOpen}
-      changeNetworkOpen={changeNetworkOpen}
-      deposit={deposit}
-      transactionStatus={transactionStatus}
-      resetDeposit={resetDeposit}
-      handleClick={handleClick}
-    />
+    <div className={classes.root}>
+      <HomeNetworkConnectView
+        isReady={isReady}
+        accounts={accounts}
+        address={address}
+        classes={classes}
+        walletConnecting={walletConnecting}
+        walletType={walletType}
+        homeConfig={homeConfig}
+        setWalletType={setWalletType}
+        setChangeNetworkOpen={setChangeNetworkOpen}
+        selectAccount={selectAccount}
+      />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <SelectDestinationNetwork
+            label="Destination Network"
+            disabled={!homeConfig || formState.isSubmitting}
+            options={destinationChains.map((dc: any) => ({
+              label: dc.name,
+              value: dc.domainId,
+            }))}
+            onChange={(value: number | undefined) => setDestinationChain(value)}
+            value={destinationChainConfig?.domainId}
+          />
+        </section>
+        <section className={classes.currencySection}>
+          <section>
+            <TokenSelectInput
+              control={control}
+              rules={{ required: true }}
+              tokens={tokens}
+              name="token"
+              disabled={!destinationChainConfig || formState.isSubmitting}
+              label={`Balance: `}
+              className={classes.generalInput}
+              sync={(tokenAddress) => {
+                setPreflightDetails({
+                  ...preflightDetails,
+                  token: tokenAddress,
+                  receiver: "",
+                  tokenAmount: 0,
+                  tokenSymbol: "",
+                });
+              }}
+              setValue={setValue}
+              options={
+                Object.keys(tokens).map((t) => ({
+                  value: t,
+                  label: (
+                    <div className={classes.tokenItem}>
+                      {tokens[t]?.imageUri && (
+                        <img
+                          src={showImageUrl(tokens[t]?.imageUri)}
+                          alt={tokens[t]?.symbol}
+                        />
+                      )}
+                      <span>{tokens[t]?.symbol || t}</span>
+                    </div>
+                  ),
+                })) || []
+              }
+            />
+          </section>
+          <section>
+            <div>
+              <TokenInput
+                classNames={{
+                  input: clsx(classes.tokenInput, classes.generalInput),
+                  button: classes.maxButton,
+                }}
+                tokenSelectorKey={watchToken}
+                tokens={tokens}
+                disabled={
+                  !destinationChainConfig ||
+                  formState.isSubmitting ||
+                  !preflightDetails.token ||
+                  preflightDetails.token === ""
+                }
+                name="tokenAmount"
+                label="Amount to send"
+                setValue={setValue}
+                control={control}
+              />
+            </div>
+          </section>
+        </section>
+        <section>
+          <AddressInput
+            disabled={!destinationChainConfig || formState.isSubmitting}
+            name="receiver"
+            label="Destination Address"
+            placeholder="Please enter the receiving address"
+            senderAddress={`${address}`}
+            sendToSameAccountHelper={
+              destinationChainConfig?.type === homeConfig?.type
+            }
+            setValue={setValue}
+            control={control}
+          />
+        </section>
+        <Fees
+          amountFormikName="tokenAmount"
+          className={classes.fees}
+          fee={bridgeFee}
+          feeSymbol={homeConfig?.nativeTokenSymbol}
+          symbol={
+            preflightDetails && tokens[preflightDetails.token]
+              ? tokens[preflightDetails.token].symbol
+              : undefined
+          }
+          amount={watchAmount}
+        />
+        <section>
+          <Button
+            disabled={!destinationChainConfig || formState.isSubmitting}
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              backgroundColor: "#262626",
+              color: "#ffffff",
+              ":hover": {
+                backgroundColor: "#262626",
+                opacity: 0.9,
+              },
+            }}
+          >
+            Start transfer
+          </Button>
+        </section>
+        <section>
+          <HelpOutlineIcon
+            onClick={() => setAboutOpen(true)}
+            className={classes.faqButton}
+          />
+        </section>
+      </form>
+      <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
+      <ChangeNetworkDrawer
+        open={changeNetworkOpen}
+        close={() => setChangeNetworkOpen(false)}
+      />
+      <PreflightModalTransfer
+        open={preflightModalOpen}
+        close={() => setPreflightModalOpen(false)}
+        receiver={preflightDetails?.receiver || ""}
+        sender={address || ""}
+        start={() => {
+          setPreflightModalOpen(false);
+          preflightDetails &&
+            deposit(
+              preflightDetails.tokenAmount,
+              preflightDetails.receiver,
+              preflightDetails.token
+            );
+        }}
+        sourceNetwork={homeConfig?.name || ""}
+        targetNetwork={destinationChainConfig?.name || ""}
+        tokenSymbol={preflightDetails?.tokenSymbol || ""}
+        value={preflightDetails?.tokenAmount || 0}
+      />
+      <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
+      {/* This is here due to requiring router */}
+      <NetworkUnsupportedModal />
+    </div>
   );
 };
 export default TransferPage;

@@ -1,5 +1,15 @@
 import React from "react";
-import { Switch, Route, Redirect } from "@chainsafe/common-components";
+// import { Switch, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  NavLink,
+  Link,
+  Redirect,
+  HashRouter,
+} from "react-router-dom";
+
 import {
   TransactionPage,
   WrapperPage,

@@ -6,3 +6,4 @@ export { default as PreflightModalTransfer } from "./PreflightModalTransfer";
 export { default as PreflightModalWrap } from "./PreflightModalWrap";
 export { default as TransferActiveModal } from "./TransferActiveModal";
 export { default as WrapActiveModal } from "./WrapActiveModal";
+export * from "./Modal";

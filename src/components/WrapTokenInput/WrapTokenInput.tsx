@@ -1,14 +1,11 @@
 import React from "react";
 import { useController } from "react-hook-form";
-// import { Button, FormikTextInput } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
-import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import FormHelperText from "@mui/material/FormHelperText";
 
-interface ITokenInput {
+interface IWrapTokenInput {
   disabled?: boolean;
   label: string;
   name: string;
@@ -20,9 +17,10 @@ interface ITokenInput {
   };
   setValue?: any;
   control?: any;
+  max?: any;
 }
 
-const TokenInput: React.FC<ITokenInput> = ({
+const WrapTokenInput: React.FC<IWrapTokenInput> = ({
   classNames,
   disabled,
   label,
@@ -31,8 +29,10 @@ const TokenInput: React.FC<ITokenInput> = ({
   name,
   setValue,
   control,
-}: ITokenInput) => {
+  max,
+}: IWrapTokenInput) => {
   const { field, fieldState } = useController({ name, control });
+
   return (
     <Box sx={{ mt: 2 }}>
       <TextField
@@ -46,10 +46,10 @@ const TokenInput: React.FC<ITokenInput> = ({
         InputProps={{
           endAdornment: (
             <Button
-              disabled={disabled || !tokens[tokenSelectorKey]}
+              disabled={disabled || !max}
               className={classNames?.button}
               onClick={() => {
-                setValue(name, tokens[tokenSelectorKey].balance);
+                setValue(name, max);
               }}
               variant="outlined"
               type="button"
@@ -63,4 +63,4 @@ const TokenInput: React.FC<ITokenInput> = ({
   );
 };
 
-export default TokenInput;
+export default WrapTokenInput;
