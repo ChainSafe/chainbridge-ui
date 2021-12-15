@@ -14,12 +14,8 @@ import { useStyles } from "./styles";
 const NetworkUnsupportedModal = () => {
   const classes = useStyles();
   const { homeChainConfig } = useNetworkManager();
-  const {
-    getNetworkName,
-    wrapTokenConfig,
-    isReady,
-    networkId,
-  } = useHomeBridge();
+  const { getNetworkName, wrapTokenConfig, isReady, networkId } =
+    useHomeBridge();
   const { pathname } = useLocation();
 
   const [open, setOpen] = useState(false);
