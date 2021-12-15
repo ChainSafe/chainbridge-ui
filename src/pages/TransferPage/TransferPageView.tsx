@@ -166,7 +166,10 @@ export default function TransferPageView({
         {(props) => (
           <Form
             className={clsx(classes.formArea, {
-              disabled: !homeConfig || !address || props.isValidating,
+              disabled:
+                walletType !== "Substrate"
+                  ? !homeConfig || !address || props.isValidating
+                  : !homeConfig,
             })}
           >
             <section>
