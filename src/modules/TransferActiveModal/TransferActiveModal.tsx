@@ -35,11 +35,8 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     tokens,
   } = useChainbridge();
   const { homeTransferTxHash } = useHomeBridge();
-  const {
-    transferTxHash,
-    depositVotes,
-    inTransitMessages,
-  } = useDestinationBridge();
+  const { transferTxHash, depositVotes, inTransitMessages } =
+    useDestinationBridge();
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
   return (
     <CustomModal

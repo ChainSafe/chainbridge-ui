@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useReducer } from "react";
-import { useWeb3 } from "@chainsafe/web3-context";
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { getNetworkName } from "../../../utils/Helpers";
+import { useWeb3 as useLocalWeb3 } from "../../index";
 import { evmHomeReducer } from "../../../reducers/EvmHomeReducer";
 
 import makeDeposit from "./makeDeposit";
@@ -28,7 +28,8 @@ export const EVMHomeAdaptorProvider = ({
     ethBalance,
     onboard,
     resetOnboard,
-  } = useWeb3();
+    dispatcher,
+  } = useLocalWeb3();
 
   const {
     homeChainConfig,
@@ -69,6 +70,7 @@ export const EVMHomeAdaptorProvider = ({
   const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
     isReady,
     checkIsReady,
+    dispatcher,
     onboard,
     homeChainConfig,
     provider,
@@ -120,7 +122,7 @@ export const EVMHomeAdaptorProvider = ({
       value={{
         connect: handleConnect,
         disconnect: async () => {
-          await resetOnboard();
+          await resetOnboard(dispatcher, onboard!);
         },
         getNetworkName,
         networkId,

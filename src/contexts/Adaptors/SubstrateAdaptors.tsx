@@ -324,11 +324,8 @@ export const SubstrateHomeAdaptorProvider = ({
 export const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
-  const {
-    depositNonce,
-    destinationChainConfig,
-    setTransactionStatus,
-  } = useNetworkManager();
+  const { depositNonce, destinationChainConfig, setTransactionStatus } =
+    useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
   const [depositVotes, setDepositVotes] = useState<number>(0);
