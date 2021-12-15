@@ -1,22 +1,26 @@
 import React from "react";
 
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
-import { useWeb3 } from "@chainsafe/web3-context";
-import { providers, BigNumber, utils } from "ethers";
-import { useCallback, useEffect, useState } from "react";
+import { providers } from "ethers";
+import { useEffect, useState } from "react";
 import {
   BridgeConfig,
-  chainbridgeConfig,
   EvmBridgeConfig,
   TokenConfig,
 } from "../../../chainbridgeConfig";
+import { API as OnboardAPI } from "bnc-onboard/dist/src/interfaces";
 import { Weth } from "../../../Contracts/Weth";
 import { WethFactory } from "../../../Contracts/WethFactory";
+import { Actions } from "../../localWeb3Context/types";
 
 export function useConnectWallet(
   isReady: boolean,
-  checkIsReady: () => Promise<boolean>,
-  onboard?: { walletSelect: (arg0: string) => Promise<any> },
+  checkIsReady: (
+    onboard: OnboardAPI,
+    dispatcher: (action: Actions) => void
+  ) => Promise<boolean>,
+  dispatcher: (action: Actions) => void,
+  onboard?: OnboardAPI,
   homeChainConfig?: BridgeConfig,
   provider?: providers.Web3Provider,
   network?: number
@@ -47,7 +51,7 @@ export function useConnectWallet(
 
           setWalletSelected(success);
           if (success) {
-            checkIsReady()
+            checkIsReady(onboard, dispatcher)
               .then((success) => {
                 if (success) {
                   if (homeChainConfig && network && isReady && provider) {
@@ -95,7 +99,7 @@ export function useConnectWallet(
           console.error(error);
         });
     } else {
-      checkIsReady()
+      checkIsReady(onboard, dispatcher)
         .then((success) => {
           if (success) {
             if (homeChainConfig && network && isReady && provider) {

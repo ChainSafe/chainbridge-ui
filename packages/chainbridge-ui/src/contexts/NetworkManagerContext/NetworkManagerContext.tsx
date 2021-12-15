@@ -62,9 +62,6 @@ interface NetworkManagerContext {
   walletType: WalletType;
   setWalletType: (walletType: WalletType) => void;
 
-  networkId: number;
-  setNetworkId: (id: number) => void;
-
   domainId?: number;
 
   homeChainConfig: BridgeConfig | undefined;
@@ -77,31 +74,99 @@ interface NetworkManagerContext {
 
   transactionStatus?: TransactionStatus;
   setTransactionStatus: (message: TransactionStatus | undefined) => void;
-  inTransitMessages: TransitState;
-
-  setDepositVotes: (input: number) => void;
-  depositVotes: number;
 
   setDepositNonce: (input: string | undefined) => void;
   depositNonce: string | undefined;
-
-  tokensDispatch: Dispatch<AddMessageAction | ResetAction | TxIsDone>;
-
-  setTransferTxHash: (input: string) => void;
-  transferTxHash: string;
-
-  setHomeTransferTxHash: (input: string) => void;
-  homeTransferTxHash: string;
 }
 
 const NetworkManagerContext = React.createContext<
   NetworkManagerContext | undefined
 >(undefined);
 
-const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
-  const [walletType, setWalletType] = useState<WalletType>("unset");
+function selectProvider(
+  type: string | undefined,
+  direction: string,
+  props: INetworkManagerProviderProps
+) {
+  const noWalletHasChosenStates = [undefined, "unset", "select"];
+  const typeKey = noWalletHasChosenStates.includes(type)
+    ? "unset"
+    : String(type).toLocaleLowerCase();
+  const providers: { [key: string]: any } = {
+    ethereum: {
+      home: <EVMHomeAdaptorProvider>{props.children}</EVMHomeAdaptorProvider>,
+      destination: (
+        <EVMDestinationAdaptorProvider>
+          {props.children}
+        </EVMDestinationAdaptorProvider>
+      ),
+    },
+    substrate: {
+      home: (
+        <SubstrateHomeAdaptorProvider>
+          {props.children}
+        </SubstrateHomeAdaptorProvider>
+      ),
+      destination: (
+        <SubstrateDestinationAdaptorProvider>
+          {props.children}
+        </SubstrateDestinationAdaptorProvider>
+      ),
+    },
+    unset: {
+      home: (
+        <HomeBridgeContext.Provider
+          value={{
+            connect: async () => undefined,
+            disconnect: async () => {},
+            getNetworkName: (id: any) => "",
+            isReady: false,
+            selectedToken: "",
+            deposit: async (
+              amount: number,
+              recipient: string,
+              tokenAddress: string,
+              destinationChainId: number
+            ) => undefined,
+            setDepositAmount: () => undefined,
+            tokens: {},
+            setSelectedToken: (input: string) => undefined,
+            address: undefined,
+            bridgeFee: undefined,
+            chainConfig: undefined,
+            depositAmount: undefined,
+            nativeTokenBalance: undefined,
+            relayerThreshold: undefined,
+            wrapTokenConfig: undefined,
+            wrapper: undefined,
+            wrapToken: async (value: number) => "",
+            unwrapToken: async (value: number) => "",
+          }}
+        >
+          {props.children}
+        </HomeBridgeContext.Provider>
+      ),
+      destination: (
+        <DestinationBridgeContext.Provider
+          value={{
+            tokensDispatch: () => "",
+            depositVotes: 0,
+            setDepositVotes: (input: number) => "",
+            disconnect: async () => {},
+          }}
+        >
+          {props.children}
+        </DestinationBridgeContext.Provider>
+      ),
+    },
+  };
+  return providers[typeKey][direction];
+}
 
-  const [networkId, setNetworkId] = useState(0);
+export const NetworkManagerProvider = ({
+  children,
+}: INetworkManagerProviderProps) => {
+  const [walletType, setWalletType] = useState<WalletType>("unset");
 
   const [homeChainConfig, setHomeChainConfig] = useState<
     BridgeConfig | undefined
@@ -114,8 +179,6 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     []
   );
 
-  const [transferTxHash, setTransferTxHash] = useState<string>("");
-  const [homeTransferTxHash, setHomeTransferTxHash] = useState<string>("");
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
   >(undefined);
@@ -190,107 +253,44 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     [depositNonce, destinationChains, homeChainConfig]
   );
 
-  const DestinationProvider = ({
-    children,
-  }: IDestinationBridgeProviderProps) => {
-    if (destinationChainConfig?.type === "Ethereum") {
-      return (
-        <EVMDestinationAdaptorProvider>
-          {children}
-        </EVMDestinationAdaptorProvider>
-      );
-    } else if (destinationChainConfig?.type === "Substrate") {
-      return (
-        <SubstrateDestinationAdaptorProvider>
-          {children}
-        </SubstrateDestinationAdaptorProvider>
-      );
-    } else {
-      return (
-        <DestinationBridgeContext.Provider
-          value={{
-            disconnect: async () => {},
-          }}
-        >
-          {children}
-        </DestinationBridgeContext.Provider>
-      );
-    }
-  };
+  const HomeProvider = useCallback(
+    (props: INetworkManagerProviderProps) =>
+      selectProvider(walletType, "home", props),
+    [walletType]
+  );
+
+  const DestinationProvider = useCallback(
+    (props: INetworkManagerProviderProps) =>
+      selectProvider(destinationChainConfig?.type, "destination", props),
+    [destinationChainConfig?.type]
+  );
 
   return (
     <NetworkManagerContext.Provider
       value={{
         domainId: homeChainConfig?.domainId,
-        networkId,
-        setNetworkId,
         homeChainConfig,
         setWalletType,
         walletType,
         homeChains: homeChains,
         destinationChains,
-        inTransitMessages,
         handleSetHomeChain,
         setDestinationChain: handleSetDestination,
         destinationChainConfig,
         transactionStatus,
         setTransactionStatus,
         depositNonce,
-        depositVotes,
         setDepositNonce,
-        setDepositVotes,
-        tokensDispatch,
-        setTransferTxHash,
-        transferTxHash,
-        setHomeTransferTxHash,
-        homeTransferTxHash,
       }}
     >
-      {walletType === "Ethereum" ? (
-        <EVMHomeAdaptorProvider>
-          <DestinationProvider>{children}</DestinationProvider>
-        </EVMHomeAdaptorProvider>
-      ) : walletType === "Substrate" ? (
-        <SubstrateHomeAdaptorProvider>
-          <DestinationProvider>{children}</DestinationProvider>
-        </SubstrateHomeAdaptorProvider>
-      ) : (
-        <HomeBridgeContext.Provider
-          value={{
-            connect: async () => undefined,
-            disconnect: async () => {},
-            getNetworkName: (id: any) => "",
-            isReady: false,
-            selectedToken: "",
-            deposit: async (
-              amount: number,
-              recipient: string,
-              tokenAddress: string,
-              destinationChainId: number
-            ) => undefined,
-            setDepositAmount: () => undefined,
-            tokens: {},
-            setSelectedToken: (input: string) => undefined,
-            address: undefined,
-            bridgeFee: undefined,
-            chainConfig: undefined,
-            depositAmount: undefined,
-            nativeTokenBalance: undefined,
-            relayerThreshold: undefined,
-            wrapTokenConfig: undefined,
-            wrapper: undefined,
-            wrapToken: async (value: number) => "",
-            unwrapToken: async (value: number) => "",
-          }}
-        >
-          <DestinationProvider>{children}</DestinationProvider>
-        </HomeBridgeContext.Provider>
-      )}
+      <HomeProvider>
+        <DestinationProvider>{children}</DestinationProvider>
+      </HomeProvider>
     </NetworkManagerContext.Provider>
   );
 };
 
-const useNetworkManager = () => {
+export const useNetworkManager = () => {
   const context = useContext(NetworkManagerContext);
   if (context === undefined) {
     throw new Error(
@@ -300,4 +300,4 @@ const useNetworkManager = () => {
   return context;
 };
 
-export { NetworkManagerProvider, useNetworkManager };
+// export { NetworkManagerProvider, useNetworkManager };

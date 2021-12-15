@@ -1,41 +1,115 @@
 import React from "react";
-import {
-  Button,
-  ExclamationCircleSvg,
-  ProgressBar,
-  Typography,
-} from "@chainsafe/common-components";
+import Typography from "@mui/material/Typography";
+import LinearProgress from "@mui/material/LinearProgress";
+
+import ErrorIcon from "@mui/icons-material/Error";
 import { CustomModal } from "../../components";
 import { useChainbridge } from "../../contexts/ChainbridgeContext/ChainbridgeContext";
-import { EvmBridgeConfig } from "../../chainbridgeConfig";
+import { TransactionStatus } from "../../contexts/NetworkManagerContext";
+
+import InitTransferBody from "./InitTransferBody";
+import InTransitBody from "./InTransitBody";
+import TransferCompleteBody from "./TransferCompleteBody";
+import ErrorTransferBody from "./ErrorTransferBody";
+
+import { useHomeBridge } from "../../contexts/HomeBridgeContext";
+import { useDestinationBridge } from "../../contexts/DestinationBridgeContext";
+
 import { useStyles } from "./styles";
 
 interface ITransferActiveModalProps {
   open: boolean;
   close: () => void;
-  handleClick: (txHash: string) => void;
 }
+
+const getTransactionStateIndicator = (status?: TransactionStatus) => {
+  const tranactionStatuses: { [key: string]: string | React.ReactNode } = {
+    "Initializing Transfer": "1",
+    "In Transit": "2",
+    "Transfer Completed": "3",
+    default: <ErrorIcon />,
+  };
+  if (!status) return tranactionStatuses["default"];
+
+  return tranactionStatuses[status] || tranactionStatuses["default"];
+};
+
+const getTransactionStateHeader = (
+  status?: TransactionStatus,
+  depositVotes?: number,
+  relayerThreshold?: number
+) => {
+  const tranactionStatuses: { [key: string]: string } = {
+    "Initializing Transfer": "Initializing Transfer",
+    "In Transit": `In Transit (${
+      Number(depositVotes) < (relayerThreshold || 0)
+        ? `${depositVotes}/${relayerThreshold} signatures needed`
+        : "Executing proposal"
+    })`,
+    "Transfer Completed": "Transfer Completed",
+    default: "Transfer aborted",
+  };
+  if (!status) return tranactionStatuses["default"];
+
+  return tranactionStatuses[status] || tranactionStatuses["default"];
+};
 
 const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   open,
   close,
-  handleClick,
 }: ITransferActiveModalProps) => {
   const classes = useStyles();
   const {
     transactionStatus,
-    depositVotes,
     relayerThreshold,
-    inTransitMessages,
     homeConfig,
     destinationChainConfig,
     depositAmount,
-    transferTxHash,
-    homeTransferTxHash,
     selectedToken,
     tokens,
   } = useChainbridge();
+  const { homeTransferTxHash } = useHomeBridge();
+  const { transferTxHash, depositVotes, inTransitMessages } =
+    useDestinationBridge();
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
+
+  const getTransactionStateBody = (status?: TransactionStatus) => {
+    const tranactionStatuses: { [key: string]: React.ReactNode } = {
+      "Initializing Transfer": <InitTransferBody classes={classes} />,
+      "In Transit": (
+        <InTransitBody
+          classes={classes}
+          inTransitMessages={inTransitMessages}
+          homeConfig={homeConfig}
+          homeTransferTxHash={homeTransferTxHash}
+        />
+      ),
+      "Transfer Completed": (
+        <TransferCompleteBody
+          classes={classes}
+          close={close}
+          homeConfig={homeConfig}
+          homeTransferTxHash={homeTransferTxHash}
+          depositAmount={depositAmount}
+          tokenSymbol={tokenSymbol}
+          destinationChainConfig={destinationChainConfig}
+        />
+      ),
+      default: (
+        <ErrorTransferBody
+          classes={classes}
+          close={close}
+          homeConfig={homeConfig}
+          homeTransferTxHash={homeTransferTxHash}
+          transferTxHash={transferTxHash}
+        />
+      ),
+    };
+    if (!status) return tranactionStatuses["default"];
+
+    return tranactionStatuses[status] || tranactionStatuses["default"];
+  };
+
   return (
     <CustomModal
       className={classes.root}
@@ -43,188 +117,40 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         inner: classes.inner,
       }}
       active={open}
+      closePosition="none"
     >
-      <ProgressBar
-        className={classes.progress}
-        size="small"
-        variant="primary"
-        progress={transactionStatus !== "Transfer Completed" ? -1 : 100}
+      <LinearProgress
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          "& > *": {
+            borderRadius: "0 !important",
+            "&  >  *": {
+              borderRadius: "0 !important",
+            },
+          },
+        }}
+        value={transactionStatus !== "Transfer Completed" ? -1 : 100}
       />
       <section>
         <div className={classes.stepIndicator}>
-          {transactionStatus === "Initializing Transfer" ? (
-            "1"
-          ) : transactionStatus === "In Transit" ? (
-            "2"
-          ) : transactionStatus === "Transfer Completed" ? (
-            "3"
-          ) : (
-            <ExclamationCircleSvg />
-          )}
+          {getTransactionStateIndicator(transactionStatus)}
         </div>
       </section>
       <section className={classes.content}>
-        <Typography className={classes.heading} variant="h3" component="h3">
-          {transactionStatus === "Initializing Transfer"
-            ? "Initializing Transfer"
-            : transactionStatus === "In Transit"
-            ? `In Transit (${
-                depositVotes < (relayerThreshold || 0)
-                  ? `${depositVotes}/${relayerThreshold} signatures needed`
-                  : "Executing proposal"
-              })`
-            : transactionStatus === "Transfer Completed"
-            ? "Transfer completed"
-            : "Transfer aborted"}
+        <Typography className={classes.heading} variant="h5" component="h5">
+          {getTransactionStateHeader(
+            transactionStatus,
+            depositVotes,
+            relayerThreshold
+          )}
         </Typography>
-        {transactionStatus === "Initializing Transfer" ? (
-          <div className={classes.initCopy}>
-            <Typography>Deposit pending...</Typography>
-            <Typography className={classes.weighted}>
-              This should take a few minutes.
-              <br />
-              Please do not refresh or leave the page.
-            </Typography>
-          </div>
-        ) : transactionStatus === "In Transit" ? (
-          <>
-            <div className={classes.sendingCopy}>
-              {inTransitMessages.transitMessage.map((m, i) => {
-                if (typeof m === "string") {
-                  return (
-                    <Typography className={classes.vote} component="p" key={i}>
-                      {m}
-                    </Typography>
-                  );
-                } else if (typeof m === "object" && m.message !== undefined) {
-                  return (
-                    <Typography className={classes.vote} component="p" key={i}>
-                      {m.message}
-                    </Typography>
-                  );
-                } else {
-                  return (
-                    <Typography className={classes.vote} component="p" key={i}>
-                      <span>Vote casted by {m.address}</span>
-                      <span>{m.signed}</span>
-                    </Typography>
-                  );
-                }
-              })}
-              <Typography className={classes.warning}>
-                This should take a few minutes. <br />
-                Please do not refresh or leave the page.
-              </Typography>
-            </div>
-            <section className={classes.buttons}>
-              <Button
-                onClick={() => {
-                  homeConfig &&
-                    (homeConfig as EvmBridgeConfig).blockExplorer &&
-                    homeTransferTxHash &&
-                    handleClick(homeTransferTxHash!);
-                }}
-                size="small"
-                className={classes.button}
-                variant="outline"
-                // disabled={
-                //   !destinationChain ||
-                //   !destinationChain.blockExplorer ||
-                //   !transferTxHash
-                // }
-              >
-                View transaction
-              </Button>
-            </section>
-          </>
-        ) : transactionStatus === "Transfer Completed" ? (
-          <>
-            <Typography className={classes.receipt} component="p">
-              Successfully transferred{" "}
-              <strong>
-                {depositAmount} {tokenSymbol}
-                <br /> from {homeConfig?.name} to {destinationChainConfig?.name}
-                .
-              </strong>
-            </Typography>
-            <section className={classes.buttons}>
-              <Button
-                onClick={() => {
-                  homeConfig &&
-                    (homeConfig as EvmBridgeConfig).blockExplorer &&
-                    homeTransferTxHash &&
-                    handleClick(homeTransferTxHash!);
-                }}
-                size="small"
-                className={classes.button}
-                variant="outline"
-                // disabled={
-                //   !destinationChain ||
-                //   !destinationChain.blockExplorer ||
-                //   !transferTxHash
-                // }
-              >
-                View transaction
-              </Button>
-              <Button
-                size="small"
-                className={classes.button}
-                variant="outline"
-                onClick={close}
-              >
-                Start new transfer
-              </Button>
-            </section>
-          </>
-        ) : (
-          <>
-            <Typography className={classes.receipt} component="p">
-              Something went wrong and we could not complete your transfer.
-            </Typography>
-            {homeConfig &&
-              (homeConfig as EvmBridgeConfig).blockExplorer &&
-              homeTransferTxHash && (
-                <Button
-                  onClick={() =>
-                    window.open(
-                      `${
-                        (homeConfig as EvmBridgeConfig).blockExplorer
-                      }/${transferTxHash}`,
-                      "_blank"
-                    )
-                  }
-                  size="small"
-                  className={classes.button}
-                  variant="outline"
-                  disabled
-                >
-                  View transaction
-                </Button>
-              )}
-            <section className={classes.buttons}>
-              <Button
-                size="small"
-                className={classes.button}
-                variant="outline"
-                onClick={close}
-              >
-                Start new transfer
-              </Button>
-              <a
-                rel="noopener noreferrer"
-                href={process.env.REACT_APP_SUPPORT_URL}
-                target="_blank"
-              >
-                <Button variant="outline">
-                  Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
-                </Button>
-              </a>
-            </section>
-          </>
-        )}
+        {getTransactionStateBody(transactionStatus)}
       </section>
     </CustomModal>
   );
 };
 
-export default TransferActiveModal;
+export default React.memo(TransferActiveModal);

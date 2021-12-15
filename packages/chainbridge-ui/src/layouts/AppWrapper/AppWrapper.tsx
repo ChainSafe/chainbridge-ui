@@ -1,11 +1,22 @@
-import {
-  NavLink,
-  Typography,
-  useHistory,
-  useLocation,
-} from "@chainsafe/common-components";
 import React, { useEffect, useState } from "react";
 import { ReactNode } from "react";
+
+import Paper from "@mui/material/Paper";
+
+import {
+  Switch,
+  NavLink,
+  Link,
+  useLocation,
+  useHistory,
+  useRouteMatch,
+} from "react-router-dom";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+
 import AppHeader from "../AppHeader/AppHeader";
 import { ReactComponent as GlobalSvg } from "../../media/Icons/global.svg";
 import { ReactComponent as GiftSvg } from "../../media/Icons/gift.svg";
@@ -25,7 +36,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({
   const [enableNavTabs, setEnableNavTabs] = useState(true);
 
   const location = useLocation();
-  const { redirect } = useHistory();
+  const history = useHistory();
 
   const { __RUNTIME_CONFIG__ } = window;
 
@@ -33,7 +44,7 @@ const AppWrapper: React.FC<IAppWrapper> = ({
 
   useEffect(() => {
     if (location.pathname.includes("/explorer") && !indexerEnabled) {
-      redirect("/transfer");
+      history.push("/transfer");
     }
   }, []);
 
@@ -44,40 +55,63 @@ const AppWrapper: React.FC<IAppWrapper> = ({
     return setEnableNavTabs(true);
   }, [location]);
 
+  const routeMatch = useRouteMatch([ROUTE_LINKS.Transfer, ROUTE_LINKS.Wrap]);
+  const currentTab = routeMatch?.path;
+
   return (
-    <section className={classes.root}>
+    <>
       {enableNavTabs ? (
-        <section className={classes.inner}>
+        <div>
           <AppHeader />
-          <section className={classes.content}>
-            {enableNavTabs && (
-              <section className={classes.navTabs}>
-                <NavLink activeClassName="active" to={ROUTE_LINKS.Transfer}>
-                  <GlobalSvg />
-                  <Typography variant="h5">Transfer</Typography>
-                </NavLink>
-                {wrapTokenPage && (
-                  <NavLink activeClassName="active" to={ROUTE_LINKS.Wrap}>
-                    <GiftSvg />
-                    <Typography variant="h5">Wrap token</Typography>
-                  </NavLink>
-                )}
-              </section>
-            )}
-            <div className={classes.pageArea}>{children}</div>
-          </section>
+          <Container>
+            <Paper
+              sx={{
+                margin: `30px auto`,
+                maxWidth: 500,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                px: 3,
+              }}
+              elevation={3}
+            >
+              {enableNavTabs && (
+                <Tabs value={currentTab}>
+                  <Tab
+                    icon={<GlobalSvg />}
+                    iconPosition="start"
+                    label="Transfer"
+                    value={ROUTE_LINKS.Transfer}
+                    to={ROUTE_LINKS.Transfer}
+                    component={Link}
+                  />
+                  {wrapTokenPage && (
+                    <Tab
+                      icon={<GiftSvg />}
+                      iconPosition="start"
+                      label="Wrap"
+                      value={ROUTE_LINKS.Wrap}
+                      to={ROUTE_LINKS.Wrap}
+                      component={Link}
+                    />
+                  )}
+                </Tabs>
+              )}
+              <div className={classes.pageArea}>{children}</div>
+            </Paper>
+          </Container>
 
           {/* Put CTA here */}
           {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
         </a> */}
-        </section>
+        </div>
       ) : (
-        <section className={classes.explorerMainContent}>
+        <div className={classes.explorerMainContent}>
           <AppHeader />
           <div className={classes.explorerArea}>{children}</div>
-        </section>
+        </div>
       )}
-    </section>
+    </>
   );
 };
 

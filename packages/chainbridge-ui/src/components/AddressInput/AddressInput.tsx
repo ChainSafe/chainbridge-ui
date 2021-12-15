@@ -1,83 +1,78 @@
 import React, { useCallback, useState } from "react";
-import {
-  CheckboxInput,
-  FormikTextInputProps,
-  TextInput,
-} from "@chainsafe/common-components";
-import clsx from "clsx";
-import { useField } from "formik";
-import { useStyles } from "./styles";
+import { useController } from "react-hook-form";
+import FormControl from "@mui/material/FormControl";
 
-interface IAddressInput extends FormikTextInputProps {
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+interface IAddressInput {
   senderAddress: string;
-  classNames?: {
-    input?: string;
-  };
+  className?: any;
+  placeholder: string;
+  name: string;
+  label: string;
+  disabled: boolean;
   sendToSameAccountHelper?: boolean;
+  control?: any;
+  classNames?: any;
+  setValue?: any;
 }
 
 const AddressInput: React.FC<IAddressInput> = ({
-  classNames,
   senderAddress,
-  className,
-  inputVariant = "default",
-  type = "text",
   placeholder,
   name,
-  size,
   label,
-  labelClassName,
-  captionMessage,
   sendToSameAccountHelper = false,
+  control,
+  setValue,
+  disabled,
   ...rest
 }: IAddressInput) => {
-  const classes = useStyles();
-  const [field, meta, helpers] = useField(name);
+  const { field, fieldState } = useController({ name, control });
 
   const [stored, setStored] = useState<string | undefined>();
 
   const toggleReceiver = useCallback(() => {
     if (stored === undefined) {
       setStored(field.value);
-      helpers.setValue(senderAddress);
+      setValue(name, senderAddress);
     } else {
-      helpers.setValue(stored);
+      setValue(name, "");
       setStored(undefined);
     }
-  }, [helpers, field, senderAddress, stored, setStored]);
+  }, [name, senderAddress, field, setStored, setValue]);
 
   return (
-    <section className={clsx(classes.root, className)}>
-      <div>
-        <TextInput
-          {...rest}
-          label={label ? label : field.name}
-          inputVariant={inputVariant}
-          type={type}
-          size={size}
-          className={clsx(classNames?.input, classes.input)}
-          labelClassName={clsx(labelClassName, classes.label)}
-          name={field.name}
-          value={field.value}
+    <FormControl disabled={disabled} fullWidth>
+      <>
+        <TextField
+          error={!!fieldState.error}
+          helperText={fieldState.error ? fieldState.error.message : undefined}
+          fullWidth
+          {...field}
+          label={label}
           placeholder={placeholder}
-          captionMessage={
-            meta.error ? `${meta.error}` : captionMessage && captionMessage
-          }
-          state={meta.error ? "error" : undefined}
-          onChange={helpers.setValue}
-          disabled={stored !== undefined}
+          disabled={Boolean(disabled && !stored)}
         />
-      </div>
+      </>
       {sendToSameAccountHelper && (
-        <div className={classes.checkbox}>
-          <CheckboxInput
+        <FormGroup sx={{ my: 1 }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                size="small"
+                checked={stored !== undefined}
+                onChange={() => toggleReceiver()}
+              />
+            }
             label="I want to send funds to my address"
-            value={stored !== undefined}
-            onChange={() => toggleReceiver()}
           />
-        </div>
+        </FormGroup>
       )}
-    </section>
+    </FormControl>
   );
 };
 

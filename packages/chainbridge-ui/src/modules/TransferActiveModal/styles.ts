@@ -15,9 +15,9 @@ export const useStyles = makeStyles(
           constants.generalUnit * 3.5
         }px`,
         bottom: 0,
-        top: "unset",
-        transform: "unset",
-        left: 0,
+        top: "unset !important",
+        transform: "unset !important",
+        left: "0 !important",
         border: "none",
         borderRadius: 0,
         transitionDuration: `${animation.transform}ms`,
@@ -48,8 +48,8 @@ export const useStyles = makeStyles(
         flexDirection: "column",
       },
       buttons: {
-        display: "flex",
-        flexDirection: "row",
+        // display: "flex",
+        // flexDirection: "row",
         marginTop: constants.generalUnit * 5,
         "& > *": {
           textDecoration: "none",

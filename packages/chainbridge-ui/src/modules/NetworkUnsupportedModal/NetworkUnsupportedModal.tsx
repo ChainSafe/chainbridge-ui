@@ -4,8 +4,8 @@ import {
   Button,
   ExclamationCircleInverseSvg,
   Typography,
-  useLocation,
 } from "@chainsafe/common-components";
+import { useLocation } from "react-router-dom";
 import { useNetworkManager, useHomeBridge } from "../../contexts";
 import { ROUTE_LINKS } from "../../routes";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
@@ -13,8 +13,9 @@ import { useStyles } from "./styles";
 
 const NetworkUnsupportedModal = () => {
   const classes = useStyles();
-  const { homeChainConfig, networkId } = useNetworkManager();
-  const { getNetworkName, wrapTokenConfig, isReady } = useHomeBridge();
+  const { homeChainConfig } = useNetworkManager();
+  const { getNetworkName, wrapTokenConfig, isReady, networkId } =
+    useHomeBridge();
   const { pathname } = useLocation();
 
   const [open, setOpen] = useState(false);
@@ -49,6 +50,7 @@ const NetworkUnsupportedModal = () => {
         inner: classes.inner,
       }}
       active={open}
+      closePosition="none"
     >
       <section>
         <ExclamationCircleInverseSvg className={classes.icon} />

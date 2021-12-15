@@ -1,7 +1,12 @@
 import React from "react";
-import { useField, useFormikContext } from "formik";
-import { Button, FormikTextInput } from "@chainsafe/common-components";
+import { useController } from "react-hook-form";
+// import { Button, FormikTextInput } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import FormHelperText from "@mui/material/FormHelperText";
 
 interface ITokenInput {
   disabled?: boolean;
@@ -13,6 +18,8 @@ interface ITokenInput {
     input?: string;
     button?: string;
   };
+  setValue?: any;
+  control?: any;
 }
 
 const TokenInput: React.FC<ITokenInput> = ({
@@ -22,34 +29,37 @@ const TokenInput: React.FC<ITokenInput> = ({
   tokens,
   tokenSelectorKey,
   name,
+  setValue,
+  control,
 }: ITokenInput) => {
-  const [, , helpers] = useField(name);
-
-  const { values } = useFormikContext();
+  const { field, fieldState } = useController({ name, control });
   return (
-    <>
-      <FormikTextInput
-        className={classNames?.input}
+    <Box sx={{ mt: 2 }}>
+      <TextField
         disabled={disabled}
-        name={name}
+        error={!!fieldState.error}
+        fullWidth
+        helperText={fieldState.error ? fieldState.error.message : undefined}
+        className={classNames?.input}
         label={label}
-      />
-      <Button
-        disabled={
-          disabled || !tokens[(values as Record<string, any>)[tokenSelectorKey]]
-        }
-        className={classNames?.button}
-        onClick={() => {
-          helpers.setValue(
-            tokens[(values as Record<string, any>)[tokenSelectorKey]].balance
-          );
+        {...field}
+        InputProps={{
+          endAdornment: (
+            <Button
+              disabled={disabled || !tokens[tokenSelectorKey]}
+              className={classNames?.button}
+              onClick={() => {
+                setValue(name, tokens[tokenSelectorKey].balance);
+              }}
+              variant="outlined"
+              type="button"
+            >
+              MAX
+            </Button>
+          ),
         }}
-        variant="outline"
-        type="button"
-      >
-        MAX
-      </Button>
-    </>
+      />
+    </Box>
   );
 };
 

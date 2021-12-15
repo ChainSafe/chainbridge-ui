@@ -1,5 +1,6 @@
 import React from "react";
-import { IModalProps, Modal } from "@chainsafe/common-components";
+import { IModalProps, Modal } from "../../modules";
+
 import clsx from "clsx";
 import { useStyles } from "./styles";
 

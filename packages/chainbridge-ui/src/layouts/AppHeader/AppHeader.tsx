@@ -1,6 +1,9 @@
 import React from "react";
 import clsx from "clsx";
-import { Typography, NavLink } from "@chainsafe/common-components";
+// import { Typography } from "@chainsafe/common-components";
+import Typography from "@mui/material/Typography";
+import { Switch, NavLink, Link } from "react-router-dom";
+
 import { shortenAddress } from "../../utils/Helpers";
 import { useChainbridge } from "../../contexts/ChainbridgeContext/ChainbridgeContext";
 import { useStyles } from "./styles";
@@ -27,13 +30,15 @@ const AppHeader: React.FC<IAppHeader> = () => {
         {/* <div className={classes.logo}>
         </div> */}
         <div className={classes.mainTitle}>
-          <Typography variant="h4">ChainBridge Token Swap</Typography>
+          <Typography variant="h5">ChainBridge Token Swap</Typography>
         </div>
         <div className={classes.headerLinks}>
           {indexerEnabled ? (
             ROUTE_LINKS_HEADERS.map(({ route, label }) => (
               <NavLink to={route} className={classes.link} key={route}>
-                <Typography className={classes.linkTitle}>{label}</Typography>
+                <Typography variant="h5" className={classes.linkTitle}>
+                  {label}
+                </Typography>
               </NavLink>
             ))
           ) : (

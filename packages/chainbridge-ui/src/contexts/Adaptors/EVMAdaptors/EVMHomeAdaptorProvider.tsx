@@ -1,10 +1,10 @@
-import React from "react";
-import { useWeb3 } from "@chainsafe/web3-context";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { getNetworkName } from "../../../utils/Helpers";
+import { useWeb3 as useLocalWeb3 } from "../../index";
+import { evmHomeReducer } from "../../../reducers/EvmHomeReducer";
 
 import makeDeposit from "./makeDeposit";
 import makeWrappedToken from "./makeWrappedToken";
@@ -28,7 +28,8 @@ export const EVMHomeAdaptorProvider = ({
     ethBalance,
     onboard,
     resetOnboard,
-  } = useWeb3();
+    dispatcher,
+  } = useLocalWeb3();
 
   const {
     homeChainConfig,
@@ -36,12 +37,25 @@ export const EVMHomeAdaptorProvider = ({
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
-    setNetworkId,
-    setHomeTransferTxHash,
   } = useNetworkManager();
 
-  const [depositAmount, setDepositAmount] = useState<number | undefined>();
-  const [selectedToken, setSelectedToken] = useState<string>("");
+  const [evmHomeState, dispatch] = useReducer(evmHomeReducer, {
+    depositAmount: undefined,
+    selectedToken: "",
+    networkId: 0,
+    homeTransferTxHash: "",
+  });
+  const { depositAmount, networkId, selectedToken, homeTransferTxHash } =
+    evmHomeState;
+
+  const setDepositAmount = (depositAmount?: number) =>
+    dispatch({ type: "setDepositAmount", depositAmount });
+  const setSelectedToken = (selectedToken: string) =>
+    dispatch({ type: "setSelectedToken", selectedToken });
+  const setNetworkId = (networkId: number) =>
+    dispatch({ type: "setNetworkId", networkId });
+  const setHomeTransferTxHash = (homeTransferTxHash: string) =>
+    dispatch({ type: "setHomeTransferTxHash", homeTransferTxHash });
 
   useEffect(() => {
     if (network) {
@@ -51,11 +65,12 @@ export const EVMHomeAdaptorProvider = ({
         handleSetHomeChain(chain.domainId);
       }
     }
-  }, [handleSetHomeChain, homeChains, network, setNetworkId]);
+  }, [handleSetHomeChain, homeChains, network]);
 
   const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
     isReady,
     checkIsReady,
+    dispatcher,
     onboard,
     homeChainConfig,
     provider,
@@ -71,7 +86,6 @@ export const EVMHomeAdaptorProvider = ({
   }, [wallet, network, onboard]);
 
   const handleCheckSupplies = makeHandleCheckSupplies(homeChainConfig);
-
 
   const deposit = makeDeposit(
     setTransactionStatus,
@@ -108,9 +122,11 @@ export const EVMHomeAdaptorProvider = ({
       value={{
         connect: handleConnect,
         disconnect: async () => {
-          await resetOnboard();
+          await resetOnboard(dispatcher, onboard!);
         },
         getNetworkName,
+        networkId,
+        homeTransferTxHash,
         bridgeFee,
         deposit,
         depositAmount,
