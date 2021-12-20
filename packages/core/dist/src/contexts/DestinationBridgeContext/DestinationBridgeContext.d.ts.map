@@ -1,0 +1,1 @@
+{"version":3,"file":"DestinationBridgeContext.d.ts","sourceRoot":"","sources":["../../../../src/contexts/DestinationBridgeContext/DestinationBridgeContext.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAqB,MAAM,OAAO,CAAC;AAC1C,OAAO,EAAE,uBAAuB,EAAE,MAAM,wBAAwB,CAAC;AAEjE,QAAA,MAAM,wBAAwB,oDAElB,CAAC;AAEb,QAAA,MAAM,oBAAoB,+BAMzB,CAAC;AAEF,OAAO,EAAE,wBAAwB,EAAE,oBAAoB,EAAE,CAAC"}
