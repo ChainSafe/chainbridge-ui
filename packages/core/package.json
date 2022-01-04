@@ -7,6 +7,10 @@
   "author": "Chainsafe Products Team",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
