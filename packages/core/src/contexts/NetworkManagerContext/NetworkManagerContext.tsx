@@ -167,7 +167,6 @@ export const NetworkManagerProvider = ({
   children,
 }: INetworkManagerProviderProps) => {
   const [walletType, setWalletType] = useState<WalletType>("unset");
-  console.log("🚀 ~ file: NetworkManagerContext.tsx ~ line 170 ~ walletType", walletType)
 
   const [homeChainConfig, setHomeChainConfig] = useState<
     BridgeConfig | undefined
@@ -224,7 +223,6 @@ export const NetworkManagerProvider = ({
   useEffect(() => {
     if (walletType !== "unset") {
       if (walletType === "select") {
-        console.log('setHomeChains', chainbridgeConfig.chains)
         setHomeChains(chainbridgeConfig.chains);
       } else {
         setHomeChains(
