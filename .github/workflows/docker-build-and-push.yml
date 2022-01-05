@@ -27,7 +27,7 @@ jobs:
     #    # requires these jobs to run first
     #    needs: [test, e2e, lint]
     # if check not passed, job will be skipped
-    if: github.ref == 'refs/heads/main' || contains(github.ref, '/tags/v')
+    # if: github.ref == 'refs/heads/main' || contains(github.ref, '/tags/v')
     # list steps
     environment:
       name: build
@@ -48,7 +48,7 @@ jobs:
           # check if branch/tag that triggered workflow was from tags
           if [[ $GITHUB_REF == refs/tags/* ]]; then
 
-            # set version 
+            # set version
             VERSION=${GITHUB_REF#refs/tags/}
 
             # append version to tags
@@ -71,6 +71,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: ./packages/example
           push: true
           tags: ${{ steps.prep.outputs.tags }}
       - name: Image digest
