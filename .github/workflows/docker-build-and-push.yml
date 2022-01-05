@@ -27,7 +27,7 @@ jobs:
     #    # requires these jobs to run first
     #    needs: [test, e2e, lint]
     # if check not passed, job will be skipped
-    # if: github.ref == 'refs/heads/main' || contains(github.ref, '/tags/v')
+    if: github.ref == 'refs/heads/main' || contains(github.ref, '/tags/v')
     # list steps
     environment:
       name: build
