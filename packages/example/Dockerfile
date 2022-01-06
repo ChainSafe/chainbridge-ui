@@ -5,7 +5,7 @@ COPY ./packages/example/package.json ./
 # COPY ./packages/example/yarn.lock ./
 RUN yarn install --frozen-lockfile
 COPY ./packages/example/* .
-RUN ls -al ./packages/example
+# RUN ls -al ./packages/example
 RUN yarn build
 
 FROM nginx:1.19-alpine AS server
