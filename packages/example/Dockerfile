@@ -7,7 +7,7 @@ COPY package.json ./
 RUN yarn install --frozen-lockfile
 COPY ./packages/example/* .
 RUN ls -al
-RUN cd ./packages/example && yarn build
+RUN yarn build
 
 FROM nginx:1.19-alpine AS server
 COPY ./etc/nginx.conf /etc/nginx/conf.d/default.conf
