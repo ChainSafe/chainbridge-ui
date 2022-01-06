@@ -1,7 +1,6 @@
 FROM node:14-alpine AS builder
 RUN apk --no-cache add git
 WORKDIR /app
-RUN ls -al ./packages/example
 COPY ./packages/example/package.json ./
 # COPY ./packages/example/yarn.lock ./
 RUN yarn install --frozen-lockfile
