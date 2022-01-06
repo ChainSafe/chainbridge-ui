@@ -5,6 +5,7 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn install --frozen-lockfile
 COPY . .
+RUN ls -al
 RUN yarn build
 
 FROM nginx:1.19-alpine AS server
