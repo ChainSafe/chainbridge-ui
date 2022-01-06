@@ -11,8 +11,6 @@ on:
     # when any of these versions receive a push
     tags:
       - "v*.*.*"
-    paths:
-      - 'packages/example/**'
   pull_request:
     branches: [main]
     tags:
