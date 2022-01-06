@@ -5,7 +5,7 @@ RUN ls -al
 COPY package.json ./
 # COPY ./packages/example/yarn.lock ./
 RUN yarn install --frozen-lockfile
-COPY ./packages/example/* .
+COPY . .
 RUN ls -al
 RUN yarn build
 
