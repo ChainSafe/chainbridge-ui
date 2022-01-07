@@ -28,6 +28,6 @@ jobs:
           scope: '@chainbridge-ui'
       - run: yarn install
       - run: yarn build:core
-      - run: yarn publish --access public
+      - run: yarn publish --cwd ./packages/core
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
