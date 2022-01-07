@@ -1,13 +1,14 @@
 {
-  "name": "@chainbridge-ui/core",
-  "version": "1.0.0",
+  "name": "@chainsafe/chainbridge-ui-core",
+  "version": "1.0.2",
   "description": "Context providers for Chainbridge UI",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "author": "Chainsafe Products Team",
   "license": "MIT",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "build": "tsc",
