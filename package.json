@@ -20,7 +20,7 @@
   "scripts": {
     "start:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c start",
     "build:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c build",
-    "build:core": "yarn wsrun -p @chainsafe/chainbridge-core -c build",
+    "build:core": "yarn wsrun -p @chainbridge-ui/core -c build",
     "sentry:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c sentry",
     "release:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c release",
     "test:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c test",

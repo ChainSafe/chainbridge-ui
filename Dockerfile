@@ -1,3 +1,4 @@
+
 FROM node:14-alpine AS builder
 RUN apk --no-cache add git
 WORKDIR /app
@@ -5,6 +6,8 @@ RUN ls -al
 COPY . .
 RUN yarn install --frozen-lockfile
 RUN ls -al
+RUN yarn build:core
+RUN ls -al ./packages/core
 RUN yarn build:ui
 
 FROM nginx:1.19-alpine AS server
