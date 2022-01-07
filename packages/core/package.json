@@ -6,7 +6,9 @@
   "types": "dist/src/index.d.ts",
   "author": "Chainsafe Products Team",
   "license": "MIT",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch"
