@@ -11,7 +11,10 @@
     "node": ">=12",
     "yarn": ">=1"
   },
-  "devDependencies": {
+  "dependencies": {
+    "@changesets/cli": "^2.14.1",
+    "ethers": "5.4.5",
+    "prettier": "2.1.2",
     "wsrun": "^5.2.4"
   },
   "scripts": {

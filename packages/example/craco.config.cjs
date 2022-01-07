@@ -5,6 +5,9 @@ module.exports = {
     plugins: ["macros"],
   },
   webpack: {
+    alias: {
+      "@mui/styled-engine": "@mui/styled-engine-sc",
+    },
     configure: (webpackConfig) => ({
       ...webpackConfig,
       optimization: {
