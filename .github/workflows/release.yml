@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - master
+    # when any of these versions receive a push
+    tags:
+      - "v*.*.*"
+  pull_request:
+    branches: [main]
+    tags:
+      - "v*.*.*"
 
 jobs:
   build:
