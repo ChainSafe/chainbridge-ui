@@ -24,7 +24,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           # Defaults to the user or organization that owns the workflow file
           scope: '@chainbridge-ui'
-      - run: yarn isntall
+      - run: yarn install
       - run: yarn build:core
       - run: yarn publish
         env:
