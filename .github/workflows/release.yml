@@ -24,6 +24,7 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v2
         with:
+          always-auth: true
           node-version: '16.x'
           cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
@@ -31,6 +32,6 @@ jobs:
           scope: '@enemycnt'
       - run: yarn install
       - run: yarn build:core
-      - run: yarn publish --cwd ./packages/core
+      - run: npm publish --access public --workspaces
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
