@@ -1,4 +1,4 @@
-name: Release core package
+name: Release
 
 on:
   push:
@@ -16,8 +16,9 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
           # Defaults to the user or organization that owns the workflow file
-          scope: '@chainsafe'
-      - run: yarn
+          scope: '@chainbridge-ui'
+      - run: yarn isntall
+      - run: yarn build:core
       - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
