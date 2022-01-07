@@ -10,6 +10,8 @@ on:
     tags:
       - "v*.*.*"
   pull_request:
+    paths:
+    - "packages/core/**"
     branches: [main]
     tags:
       - "v*.*.*"

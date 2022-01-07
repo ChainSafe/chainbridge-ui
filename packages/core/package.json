@@ -1,5 +1,5 @@
 {
-  "name": "chainbridge-ui/core",
+  "name": "chainbridge-ui-core",
   "version": "1.0.0",
   "description": "Context providers for Chainbridge UI",
   "main": "dist/src/index.js",

@@ -14,6 +14,8 @@ on:
     tags:
       - "v*.*.*"
   pull_request:
+    paths:
+    - "packages/example/**"
     branches: [main]
     tags:
       - "v*.*.*"
