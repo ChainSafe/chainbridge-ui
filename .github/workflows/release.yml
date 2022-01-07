@@ -2,6 +2,8 @@ name: Release
 
 on:
   push:
+    paths:
+      - "packages/core/**"
     branches:
       - master
     # when any of these versions receive a push

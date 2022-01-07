@@ -5,6 +5,8 @@ name: Docker build and push
 
 on:
   push:
+    paths:
+      - "packages/example/**"
     branches:
       # when main branch receives a push
       - main
@@ -48,7 +50,7 @@ jobs:
           # check if branch/tag that triggered workflow was from tags
           if [[ $GITHUB_REF == refs/tags/* ]]; then
 
-            # set version 
+            # set version
             VERSION=${GITHUB_REF#refs/tags/}
 
             # append version to tags
