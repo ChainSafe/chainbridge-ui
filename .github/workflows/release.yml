@@ -35,3 +35,7 @@ jobs:
       - run: yarn install
       - run: yarn build:core
       - run: cd packages/core && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          token: ${{ secrets.NPM_TOKEN }}
