@@ -19,6 +19,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       # Setup .npmrc file to publish to npm
@@ -32,10 +34,4 @@ jobs:
           scope: '@enemycnt'
       - run: yarn install
       - run: yarn build:core
-      - shell: bash
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn config set npmAuthToken "$env:NPM_TOKEN"
-      - run: yarn publish:core
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: cd packages/core && yarn publish
