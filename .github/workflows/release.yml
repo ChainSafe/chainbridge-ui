@@ -34,4 +34,4 @@ jobs:
           scope: '@enemycnt'
       - run: yarn install
       - run: yarn build:core
-      - run: cd packages/core && yarn publish
+      - run: cd packages/core && npm publish
