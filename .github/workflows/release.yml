@@ -32,6 +32,6 @@ jobs:
           scope: '@enemycnt'
       - run: yarn install
       - run: yarn build:core
-      - run: npm publish --access public --workspaces
+      - run: yarn publish:core
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
