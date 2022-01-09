@@ -34,7 +34,7 @@ jobs:
           scope: '@enemycnt'
       - run: yarn install
       - run: yarn build:core
-      - run: cd packages/core && npm publish
+      - run: npm publish --workspace=chainbridge-ui-core
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
