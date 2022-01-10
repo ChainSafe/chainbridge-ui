@@ -31,7 +31,7 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@chainsafe'
       - run: yarn
-      - run: yarn workspace chainbridge-ui-core build
-      - run: yarn workspace chainbridge-ui-core publish
+      - run: yarn workspace @chainsafe/chainbridge-ui-core build
+      - run: yarn workspace @chainsafe/chainbridge-ui-core publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
