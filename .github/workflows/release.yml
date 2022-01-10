@@ -19,8 +19,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       # Setup .npmrc file to publish to npm
@@ -32,10 +30,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           # Defaults to the user or organization that owns the workflow file
           scope: '@enemycnt'
-      - run: yarn install
-      - run: yarn build:core
-      - run: npm publish --workspace=chainbridge-ui-core --regsitry=https://registry.npmjs.org
+      - run: yarn
+      - run: yarn workspace chainbridge-ui-core build
+      - run: yarn workspace chainbridge-ui-core publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          token: ${{ secrets.NPM_TOKEN }}
