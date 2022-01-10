@@ -32,6 +32,6 @@ jobs:
           scope: '@chainsafe'
       - run: yarn
       - run: yarn workspace @chainsafe/chainbridge-ui-core build
-      - run: yarn workspace @chainsafe/chainbridge-ui-core publish --access public
+      - run: npm publish --workspace=@chainsafe/chainbridge-ui-core publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
