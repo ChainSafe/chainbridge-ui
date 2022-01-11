@@ -1,9 +1,11 @@
 {
   "name": "@chainsafe/chainbridge-ui",
   "version": "1.0.0",
-  "private": true,
+  "publishConfig": {
+    "access": "restricted"
+  },
   "dependencies": {
-    "@chainbridge-ui/core": "link:./../core",
+    "@chainsafe/chainbridge-ui-core": "^1.0.2",
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import useInterval from "@use-it/interval";
-import { useExplorer } from "@chainbridge-ui/core";
+import { useExplorer } from "@chainsafe/chainbridge-ui-core";
 import { TransferDetailView } from "../../components";
-import { fetchTransaction } from "@chainbridge-ui/core";
+import { fetchTransaction } from "@chainsafe/chainbridge-ui-core";
 import { computeTransferDetails } from "../../utils/Helpers";
 import {
   DepositRecord,
   TransferDetails,
-} from "@chainbridge-ui/core";
+} from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
 
 const TransactionPage = () => {

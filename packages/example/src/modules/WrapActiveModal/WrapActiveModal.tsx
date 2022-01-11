@@ -4,7 +4,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import Typography from "@mui/material/Typography";
 import { CustomModal } from "../../components";
-import { useChainbridge } from "@chainbridge-ui/core";
+import { useChainbridge } from "@chainsafe/chainbridge-ui-core";
 import { EvmBridgeConfig, TokenConfig } from "../../chainbridgeConfig";
 import { useStyles } from "./styles";
 
