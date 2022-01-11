@@ -1715,8 +1715,20 @@
   resolved "https://registry.yarnpkg.com/@celo-tools/celo-ethers-wrapper/-/celo-ethers-wrapper-0.0.5.tgz#a0bd4553e59c0fc4e97dcec97f719fd27dc4498b"
   integrity sha512-an5TaLv/esjQLEYtF79f8isBUtHEN+ZiHci2H4gVTEAgRgS+nSp5QCq8/LV/biAh9kJJEpojEzlxJALSKu8Klg==
 
-"@chainbridge-ui/core@link:./packages/core":
-  version "1.0.0"
+"@chainsafe/browser-storage-hooks@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@chainsafe/browser-storage-hooks/-/browser-storage-hooks-1.0.1.tgz#26d32cde1999914db755a631e2643823c54959f7"
+  integrity sha512-Q4b5gQAZnsRXKeADspd5isqfwwhhXjDk70y++YadufA6EZ3tf340oW0OVszp74KaGEw+CAYFGQR4X7bzpZ3x9Q==
+
+"@chainsafe/chainbridge-contracts@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-contracts/-/chainbridge-contracts-2.0.0.tgz#9fbc17876915ed062af74ebb45fb4d0415e3ce52"
+  integrity sha512-bo6Lusr3KBjHpQ5k+Tq7u7Dfox9VOapN+ih4MBhIZ4JGf7bICFsByKXXSFzMsOv2aq0VlmorsTGAaWmMdGprdg==
+
+"@chainsafe/chainbridge-ui-core@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-ui-core/-/chainbridge-ui-core-1.0.2.tgz#90dcc0d0a0052682e3b50188523d0ddcbbf1ff82"
+  integrity sha512-afotSFJvsxfAhlFurXSvyI8lyN8/B8r6rFkHMEHlyGUwWZ53e+GUQjtkQhihwg7i3q63X5tEhjw54vhGOlxvyQ==
   dependencies:
     "@babel/core" "^7.12.3"
     "@babel/runtime" "^7.12.1"
@@ -1736,16 +1748,6 @@
     bnc-onboard "1.26.1"
     ethers "^5.4.5"
     react "^16.13.1"
-
-"@chainsafe/browser-storage-hooks@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@chainsafe/browser-storage-hooks/-/browser-storage-hooks-1.0.1.tgz#26d32cde1999914db755a631e2643823c54959f7"
-  integrity sha512-Q4b5gQAZnsRXKeADspd5isqfwwhhXjDk70y++YadufA6EZ3tf340oW0OVszp74KaGEw+CAYFGQR4X7bzpZ3x9Q==
-
-"@chainsafe/chainbridge-contracts@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-contracts/-/chainbridge-contracts-2.0.0.tgz#9fbc17876915ed062af74ebb45fb4d0415e3ce52"
-  integrity sha512-bo6Lusr3KBjHpQ5k+Tq7u7Dfox9VOapN+ih4MBhIZ4JGf7bICFsByKXXSFzMsOv2aq0VlmorsTGAaWmMdGprdg==
 
 "@chainsafe/common-components@1.0.26":
   version "1.0.26"
@@ -17818,6 +17820,11 @@ wcwidth@^1.0.1:
   integrity sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=
   dependencies:
     defaults "^1.0.3"
+
+web-vitals@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.3.tgz#6dca59f41dbc3fcccdb889da06191b437b18f534"
+  integrity sha512-+ijpniAzcnQicXaXIN0/eHQAiV/jMt1oHGHTmz7VdAJPPkzzDhmoYPSpLgJTuFtUh+jCjxCoeTZPg7Ic+g8o7w==
 
 web3-core-helpers@1.3.6:
   version "1.3.6"
