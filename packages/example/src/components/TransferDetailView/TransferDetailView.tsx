@@ -11,7 +11,7 @@ import {
   showImageUrlNetworkIcons,
   getProposalStatus,
 } from "../../utils/Helpers";
-import { TransferDetails } from "@chainbridge-ui/core";
+import { TransferDetails } from "@chainsafe/chainbridge-ui-core";
 import { ReactComponent as HashTxIcon } from "../../media/Icons/hashTx.svg";
 import AddressOrLink from "../AddressOrLink/AddressOrLink";
 import { useStyles } from "../ExplorerTable/styles";

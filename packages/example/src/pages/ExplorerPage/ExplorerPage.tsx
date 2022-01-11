@@ -10,7 +10,7 @@ import {
   useExplorer,
   ExplorerPageState,
   transfersReducer,
-} from "@chainbridge-ui/core";
+} from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
 
 type PreflightDetails = {

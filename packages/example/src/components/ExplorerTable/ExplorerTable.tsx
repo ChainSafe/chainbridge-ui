@@ -14,7 +14,7 @@ import {
 import {
   DepositRecord,
   TransferDetails,
-} from "@chainbridge-ui/core";
+} from "@chainsafe/chainbridge-ui-core";
 import {
   formatTransferDate,
   getRandomSeed,

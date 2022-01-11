@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
-import { useChainbridge, useNetworkManager } from "@chainbridge-ui/core";
+import { useChainbridge, useNetworkManager } from "@chainsafe/chainbridge-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 import {
