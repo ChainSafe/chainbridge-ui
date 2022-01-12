@@ -1,10 +1,15 @@
 import React, { useState, useReducer, useEffect } from "react";
+
 import {
-  Typography,
-  Grid,
   useHistory,
-  Button,
-} from "@chainsafe/common-components";
+} from "react-router-dom"
+import Typography from "@mui/material/Typography";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+
+
 import { ExplorerTable } from "../../components";
 import {
   useExplorer,
@@ -54,17 +59,10 @@ const ExplorerPage = () => {
     initState
   );
 
-  const { redirect } = useHistory();
+  const history = useHistory();
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
-
-  const renderOptions = () => {
-    return chains.map(({ domainId, name }) => ({
-      label: name,
-      value: domainId,
-    }));
-  };
 
   const handleOpenModal = (txId: string | undefined) => () => {
     const txDetail = transfers.find((tx) => tx.id === txId);
@@ -78,7 +76,7 @@ const ExplorerPage = () => {
       ...explorerState,
       transferDetails: txDetail,
     });
-    redirect(`/explorer/transaction/detail-view/${txDetail?.id}`);
+    history.push(`/explorer/transaction/detail-view/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -86,7 +84,7 @@ const ExplorerPage = () => {
     explorerPageDispatcher({
       type: "cleanTransferDetails",
     });
-    redirect("/explorer/transaction/list");
+    history.push("/explorer/transaction/list");
   };
 
   const handleTimelineButtonClick = () =>
@@ -109,29 +107,35 @@ const ExplorerPage = () => {
   }, [transfers]);
 
   return (
-    <Grid lg={12} justifyContent="center" flexWrap="wrap">
+    <Box sx={{ display: 'flex',justifyContent: 'center', flexWrap: 'wrap'}}>
       <section className={classes.mainContent}>
         <section className={classes.networkInfoContainer}>
           <div className={classes.networkInfo}>
             <div className={classes.networkSelection}>
-              <Typography component="h2" variant="h2">
+              <Typography component="h5" variant="h5">
                 Transfers on
               </Typography>
-              {/* <div className={classes.networkSelectorContainer}>
-                <SelectInput
+              <div className={classes.networkSelectorContainer}>
+                <Select
                   className={classes.networkSelector}
-                  options={renderOptions()}
-                  onChange={(value: any) => {
-                    explorerDispatcher({
+                  onChange={(e: SelectChangeEvent) => {
+                    console.log("e", e)
+                    explorerPageDispatcher({
                       type: "selectNetwork",
-                      payload: value,
-                    });
+                      payload: Number(e.target.value)
+                    })
                   }}
-                  value={network}
+                  value={explorerPageState.network.domainId.toString()}
                   placeholder="Select network"
                   disabled={!chains.length}
-                />
-              </div> */}
+                >
+                  {chains.map(({ domainId, name }) => (
+                    <MenuItem key={domainId} value={domainId}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
             </div>
           </div>
           {/* <div className={classes.searchInput}>
@@ -184,7 +188,7 @@ const ExplorerPage = () => {
           </div>
         </div>
       </section>
-    </Grid>
+    </Box>
   );
 };
 export default ExplorerPage;

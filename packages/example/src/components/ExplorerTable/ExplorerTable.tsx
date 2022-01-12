@@ -70,14 +70,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       );
       // console.log(fromChain, toChain);
       const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
-      console.log(
-        "🚀 ~ file: ExplorerTable.tsx ~ line 73 ~ transferData.map ~ transfer.sourceTokenAddress",
-        transfer.sourceTokenAddress
-      );
-      console.log(
-        "🚀 ~ file: ExplorerTable.tsx ~ line 73 ~ transferData.map ~ fromToken",
-        fromToken
-      );
+      // console.log(
+      //   "🚀 ~ file: ExplorerTable.tsx ~ line 73 ~ transferData.map ~ transfer.sourceTokenAddress",
+      //   transfer.sourceTokenAddress
+      // );
+      // console.log(
+      //   "🚀 ~ file: ExplorerTable.tsx ~ line 73 ~ transferData.map ~ fromToken",
+      //   fromToken
+      // );
 
       const randomString = getRandomSeed();
 
