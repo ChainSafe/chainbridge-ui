@@ -1,20 +1,24 @@
 name: Release
 
 on:
-  push:
-    paths:
-      - "packages/core/**"
-    branches:
-      - master
-    # when any of these versions receive a push
-    tags:
-      - "v*.*.*"
-  pull_request:
-    paths:
-    - "packages/core/**"
-    branches: [main]
-    tags:
-      - "v*.*.*"
+  # push:
+  #   paths:
+  #     - "packages/core/**"
+  #   branches:
+  #     - master
+  #   # when any of these versions receive a push
+  #   tags:
+  #     - "v*.*.*"
+  # pull_request:
+  #   paths:
+  #   - "packages/core/**"
+  #   branches: [main]
+  #   tags:
+  #     - "v*.*.*"
+  # when any releases are created
+  release:
+    types:
+      - created
 
 jobs:
   build:
