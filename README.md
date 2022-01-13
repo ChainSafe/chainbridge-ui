@@ -1,4 +1,4 @@
-<p align="center"><img width="500" title="Chainbridge UI" src='assets/chainsafe_log.png'/></p>
+<p align="center"><a href="https://https://chainsafe.io/"><img width="500" title="Chainbridge UI" src='assets/chainsafe_logo.png'/></a></p>
 ---
 
 ## Introduction
