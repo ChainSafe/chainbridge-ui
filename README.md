@@ -5,7 +5,7 @@
 ## Introduction
 **Chainbridge UI** is a OpenSourced (under GNU Lesser General Public License v3.0) whitelabel application for developers
 to work with Chainsafe [Chainbridge](https://github.com/ChainSafe/chainbridge-core). UI consist of two part:
-SendingUI is used to interact with [Bridge](https://github.com/chainsafe/chainbridge-solidity) smart contract
+BridgeUI is used to interact with [Bridge](https://github.com/chainsafe/chainbridge-solidity) smart contracts
 in order to send deposits.
 ExplorerUI is used to track and navigate every bridging that happens over specific Bridge smart contract.
 
