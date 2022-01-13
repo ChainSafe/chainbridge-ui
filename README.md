@@ -3,7 +3,7 @@
 # ChainbridgeUI
 
 ## Introduction
-**Chainbridge UI** is a OpenSourced (under GNU Lesser General Public License v3.0) whitelabel application for developers
+**Chainbridge UI** is an OpenSource (under GNU Lesser General Public License v3.0) whitelabel application for developers
 to work with Chainsafe [Chainbridge](https://github.com/ChainSafe/chainbridge-core). UI consist of two part:
 BridgeUI is used to interact with [Bridge](https://github.com/chainsafe/chainbridge-solidity) smart contracts
 in order to send deposits.
