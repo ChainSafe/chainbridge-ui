@@ -17,6 +17,7 @@ It requires you to have MetaMask wallet and to have some ETH on those network in
 ***NOTE*** this is under an active development so can be broken occasionally.
 
 ## Running locally
+TODO
 
 ## FAQ
 Please check our [Q&A section](https://github.com/ChainSafe/chainbridge-ui/discussions/categories/q-a)
