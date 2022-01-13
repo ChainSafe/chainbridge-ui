@@ -14,7 +14,7 @@ You can test UI with our [live demo](52.73.103.2)
 This demo is a working bridge between Rinkebay <> Goerly <> Alfajores (celo).
 It requires you to have MetaMask wallet and to have some ETH on those network in order to pay tx fees, also you need to request some ERC20 tokens in our [discord](https://discord.gg/ykXsJKfhgq) channel
 
-*NOTE* this is under an active development so can be broken occasionally.
+***NOTE*** this is under an active development so can be broken occasionally.
 
 ## Running locally
 
