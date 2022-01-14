@@ -6,7 +6,6 @@ import {
   useChainbridge,
   useNetworkManager,
 } from "@chainsafe/chainbridge-ui-core";
-import chainbridgeConfig from "./runtimeConfig";
 
 import { utils } from "ethers";
 
@@ -82,7 +81,7 @@ const App: React.FC<{}> = () => {
     },
   } = window;
 
-  const tokens = chainbridgeConfig.chains
+  const tokens = chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
       if (bc.networkId) {
