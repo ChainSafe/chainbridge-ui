@@ -5,7 +5,7 @@ import {
   useDestinationBridge,
   useHomeBridge,
   useNetworkManager,
-} from "@chainbridge-ui/core";
+} from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
 
 interface IChangeNetworkDrawerProps {

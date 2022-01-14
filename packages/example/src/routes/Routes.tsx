@@ -16,7 +16,7 @@ import {
   ExplorerPage,
   TransferPage,
 } from "../pages";
-import { ExplorerProvider } from "@chainbridge-ui/core";
+import { ExplorerProvider } from "@chainsafe/chainbridge-ui-core";
 
 export const ROUTE_LINKS = {
   Transfer: "/transfer",

@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@chainsafe/common-components";
 import { useLocation } from "react-router-dom";
-import { useNetworkManager, useHomeBridge } from "@chainbridge-ui/core";
+import { useNetworkManager, useHomeBridge } from "@chainsafe/chainbridge-ui-core";
 import { ROUTE_LINKS } from "../../routes";
 import { chainbridgeConfig } from "../../chainbridgeConfig";
 import { useStyles } from "./styles";

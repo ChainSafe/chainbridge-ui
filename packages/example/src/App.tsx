@@ -11,7 +11,7 @@ import {
   ChainbridgeProvider,
   NetworkManagerProvider,
   LocalProvider,
-} from "@chainbridge-ui/core";
+} from "@chainsafe/chainbridge-ui-core";
 import { AppWrapper } from "./layouts";
 import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";

@@ -1,7 +1,9 @@
 {
   "name": "@chainsafe/chainbridge-ui",
   "version": "1.0.0",
-  "private": true,
+  "publishConfig": {
+    "access": "restricted"
+  },
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",

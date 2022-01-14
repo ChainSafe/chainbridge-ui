@@ -10,7 +10,7 @@ import {
   useChainbridge,
   useHomeBridge,
   useNetworkManager,
-} from "@chainbridge-ui/core";
+} from "@chainsafe/chainbridge-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 

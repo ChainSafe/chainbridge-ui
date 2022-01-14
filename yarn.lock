@@ -1725,30 +1725,6 @@
   resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-contracts/-/chainbridge-contracts-2.0.0.tgz#9fbc17876915ed062af74ebb45fb4d0415e3ce52"
   integrity sha512-bo6Lusr3KBjHpQ5k+Tq7u7Dfox9VOapN+ih4MBhIZ4JGf7bICFsByKXXSFzMsOv2aq0VlmorsTGAaWmMdGprdg==
 
-"@chainsafe/chainbridge-ui-core@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@chainsafe/chainbridge-ui-core/-/chainbridge-ui-core-1.0.2.tgz#90dcc0d0a0052682e3b50188523d0ddcbbf1ff82"
-  integrity sha512-afotSFJvsxfAhlFurXSvyI8lyN8/B8r6rFkHMEHlyGUwWZ53e+GUQjtkQhihwg7i3q63X5tEhjw54vhGOlxvyQ==
-  dependencies:
-    "@babel/core" "^7.12.3"
-    "@babel/runtime" "^7.12.1"
-    "@celo-tools/celo-ethers-wrapper" "^0.0.5"
-    "@chainsafe/chainbridge-contracts" "2.0.0"
-    "@chainsafe/web3-context" "1.2.0"
-    "@polkadot/api" "3.11.1"
-    "@polkadot/extension-dapp" "0.37.1"
-    "@polkadot/keyring" "5.6.3"
-    "@polkadot/networks" "5.6.3"
-    "@polkadot/types" "3.11.1"
-    "@polkadot/ui-keyring" "0.69.1"
-    "@polkadot/ui-settings" "0.69.1"
-    "@polkadot/util" "5.6.3"
-    "@polkadot/util-crypto" "5.6.3"
-    bignumber.js "^9.0.1"
-    bnc-onboard "1.26.1"
-    ethers "^5.4.5"
-    react "^16.13.1"
-
 "@chainsafe/common-components@1.0.26":
   version "1.0.26"
   resolved "https://registry.yarnpkg.com/@chainsafe/common-components/-/common-components-1.0.26.tgz#d15850d2c9e06f87c2a74504f7f1f70e031daaeb"
