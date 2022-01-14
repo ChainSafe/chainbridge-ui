@@ -9,7 +9,7 @@ import {
   useHomeBridge,
   useChainbridge,
   TransactionStatus,
-} from "@chainbridge-ui/core";
+} from "@chainsafe/chainbridge-ui-core";
 
 import InitTransferBody from "./InitTransferBody";
 import InTransitBody from "./InTransitBody";

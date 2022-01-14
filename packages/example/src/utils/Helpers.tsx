@@ -11,7 +11,7 @@ import CosmosIcon from "../media/networks/cosmos.svg";
 import EthermintIcon from "../media/networks/ethermint.svg";
 import PolkadotIcon from "../media/networks/polkadot.svg";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { DepositRecord, TransferDetails } from "@chainbridge-ui/core";
+import { DepositRecord, TransferDetails } from "@chainsafe/chainbridge-ui-core";
 import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
 
 const { decodeAddress, encodeAddress } = require("@polkadot/keyring");

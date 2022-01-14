@@ -1,5 +1,5 @@
 import React from "react";
-import { useNetworkManager, useChainbridge } from "@chainbridge-ui/core";
+import { useNetworkManager, useChainbridge } from "@chainsafe/chainbridge-ui-core";
 import {
   Button,
   Modal,
