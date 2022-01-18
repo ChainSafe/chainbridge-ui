@@ -1,7 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useReducer } from "react";
 import {
   ExplorerState,
   PaginationParams,
+  transfersReducer,
+  ExplorerPageState,
+  Action
 } from "../../reducers/TransfersReducer";
 import { fetchTransfers } from "../../services/ExplorerService";
 
@@ -15,6 +18,8 @@ type ExplorerContext = {
   explorerState: ExplorerState;
   loadMore: (options: PaginationParams) => void;
   setExplorerStateContext: any;
+  explorerPageState: ExplorerPageState;
+  explorerPageDispatcher: React.Dispatch<Action>
 };
 
 const ExplorerContext = React.createContext<ExplorerContext | undefined>(
@@ -28,6 +33,43 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
     },
   } = window;
 
+  const initState: ExplorerPageState = {
+    // fromDomainId: 0,
+    // toDomainId: 0,
+    transferDetails: {
+      id: "",
+      formatedTransferDate: "",
+      fromAddress: "",
+      proposalStatus: 0,
+      formatedAmount: "",
+      fromNetworkName: "",
+      toNetworkName: "",
+      depositTransactionHash: "",
+      fromDomainId: 0,
+      toDomainId: 0,
+      voteEvents: [],
+      proposalEvents: [],
+      timelineMessages: [],
+      fromChain: undefined,
+      toChain: undefined,
+      pillColorStatus: { borderColor: "", background: "" },
+    },
+    timelineButtonClicked: false,
+    chains,
+  };
+
+  const [explorerPageState, explorerPageDispatcher] = useReducer(
+    transfersReducer,
+    initState
+  );
+
+  const { fromDomainId, toDomainId, depositTransactionHash } = explorerPageState;
+  const filters = {
+    fromDomainId,
+    toDomainId,
+    depositTransactionHash
+  };
+
   const [state, setState] = useState<ExplorerState>({
     isLoading: false,
     transfers: [],
@@ -36,11 +78,11 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
   });
 
   useEffect(() => {
-    fetchTransfers(setState, state, DEFAULT_PAGINATION_OPTIONS);
-  }, []);
+    fetchTransfers(setState, state, DEFAULT_PAGINATION_OPTIONS, filters);
+  }, [fromDomainId, toDomainId, depositTransactionHash]);
 
   const loadMore = (options: PaginationParams) =>
-    fetchTransfers(setState, state, options);
+    fetchTransfers(setState, state, options, filters);
 
   return (
     <ExplorerContext.Provider
@@ -48,6 +90,8 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
         explorerState: state,
         loadMore,
         setExplorerStateContext: setState,
+        explorerPageState,
+        explorerPageDispatcher
       }}
     >
       {children}

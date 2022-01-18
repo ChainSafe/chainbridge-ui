@@ -1,21 +1,18 @@
 import React, { useState, useReducer, useEffect } from "react";
 
-import {
-  useHistory,
-} from "react-router-dom"
+import { useHistory } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 
-
+import { useExplorer } from "@chainsafe/chainbridge-ui-core";
 import { ExplorerTable } from "../../components";
-import {
-  useExplorer,
-  ExplorerPageState,
-  transfersReducer,
-} from "@chainsafe/chainbridge-ui-core";
+
 import { useStyles } from "./styles";
 
 type PreflightDetails = {
@@ -27,37 +24,14 @@ type PreflightDetails = {
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
-  const { explorerState, loadMore, setExplorerStateContext } = explorerContext;
+  const {
+    explorerState,
+    loadMore,
+    setExplorerStateContext,
+    explorerPageState,
+    explorerPageDispatcher,
+  } = explorerContext;
   const { chains, transfers, pageInfo, isLoading } = explorerState;
-
-  const initState: ExplorerPageState = {
-    network: { name: "", domainId: 0 },
-    transferDetails: {
-      id: "",
-      formatedTransferDate: "",
-      fromAddress: "",
-      proposalStatus: 0,
-      formatedAmount: "",
-      fromNetworkName: "",
-      toNetworkName: "",
-      depositTransactionHash: "",
-      fromDomainId: 0,
-      toDomainId: 0,
-      voteEvents: [],
-      proposalEvents: [],
-      timelineMessages: [],
-      fromChain: undefined,
-      toChain: undefined,
-      pillColorStatus: { borderColor: "", background: "" },
-    },
-    timelineButtonClicked: false,
-    chains,
-  };
-
-  const [explorerPageState, explorerPageDispatcher] = useReducer(
-    transfersReducer,
-    initState
-  );
 
   const history = useHistory();
 
@@ -107,44 +81,82 @@ const ExplorerPage = () => {
   }, [transfers]);
 
   return (
-    <Box sx={{ display: 'flex',justifyContent: 'center', flexWrap: 'wrap'}}>
+    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
       <section className={classes.mainContent}>
         <section className={classes.networkInfoContainer}>
           <div className={classes.networkInfo}>
             <div className={classes.networkSelection}>
-              <Typography component="h5" variant="h5">
-                Transfers on
+              <Typography
+                component="h5"
+                variant="h5"
+                noWrap
+                sx={{ flexShrink: 0 }}
+              >
+                Transfers from
               </Typography>
-              <div className={classes.networkSelectorContainer}>
-                <Select
-                  className={classes.networkSelector}
-                  onChange={(e: SelectChangeEvent) => {
-                    console.log("e", e)
-                    explorerPageDispatcher({
-                      type: "selectNetwork",
-                      payload: Number(e.target.value)
-                    })
-                  }}
-                  value={explorerPageState.network.domainId.toString()}
-                  placeholder="Select network"
-                  disabled={!chains.length}
-                >
-                  {chains.map(({ domainId, name }) => (
-                    <MenuItem key={domainId} value={domainId}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </div>
+              <Select
+                className={classes.networkSelector}
+                onChange={(e: SelectChangeEvent) => {
+                  console.log("e", e);
+                  explorerPageDispatcher({
+                    type: "selectFromDomainId",
+                    payload: Number(e.target.value),
+                  });
+                }}
+                value={String(explorerPageState.fromDomainId)}
+                placeholder="Select network"
+                disabled={!chains.length}
+              >
+                {chains.map(({ domainId, name }) => (
+                  <MenuItem key={domainId} value={domainId}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Typography
+                component="h5"
+                variant="h5"
+                sx={{ marginLeft: "15px" }}
+              >
+                to
+              </Typography>
+              <Select
+                className={classes.networkSelector}
+                onChange={(e: SelectChangeEvent) => {
+                  console.log("e", e);
+                  explorerPageDispatcher({
+                    type: "selectToDomainId",
+                    payload: Number(e.target.value),
+                  });
+                }}
+                value={String(explorerPageState.toDomainId)}
+                placeholder="Select network"
+                disabled={!chains.length}
+              >
+                {chains.map(({ domainId, name }) => (
+                  <MenuItem key={domainId} value={domainId}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
             </div>
           </div>
-          {/* <div className={classes.searchInput}>
-            <TextInput
-              placeholder={"Search by deposit hash"}
-              LeftIcon={SearchIcon}
-              onChange={() => {}}
+          <Box sx={{ display: "grid", gridRow: "1", width: "50ch" }}>
+            <TextField
+              placeholder="Search by deposit hash"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              value={explorerPageState.depositTransactionHash}
+              onChange={() => {
+                console.log("do nothing!");
+              }}
             />
-          </div> */}
+          </Box>
         </section>
         <div className={classes.explorerTableContainer}>
           <div className={classes.explorerTable}>

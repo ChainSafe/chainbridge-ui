@@ -112,7 +112,9 @@ type TokenForDetailsView = {
 };
 
 export type Action =
-  | { type: "selectNetwork"; payload: number }
+  | { type: "setDepositTransactionHash"; payload: string }
+  | { type: "selectFromDomainId"; payload: number }
+  | { type: "selectToDomainId"; payload: number }
   | { type: "setTransferDetails"; payload: DepositRecord }
   | { type: "cleanTransferDetails" }
   | { type: "setTokenIconsForDetailView"; payload: TokenForDetailsView }
@@ -120,11 +122,6 @@ export type Action =
 
 export type Transfers = {
   [depositNonce: number]: DepositRecord;
-};
-
-type NetworkSelection = {
-  name: string;
-  domainId: number;
 };
 
 export type TransferDetails = {
@@ -171,7 +168,9 @@ export type PaginationParams = {
 };
 
 export type ExplorerPageState = {
-  network: NetworkSelection;
+  fromDomainId?: number;
+  toDomainId?: number;
+  depositTransactionHash?: string;
   transferDetails: TransferDetails;
   timelineButtonClicked: boolean;
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
@@ -182,13 +181,18 @@ export function transfersReducer(
   action: Action
 ): ExplorerPageState {
   switch (action.type) {
-    case "selectNetwork":
-      const { chains } = explorerState;
-      const networkSelected = chains.find(
+    case "setDepositTransactionHash":
+      return { ...explorerState, depositTransactionHash: action.payload };
+    case "selectFromDomainId":
+      const {domainId: fromDomainId} = explorerState.chains.find(
         ({ domainId }) => domainId === action.payload
-      );
-      const { name, domainId } = networkSelected!;
-      return { ...explorerState, network: { name, domainId } };
+      )!;
+      return { ...explorerState, fromDomainId };
+    case "selectToDomainId":
+      const {domainId: toDomainId} = explorerState.chains.find(
+        ({ domainId }) => domainId === action.payload
+      )!;
+      return { ...explorerState, toDomainId };
     case "setTransferDetails":
       const transferDetails = computeTransferDetails(
         action.payload,
