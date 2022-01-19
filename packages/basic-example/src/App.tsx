@@ -53,7 +53,7 @@ const BasicApp = (props: any) => {
               <h2>Destination chains</h2>
               <div>
                 {destinationChains.map((d) => (
-                  <div>
+                  <div key={d.domainId}>
                     <p>Network name: {d.name}</p>
                     <p>Network Id: {d.domainId}</p>
                     <br />
