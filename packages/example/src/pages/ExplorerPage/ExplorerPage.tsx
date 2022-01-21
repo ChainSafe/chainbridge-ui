@@ -10,8 +10,10 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { useExplorer } from "@chainsafe/chainbridge-ui-core";
+import { useExplorer, useChainbridge } from "@chainsafe/chainbridge-ui-core";
 import { ExplorerTable } from "../../components";
+import MyAllSwitch from "./MyAllSwitch";
+import SelectNetwork from "./SelectNetwork";
 
 import { useStyles } from "./styles";
 
@@ -37,6 +39,14 @@ const ExplorerPage = () => {
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
+  const [myAllSwitchValue, setMyAllSwitchValue] = useState("all");
+
+  const { isReady, address } = useChainbridge();
+  useEffect(() => {
+    if (isReady) {
+      setMyAllSwitchValue("my");
+    }
+  }, [isReady, address]);
 
   const handleOpenModal = (txId: string | undefined) => () => {
     const txDetail = transfers.find((tx) => tx.id === txId);
@@ -94,25 +104,17 @@ const ExplorerPage = () => {
               >
                 Transfers from
               </Typography>
-              <Select
+              <SelectNetwork
                 className={classes.networkSelector}
-                onChange={(e: SelectChangeEvent) => {
-                  console.log("e", e);
+                onChange={(val: number) => {
                   explorerPageDispatcher({
                     type: "selectFromDomainId",
-                    payload: Number(e.target.value),
+                    payload: val,
                   });
                 }}
-                value={String(explorerPageState.fromDomainId)}
-                placeholder="Select network"
-                disabled={!chains.length}
-              >
-                {chains.map(({ domainId, name }) => (
-                  <MenuItem key={domainId} value={domainId}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
+                chains={chains}
+                value={explorerPageState.fromDomainId?.toString() ?? ""}
+              />
               <Typography
                 component="h5"
                 variant="h5"
@@ -120,25 +122,17 @@ const ExplorerPage = () => {
               >
                 to
               </Typography>
-              <Select
+              <SelectNetwork
                 className={classes.networkSelector}
-                onChange={(e: SelectChangeEvent) => {
-                  console.log("e", e);
+                onChange={(val: number) => {
                   explorerPageDispatcher({
                     type: "selectToDomainId",
-                    payload: Number(e.target.value),
+                    payload: val,
                   });
                 }}
-                value={String(explorerPageState.toDomainId)}
-                placeholder="Select network"
-                disabled={!chains.length}
-              >
-                {chains.map(({ domainId, name }) => (
-                  <MenuItem key={domainId} value={domainId}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
+                chains={chains}
+                value={explorerPageState.toDomainId?.toString() ?? ""}
+              />
             </div>
           </div>
           <Box sx={{ display: "grid", gridRow: "1", width: "50ch" }}>
@@ -152,11 +146,35 @@ const ExplorerPage = () => {
                 ),
               }}
               value={explorerPageState.depositTransactionHash}
-              onChange={() => {
-                console.log("do nothing!");
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                explorerPageDispatcher({
+                  type: "setDepositTransactionHash",
+                  payload: e.target.value,
+                });
               }}
             />
           </Box>
+          {isReady && address && (
+            <Box
+              sx={{
+                ml: 1,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <MyAllSwitch
+                switchValue={myAllSwitchValue}
+                onSwitchChange={(e: any, newSwitchValue: string) => {
+                  console.log("switch! ", newSwitchValue);
+                  setMyAllSwitchValue(newSwitchValue);
+                  explorerPageDispatcher({
+                    type: "setMyAddress",
+                    payload: address,
+                  });
+                }}
+              />
+            </Box>
+          )}
         </section>
         <div className={classes.explorerTableContainer}>
           <div className={classes.explorerTable}>
