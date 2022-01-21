@@ -17,6 +17,8 @@ export const fetchTransfers = async (
     fromDomainId?: number;
     toDomainId?: number;
     depositTransactionHash?: string;
+    fromAddress?: string;
+    toAddress?: string;
   }
 ): Promise<any> => {
   const {
@@ -27,10 +29,13 @@ export const fetchTransfers = async (
       ...state,
       isLoading: true,
     });
+    const clearedParams = Object.entries({ ...options, ...filters }).filter(
+      ([k, v]) => v !== undefined && v !== ""
+    );
     // @ts-ignore
-    const params = new URLSearchParams({...options, ...filters}).toString();
+    const params = new URLSearchParams(clearedParams).toString();
 
-    const response = await fetch(`${INDEXER_URL}/transfers?${params}`);
+    const response = await fetch(`${INDEXER_URL}/transfers/filters?${params}`);
     const responseParsed = await response.json();
     const transfers: Array<DepositRecord> = responseParsed.transfers;
     const pageInfo: PageInfo = responseParsed.pageInfo;

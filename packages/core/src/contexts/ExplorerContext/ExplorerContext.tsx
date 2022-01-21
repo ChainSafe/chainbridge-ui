@@ -4,7 +4,7 @@ import {
   PaginationParams,
   transfersReducer,
   ExplorerPageState,
-  Action
+  Action,
 } from "../../reducers/TransfersReducer";
 import { fetchTransfers } from "../../services/ExplorerService";
 
@@ -19,7 +19,7 @@ type ExplorerContext = {
   loadMore: (options: PaginationParams) => void;
   setExplorerStateContext: any;
   explorerPageState: ExplorerPageState;
-  explorerPageDispatcher: React.Dispatch<Action>
+  explorerPageDispatcher: React.Dispatch<Action>;
 };
 
 const ExplorerContext = React.createContext<ExplorerContext | undefined>(
@@ -63,11 +63,19 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
     initState
   );
 
-  const { fromDomainId, toDomainId, depositTransactionHash } = explorerPageState;
+  const {
+    fromDomainId,
+    toDomainId,
+    depositTransactionHash,
+    fromAddress,
+    toAddress,
+  } = explorerPageState;
   const filters = {
     fromDomainId,
     toDomainId,
-    depositTransactionHash
+    depositTransactionHash,
+    fromAddress,
+    toAddress,
   };
 
   const [state, setState] = useState<ExplorerState>({
@@ -79,7 +87,13 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
 
   useEffect(() => {
     fetchTransfers(setState, state, DEFAULT_PAGINATION_OPTIONS, filters);
-  }, [fromDomainId, toDomainId, depositTransactionHash]);
+  }, [
+    fromDomainId,
+    toDomainId,
+    depositTransactionHash,
+    fromAddress,
+    toAddress,
+  ]);
 
   const loadMore = (options: PaginationParams) =>
     fetchTransfers(setState, state, options, filters);
@@ -91,7 +105,7 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
         loadMore,
         setExplorerStateContext: setState,
         explorerPageState,
-        explorerPageDispatcher
+        explorerPageDispatcher,
       }}
     >
       {children}

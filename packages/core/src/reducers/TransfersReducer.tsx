@@ -112,6 +112,7 @@ type TokenForDetailsView = {
 };
 
 export type Action =
+  | { type: "setMyAddress"; payload: string }
   | { type: "setDepositTransactionHash"; payload: string }
   | { type: "selectFromDomainId"; payload: number }
   | { type: "selectToDomainId"; payload: number }
@@ -171,6 +172,9 @@ export type ExplorerPageState = {
   fromDomainId?: number;
   toDomainId?: number;
   depositTransactionHash?: string;
+  fromAddress?: string;
+  toAddress?: string;
+
   transferDetails: TransferDetails;
   timelineButtonClicked: boolean;
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
@@ -181,15 +185,21 @@ export function transfersReducer(
   action: Action
 ): ExplorerPageState {
   switch (action.type) {
+    case "setMyAddress":
+      return {
+        ...explorerState,
+        fromAddress: action.payload,
+        toAddress: action.payload,
+      };
     case "setDepositTransactionHash":
       return { ...explorerState, depositTransactionHash: action.payload };
     case "selectFromDomainId":
-      const {domainId: fromDomainId} = explorerState.chains.find(
+      const { domainId: fromDomainId } = explorerState.chains.find(
         ({ domainId }) => domainId === action.payload
       )!;
       return { ...explorerState, fromDomainId };
     case "selectToDomainId":
-      const {domainId: toDomainId} = explorerState.chains.find(
+      const { domainId: toDomainId } = explorerState.chains.find(
         ({ domainId }) => domainId === action.payload
       )!;
       return { ...explorerState, toDomainId };
