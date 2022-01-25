@@ -2,7 +2,8 @@
 
 ## vNext
 
-- ...
+- Cherry picked 6159de29, ae130023 from the upstream
+- Turned off double approval
 
 ## v0.5.0
 
