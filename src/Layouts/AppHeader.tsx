@@ -21,7 +21,6 @@ const useStyles = makeStyles(
         top: 0,
         left: 0,
         backgroundColor: "#FFFFFF",
-        borderBottom: `1px solid ${palette.additional["header"][3]}`,
         color: palette.additional["header"][2],
         alignItems: "center",
         zIndex: zIndex?.layer2,
