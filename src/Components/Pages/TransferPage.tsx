@@ -43,9 +43,17 @@ const showImageUrl = (url?: string) =>
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      padding: constants.generalUnit * 6,
+      fontFamily: "Sora, sans-serif",
+      padding: 25,
       position: "relative",
       backgroundColor: "#FFFFFF",
+    },
+    title: {
+      fontSize: "22px",
+      fontWeight: "bold",
+      color: "#000000",
+      textAlign: "center",
+      paddingBottom: "30px",
     },
     walletArea: {
       display: "flex",
@@ -55,7 +63,8 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       width: "100%",
     },
     connectButton: {
-      margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
+      background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+      borderRadius: "5px",
     },
     connecting: {
       textAlign: "center",
@@ -198,6 +207,21 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     accountSelector: {
       marginBottom: 24,
     },
+    transferButton: {
+      background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+      borderRadius: "5px",
+    },
+    footerText: {
+      color: "#5C4DCF",
+      fontSize: "12px",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingTop: "15px",
+      fontFamily: "SF Pro Display, sans-serif",
+      fontStyle: "normal",
+      fontWeight: "bold",
+    },
   })
 );
 
@@ -335,6 +359,7 @@ const TransferPage = () => {
 
   return (
     <article className={classes.root}>
+      <div className={classes.title}>Transfer Tokens (ERC20 to Native)</div>
       <div className={classes.walletArea}>
         {!isReady ? (
           <Button
@@ -365,11 +390,7 @@ const TransferPage = () => {
                 Change
               </Typography>
             </div>
-            <Typography
-              component="h2"
-              variant="h2"
-              className={classes.networkName}
-            >
+            <Typography className={classes.networkName}>
               {homeConfig?.name}
             </Typography>
           </section>
@@ -517,19 +538,23 @@ const TransferPage = () => {
               }
             />
             <section>
-              <Button type="submit" fullsize variant="primary">
+              <Button
+                type="submit"
+                fullsize
+                variant="primary"
+                className={classes.transferButton}
+              >
                 Start transfer
               </Button>
             </section>
-            {/* <section>
-            <QuestionCircleSvg
-              onClick={() => setAboutOpen(true)}
-              className={classes.faqButton}
-            />
-          </section> */}
           </Form>
         )}
       </Formik>
+      <section className={classes.footerText}>
+        <div>Cere Homepage</div>
+        <div>Cere Staking</div>
+        <div>Cere Wiki</div>
+      </section>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
       <ChangeNetworkDrawer
         open={changeNetworkOpen}

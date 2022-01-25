@@ -14,9 +14,10 @@ const useStyles = makeStyles(
         display: "flex",
         position: "fixed",
         justifyContent: "space-between",
-        padding: `${constants.generalUnit * 2}px ${
-          constants.generalUnit * 4
-        }px`,
+        // padding: `${constants.generalUnit * 2}px ${
+        //   constants.generalUnit * 4
+        // }px`,
+        padding: "25px",
         width: "100%",
         top: 0,
         left: 0,
@@ -27,6 +28,7 @@ const useStyles = makeStyles(
         [breakpoints.down("sm")]: {
           flexDirection: "column",
         },
+        alignContent: "center",
       },
       left: {
         display: "flex",
