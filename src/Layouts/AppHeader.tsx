@@ -10,6 +10,7 @@ const useStyles = makeStyles(
   ({ constants, palette, zIndex, breakpoints }: ITheme) => {
     return createStyles({
       root: {
+        fontFamily: "Sora, sans-serif",
         display: "flex",
         position: "fixed",
         justifyContent: "space-between",
@@ -19,7 +20,7 @@ const useStyles = makeStyles(
         width: "100%",
         top: 0,
         left: 0,
-        backgroundColor: palette.additional["header"][1],
+        backgroundColor: "#FFFFFF",
         borderBottom: `1px solid ${palette.additional["header"][3]}`,
         color: palette.additional["header"][2],
         alignItems: "center",
@@ -76,6 +77,10 @@ const useStyles = makeStyles(
       },
       title: {
         paddingLeft: 10,
+        fontStyle: "normal",
+        fontWeight: "bold",
+        fontSize: "30px",
+        color: "#000000",
       },
     });
   }
@@ -100,23 +105,12 @@ const AppHeader: React.FC<IAppHeader> = () => {
           className={classes.title}
           to="/"
         >
-          <Typography variant="h4">Bridge</Typography>
-          <br />
-          <Typography variant="body1">
-            Transfer CERE tokens from Ethereum and Polygon to Cere Network
+          <Typography variant="h4" className={classes.title}>
+            Cere Bridge
           </Typography>
         </NavLink>
       </div>
       <div className={classes.rightWrapper}>
-        <section className={classes.link}>
-          <a
-            href="https://cere-network.gitbook.io/cere-network/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Typography variant="h5">DDC Wiki</Typography>
-          </a>
-        </section>
         <section className={classes.state}>
           {!isReady ? (
             <Typography variant="h5">No wallet connected</Typography>
