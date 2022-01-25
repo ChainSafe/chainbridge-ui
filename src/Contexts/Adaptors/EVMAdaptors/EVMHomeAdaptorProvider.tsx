@@ -19,13 +19,6 @@ import { decodeAddress } from "@polkadot/util-crypto";
 
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
 
-const resetAllowanceLogicFor = [
-  "0xdac17f958d2ee523a2206206994597c13d831ec7", //USDT
-  "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1", //cUSD CELO
-  // "0xe09523d86d9b788BCcb580d061605F31FCe69F51", //сTST CELO cUSD on Rinkeby
-  //Add other offending tokens here
-];
-
 export const EVMHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
@@ -118,6 +111,12 @@ export const EVMHomeAdaptorProvider = ({
       onboard
         .walletSelect("metamask")
         .then((success) => {
+          if (window.ethereum) {
+            window.ethereum.on("chainChanged", (ch: any) => {
+              window.location.reload();
+            });
+          }
+
           setWalletSelected(success);
           if (success) {
             checkIsReady()
@@ -348,13 +347,16 @@ export const EVMHomeAdaptorProvider = ({
           address,
           (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
         );
-
+        console.log(
+          "🚀  currentAllowance",
+          utils.formatUnits(currentAllowance, erc20Decimals)
+        );
         if (
           Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount
         ) {
           if (
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
-            resetAllowanceLogicFor.includes(tokenAddress)
+            token.isDoubleApproval
           ) {
             //We need to reset the user's allowance to 0 before we give them a new allowance
             //TODO Should we alert the user this is happening here?
