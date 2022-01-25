@@ -61,6 +61,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       alignItems: "center",
       justifyContent: "center",
       width: "100%",
+      marginBottom: 24,
     },
     connectButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
@@ -470,7 +471,7 @@ const TransferPage = () => {
                       preflightDetails.token === ""
                     }
                     name="tokenAmount"
-                    label="I want to send"
+                    label="I want to send:"
                   />
                 </div>
               </section>
@@ -514,7 +515,7 @@ const TransferPage = () => {
               <AddressInput
                 disabled={!destinationChainConfig}
                 name="receiver"
-                label="Destination Address"
+                label="Destination Address:"
                 placeholder="Please enter the receiving address"
                 className={classes.address}
                 classNames={{
@@ -544,7 +545,7 @@ const TransferPage = () => {
                 variant="primary"
                 className={classes.transferButton}
               >
-                Start transfer
+                Start Transfer
               </Button>
             </section>
           </Form>
