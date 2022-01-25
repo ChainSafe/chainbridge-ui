@@ -165,11 +165,10 @@ const ExplorerPage = () => {
               <MyAllSwitch
                 switchValue={myAllSwitchValue}
                 onSwitchChange={(e: any, newSwitchValue: string) => {
-                  console.log("switch! ", newSwitchValue);
                   setMyAllSwitchValue(newSwitchValue);
                   explorerPageDispatcher({
                     type: "setMyAddress",
-                    payload: address,
+                    payload: newSwitchValue === "my" ? address : "",
                   });
                 }}
               />
