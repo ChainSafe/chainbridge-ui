@@ -29,6 +29,7 @@ const useStyles = makeStyles(
       inner: {
         paddingTop: constants.navItemHeight as number,
         paddingBottom: constants.navItemHeight as number,
+        backgroundColor: "#F5F7F9",
       },
       cta: {
         display: "block",
