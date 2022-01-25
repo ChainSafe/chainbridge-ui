@@ -111,6 +111,11 @@ type TokenForDetailsView = {
   toChain: EvmBridgeConfig | SubstrateBridgeConfig;
 };
 
+type MyAddressPayload = {
+  address?: string;
+  switchValue: string;
+};
+
 export type Action =
   | { type: "setMyAddress"; payload: string }
   | { type: "setDepositTransactionHash"; payload: string }

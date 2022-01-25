@@ -6,6 +6,8 @@ import {
   ExplorerPageState,
   Action,
 } from "../../reducers/TransfersReducer";
+import { useHomeBridge } from "../HomeBridgeContext";
+
 import { fetchTransfers } from "../../services/ExplorerService";
 
 const DEFAULT_PAGINATION_OPTIONS = { first: "10" };
@@ -33,9 +35,13 @@ const ExplorerProvider = ({ children }: IExplorerContextProps) => {
     },
   } = window;
 
+  const { address } = useHomeBridge();
+
   const initState: ExplorerPageState = {
     // fromDomainId: 0,
     // toDomainId: 0,
+    fromAddress: address,
+    toAddress: address,
     transferDetails: {
       id: "",
       formatedTransferDate: "",
