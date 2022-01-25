@@ -54,7 +54,7 @@ const useStyles = makeStyles(
         height: "100%",
         width: "100%",
         overflow: "hidden",
-        border: `1px solid ${palette.additional["gray"][7]}`,
+        boxShadow: "20px 4px 72px rgba(85, 85, 85, 0.15)",
         borderRadius: 4,
       },
       navTabs: {
