@@ -83,10 +83,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     changeButton: {
       cursor: "pointer",
+      color: "#5C4DCF",
+      fontSize: "11px",
     },
     networkName: {
       padding: "5px 8px",
-      border: `1px solid ${palette.additional["gray"][6]}`,
+      border: `1px solid #C4C4C4`,
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
@@ -120,6 +122,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
           borderRight: 0,
+          border: "1px solid #C4C4C4",
         },
       },
       "& span:last-child.error": {
@@ -153,7 +156,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     address: {
       margin: 0,
       marginBottom: constants.generalUnit * 3,
-      fontSize: 10,
+      fontSize: 8,
     },
     addressInput: {},
     generalInput: {
@@ -194,10 +197,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > *": {
         display: "block",
         width: "50%",
-        color: "#AFAFAF",
+        color: "#000000",
         marginBottom: constants.generalUnit / 2,
         "&:nth-child(even)": {
           textAlign: "right",
+          color: "#AFAFAF",
         },
       },
     },
@@ -218,6 +222,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontFamily: "SF Pro Display, sans-serif",
       fontStyle: "normal",
       fontWeight: "bold",
+    },
+    inputBorder: {
+      border: "1px solid #C4C4C4",
+    },
+    inputLabel: {
+      fontSize: 12,
+      fontWeight: "normal",
+      fontStyle: "normal",
+      color: "#000000",
     },
   })
 );
@@ -378,7 +391,7 @@ const TransferPage = () => {
         ) : (
           <section className={classes.connected}>
             <div>
-              <Typography variant="body1">Home network</Typography>
+              <div className={classes.inputLabel}>Home Network</div>
               <Typography
                 className={classes.changeButton}
                 variant="body1"
