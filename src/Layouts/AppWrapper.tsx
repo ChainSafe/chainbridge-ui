@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
 import { ReactComponent as GlobalSvg } from "../media/Icons/global.svg";
 import { ROUTE_LINKS } from "../Components/Routes";
-import backgroundImage from "../media/bg.svg";
+import backgroundImage from "../media/background-vector-image.svg";
 
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
