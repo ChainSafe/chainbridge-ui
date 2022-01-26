@@ -66,6 +66,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     connectButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
       borderRadius: "5px",
+      "&:hover": {
+        color: "white",
+      },
     },
     connecting: {
       textAlign: "center",
@@ -211,6 +214,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     transferButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
       borderRadius: "5px",
+      "&:hover": {
+        color: "white",
+      },
     },
     footerText: {
       color: "#5C4DCF",
