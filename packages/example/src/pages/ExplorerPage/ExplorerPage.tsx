@@ -1,16 +1,20 @@
 import React, { useState, useReducer, useEffect } from "react";
-import {
-  Typography,
-  Grid,
-  useHistory,
-  Button,
-} from "@chainsafe/common-components";
+
+import { useHistory } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+
+import { useExplorer, useChainbridge } from "@chainsafe/chainbridge-ui-core";
 import { ExplorerTable } from "../../components";
-import {
-  useExplorer,
-  ExplorerPageState,
-  transfersReducer,
-} from "@chainsafe/chainbridge-ui-core";
+import MyAllSwitch from "./MyAllSwitch";
+import SelectNetwork from "./SelectNetwork";
+
 import { useStyles } from "./styles";
 
 type PreflightDetails = {
@@ -22,49 +26,27 @@ type PreflightDetails = {
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
-  const { explorerState, loadMore, setExplorerStateContext } = explorerContext;
+  const {
+    explorerState,
+    loadMore,
+    setExplorerStateContext,
+    explorerPageState,
+    explorerPageDispatcher,
+  } = explorerContext;
   const { chains, transfers, pageInfo, isLoading } = explorerState;
 
-  const initState: ExplorerPageState = {
-    network: { name: "", domainId: 0 },
-    transferDetails: {
-      id: "",
-      formatedTransferDate: "",
-      fromAddress: "",
-      proposalStatus: 0,
-      formatedAmount: "",
-      fromNetworkName: "",
-      toNetworkName: "",
-      depositTransactionHash: "",
-      fromDomainId: 0,
-      toDomainId: 0,
-      voteEvents: [],
-      proposalEvents: [],
-      timelineMessages: [],
-      fromChain: undefined,
-      toChain: undefined,
-      pillColorStatus: { borderColor: "", background: "" },
-    },
-    timelineButtonClicked: false,
-    chains,
-  };
-
-  const [explorerPageState, explorerPageDispatcher] = useReducer(
-    transfersReducer,
-    initState
-  );
-
-  const { redirect } = useHistory();
+  const history = useHistory();
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
+  const [myAllSwitchValue, setMyAllSwitchValue] = useState("all");
 
-  const renderOptions = () => {
-    return chains.map(({ domainId, name }) => ({
-      label: name,
-      value: domainId,
-    }));
-  };
+  const { isReady, address } = useChainbridge();
+  useEffect(() => {
+    if (isReady) {
+      setMyAllSwitchValue("my");
+    }
+  }, [isReady, address]);
 
   const handleOpenModal = (txId: string | undefined) => () => {
     const txDetail = transfers.find((tx) => tx.id === txId);
@@ -78,7 +60,7 @@ const ExplorerPage = () => {
       ...explorerState,
       transferDetails: txDetail,
     });
-    redirect(`/explorer/transaction/detail-view/${txDetail?.id}`);
+    history.push(`/explorer/transaction/detail-view/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -86,7 +68,7 @@ const ExplorerPage = () => {
     explorerPageDispatcher({
       type: "cleanTransferDetails",
     });
-    redirect("/explorer/transaction/list");
+    history.push("/explorer/transaction/list");
   };
 
   const handleTimelineButtonClick = () =>
@@ -109,38 +91,89 @@ const ExplorerPage = () => {
   }, [transfers]);
 
   return (
-    <Grid lg={12} justifyContent="center" flexWrap="wrap">
+    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
       <section className={classes.mainContent}>
         <section className={classes.networkInfoContainer}>
           <div className={classes.networkInfo}>
             <div className={classes.networkSelection}>
-              <Typography component="h2" variant="h2">
-                Transfers on
+              <Typography
+                component="h5"
+                variant="h5"
+                noWrap
+                sx={{ flexShrink: 0 }}
+              >
+                Transfers from
               </Typography>
-              {/* <div className={classes.networkSelectorContainer}>
-                <SelectInput
-                  className={classes.networkSelector}
-                  options={renderOptions()}
-                  onChange={(value: any) => {
-                    explorerDispatcher({
-                      type: "selectNetwork",
-                      payload: value,
-                    });
-                  }}
-                  value={network}
-                  placeholder="Select network"
-                  disabled={!chains.length}
-                />
-              </div> */}
+              <SelectNetwork
+                className={classes.networkSelector}
+                onChange={(val: number) => {
+                  explorerPageDispatcher({
+                    type: "selectFromDomainId",
+                    payload: val,
+                  });
+                }}
+                chains={chains}
+                value={explorerPageState.fromDomainId?.toString() ?? ""}
+              />
+              <Typography
+                component="h5"
+                variant="h5"
+                sx={{ marginLeft: "15px" }}
+              >
+                to
+              </Typography>
+              <SelectNetwork
+                className={classes.networkSelector}
+                onChange={(val: number) => {
+                  explorerPageDispatcher({
+                    type: "selectToDomainId",
+                    payload: val,
+                  });
+                }}
+                chains={chains}
+                value={explorerPageState.toDomainId?.toString() ?? ""}
+              />
             </div>
           </div>
-          {/* <div className={classes.searchInput}>
-            <TextInput
-              placeholder={"Search by deposit hash"}
-              LeftIcon={SearchIcon}
-              onChange={() => {}}
+          <Box sx={{ display: "grid", gridRow: "1", width: "50ch" }}>
+            <TextField
+              placeholder="Search by deposit hash"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              value={explorerPageState.depositTransactionHash}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                explorerPageDispatcher({
+                  type: "setDepositTransactionHash",
+                  payload: e.target.value,
+                });
+              }}
             />
-          </div> */}
+          </Box>
+          {isReady && address && (
+            <Box
+              sx={{
+                ml: 1,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <MyAllSwitch
+                switchValue={myAllSwitchValue}
+                onSwitchChange={(e: any, newSwitchValue: string) => {
+                  setMyAllSwitchValue(newSwitchValue);
+                  explorerPageDispatcher({
+                    type: "setMyAddress",
+                    payload: newSwitchValue === "my" ? address : "",
+                  });
+                }}
+              />
+            </Box>
+          )}
         </section>
         <div className={classes.explorerTableContainer}>
           <div className={classes.explorerTable}>
@@ -184,7 +217,7 @@ const ExplorerPage = () => {
           </div>
         </div>
       </section>
-    </Grid>
+    </Box>
   );
 };
 export default ExplorerPage;

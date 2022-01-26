@@ -15,34 +15,27 @@ export const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
       },
     },
     networkInfoContainer: {
-      display: "grid",
-      gridTemplateColumns: "repeat(2, 1fr)",
+      display: "flex",
+      justifyContent: "space-between",
     },
     networkInfo: {
       display: "grid",
       gridColumn: "1/5",
       gridRow: "1",
+      paddingRight: 15
     },
     networkSelection: {
       display: "flex",
       alignItems: "center",
-      "& > h2": {
-        color: "#595959",
-        fontWeight: 600,
-        marginRight: 26,
-        [breakpoints.down("md")]: {
-          fontSize: 20,
-        },
-      },
+      maxWidth: 600,
     },
     networkSelectorContainer: {
       display: "flex",
-      width: 372,
     },
     searchInput: {
       display: "grid",
-      gridColumn: "3/4",
       gridRow: "1",
+      width: "50ch"
     },
     networkSelector: {
       marginLeft: 21,
