@@ -12,6 +12,7 @@
     "yarn": ">=1"
   },
   "dependencies": {
+    "@chainsafe/chainbridge-ui-core": "1.0.3",
     "@changesets/cli": "^2.14.1",
     "ethers": "5.4.5",
     "prettier": "2.1.2",
@@ -46,5 +47,8 @@
       "**/webpack-dev-server",
       "**/react-scripts"
     ]
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
   }
 }
