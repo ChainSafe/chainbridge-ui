@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import AppHeader from "./AppHeader";
 import { ReactComponent as GlobalSvg } from "../media/Icons/global.svg";
 import { ROUTE_LINKS } from "../Components/Routes";
+import backgroundImage from "../media/bg.svg";
 
 interface IAppWrapper {
   children: ReactNode | ReactNode[];
@@ -19,12 +20,6 @@ const useStyles = makeStyles(
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        paddingTop: 30,
-        marginTop: 10,
-        [breakpoints.between("sm", "xl")]: {
-          paddingTop: 20,
-          marginTop: 55,
-        },
       },
       inner: {
         paddingTop: constants.navItemHeight as number,
@@ -40,23 +35,26 @@ const useStyles = makeStyles(
         right: constants.generalUnit * 3,
       },
       content: {
-        // position: "absolute",
-        // top: "50%",
-        // left: "50%",
-        // transform: "translate(-50%, -50%)",
-        margin: `30px auto`,
-        maxWidth: 460,
+        width: "100%",
         display: "flex",
+        flex: 1,
         flexDirection: "column",
         overflow: "hidden",
         borderRadius: 4,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#F5F7F9",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundPosition: "center",
+        backgroundSize: "95%",
+        backgroundRepeat: "no-repeat",
       },
       pageArea: {
         height: "100%",
-        width: "100%",
         overflow: "hidden",
         boxShadow: "20px 4px 72px rgba(85, 85, 85, 0.15)",
         borderRadius: 4,
+        maxWidth: 460,
       },
       navTabs: {
         // position: "absolute",
@@ -115,15 +113,9 @@ const AppWrapper: React.FC<IAppWrapper> = ({
 
   return (
     <section className={classes.root}>
-      <section className={classes.inner}>
-        <AppHeader />
-        <section className={classes.content}>
-          <div className={classes.pageArea}>{children}</div>
-        </section>
-
-        {/* Put CTA here */}
-        {/* <a className={classes.cta} rel="noopener noreferrer" target="_blank" href="#">
-        </a> */}
+      <AppHeader />
+      <section className={classes.content}>
+        <div className={classes.pageArea}>{children}</div>
       </section>
     </section>
   );

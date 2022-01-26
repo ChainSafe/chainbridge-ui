@@ -12,15 +12,9 @@ const useStyles = makeStyles(
       root: {
         fontFamily: "Sora, sans-serif",
         display: "flex",
-        position: "fixed",
         justifyContent: "space-between",
-        // padding: `${constants.generalUnit * 2}px ${
-        //   constants.generalUnit * 4
-        // }px`,
         padding: "25px",
         width: "100%",
-        top: 0,
-        left: 0,
         backgroundColor: "#FFFFFF",
         color: palette.additional["header"][2],
         alignItems: "center",
@@ -124,14 +118,6 @@ const AppHeader: React.FC<IAppHeader> = () => {
                     {address && shortenAddress(address)}
                   </Typography>
                 </div>
-                <Typography variant="h5" className={classes.address}>
-                  <div>
-                    <span>connected to </span>
-                    <span>
-                      <strong>{homeConfig?.name}</strong>
-                    </span>
-                  </div>
-                </Typography>
               </div>
             </>
           )}
