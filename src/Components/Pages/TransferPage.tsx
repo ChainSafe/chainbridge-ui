@@ -49,7 +49,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       backgroundColor: "#FFFFFF",
     },
     title: {
-      fontSize: "22px",
+      fontSize: "1.2rem",
       fontWeight: "bold",
       color: "#000000",
       textAlign: "center",
@@ -85,14 +85,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       cursor: "pointer",
     },
     networkName: {
-      padding: `${constants.generalUnit * 2}px ${
-        constants.generalUnit * 1.5
-      }px`,
+      padding: "5px 8px",
       border: `1px solid ${palette.additional["gray"][6]}`,
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
-      marginBottom: constants.generalUnit * 3,
     },
     formArea: {
       "&.disabled": {
@@ -135,16 +132,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
+      color: "#5C4DCF",
+      borderLeft: "none",
+      backgroundColor: "white",
       borderColor: palette.additional["gray"][6],
       "&:hover": {
         borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
-        color: palette.common.white.main,
-      },
-      "&:focus": {
-        borderColor: palette.additional["gray"][6],
+        backgroundColor: "white",
+        color: "#5C4DCF",
       },
     },
     currencySelector: {
@@ -158,6 +153,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     address: {
       margin: 0,
       marginBottom: constants.generalUnit * 3,
+      fontSize: 10,
     },
     addressInput: {},
     generalInput: {
@@ -198,7 +194,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > *": {
         display: "block",
         width: "50%",
-        color: palette.additional["gray"][8],
+        color: "#AFAFAF",
         marginBottom: constants.generalUnit / 2,
         "&:nth-child(even)": {
           textAlign: "right",
@@ -391,9 +387,7 @@ const TransferPage = () => {
                 Change
               </Typography>
             </div>
-            <Typography className={classes.networkName}>
-              {homeConfig?.name}
-            </Typography>
+            <div className={classes.networkName}>{homeConfig?.name}</div>
           </section>
         )}
       </div>
@@ -516,7 +510,7 @@ const TransferPage = () => {
                 disabled={!destinationChainConfig}
                 name="receiver"
                 label="Destination Address:"
-                placeholder="Please enter the receiving address"
+                placeholder="Please enter the receiving address..."
                 className={classes.address}
                 classNames={{
                   input: classes.addressInput,
