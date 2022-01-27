@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { NavLink, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import CereLogo from "../media/Icons/bridge-icon.png";
+import CereLogo from "../media/Icons/cere-icon.svg";
 
 const useStyles = makeStyles(
   ({ constants, palette, zIndex, breakpoints }: ITheme) => {
@@ -34,8 +34,8 @@ const useStyles = makeStyles(
         height: constants.generalUnit * 5,
         width: constants.generalUnit * 5,
         "& svg, & img": {
-          maxHeight: "100%",
-          maxWidth: "100%",
+          height: "100%",
+          width: "100%",
         },
       },
       state: {
@@ -71,7 +71,7 @@ const useStyles = makeStyles(
         paddingRight: 10,
       },
       title: {
-        paddingLeft: 10,
+        paddingLeft: 5,
         fontStyle: "normal",
         fontWeight: "bold",
         fontSize: "30px",
