@@ -585,7 +585,10 @@ const TransferPage = () => {
         <NavLink
           style={{ textDecoration: "none" }}
           className={classes.footerText}
-          to={{ pathname: "https://explorer.cere.network" }}
+          to={{
+            pathname:
+              "https://explorer.cere.network/?rpc=wss%3A%2F%2Frpc.mainnet.cere.network%3A9945#/staking",
+          }}
           target="_blank"
         >
           Cere Staking

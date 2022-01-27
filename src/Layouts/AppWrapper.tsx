@@ -12,6 +12,8 @@ interface IAppWrapper {
   wrapTokenPage?: boolean;
 }
 
+const backgroundColour = "#F5F7F9";
+
 const useStyles = makeStyles(
   ({ animation, constants, palette, breakpoints }: ITheme) => {
     return createStyles({
@@ -24,7 +26,7 @@ const useStyles = makeStyles(
       inner: {
         paddingTop: constants.navItemHeight as number,
         paddingBottom: constants.navItemHeight as number,
-        backgroundColor: "#F5F7F9",
+        backgroundColor: backgroundColour,
       },
       cta: {
         display: "block",
@@ -43,7 +45,7 @@ const useStyles = makeStyles(
         borderRadius: 4,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#F5F7F9",
+        backgroundColor: backgroundColour,
         backgroundImage: `url(${backgroundImage})`,
         backgroundPosition: "center",
         backgroundSize: "95%",
