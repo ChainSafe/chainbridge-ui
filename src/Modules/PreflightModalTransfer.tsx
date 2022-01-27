@@ -5,13 +5,14 @@ import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { mergeClasses } from "@material-ui/styles";
+import styles from "../Constants/constants";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
       zIndex: zIndex?.blocker,
       backgroundColor: "white !important",
-      font: "Sora, sans-serif",
+      font: styles.primaryFont,
       position: "absolute",
     },
     subtitle: {
@@ -37,12 +38,14 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       fontStyle: "normal",
       fontWeight: "bold",
       textAlign: "center",
-      color: "#000000",
-      marginTop: 30,
+      color: "black",
+      marginTop: constants.generalUnit * 3.75,
     },
     messageBlock: {
-      margin: "50px 15px",
-      fontSize: "14px",
+      margin: `${constants.generalUnit * 6.25}px ${
+        constants.generalUnit * 1.875
+      }px`,
+      fontSize: 14,
       color: "#717171",
       "& li": {
         display: "list-item",
@@ -55,24 +58,24 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
-      color: "#5C4DCF",
+      color: styles.primaryTextColor,
       "&:hover": {
         color: "white",
       },
     },
     backButton: {
-      color: "#5C4DCF",
+      color: styles.primaryTextColor,
       background: "white",
       border: "none",
       "&:hover": {
-        color: "#5C4DCF",
+        color: styles.primaryTextColor,
       },
-      marginTop: 20,
+      marginTop: constants.generalUnit * 2.5,
     },
     agreementBlock: {
-      marginTop: 50,
-      marginBottom: 50,
-      color: "#000000",
+      marginTop: constants.generalUnit * 6.25,
+      marginBottom: constants.generalUnit * 6.25,
+      color: "black",
     },
   })
 );
@@ -125,15 +128,15 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
       </div>
       <div className={classes.agreementBlock}>
         <Typography variant="h5" component="p">
-          I agree and want to send <strong>1 CERE</strong> from&nbsp;
+          I agree and want to send{" "}
           <strong>
-            {shortenAddress("0xcfe7CCA69B9B18FA630fD90919559f723b15a449")}
+            {value} {tokenSymbol}
           </strong>{" "}
-          on <strong>{sourceNetwork}</strong> to&nbsp;
-          <strong>
-            {shortenAddress("5DiGokL5Uz8tDvY5Ez3BiSL5PnPjVXz738xxwry4QzPhVCLY")}
-          </strong>{" "}
-          on <strong>Cere Mainnet</strong>.
+          from&nbsp;
+          <strong>{shortenAddress(sender)}</strong> on{" "}
+          <strong>{sourceNetwork}</strong> to&nbsp;
+          <strong>{shortenAddress(receiver)}</strong> on{" "}
+          <strong>{targetNetwork}</strong>.
         </Typography>
       </div>
       <div>
