@@ -132,7 +132,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
           border: `1px solid ${borderColor}`,
           "&:hover": {
             border: `1px solid ${borderColor}`,
-            borderRight: "none",
+            borderRight: 0,
           },
         },
       },
@@ -151,7 +151,6 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       backgroundColor: "white",
       borderColor: `${borderColor} !important`,
       "&:hover": {
-        border: "1px solid red",
         borderColor: `${borderColor} !important`,
         backgroundColor: "white",
         color: primaryTextColor,
