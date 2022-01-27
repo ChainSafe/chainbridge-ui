@@ -44,16 +44,16 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       fontFamily: "Sora, sans-serif",
-      padding: 25,
+      padding: constants.generalUnit * 6,
       position: "relative",
       backgroundColor: "#FFFFFF",
     },
     title: {
-      fontSize: "1.2rem",
+      fontSize: 24,
       fontWeight: "bold",
       color: "#000000",
       textAlign: "center",
-      paddingBottom: "30px",
+      paddingBottom: 30,
     },
     walletArea: {
       display: "flex",
@@ -484,7 +484,7 @@ const TransferPage = () => {
                       preflightDetails.token === ""
                     }
                     name="tokenAmount"
-                    label="I want to send:"
+                    label="I want to send"
                   />
                 </div>
               </section>
@@ -528,7 +528,7 @@ const TransferPage = () => {
               <AddressInput
                 disabled={!destinationChainConfig}
                 name="receiver"
-                label="Destination Address:"
+                label="Destination Address"
                 placeholder="Please enter the receiving address..."
                 className={classes.address}
                 classNames={{
