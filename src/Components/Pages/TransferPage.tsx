@@ -49,12 +49,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontFamily: "Sora, sans-serif",
       padding: constants.generalUnit * 3,
       position: "relative",
-      backgroundColor: "#FFFFFF",
+      backgroundColor: "white",
     },
     title: {
       fontSize: 24,
       fontWeight: "bold",
-      color: "#000000",
+      color: "black",
       textAlign: "center",
       paddingBottom: 30,
     },
@@ -209,7 +209,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > *": {
         display: "block",
         width: "50%",
-        color: "#000000",
+        color: "black",
         marginBottom: constants.generalUnit / 2,
         "&:nth-child(even)": {
           textAlign: "right",
@@ -252,7 +252,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontSize: 12,
       fontWeight: "normal",
       fontStyle: "normal",
-      color: "#000000",
+      color: "black",
     },
   })
 );
