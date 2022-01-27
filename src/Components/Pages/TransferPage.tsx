@@ -8,6 +8,7 @@ import {
   Typography,
   // QuestionCircleSvg,
   SelectInput,
+  NavLink,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
@@ -226,13 +227,20 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         color: "white",
       },
     },
-    footerText: {
+    footer: {
       color: "#5C4DCF",
       fontSize: "12px",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
       paddingTop: "15px",
+      fontFamily: "SF Pro Display, sans-serif",
+      fontStyle: "normal",
+      fontWeight: "bold",
+    },
+    footerText: {
+      color: "#5C4DCF",
+      fontSize: "12px",
       fontFamily: "SF Pro Display, sans-serif",
       fontStyle: "normal",
       fontWeight: "bold",
@@ -566,10 +574,31 @@ const TransferPage = () => {
           </Form>
         )}
       </Formik>
-      <section className={classes.footerText}>
-        <div>Cere Homepage</div>
-        <div>Cere Staking</div>
-        <div>Cere Wiki</div>
+      <section className={classes.footer}>
+        <NavLink
+          style={{ textDecoration: "none" }}
+          className={classes.footerText}
+          to={{ pathname: "https://cere.network/" }}
+          target="_blank"
+        >
+          Cere Homepage
+        </NavLink>
+        <NavLink
+          style={{ textDecoration: "none" }}
+          className={classes.footerText}
+          to={{ pathname: "https://explorer.cere.network" }}
+          target="_blank"
+        >
+          Cere Staking
+        </NavLink>
+        <NavLink
+          style={{ textDecoration: "none" }}
+          className={classes.footerText}
+          to={{ pathname: "https://cere-network.gitbook.io/cere-network/" }}
+          target="_blank"
+        >
+          Cere Wiki
+        </NavLink>
       </section>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
       <ChangeNetworkDrawer
