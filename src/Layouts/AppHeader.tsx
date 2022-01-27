@@ -13,9 +13,9 @@ const useStyles = makeStyles(
         fontFamily: "Sora, sans-serif",
         display: "flex",
         justifyContent: "space-between",
-        padding: "25px",
+        padding: constants.generalUnit * 3.1,
         width: "100%",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "black",
         color: palette.additional["header"][2],
         alignItems: "center",
         zIndex: zIndex?.layer2,
@@ -71,11 +71,11 @@ const useStyles = makeStyles(
         paddingRight: 10,
       },
       title: {
-        paddingLeft: 5,
+        paddingLeft: constants.generalUnit / 1.4,
         fontStyle: "normal",
         fontWeight: "bold",
-        fontSize: "30px",
-        color: "#000000",
+        fontSize: 30,
+        color: "white",
       },
     });
   }
