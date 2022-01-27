@@ -44,7 +44,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       fontFamily: "Sora, sans-serif",
-      padding: constants.generalUnit * 6,
+      padding: constants.generalUnit * 3,
       position: "relative",
       backgroundColor: "#FFFFFF",
     },
