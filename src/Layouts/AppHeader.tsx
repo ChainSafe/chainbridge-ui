@@ -15,7 +15,7 @@ const useStyles = makeStyles(
         justifyContent: "space-between",
         padding: constants.generalUnit * 3.1,
         width: "100%",
-        backgroundColor: "black",
+        backgroundColor: "white",
         color: palette.additional["header"][2],
         alignItems: "center",
         zIndex: zIndex?.layer2,
@@ -75,7 +75,7 @@ const useStyles = makeStyles(
         fontStyle: "normal",
         fontWeight: "bold",
         fontSize: 30,
-        color: "white",
+        color: "black",
       },
     });
   }
