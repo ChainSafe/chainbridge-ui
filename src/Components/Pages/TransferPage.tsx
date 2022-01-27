@@ -510,12 +510,6 @@ const TransferPage = () => {
                       value: t,
                       label: (
                         <div className={classes.tokenItem}>
-                          {tokens[t]?.imageUri && (
-                            <img
-                              src={showImageUrl(tokens[t]?.imageUri)}
-                              alt={tokens[t]?.symbol}
-                            />
-                          )}
                           <span>{tokens[t]?.symbol || t}</span>
                         </div>
                       ),
