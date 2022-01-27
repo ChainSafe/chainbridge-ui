@@ -40,6 +40,8 @@ const PredefinedIcons: any = {
 const showImageUrl = (url?: string) =>
   url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
 
+const textColor = "#5C4DCF";
+
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
@@ -142,7 +144,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: "#5C4DCF",
+      color: textColor,
       borderLeft: "none",
       backgroundColor: "white",
       borderColor: "#C4C4C4 !important",
@@ -150,7 +152,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         border: "1px solid red",
         borderColor: "#C4C4C4 !important",
         backgroundColor: "white",
-        color: "#5C4DCF",
+        color: textColor,
         borderLeft: "none",
       },
     },
