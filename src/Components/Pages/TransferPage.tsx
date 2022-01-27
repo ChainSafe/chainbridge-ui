@@ -29,6 +29,7 @@ import WETHIcon from "../../media/tokens/weth.svg";
 import DAIIcon from "../../media/tokens/dai.svg";
 import celoUSD from "../../media/tokens/cusd.svg";
 import CEREIcon from "../../media/tokens/cere-token.svg";
+import styles from "../../Constants/constants";
 
 const PredefinedIcons: any = {
   ETHIcon: ETHIcon,
@@ -41,13 +42,12 @@ const PredefinedIcons: any = {
 const showImageUrl = (url?: string) =>
   url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
 
-const primaryTextColor = "#5C4DCF";
 const borderColor = "#C4C4C4";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      fontFamily: "Sora, sans-serif",
+      fontFamily: styles.primaryFont,
       padding: constants.generalUnit * 3,
       position: "relative",
       backgroundColor: "white",
@@ -90,7 +90,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     changeButton: {
       cursor: "pointer",
-      color: primaryTextColor,
+      color: styles.primaryTextColor,
       fontSize: 11,
     },
     networkName: {
@@ -146,14 +146,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: primaryTextColor,
+      color: styles.primaryTextColor,
       borderLeft: 0,
       backgroundColor: "white",
       borderColor: `${borderColor} !important`,
       "&:hover": {
         borderColor: `${borderColor} !important`,
         backgroundColor: "white",
-        color: primaryTextColor,
+        color: styles.primaryTextColor,
         borderLeft: 0,
       },
     },
@@ -228,7 +228,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     footer: {
-      color: primaryTextColor,
+      color: styles.primaryTextColor,
       fontSize: 12,
       display: "flex",
       justifyContent: "space-between",
@@ -239,7 +239,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontWeight: "bold",
     },
     footerText: {
-      color: primaryTextColor,
+      color: styles.primaryTextColor,
       fontSize: 12,
       fontStyle: "normal",
       fontWeight: "bold",
