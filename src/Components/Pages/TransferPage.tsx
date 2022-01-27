@@ -41,7 +41,8 @@ const PredefinedIcons: any = {
 const showImageUrl = (url?: string) =>
   url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
 
-const textColor = "#5C4DCF";
+const primaryTextColor = "#5C4DCF";
+const borderColor = "#C4C4C4";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
@@ -49,14 +50,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontFamily: "Sora, sans-serif",
       padding: constants.generalUnit * 3,
       position: "relative",
-      backgroundColor: "#FFFFFF",
+      backgroundColor: "white",
     },
     title: {
       fontSize: 24,
       fontWeight: "bold",
-      color: "#000000",
+      color: "black",
       textAlign: "center",
-      paddingBottom: 30,
+      paddingBottom: constants.generalUnit * 3.75,
     },
     walletArea: {
       display: "flex",
@@ -64,11 +65,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       alignItems: "center",
       justifyContent: "center",
       width: "100%",
-      marginBottom: 24,
+      marginBottom: constants.generalUnit * 3,
     },
     connectButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
-      borderRadius: "5px",
+      borderRadius: 5,
       "&:hover": {
         color: "white",
       },
@@ -89,12 +90,12 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     changeButton: {
       cursor: "pointer",
-      color: "#5C4DCF",
-      fontSize: "11px",
+      color: primaryTextColor,
+      fontSize: 11,
     },
     networkName: {
-      padding: "5px 8px",
-      border: `1px solid #C4C4C4`,
+      padding: `${constants.generalUnit / 1.5}px ${constants.generalUnit}px`,
+      border: `1px solid ${borderColor}`,
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
@@ -128,10 +129,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
           borderRight: 0,
-          border: "1px solid #C4C4C4",
+          border: `1px solid ${borderColor}`,
           "&:hover": {
-            border: "1px solid #C4C4C4",
-            borderRight: "none",
+            border: `1px solid ${borderColor}`,
+            borderRight: 0,
           },
         },
       },
@@ -145,16 +146,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: textColor,
-      borderLeft: "none",
+      color: primaryTextColor,
+      borderLeft: 0,
       backgroundColor: "white",
-      borderColor: "#C4C4C4 !important",
+      borderColor: `${borderColor} !important`,
       "&:hover": {
-        border: "1px solid red",
-        borderColor: "#C4C4C4 !important",
+        borderColor: `${borderColor} !important`,
         backgroundColor: "white",
-        color: textColor,
-        borderLeft: "none",
+        color: primaryTextColor,
+        borderLeft: 0,
       },
     },
     currencySelector: {
@@ -209,7 +209,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > *": {
         display: "block",
         width: "50%",
-        color: "#000000",
+        color: "black",
         marginBottom: constants.generalUnit / 2,
         "&:nth-child(even)": {
           textAlign: "right",
@@ -218,41 +218,40 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       },
     },
     accountSelector: {
-      marginBottom: 24,
+      marginBottom: constants.generalUnit * 3,
     },
     transferButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
-      borderRadius: "5px",
+      borderRadius: 5,
       "&:hover": {
         color: "white",
       },
     },
     footer: {
-      color: "#5C4DCF",
-      fontSize: "12px",
+      color: primaryTextColor,
+      fontSize: 12,
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      paddingTop: "15px",
+      paddingTop: constants.generalUnit * 2,
       fontFamily: "SF Pro Display, sans-serif",
       fontStyle: "normal",
       fontWeight: "bold",
     },
     footerText: {
-      color: "#5C4DCF",
-      fontSize: "12px",
-      fontFamily: "SF Pro Display, sans-serif",
+      color: primaryTextColor,
+      fontSize: 12,
       fontStyle: "normal",
       fontWeight: "bold",
     },
     inputBorder: {
-      border: "1px solid #C4C4C4",
+      border: `1px solid ${borderColor}`,
     },
     inputLabel: {
       fontSize: 12,
       fontWeight: "normal",
       fontStyle: "normal",
-      color: "#000000",
+      color: "black",
     },
   })
 );
@@ -586,7 +585,10 @@ const TransferPage = () => {
         <NavLink
           style={{ textDecoration: "none" }}
           className={classes.footerText}
-          to={{ pathname: "https://explorer.cere.network" }}
+          to={{
+            pathname:
+              "https://explorer.cere.network/?rpc=wss%3A%2F%2Frpc.mainnet.cere.network%3A9945#/staking",
+          }}
           target="_blank"
         >
           Cere Staking
