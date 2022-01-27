@@ -90,7 +90,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     changeButton: {
       cursor: "pointer",
       color: "#5C4DCF",
-      fontSize: "11px",
+      fontSize: 11,
     },
     networkName: {
       padding: "5px 8px",
@@ -146,7 +146,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderTopLeftRadius: 0,
       left: -1,
       color: textColor,
-      borderLeft: "none",
+      borderLeft: 0,
       backgroundColor: "white",
       borderColor: "#C4C4C4 !important",
       "&:hover": {
@@ -154,7 +154,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         borderColor: "#C4C4C4 !important",
         backgroundColor: "white",
         color: textColor,
-        borderLeft: "none",
+        borderLeft: 0,
       },
     },
     currencySelector: {
@@ -222,25 +222,25 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     transferButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
-      borderRadius: "5px",
+      borderRadius: 5,
       "&:hover": {
         color: "white",
       },
     },
     footer: {
       color: "#5C4DCF",
-      fontSize: "12px",
+      fontSize: 12,
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      paddingTop: "15px",
+      paddingTop: 15,
       fontFamily: "SF Pro Display, sans-serif",
       fontStyle: "normal",
       fontWeight: "bold",
     },
     footerText: {
       color: "#5C4DCF",
-      fontSize: "12px",
+      fontSize: 12,
       fontFamily: "SF Pro Display, sans-serif",
       fontStyle: "normal",
       fontWeight: "bold",
