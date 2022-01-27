@@ -8,6 +8,7 @@ import {
   Typography,
   // QuestionCircleSvg,
   SelectInput,
+  NavLink,
 } from "@chainsafe/common-components";
 import { Form, Formik } from "formik";
 import AddressInput from "../Custom/AddressInput";
@@ -40,11 +41,23 @@ const PredefinedIcons: any = {
 const showImageUrl = (url?: string) =>
   url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
 
+const primaryTextColor = "#5C4DCF";
+const borderColor = "#C4C4C4";
+
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
-      padding: constants.generalUnit * 6,
+      fontFamily: "Sora, sans-serif",
+      padding: constants.generalUnit * 3,
       position: "relative",
+      backgroundColor: "white",
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "black",
+      textAlign: "center",
+      paddingBottom: constants.generalUnit * 3.75,
     },
     walletArea: {
       display: "flex",
@@ -52,9 +65,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       alignItems: "center",
       justifyContent: "center",
       width: "100%",
+      marginBottom: constants.generalUnit * 3,
     },
     connectButton: {
-      margin: `${constants.generalUnit * 3}px 0 ${constants.generalUnit * 6}px`,
+      background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+      borderRadius: 5,
+      "&:hover": {
+        color: "white",
+      },
     },
     connecting: {
       textAlign: "center",
@@ -72,16 +90,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     changeButton: {
       cursor: "pointer",
+      color: primaryTextColor,
+      fontSize: 11,
     },
     networkName: {
-      padding: `${constants.generalUnit * 2}px ${
-        constants.generalUnit * 1.5
-      }px`,
-      border: `1px solid ${palette.additional["gray"][6]}`,
+      padding: `${constants.generalUnit / 1.5}px ${constants.generalUnit}px`,
+      border: `1px solid ${borderColor}`,
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
-      marginBottom: constants.generalUnit * 3,
     },
     formArea: {
       "&.disabled": {
@@ -112,6 +129,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
           borderBottomRightRadius: 0,
           borderTopRightRadius: 0,
           borderRight: 0,
+          border: `1px solid ${borderColor}`,
+          "&:hover": {
+            border: `1px solid ${borderColor}`,
+            borderRight: 0,
+          },
         },
       },
       "& span:last-child.error": {
@@ -124,16 +146,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
       left: -1,
-      color: palette.additional["gray"][8],
-      backgroundColor: palette.additional["gray"][3],
-      borderColor: palette.additional["gray"][6],
+      color: primaryTextColor,
+      borderLeft: 0,
+      backgroundColor: "white",
+      borderColor: `${borderColor} !important`,
       "&:hover": {
-        borderColor: palette.additional["gray"][6],
-        backgroundColor: palette.additional["gray"][7],
-        color: palette.common.white.main,
-      },
-      "&:focus": {
-        borderColor: palette.additional["gray"][6],
+        borderColor: `${borderColor} !important`,
+        backgroundColor: "white",
+        color: primaryTextColor,
+        borderLeft: 0,
       },
     },
     currencySelector: {
@@ -147,6 +168,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     address: {
       margin: 0,
       marginBottom: constants.generalUnit * 3,
+      fontSize: 8,
     },
     addressInput: {},
     generalInput: {
@@ -187,15 +209,49 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > *": {
         display: "block",
         width: "50%",
-        color: palette.additional["gray"][8],
+        color: "black",
         marginBottom: constants.generalUnit / 2,
         "&:nth-child(even)": {
           textAlign: "right",
+          color: "#AFAFAF",
         },
       },
     },
     accountSelector: {
-      marginBottom: 24,
+      marginBottom: constants.generalUnit * 3,
+    },
+    transferButton: {
+      background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+      borderRadius: 5,
+      "&:hover": {
+        color: "white",
+      },
+    },
+    footer: {
+      color: primaryTextColor,
+      fontSize: 12,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingTop: constants.generalUnit * 2,
+      fontFamily: "SF Pro Display, sans-serif",
+      fontStyle: "normal",
+      fontWeight: "bold",
+    },
+    footerText: {
+      color: primaryTextColor,
+      fontSize: 12,
+      fontStyle: "normal",
+      fontWeight: "bold",
+    },
+    inputBorder: {
+      border: `1px solid ${borderColor}`,
+    },
+    inputLabel: {
+      fontSize: 12,
+      fontWeight: "normal",
+      fontStyle: "normal",
+      color: "black",
     },
   })
 );
@@ -334,6 +390,7 @@ const TransferPage = () => {
 
   return (
     <article className={classes.root}>
+      <div className={classes.title}>Transfer Tokens (ERC20 to Native)</div>
       <div className={classes.walletArea}>
         {!isReady ? (
           <Button
@@ -355,7 +412,7 @@ const TransferPage = () => {
         ) : (
           <section className={classes.connected}>
             <div>
-              <Typography variant="body1">Home network</Typography>
+              <div className={classes.inputLabel}>Home Network</div>
               <Typography
                 className={classes.changeButton}
                 variant="body1"
@@ -364,13 +421,7 @@ const TransferPage = () => {
                 Change
               </Typography>
             </div>
-            <Typography
-              component="h2"
-              variant="h2"
-              className={classes.networkName}
-            >
-              {homeConfig?.name}
-            </Typography>
+            <div className={classes.networkName}>{homeConfig?.name}</div>
           </section>
         )}
       </div>
@@ -474,12 +525,6 @@ const TransferPage = () => {
                       value: t,
                       label: (
                         <div className={classes.tokenItem}>
-                          {tokens[t]?.imageUri && (
-                            <img
-                              src={showImageUrl(tokens[t]?.imageUri)}
-                              alt={tokens[t]?.symbol}
-                            />
-                          )}
                           <span>{tokens[t]?.symbol || t}</span>
                         </div>
                       ),
@@ -493,7 +538,7 @@ const TransferPage = () => {
                 disabled={!destinationChainConfig}
                 name="receiver"
                 label="Destination Address"
-                placeholder="Please enter the receiving address"
+                placeholder="Please enter the receiving address..."
                 className={classes.address}
                 classNames={{
                   input: classes.addressInput,
@@ -516,19 +561,47 @@ const TransferPage = () => {
               }
             />
             <section>
-              <Button type="submit" fullsize variant="primary">
-                Start transfer
+              <Button
+                type="submit"
+                fullsize
+                variant="primary"
+                className={classes.transferButton}
+              >
+                Start Transfer
               </Button>
             </section>
-            {/* <section>
-            <QuestionCircleSvg
-              onClick={() => setAboutOpen(true)}
-              className={classes.faqButton}
-            />
-          </section> */}
           </Form>
         )}
       </Formik>
+      <section className={classes.footer}>
+        <NavLink
+          style={{ textDecoration: "none" }}
+          className={classes.footerText}
+          to={{ pathname: "https://cere.network/" }}
+          target="_blank"
+        >
+          Cere Homepage
+        </NavLink>
+        <NavLink
+          style={{ textDecoration: "none" }}
+          className={classes.footerText}
+          to={{
+            pathname:
+              "https://explorer.cere.network/?rpc=wss%3A%2F%2Frpc.mainnet.cere.network%3A9945#/staking",
+          }}
+          target="_blank"
+        >
+          Cere Staking
+        </NavLink>
+        <NavLink
+          style={{ textDecoration: "none" }}
+          className={classes.footerText}
+          to={{ pathname: "https://cere-network.gitbook.io/cere-network/" }}
+          target="_blank"
+        >
+          Cere Wiki
+        </NavLink>
+      </section>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
       <ChangeNetworkDrawer
         open={changeNetworkOpen}

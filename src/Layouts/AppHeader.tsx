@@ -4,29 +4,25 @@ import clsx from "clsx";
 import { NavLink, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import CereLogo from "../media/Icons/bridge-icon.png";
+import CereLogo from "../media/Icons/cere-icon.svg";
 
 const useStyles = makeStyles(
   ({ constants, palette, zIndex, breakpoints }: ITheme) => {
     return createStyles({
       root: {
+        fontFamily: "Sora, sans-serif",
         display: "flex",
-        position: "fixed",
         justifyContent: "space-between",
-        padding: `${constants.generalUnit * 2}px ${
-          constants.generalUnit * 4
-        }px`,
+        padding: constants.generalUnit * 3.1,
         width: "100%",
-        top: 0,
-        left: 0,
-        backgroundColor: palette.additional["header"][1],
-        borderBottom: `1px solid ${palette.additional["header"][3]}`,
+        backgroundColor: "white",
         color: palette.additional["header"][2],
         alignItems: "center",
         zIndex: zIndex?.layer2,
         [breakpoints.down("sm")]: {
           flexDirection: "column",
         },
+        alignContent: "center",
       },
       left: {
         display: "flex",
@@ -38,8 +34,8 @@ const useStyles = makeStyles(
         height: constants.generalUnit * 5,
         width: constants.generalUnit * 5,
         "& svg, & img": {
-          maxHeight: "100%",
-          maxWidth: "100%",
+          height: "100%",
+          width: "100%",
         },
       },
       state: {
@@ -75,7 +71,11 @@ const useStyles = makeStyles(
         paddingRight: 10,
       },
       title: {
-        paddingLeft: 10,
+        paddingLeft: constants.generalUnit / 1.4,
+        fontStyle: "normal",
+        fontWeight: "bold",
+        fontSize: 30,
+        color: "black",
       },
     });
   }
@@ -100,23 +100,12 @@ const AppHeader: React.FC<IAppHeader> = () => {
           className={classes.title}
           to="/"
         >
-          <Typography variant="h4">Bridge</Typography>
-          <br />
-          <Typography variant="body1">
-            Transfer CERE tokens from Ethereum and Polygon to Cere Network
+          <Typography variant="h4" className={classes.title}>
+            Cere Bridge
           </Typography>
         </NavLink>
       </div>
       <div className={classes.rightWrapper}>
-        <section className={classes.link}>
-          <a
-            href="https://cere-network.gitbook.io/cere-network/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Typography variant="h5">DDC Wiki</Typography>
-          </a>
-        </section>
         <section className={classes.state}>
           {!isReady ? (
             <Typography variant="h5">No wallet connected</Typography>
@@ -129,14 +118,6 @@ const AppHeader: React.FC<IAppHeader> = () => {
                     {address && shortenAddress(address)}
                   </Typography>
                 </div>
-                <Typography variant="h5" className={classes.address}>
-                  <div>
-                    <span>connected to </span>
-                    <span>
-                      <strong>{homeConfig?.name}</strong>
-                    </span>
-                  </div>
-                </Typography>
               </div>
             </>
           )}
