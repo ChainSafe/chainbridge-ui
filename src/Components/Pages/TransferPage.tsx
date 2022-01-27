@@ -126,6 +126,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
           borderTopRightRadius: 0,
           borderRight: 0,
           border: "1px solid #C4C4C4",
+          "&:hover": {
+            border: "1px solid #C4C4C4",
+            borderRight: "none",
+          },
         },
       },
       "& span:last-child.error": {
@@ -141,11 +145,13 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       color: "#5C4DCF",
       borderLeft: "none",
       backgroundColor: "white",
-      borderColor: palette.additional["gray"][6],
+      borderColor: "#C4C4C4 !important",
       "&:hover": {
-        borderColor: palette.additional["gray"][6],
+        border: "1px solid red",
+        borderColor: "#C4C4C4 !important",
         backgroundColor: "white",
         color: "#5C4DCF",
+        borderLeft: "none",
       },
     },
     currencySelector: {
