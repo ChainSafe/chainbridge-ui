@@ -3,15 +3,15 @@ import React from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import {
   Button,
-  ExclamationCircleSvg,
+  NavLink,
   ProgressBar,
   Typography,
 } from "@chainsafe/common-components";
+import ExclamationCircleSvg from "./../media/Icons/exclamation-mark-icon.png";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { EvmBridgeConfig } from "../chainbridgeConfig";
 import styles from "../Constants/constants";
-import { TransactionStatus } from "../Contexts/NetworkManagerContext";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
@@ -81,18 +81,26 @@ const useStyles = makeStyles(
         border: "none",
         color: "white",
         textDecoration: "none",
-        "&:hover": {},
+        "&:hover": {
+          background: "none",
+          color: "white",
+        },
       },
       initCopy: {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        marginLeft: constants.generalUnit * 6.25,
+        marginBottom: constants.generalUnit * 2,
         "& > *:first-child": {
           marginTop: constants.generalUnit * 3,
           marginBottom: constants.generalUnit * 5,
         },
       },
-      sendingCopy: {},
+      sendingCopy: {
+        marginLeft: constants.generalUnit * 6.25,
+        marginBottom: constants.generalUnit * 2,
+      },
       vote: {
         display: "flex",
         flexDirection: "row",
@@ -141,6 +149,27 @@ const useStyles = makeStyles(
         justifyContent: "flex-start",
         alignItems: "center",
         marginTop: constants.generalUnit * 3,
+      },
+      exclamation: {
+        height: constants.generalUnit * 3.75,
+        width: constants.generalUnit * 3.75,
+      },
+      footer: {
+        color: styles.primaryTextColor,
+        fontSize: 12,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: constants.generalUnit * 3,
+        fontFamily: "SF Pro Display, sans-serif",
+        fontStyle: "normal",
+        fontWeight: "bold",
+      },
+      footerText: {
+        color: styles.primaryTextColor,
+        fontSize: 12,
+        fontStyle: "normal",
+        fontWeight: "bold",
       },
     })
 );
@@ -192,7 +221,11 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             ) : transactionStatus === "Transfer Completed" ? (
               "3"
             ) : (
-              <ExclamationCircleSvg />
+              <img
+                src={ExclamationCircleSvg}
+                alt="Exclamation"
+                className={classes.exclamation}
+              />
             )}
           </div>
           <Typography className={classes.heading} variant="h3" component="h3">
@@ -316,24 +349,27 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                   View transaction
                 </Button>
               )} */}
-            <section className={classes.buttons}>
-              <Button
-                size="small"
-                className={classes.button}
-                variant="outline"
-                onClick={close}
-              >
-                Start new transfer
-              </Button>
-              <a
-                rel="noopener noreferrer"
-                href={process.env.REACT_APP_SUPPORT_URL}
-                target="_blank"
-              >
-                <Button variant="outline">
-                  Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
+            <section>
+              <div className={classes.buttons}>
+                <Button
+                  size="small"
+                  className={classes.button}
+                  variant="outline"
+                  onClick={close}
+                >
+                  Start new transfer
                 </Button>
-              </a>
+              </div>
+              <div className={classes.footer}>
+                <NavLink
+                  style={{ textDecoration: "none" }}
+                  className={classes.footerText}
+                  to={{ pathname: process.env.REACT_APP_SUPPORT_URL }}
+                  target="_blank"
+                >
+                  Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
+                </NavLink>
+              </div>
             </section>
           </>
         )}
