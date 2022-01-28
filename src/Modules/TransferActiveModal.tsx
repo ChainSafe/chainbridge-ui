@@ -10,20 +10,23 @@ import {
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { EvmBridgeConfig } from "../chainbridgeConfig";
+import styles from "../Constants/constants";
+import { TransactionStatus } from "../Contexts/NetworkManagerContext";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>
     createStyles({
       root: {
         width: "100%",
+        font: styles.primaryFont,
       },
       inner: {
         width: "100% !important",
         maxWidth: "unset !important",
         display: "flex",
         flexDirection: "row",
-        padding: `${constants.generalUnit * 5}px ${
-          constants.generalUnit * 3.5
+        padding: `${constants.generalUnit * 2}px ${
+          constants.generalUnit * 2
         }px`,
         bottom: 0,
         top: "unset",
@@ -34,20 +37,21 @@ const useStyles = makeStyles(
         transitionDuration: `${animation.transform}ms`,
       },
       heading: {
-        marginBottom: constants.generalUnit,
         whiteSpace: "nowrap",
+        fontSize: 20,
+        marginLeft: constants.generalUnit * 1.5,
       },
       stepIndicator: {
         ...typography.h4,
         height: 40,
         width: 40,
-        marginRight: constants.generalUnit * 2,
         borderRadius: "50%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        border: `1px solid ${palette.additional["transactionModal"][2]}`,
-        color: palette.additional["transactionModal"][3],
+        color: "white",
+        background:
+          "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
         "& svg": {
           height: 20,
           width: 20,
@@ -57,10 +61,16 @@ const useStyles = makeStyles(
       content: {
         display: "flex",
         flexDirection: "column",
+        width: "100%",
       },
       buttons: {
         display: "flex",
         flexDirection: "row",
+        justifyContent: "center",
+        background:
+          "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+        borderRadius: constants.generalUnit / 2,
+        minHeight: constants.generalUnit * 4,
         marginTop: constants.generalUnit * 5,
         "& > *": {
           textDecoration: "none",
@@ -68,23 +78,18 @@ const useStyles = makeStyles(
         },
       },
       button: {
-        borderColor: `${palette.additional["gray"][8]} !important`,
-        color: `${palette.additional["gray"][8]} !important`,
+        border: "none",
+        color: "white",
         textDecoration: "none",
-        "&:hover": {
-          borderColor: `${palette.additional["gray"][8]} !important`,
-          backgroundColor: `${palette.additional["gray"][8]} !important`,
-          color: `${palette.common.white.main} !important`,
-          textDecoration: "none",
-        },
+        "&:hover": {},
       },
       initCopy: {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         "& > *:first-child": {
-          marginTop: constants.generalUnit * 3.5,
-          marginBottom: constants.generalUnit * 8,
+          marginTop: constants.generalUnit * 3,
+          marginBottom: constants.generalUnit * 5,
         },
       },
       sendingCopy: {},
@@ -111,8 +116,8 @@ const useStyles = makeStyles(
         fontWeight: 600,
       },
       receipt: {
-        marginTop: constants.generalUnit * 3.5,
-        marginBottom: constants.generalUnit * 8,
+        marginTop: constants.generalUnit * 3,
+        marginLeft: constants.generalUnit * 6.5,
       },
       weighted: {
         fontWeight: 600,
@@ -126,9 +131,16 @@ const useStyles = makeStyles(
           borderRadius: "0 !important",
           "&  >  *": {
             borderRadius: "0 !important",
-            background: `${palette.additional["transactionModal"][1]} !important`,
+            background: `linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%) !important`,
           },
         },
+      },
+      title: {
+        display: "flex",
+        alignContent: "center",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        marginTop: constants.generalUnit * 3,
       },
     })
 );
@@ -170,33 +182,33 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         variant="primary"
         progress={transactionStatus !== "Transfer Completed" ? -1 : 100}
       />
-      <section>
-        <div className={classes.stepIndicator}>
-          {transactionStatus === "Initializing Transfer" ? (
-            "1"
-          ) : transactionStatus === "In Transit" ? (
-            "2"
-          ) : transactionStatus === "Transfer Completed" ? (
-            "3"
-          ) : (
-            <ExclamationCircleSvg />
-          )}
+      <div className={classes.content}>
+        <div className={classes.title}>
+          <div className={classes.stepIndicator}>
+            {transactionStatus === "Initializing Transfer" ? (
+              "1"
+            ) : transactionStatus === "In Transit" ? (
+              "2"
+            ) : transactionStatus === "Transfer Completed" ? (
+              "3"
+            ) : (
+              <ExclamationCircleSvg />
+            )}
+          </div>
+          <Typography className={classes.heading} variant="h3" component="h3">
+            {transactionStatus === "Initializing Transfer"
+              ? "Initializing Transfer"
+              : transactionStatus === "In Transit"
+              ? `In Transit (${
+                  depositVotes < (relayerThreshold || 0)
+                    ? `${depositVotes}/${relayerThreshold} signatures needed`
+                    : "Executing proposal"
+                })`
+              : transactionStatus === "Transfer Completed"
+              ? "Transfer completed"
+              : "Transfer aborted"}
+          </Typography>
         </div>
-      </section>
-      <section className={classes.content}>
-        <Typography className={classes.heading} variant="h3" component="h3">
-          {transactionStatus === "Initializing Transfer"
-            ? "Initializing Transfer"
-            : transactionStatus === "In Transit"
-            ? `In Transit (${
-                depositVotes < (relayerThreshold || 0)
-                  ? `${depositVotes}/${relayerThreshold} signatures needed`
-                  : "Executing proposal"
-              })`
-            : transactionStatus === "Transfer Completed"
-            ? "Transfer completed"
-            : "Transfer aborted"}
-        </Typography>
         {transactionStatus === "Initializing Transfer" ? (
           <div className={classes.initCopy}>
             <Typography>Deposit pending...</Typography>
@@ -325,7 +337,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             </section>
           </>
         )}
-      </section>
+      </div>
     </CustomModal>
   );
 };
