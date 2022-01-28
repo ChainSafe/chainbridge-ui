@@ -4,6 +4,7 @@
 
 - Cherry picked 6159de29, ae130023 from the upstream
 - Turned off double approval
+- Redesigned transfer and pre-flight transfer page
 
 ## v0.5.0
 

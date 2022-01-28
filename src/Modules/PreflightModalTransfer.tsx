@@ -4,30 +4,15 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
+import styles from "../Constants/constants";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
       zIndex: zIndex?.blocker,
+      backgroundColor: "white !important",
+      font: styles.primaryFont,
       position: "absolute",
-      "& li": {
-        position: "relative",
-        padding: `${constants.generalUnit}px 0 ${constants.generalUnit}px ${
-          constants.generalUnit * 8
-        }px`,
-        "&:before": {
-          content: "''",
-          display: "block",
-          backgroundColor: palette.additional["gray"][2],
-          height: constants.generalUnit,
-          width: constants.generalUnit,
-          borderRadius: "50%",
-          position: "absolute",
-          top: "50%",
-          left: constants.generalUnit * 4,
-          transform: "translate(-50%, -50%)",
-        },
-      },
     },
     subtitle: {
       margin: `${constants.generalUnit * 2}px 0`,
@@ -36,13 +21,60 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       margin: `${constants.generalUnit * 2}px 0`,
     },
     startButton: {
-      backgroundColor: palette.additional["preflight"][1],
-      color: palette.additional["preflight"][2],
+      color: "white",
       marginBottom: constants.generalUnit * 2,
+      background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+      "&:hover": {
+        color: "white",
+      },
     },
     backdrop: {
       position: "absolute",
       zIndex: zIndex?.layer4,
+    },
+    title: {
+      fontSize: 20,
+      fontStyle: "normal",
+      fontWeight: "bold",
+      textAlign: "center",
+      color: "black",
+      marginTop: constants.generalUnit * 3.75,
+    },
+    messageBlock: {
+      margin: `${constants.generalUnit * 6.25}px ${
+        constants.generalUnit * 1.875
+      }px`,
+      fontSize: 14,
+      color: "#717171",
+      "& li": {
+        display: "list-item",
+        listStyleType: "disc",
+      },
+    },
+    backButtonDiv: {
+      display: "flex",
+      alignContent: "center",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "white",
+      color: styles.primaryTextColor,
+      "&:hover": {
+        color: "white",
+      },
+    },
+    backButton: {
+      color: styles.primaryTextColor,
+      background: "white",
+      border: "none",
+      "&:hover": {
+        color: styles.primaryTextColor,
+      },
+      marginTop: constants.generalUnit * 2.5,
+    },
+    agreementBlock: {
+      marginTop: constants.generalUnit * 6.25,
+      marginBottom: constants.generalUnit * 6.25,
+      color: "black",
     },
   })
 );
@@ -78,52 +110,44 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
       classNames={{
         backdrop: classes.backdrop,
       }}
-      size={430}
+      size={450}
       open={open}
     >
-      <Typography variant="h3" component="h2">
-        Pre-flight check
-      </Typography>
-      <Typography className={classes.subtitle} variant="h5" component="p">
-        Please be advised this is an experimental application:
-      </Typography>
-      <ul>
-        <li>
-          <Typography variant="h5">
+      <div className={classes.title}>Pre-flight check</div>
+      <div className={classes.messageBlock}>
+        <ul>
+          <li>
             You will not be able to cancel the transaction once you submit it.
-          </Typography>
-        </li>
-        <li>
-          <Typography variant="h5">
-            Your transaction could get stuck for an indefinite amount of time
-          </Typography>
-        </li>
-        <li>
-          <Typography variant="h5">
+          </li>
+          <li>
             Funds cannot be returned if they are sent to the wrong address.
-          </Typography>
-        </li>
-        <li>
-          <Typography variant="h5">
-            The transaction fee may be higher than expected.
-          </Typography>
-        </li>
-      </ul>
-      <Typography className={classes.agreement} variant="h5" component="p">
-        I agree and want to send{" "}
-        <strong>
-          {value} {tokenSymbol}
-        </strong>{" "}
-        from&nbsp;
-        <strong>{shortenAddress(sender)}</strong> on{" "}
-        <strong>{sourceNetwork}</strong> to&nbsp;
-        <strong>{shortenAddress(receiver)}</strong> on{" "}
-        <strong>{targetNetwork}</strong>.
-      </Typography>
-      <Button onClick={start} className={classes.startButton} fullsize>
-        Start Transfer
-      </Button>
-      <Button onClick={close}>Back</Button>
+          </li>
+          <li>The transaction fee may be higher than expected.</li>
+        </ul>
+      </div>
+      <div className={classes.agreementBlock}>
+        <Typography variant="h5" component="p">
+          I agree and want to send{" "}
+          <strong>
+            {value} {tokenSymbol}
+          </strong>{" "}
+          from&nbsp;
+          <strong>{shortenAddress(sender)}</strong> on{" "}
+          <strong>{sourceNetwork}</strong> to&nbsp;
+          <strong>{shortenAddress(receiver)}</strong> on{" "}
+          <strong>{targetNetwork}</strong>.
+        </Typography>
+      </div>
+      <div>
+        <Button onClick={start} className={classes.startButton} fullsize>
+          Start Transfer
+        </Button>
+      </div>
+      <div className={classes.backButtonDiv}>
+        <Button className={classes.backButton} onClick={close}>
+          Back
+        </Button>
+      </div>
     </CustomDrawer>
   );
 };
