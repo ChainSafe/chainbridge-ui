@@ -4,7 +4,6 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
-import { mergeClasses } from "@material-ui/styles";
 import styles from "../Constants/constants";
 
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
