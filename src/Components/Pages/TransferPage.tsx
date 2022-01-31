@@ -593,14 +593,6 @@ const TransferPage = () => {
         >
           Cere Staking
         </NavLink>
-        <NavLink
-          style={{ textDecoration: "none" }}
-          className={classes.footerText}
-          to={{ pathname: "https://cere-network.gitbook.io/cere-network/" }}
-          target="_blank"
-        >
-          Cere Wiki
-        </NavLink>
       </section>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
       <ChangeNetworkDrawer
