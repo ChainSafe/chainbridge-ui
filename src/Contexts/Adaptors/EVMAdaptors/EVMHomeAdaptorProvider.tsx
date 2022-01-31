@@ -38,20 +38,20 @@ export const EVMHomeAdaptorProvider = ({
 
   const getNetworkName = (id: any) => {
     switch (Number(id)) {
-      case 5:
-        return "Localhost";
       case 1:
-        return "Mainnet";
+        return "Ethereum Mainnet";
+      case 2:
+        return "Cere Mainnet (Testnet)";
       case 3:
-        return "Ropsten";
+        return "Ethereum Ropsten";
       case 4:
-        return "Rinkeby";
-      // case 5:
-      //   return "Goerli";
+        return "Ethereum Rinkeby";
+      case 5:
+        return "Ethereum Goerli";
       case 6:
         return "Kotti";
       case 42:
-        return "Kovan";
+        return "Ethereum Kovan";
       case 61:
         return "Ethereum Classic - Mainnet";
       case 42220:
@@ -62,6 +62,10 @@ export const EVMHomeAdaptorProvider = ({
         return "CELO - Baklava Testnet";
       case 1749641142:
         return "Besu";
+      case 137:
+        return "Polygon Mainnet";
+      case 80001:
+        return "Polygon Mumbai";
       default:
         return "Other";
     }
