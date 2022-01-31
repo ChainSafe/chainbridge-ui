@@ -69,7 +69,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       "&:hover": {
         color: styles.primaryTextColor,
       },
-      marginTop: constants.generalUnit * 2.5,
+      marginTop: constants.generalUnit,
     },
     agreementBlock: {
       marginTop: constants.generalUnit * 6.25,
