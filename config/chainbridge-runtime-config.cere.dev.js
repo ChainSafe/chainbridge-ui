@@ -5,29 +5,29 @@ const cereTokenDecimals = 10;
 window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
     chains: [
-      {
-        chainId: 81,
-        networkId: 80001,
-        name: "Polygon Mumbai",
-        decimals: cereTokenDecimals,
-        bridgeAddress: "0x80C8ee1C89c574eB97B3783f0B9C9483EdF8B92E",
-        erc20HandlerAddress: "0x53cc2228587EAca7CcE3189f24BC9bd490E43C48",
-        rpcUrl: "",
-        type: "Ethereum",
-        nativeTokenSymbol: "MATIC",
-        tokens: [
-          {
-            address: "0xcD54b7066839B25A0E5fDf76866D338cc7257179",
-            name: cereTokenName,
-            symbol: cereTokenSymbol,
-            imageUri: "CEREIcon",
-            resourceId:
-              "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
-            decimals: cereTokenDecimals,
-            isDoubleApproval: false,
-          },
-        ],
-      },
+      // {
+      //   chainId: 81,
+      //   networkId: 80001,
+      //   name: "Polygon Mumbai",
+      //   decimals: cereTokenDecimals,
+      //   bridgeAddress: "0x80C8ee1C89c574eB97B3783f0B9C9483EdF8B92E",
+      //   erc20HandlerAddress: "0x53cc2228587EAca7CcE3189f24BC9bd490E43C48",
+      //   rpcUrl: "",
+      //   type: "Ethereum",
+      //   nativeTokenSymbol: "MATIC",
+      //   tokens: [
+      //     {
+      //       address: "0xcD54b7066839B25A0E5fDf76866D338cc7257179",
+      //       name: cereTokenName,
+      //       symbol: cereTokenSymbol,
+      //       imageUri: "CEREIcon",
+      //       resourceId:
+      //         "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+      //       decimals: cereTokenDecimals,
+      //       isDoubleApproval: false,
+      //     },
+      //   ],
+      // },
       {
         chainId: 1,
         networkId: 2,
