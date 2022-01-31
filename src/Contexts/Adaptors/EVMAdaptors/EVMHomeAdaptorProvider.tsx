@@ -39,9 +39,9 @@ export const EVMHomeAdaptorProvider = ({
   const getNetworkName = (id: any) => {
     switch (Number(id)) {
       case 1:
-        return "Mainnet";
+        return "Ethereum Mainnet";
       case 2:
-        return "Cere Blockchain Mainnet (Testnet)";
+        return "Cere Mainnet (Testnet)";
       case 3:
         return "Ropsten";
       case 4:
