@@ -90,6 +90,7 @@ const useStyles = makeStyles(
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        fontSize: 14,
         marginLeft: constants.generalUnit * 6.25,
         marginBottom: constants.generalUnit * 2,
         "& > *:first-child": {
@@ -100,6 +101,11 @@ const useStyles = makeStyles(
       sendingCopy: {
         marginLeft: constants.generalUnit * 6.25,
         marginBottom: constants.generalUnit * 2,
+        fontSize: 14,
+        "& > div:first-child": {
+          fontSize: 14,
+          marginTop: constants.generalUnit * 3,
+        },
       },
       vote: {
         display: "flex",
@@ -245,11 +251,10 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         {transactionStatus === "Initializing Transfer" ? (
           <div className={classes.initCopy}>
             <Typography>Deposit pending...</Typography>
-            <Typography className={classes.weighted}>
-              This should take a few minutes.
-              <br />
-              Please do not refresh or leave the page.
-            </Typography>
+            <div>
+              This should take a few minutes. <br /> <br />
+              <strong> Please do not refresh or leave the page.</strong>
+            </div>
           </div>
         ) : transactionStatus === "In Transit" ? (
           <div className={classes.sendingCopy}>
@@ -275,10 +280,10 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 );
               }
             })}
-            <Typography className={classes.warning}>
-              This should take a few minutes. <br />
-              Please do not refresh or leave the page.
-            </Typography>
+            <div>
+              This should take a few minutes. <br /> <br />
+              <strong> Please do not refresh or leave the page.</strong>
+            </div>
           </div>
         ) : transactionStatus === "Transfer Completed" ? (
           <>
