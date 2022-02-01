@@ -5,6 +5,7 @@ import { NavLink, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import CereLogo from "../media/Icons/cere-icon.svg";
+import styles from "../Constants/constants";
 
 const useStyles = makeStyles(
   ({ constants, palette, zIndex, breakpoints }: ITheme) => {
@@ -39,6 +40,7 @@ const useStyles = makeStyles(
         },
       },
       state: {
+        fontFamily: styles.secondaryFont,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
