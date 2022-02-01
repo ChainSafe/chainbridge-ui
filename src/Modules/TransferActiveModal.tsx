@@ -40,8 +40,6 @@ const useStyles = makeStyles(
         whiteSpace: "nowrap",
         fontSize: 20,
         marginLeft: constants.generalUnit * 1.5,
-        fontWeight: "bold",
-        fontFamily: styles.primaryFont,
       },
       stepIndicator: {
         ...typography.h4,
@@ -93,9 +91,6 @@ const useStyles = makeStyles(
         flexDirection: "column",
         justifyContent: "space-between",
         fontSize: 14,
-        color: "#717171",
-        lineHeight: `${constants.generalUnit * 2}px`,
-        fontFamily: styles.secondaryFont,
         marginLeft: constants.generalUnit * 6.25,
         marginBottom: constants.generalUnit * 2,
         "& > *:first-child": {
@@ -172,7 +167,7 @@ const useStyles = makeStyles(
         justifyContent: "center",
         alignItems: "center",
         paddingTop: constants.generalUnit * 3,
-        fontFamily: styles.secondaryFont,
+        fontFamily: "SF Pro Display, sans-serif",
         fontStyle: "normal",
         fontWeight: "bold",
       },
@@ -196,7 +191,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
 }: ITransferActiveModalProps) => {
   const classes = useStyles();
   const {
-    // transactionStatus,
+    transactionStatus,
     depositVotes,
     relayerThreshold,
     inTransitMessages,
@@ -208,14 +203,13 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     tokens,
   } = useChainbridge();
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
-  const transactionStatus: string = "Initializing Transfer";
   return (
     <CustomModal
       className={classes.root}
       injectedClass={{
         inner: classes.inner,
       }}
-      active={true}
+      active={open}
     >
       <ProgressBar
         className={classes.progress}
@@ -258,7 +252,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
           <div className={classes.initCopy}>
             <Typography>Deposit pending...</Typography>
             <div>
-              This should take a few minutes. <br />
+              This should take a few minutes. <br /> <br />
               <strong> Please do not refresh or leave the page.</strong>
             </div>
           </div>
