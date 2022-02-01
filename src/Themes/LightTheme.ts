@@ -46,6 +46,7 @@ export const lightTheme = createTheme({
             root: {
               backgroundColor: "#262626",
               color: "#ffffff",
+              height: 38,
               borderRadius: 5,
               "& svg": {
                 fill: "#ffffff",

@@ -79,7 +79,6 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       "&:hover": {
         color: styles.primaryTextColor,
       },
-      marginTop: constants.generalUnit,
     },
     agreementBlock: {
       fontFamily: arialFont,
