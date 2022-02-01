@@ -24,11 +24,11 @@ import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
 import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
-import ETHIcon from "../../media/tokens/eth.svg";
+import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
 import WETHIcon from "../../media/tokens/weth.svg";
 import DAIIcon from "../../media/tokens/dai.svg";
 import celoUSD from "../../media/tokens/cusd.svg";
-import CEREIcon from "../../media/tokens/cere-token.svg";
+import { ReactComponent as CEREIcon } from "../../media/tokens/cere-token.svg";
 import styles from "../../Constants/constants";
 
 const PredefinedIcons: any = {
@@ -92,6 +92,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       cursor: "pointer",
       color: styles.primaryTextColor,
       fontSize: 11,
+      fontFamily: `${styles.secondaryFont} !important`,
     },
     networkName: {
       padding: `${constants.generalUnit / 1.5}px ${constants.generalUnit}px`,
@@ -206,14 +207,14 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexWrap: "wrap",
       justifyContent: "space-between",
       marginBottom: constants.generalUnit,
+      fontFamily: styles.secondaryFont,
+      color: "#717171",
       "& > *": {
         display: "block",
         width: "50%",
-        color: "black",
         marginBottom: constants.generalUnit / 2,
         "&:nth-child(even)": {
           textAlign: "right",
-          color: "#AFAFAF",
         },
       },
     },
@@ -222,6 +223,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     transferButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+      fontWeight: "bold",
       borderRadius: 5,
       "&:hover": {
         color: "white",
@@ -234,7 +236,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       justifyContent: "space-between",
       alignItems: "center",
       paddingTop: constants.generalUnit * 2,
-      fontFamily: "SF Pro Display, sans-serif",
+      fontFamily: styles.secondaryFont,
       fontStyle: "normal",
       fontWeight: "bold",
     },
@@ -252,6 +254,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontWeight: "normal",
       fontStyle: "normal",
       color: "black",
+    },
+    networkIcon: {
+      width: constants.generalUnit * 1.5,
+      height: constants.generalUnit * 1.5,
+      marginRight: constants.generalUnit / 2,
     },
   })
 );
@@ -421,7 +428,14 @@ const TransferPage = () => {
                 Change
               </Typography>
             </div>
-            <div className={classes.networkName}>{homeConfig?.name}</div>
+            <div className={classes.networkName}>
+              {walletType === "Ethereum" ? (
+                <ETHIcon className={classes.networkIcon} />
+              ) : (
+                <CEREIcon className={classes.networkIcon} />
+              )}
+              {homeConfig?.name}
+            </div>
           </section>
         )}
       </div>
