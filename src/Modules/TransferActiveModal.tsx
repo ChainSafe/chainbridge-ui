@@ -40,6 +40,8 @@ const useStyles = makeStyles(
         whiteSpace: "nowrap",
         fontSize: 20,
         marginLeft: constants.generalUnit * 1.5,
+        fontWeight: "bold",
+        fontFamily: styles.primaryFont,
       },
       stepIndicator: {
         ...typography.h4,
@@ -80,6 +82,7 @@ const useStyles = makeStyles(
       button: {
         border: "none",
         color: "white",
+        fontWeight: "bold",
         textDecoration: "none",
         "&:hover": {
           background: "none",
@@ -92,6 +95,9 @@ const useStyles = makeStyles(
         justifyContent: "space-between",
         fontSize: 14,
         marginLeft: constants.generalUnit * 6.25,
+        color: styles.greyColor,
+        lineHeight: `${constants.generalUnit * 3}px`,
+        fontFamily: styles.secondaryFont,
         marginBottom: constants.generalUnit * 2,
         "& > *:first-child": {
           marginTop: constants.generalUnit * 3,
@@ -99,6 +105,9 @@ const useStyles = makeStyles(
         },
       },
       sendingCopy: {
+        color: styles.greyColor,
+        lineHeight: `${constants.generalUnit * 3}px`,
+        fontFamily: styles.secondaryFont,
         marginLeft: constants.generalUnit * 6.25,
         marginBottom: constants.generalUnit * 2,
         fontSize: 14,
@@ -130,6 +139,9 @@ const useStyles = makeStyles(
         fontWeight: 600,
       },
       receipt: {
+        color: styles.greyColor,
+        lineHeight: `${constants.generalUnit * 3}px`,
+        fontFamily: styles.secondaryFont,
         marginTop: constants.generalUnit * 3,
         marginLeft: constants.generalUnit * 6.5,
       },
@@ -167,7 +179,7 @@ const useStyles = makeStyles(
         justifyContent: "center",
         alignItems: "center",
         paddingTop: constants.generalUnit * 3,
-        fontFamily: "SF Pro Display, sans-serif",
+        fontFamily: styles.secondaryFont,
         fontStyle: "normal",
         fontWeight: "bold",
       },
@@ -252,7 +264,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
           <div className={classes.initCopy}>
             <Typography>Deposit pending...</Typography>
             <div>
-              This should take a few minutes. <br /> <br />
+              This should take a few minutes. <br />
               <strong> Please do not refresh or leave the page.</strong>
             </div>
           </div>

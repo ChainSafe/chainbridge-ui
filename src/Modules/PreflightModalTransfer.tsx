@@ -52,7 +52,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
         constants.generalUnit * 1.875
       }px`,
       fontSize: 14,
-      color: "#717171",
+      color: styles.greyColor,
       "& li": {
         display: "list-item",
         listStyleType: "disc",
