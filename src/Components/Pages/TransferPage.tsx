@@ -208,7 +208,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       justifyContent: "space-between",
       marginBottom: constants.generalUnit,
       fontFamily: styles.secondaryFont,
-      color: "#717171",
+      color: styles.greyColor,
       "& > *": {
         display: "block",
         width: "50%",
