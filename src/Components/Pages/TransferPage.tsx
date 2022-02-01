@@ -24,11 +24,11 @@ import { useNetworkManager } from "../../Contexts/NetworkManagerContext";
 import NetworkUnsupportedModal from "../../Modules/NetworkUnsupportedModal";
 import { isValidSubstrateAddress } from "../../Utils/Helpers";
 import { useHomeBridge } from "../../Contexts/HomeBridgeContext";
-import ETHIcon from "../../media/tokens/eth.svg";
+import { ReactComponent as ETHIcon } from "../../media/tokens/eth.svg";
 import WETHIcon from "../../media/tokens/weth.svg";
 import DAIIcon from "../../media/tokens/dai.svg";
 import celoUSD from "../../media/tokens/cusd.svg";
-import CEREIcon from "../../media/tokens/cere-token.svg";
+import { ReactComponent as CEREIcon } from "../../media/tokens/cere-token.svg";
 import styles from "../../Constants/constants";
 
 const PredefinedIcons: any = {
@@ -92,6 +92,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       cursor: "pointer",
       color: styles.primaryTextColor,
       fontSize: 11,
+      fontFamily: "SF Pro Display, sans-serif !important",
     },
     networkName: {
       padding: `${constants.generalUnit / 1.5}px ${constants.generalUnit}px`,
@@ -252,6 +253,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontWeight: "normal",
       fontStyle: "normal",
       color: "black",
+    },
+    networkIcon: {
+      width: constants.generalUnit * 1.5,
+      height: constants.generalUnit * 1.5,
+      marginRight: constants.generalUnit / 2,
     },
   })
 );
@@ -421,7 +427,14 @@ const TransferPage = () => {
                 Change
               </Typography>
             </div>
-            <div className={classes.networkName}>{homeConfig?.name}</div>
+            <div className={classes.networkName}>
+              {walletType === "Ethereum" ? (
+                <ETHIcon className={classes.networkIcon} />
+              ) : (
+                <CEREIcon className={classes.networkIcon} />
+              )}
+              {homeConfig?.name}
+            </div>
           </section>
         )}
       </div>
