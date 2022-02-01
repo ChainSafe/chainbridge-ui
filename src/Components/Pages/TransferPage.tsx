@@ -223,6 +223,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     transferButton: {
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
+      fontWeight: "bold",
       borderRadius: 5,
       "&:hover": {
         color: "white",
