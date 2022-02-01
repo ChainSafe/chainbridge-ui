@@ -69,7 +69,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       },
     },
     backButton: {
-      fontFamily: "SF Pro Display, sans-serif",
+      fontFamily: styles.secondaryFont,
       color: styles.primaryTextColor,
       fontWeight: "bold",
       background: "white",
