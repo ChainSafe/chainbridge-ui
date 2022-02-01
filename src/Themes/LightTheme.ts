@@ -46,7 +46,7 @@ export const lightTheme = createTheme({
             root: {
               backgroundColor: "#262626",
               color: "#ffffff",
-              border: `1px solid #262626`,
+              borderRadius: 5,
               "& svg": {
                 fill: "#ffffff",
               },
@@ -60,14 +60,14 @@ export const lightTheme = createTheme({
             },
             hover: {
               backgroundColor: "#ffffff",
-              color: "#262626",
+              color: "white",
               "& svg": {
                 fill: "#262626",
               },
             },
             focus: {
               backgroundColor: "#ffffff",
-              color: "#262626",
+              color: "white",
               "& svg": {
                 fill: "#262626",
               },
