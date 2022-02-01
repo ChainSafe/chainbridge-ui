@@ -122,7 +122,7 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         backdrop: classes.backdrop,
       }}
       size={460}
-      open={true}
+      open={false}
     >
       <div className={classes.title}>Pre-flight check</div>
       <div className={classes.messageBlock}>
