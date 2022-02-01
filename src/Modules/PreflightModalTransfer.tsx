@@ -22,6 +22,9 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
     },
     startButton: {
       color: "white",
+      border: "none",
+      borderRadius: 5,
+      fontWeight: "bold",
       marginBottom: constants.generalUnit * 2,
       background: "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
       "&:hover": {
@@ -41,6 +44,8 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginTop: constants.generalUnit * 3.75,
     },
     messageBlock: {
+      fontFamily: "Arial, sans-serif",
+      lineHeight: `${constants.generalUnit * 2.5}px`,
       margin: `${constants.generalUnit * 6.25}px ${
         constants.generalUnit * 1.875
       }px`,
@@ -49,6 +54,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       "& li": {
         display: "list-item",
         listStyleType: "disc",
+        marginBottom: constants.generalUnit * 2,
       },
     },
     backButtonDiv: {
@@ -63,7 +69,9 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       },
     },
     backButton: {
+      fontFamily: "SF Pro Display, sans-serif",
       color: styles.primaryTextColor,
+      fontWeight: "bold",
       background: "white",
       border: "none",
       "&:hover": {
@@ -72,6 +80,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginTop: constants.generalUnit,
     },
     agreementBlock: {
+      fontFamily: "Arial, sans-serif",
       marginTop: constants.generalUnit * 6.25,
       marginBottom: constants.generalUnit * 6.25,
       color: "black",
