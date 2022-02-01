@@ -6,6 +6,8 @@ import { Button, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
 import styles from "../Constants/constants";
 
+const arialFont = "Arial, sans-serif";
+
 const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
   createStyles({
     root: {
@@ -44,7 +46,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginTop: constants.generalUnit * 3.75,
     },
     messageBlock: {
-      fontFamily: "Arial, sans-serif",
+      fontFamily: arialFont,
       lineHeight: `${constants.generalUnit * 2.5}px`,
       margin: `${constants.generalUnit * 6.25}px ${
         constants.generalUnit * 1.875
@@ -80,7 +82,7 @@ const useStyles = makeStyles(({ constants, palette, zIndex }: ITheme) =>
       marginTop: constants.generalUnit,
     },
     agreementBlock: {
-      fontFamily: "Arial, sans-serif",
+      fontFamily: arialFont,
       marginTop: constants.generalUnit * 6.25,
       marginBottom: constants.generalUnit * 6.25,
       color: "black",
@@ -120,7 +122,7 @@ const PreflightModalTransfer: React.FC<IPreflightModalTransferProps> = ({
         backdrop: classes.backdrop,
       }}
       size={460}
-      open={open}
+      open={true}
     >
       <div className={classes.title}>Pre-flight check</div>
       <div className={classes.messageBlock}>
