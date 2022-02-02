@@ -2,6 +2,10 @@
 
 ## vNext
 
+- ...
+
+## v0.6.0
+
 - Cherry picked 6159de29, ae130023 from the upstream
 - Turned off double approval
 - Redesign transfer active modal
