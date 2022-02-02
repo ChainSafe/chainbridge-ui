@@ -78,6 +78,7 @@ export const lightTheme = createTheme({
             root: {
               backgroundColor: "transparent",
               color: "#ffffff",
+              height: 38,
               border: `1px solid #ffffff`,
               "& svg": {
                 fill: "#ffffff",
