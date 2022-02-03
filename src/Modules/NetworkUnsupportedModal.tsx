@@ -65,7 +65,7 @@ const NetworkUnsupportedModal = () => {
 
   const [open, setOpen] = useState(false);
   const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
-  const ethereumNetworkId = [1, 5];
+  const ethereumNetworkIds = [1, 5];
 
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
@@ -105,7 +105,7 @@ const NetworkUnsupportedModal = () => {
         <Typography component="p" variant="body1">
           Please change to{" "}
           {supportedNetworks.map((i) => {
-            if (ethereumNetworkId.includes(i)) {
+            if (ethereumNetworkIds.includes(i)) {
               return `${getNetworkName(i)}`;
             }
           })}{" "}
