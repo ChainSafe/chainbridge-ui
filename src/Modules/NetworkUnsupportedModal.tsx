@@ -65,6 +65,7 @@ const NetworkUnsupportedModal = () => {
 
   const [open, setOpen] = useState(false);
   const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
+  const isProduction = process.env.NODE_ENV == "production";
 
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
@@ -102,14 +103,9 @@ const NetworkUnsupportedModal = () => {
         </Typography>
         <br />
         <Typography component="p" variant="body1">
-          This app is configured to work on{" "}
-          {supportedNetworks.map(
-            (n, i) =>
-              `${getNetworkName(n)}${
-                i < supportedNetworks.length - 1 ? ", " : ""
-              }`
-          )}{" "}
-          networks
+          {isProduction
+            ? "Please change to Ethereum Mainnet Network."
+            : "Please change to Ethereum Goerli Network."}
         </Typography>
         <section className={classes.buttons}>
           <a
