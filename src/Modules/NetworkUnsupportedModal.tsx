@@ -65,7 +65,7 @@ const NetworkUnsupportedModal = () => {
 
   const [open, setOpen] = useState(false);
   const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
-  const isProduction = process.env.NODE_ENV == "production";
+  const isProduction = process.env.REACT_APP_SENTRY_ENV == "production";
 
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
