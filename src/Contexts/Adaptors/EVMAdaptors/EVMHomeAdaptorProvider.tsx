@@ -78,6 +78,7 @@ export const EVMHomeAdaptorProvider = ({
     handleSetHomeChain,
     homeChains,
     setNetworkId,
+    setWalletType,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -118,6 +119,9 @@ export const EVMHomeAdaptorProvider = ({
           if (window.ethereum) {
             window.ethereum.on("chainChanged", (ch: any) => {
               window.location.reload();
+            });
+            window.ethereum.on("accountsChanged", (accounts: any) => {
+              setWalletType("unset");
             });
           }
 
