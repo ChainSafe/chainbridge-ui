@@ -172,7 +172,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       marginBottom: constants.generalUnit * 3,
       fontSize: 8,
     },
-    addressInput: {},
+    addressInput: {
+      "& > div > input": {
+        fontSize: "12px !important",
+      },
+    },
     generalInput: {
       "& > span": {
         marginBottom: constants.generalUnit,
