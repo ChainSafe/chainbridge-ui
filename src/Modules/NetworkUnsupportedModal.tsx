@@ -109,7 +109,7 @@ const NetworkUnsupportedModal = () => {
               return `${getNetworkName(i)}`;
             }
           })}{" "}
-          network
+          network.
         </Typography>
         <section className={classes.buttons}>
           <a
