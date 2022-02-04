@@ -425,13 +425,14 @@ const TransferPage = () => {
           <section className={classes.connected}>
             <div>
               <div className={classes.inputLabel}>Home Network</div>
-              <Typography
-                className={classes.changeButton}
-                variant="body1"
-                onClick={() => setChangeNetworkOpen(true)}
-              >
-                Change
-              </Typography>
+              {/* ToDo: uncomment after enabling Cere -> Eth flow */}
+              {/*<Typography*/}
+              {/*  className={classes.changeButton}*/}
+              {/*  variant="body1"*/}
+              {/*  onClick={() => setChangeNetworkOpen(true)}*/}
+              {/*>*/}
+              {/*  Change*/}
+              {/*</Typography>*/}
             </div>
             <div className={classes.networkName}>
               {walletType === "Ethereum" ? (
