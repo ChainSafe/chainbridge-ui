@@ -46,7 +46,7 @@ export const lightTheme = createTheme({
             root: {
               backgroundColor: "#262626",
               color: "#ffffff",
-              height: 38,
+              height: 40,
               borderRadius: 5,
               "& svg": {
                 fill: "#ffffff",
@@ -54,7 +54,7 @@ export const lightTheme = createTheme({
             },
             active: {
               backgroundColor: "#ffffff",
-              color: "#262626",
+              color: "white",
               "& svg": {
                 fill: "#262626",
               },
@@ -78,7 +78,7 @@ export const lightTheme = createTheme({
             root: {
               backgroundColor: "transparent",
               color: "#ffffff",
-              height: 38,
+              height: 40,
               border: `1px solid #ffffff`,
               "& svg": {
                 fill: "#ffffff",
