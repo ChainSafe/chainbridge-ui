@@ -136,14 +136,14 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setDestinationChains(
           chainbridgeConfig.chains.filter(
             (bridgeConfig: BridgeConfig) =>
-              bridgeConfig.destinationChain === true
+              bridgeConfig.chainId !== chain.chainId
           )
         );
         if (chainbridgeConfig.chains.length === 2) {
           setDestinationChain(
             chainbridgeConfig.chains.find(
               (bridgeConfig: BridgeConfig) =>
-                bridgeConfig.destinationChain === true
+                bridgeConfig.chainId !== chain.chainId
             )
           );
         }
