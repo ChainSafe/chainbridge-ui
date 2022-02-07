@@ -359,10 +359,7 @@ const TransferPage = () => {
           if (homeConfig?.type === "Ethereum") {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
-            return (
-              parseFloat(value + (bridgeFee || 0)) <=
-              tokens[preflightDetails.token].balance
-            );
+            return parseFloat(value) <= tokens[preflightDetails.token].balance;
           }
         }
         return false;
@@ -377,7 +374,8 @@ const TransferPage = () => {
               preflightDetails.token,
               destinationChainConfig.chainId
             );
-            return Boolean(supplies);
+            // return Boolean(supplies);
+            return true;
           }
           return false;
         }
@@ -409,7 +407,7 @@ const TransferPage = () => {
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              setWalletType("Ethereum");
+              setWalletType("select");
             }}
           >
             Connect to Wallet
