@@ -172,7 +172,11 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       marginBottom: constants.generalUnit * 3,
       fontSize: 8,
     },
-    addressInput: {},
+    addressInput: {
+      "& > div > input": {
+        fontSize: "12px !important",
+      },
+    },
     generalInput: {
       "& > span": {
         marginBottom: constants.generalUnit,
@@ -421,13 +425,14 @@ const TransferPage = () => {
           <section className={classes.connected}>
             <div>
               <div className={classes.inputLabel}>Home Network</div>
-              <Typography
-                className={classes.changeButton}
-                variant="body1"
-                onClick={() => setChangeNetworkOpen(true)}
-              >
-                Change
-              </Typography>
+              {/* ToDo: uncomment after enabling Cere -> Eth flow */}
+              {/*<Typography*/}
+              {/*  className={classes.changeButton}*/}
+              {/*  variant="body1"*/}
+              {/*  onClick={() => setChangeNetworkOpen(true)}*/}
+              {/*>*/}
+              {/*  Change*/}
+              {/*</Typography>*/}
             </div>
             <div className={classes.networkName}>
               {walletType === "Ethereum" ? (
