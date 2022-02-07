@@ -22,17 +22,9 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
 
   return (
     <section className={className}>
-      {fee !== undefined && feeSymbol !== undefined && (
-        <>
-          <Typography component="p">Bridge Fee</Typography>
-          <Typography component="p">
-            {fee} {feeSymbol}
-          </Typography>
-        </>
-      )}
       {symbol !== undefined && (
         <>
-          <Typography component="p">Transfer Amount:</Typography>
+          <Typography component="p">Transfer Amount</Typography>
           <Typography component="p">
             {Number((values as Record<string, any>)[amountFormikName])?.toFixed(
               3

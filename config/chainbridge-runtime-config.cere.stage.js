@@ -5,28 +5,30 @@ const cereTokenDecimals = 10;
 window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
     chains: [
-      {
-        chainId: 81,
-        networkId: 80001,
-        name: "Polygon Mumbai",
-        decimals: cereTokenDecimals,
-        bridgeAddress: "0xBDc040b15561CFC9ED1Ce049DE8bEAbf0b520b33",
-        erc20HandlerAddress: "0x8Ee8876d13e79b846fb6c3e5Ffe226a2e111387a",
-        rpcUrl: "",
-        type: "Ethereum",
-        nativeTokenSymbol: "MATIC",
-        tokens: [
-          {
-            address: "0xd111d479e23A8342A81ad595Ea1CAF229B3528c3",
-            name: cereTokenName,
-            symbol: cereTokenSymbol,
-            imageUri: "CEREIcon",
-            resourceId:
-              "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
-            decimals: cereTokenDecimals,
-          },
-        ],
-      },
+      // ToDo: Uncomment when Polygon will be added
+      // {
+      //   chainId: 81,
+      //   networkId: 80001,
+      //   name: "Polygon Mumbai",
+      //   decimals: cereTokenDecimals,
+      //   bridgeAddress: "0xBDc040b15561CFC9ED1Ce049DE8bEAbf0b520b33",
+      //   erc20HandlerAddress: "0x8Ee8876d13e79b846fb6c3e5Ffe226a2e111387a",
+      //   rpcUrl: "",
+      //   type: "Ethereum",
+      //   nativeTokenSymbol: "MATIC",
+      //   tokens: [
+      //     {
+      //       address: "0xd111d479e23A8342A81ad595Ea1CAF229B3528c3",
+      //       name: cereTokenName,
+      //       symbol: cereTokenSymbol,
+      //       imageUri: "CEREIcon",
+      //       resourceId:
+      //         "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+      //       decimals: cereTokenDecimals,
+      //       isDoubleApproval: false,
+      //     },
+      //   ],
+      // },
       {
         chainId: 1,
         networkId: 2,
@@ -71,6 +73,7 @@ window.__RUNTIME_CONFIG__ = {
             resourceId:
               "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
             decimals: cereTokenDecimals,
+            isDoubleApproval: false,
           },
         ],
       },
