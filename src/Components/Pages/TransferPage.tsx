@@ -400,7 +400,15 @@ const TransferPage = () => {
 
   return (
     <article className={classes.root}>
-      <div className={classes.title}>Transfer Tokens (ERC20 to Native)</div>
+      <div className={classes.title}>
+        {walletType === "Ethereum" ? (
+          <>Transfer Tokens (ERC20 to Native)</>
+        ) : walletType === "Substrate" ? (
+          <>Transfer Tokens (Native to ERC20)</>
+        ) : (
+          <>Transfer Tokens</>
+        )}
+      </div>
       <div className={classes.walletArea}>
         {!isReady ? (
           <Button
