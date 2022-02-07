@@ -2,7 +2,7 @@
 
 ## vNext
 
-- ...
+- Update config, chain-spec file to enable Cere native to Cere ERC20 transfer
 
 ## v0.6.0
 
