@@ -52,7 +52,6 @@ window.__RUNTIME_CONFIG__ = {
             decimals: cereTokenDecimals,
           },
         ],
-        destinationChain: false,
       },
       {
         chainId: 0,
