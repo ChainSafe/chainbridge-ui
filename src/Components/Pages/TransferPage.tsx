@@ -359,7 +359,10 @@ const TransferPage = () => {
           if (homeConfig?.type === "Ethereum") {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
-            return parseFloat(value) <= tokens[preflightDetails.token].balance;
+            return (
+              parseFloat(value) + (bridgeFee || 0) <=
+              tokens[preflightDetails.token].balance
+            );
           }
         }
         return false;
