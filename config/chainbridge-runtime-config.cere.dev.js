@@ -58,7 +58,7 @@ window.__RUNTIME_CONFIG__ = {
         networkId: 5,
         name: "Ethereum Goerli",
         decimals: cereTokenDecimals,
-        rpcUrl: "https://goerli.infura.io/v3/2532f2073c2d4a34b5b9544c76a3de8b ",
+        rpcUrl: "https://goerli.infura.io/v3/178b87e860404572bc217ca53fe594bd",
         bridgeAddress: "0xa806cA3bD88F790744462cBC34c40EDd5b8dc2Dd",
         erc20HandlerAddress: "0xf934Bfc8B5241b6C9e0DfC9A329AD687e79c5498",
         type: "Ethereum",
