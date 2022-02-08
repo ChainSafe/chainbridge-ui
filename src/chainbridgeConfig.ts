@@ -24,7 +24,6 @@ export type BridgeConfig = {
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
   decimals: number;
-  destinationChain?: boolean;
 };
 
 export type EvmBridgeConfig = BridgeConfig & {

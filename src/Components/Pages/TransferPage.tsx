@@ -360,7 +360,7 @@ const TransferPage = () => {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
             return (
-              parseFloat(value + (bridgeFee || 0)) <=
+              parseFloat(value) + (bridgeFee || 0) <=
               tokens[preflightDetails.token].balance
             );
           }
@@ -377,7 +377,12 @@ const TransferPage = () => {
               preflightDetails.token,
               destinationChainConfig.chainId
             );
-            return Boolean(supplies);
+            // As the handleCheckSupplies function is undefined in substrateAdaptor
+            if (supplies === undefined) {
+              return true;
+            } else {
+              return Boolean(supplies);
+            }
           }
           return false;
         }
@@ -402,14 +407,22 @@ const TransferPage = () => {
 
   return (
     <article className={classes.root}>
-      <div className={classes.title}>Transfer Tokens (ERC20 to Native)</div>
+      <div className={classes.title}>
+        {walletType === "Ethereum" ? (
+          <>Transfer Tokens (ERC20 to Native)</>
+        ) : walletType === "Substrate" ? (
+          <>Transfer Tokens (Native to ERC20)</>
+        ) : (
+          <>Transfer Tokens</>
+        )}
+      </div>
       <div className={classes.walletArea}>
         {!isReady ? (
           <Button
             className={classes.connectButton}
             fullsize
             onClick={() => {
-              setWalletType("Ethereum");
+              setWalletType("select");
             }}
           >
             Connect to Wallet

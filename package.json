@@ -11,7 +11,7 @@
     "@chainsafe/common-theme": "1.0.10",
     "@chainsafe/web3-context": "1.2.0",
     "@material-ui/styles": "4.10.0",
-    "@polkadot/api": "3.11.1",
+    "@polkadot/api": "4.2.1",
     "@polkadot/extension-dapp": "0.37.1",
     "@polkadot/keyring": "5.6.3",
     "@polkadot/networks": "5.6.3",
