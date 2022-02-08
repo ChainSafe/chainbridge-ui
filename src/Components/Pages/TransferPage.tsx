@@ -377,8 +377,12 @@ const TransferPage = () => {
               preflightDetails.token,
               destinationChainConfig.chainId
             );
-            // return Boolean(supplies);
-            return true;
+            // As the handleCheckSupplies function is undefined in substrateAdaptor
+            if (supplies === undefined) {
+              return true;
+            } else {
+              return Boolean(supplies);
+            }
           }
           return false;
         }
