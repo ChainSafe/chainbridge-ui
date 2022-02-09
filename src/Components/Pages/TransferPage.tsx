@@ -101,6 +101,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
+      fontSize: 11,
     },
     formArea: {
       "&.disabled": {
@@ -181,6 +182,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       "& > span": {
         marginBottom: constants.generalUnit,
       },
+      "& > div > div > div > div": {
+        fontSize: "11px !important",
+      },
     },
     faqButton: {
       cursor: "pointer",
@@ -255,7 +259,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       border: `1px solid ${borderColor}`,
     },
     inputLabel: {
-      fontSize: 11,
+      fontSize: 12,
       fontWeight: "normal",
       fontStyle: "normal",
       color: "black",
