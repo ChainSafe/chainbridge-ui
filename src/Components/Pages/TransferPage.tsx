@@ -174,7 +174,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     addressInput: {
       "& > div > input": {
-        fontSize: "12px !important",
+        fontSize: "11px !important",
       },
     },
     generalInput: {
@@ -255,7 +255,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       border: `1px solid ${borderColor}`,
     },
     inputLabel: {
-      fontSize: 12,
+      fontSize: 11,
       fontWeight: "normal",
       fontStyle: "normal",
       color: "black",
