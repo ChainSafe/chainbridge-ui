@@ -32,6 +32,7 @@ import { ReactComponent as CEREIcon } from "../../media/tokens/cere-token.svg";
 import styles from "../../Constants/constants";
 import { ReactComponent as ArrowIcon } from "../../media/Icons/arrow.svg";
 import { ReactComponent as HomeIcon } from "../../media/Icons/home-icon.svg";
+import { useDestinationBridge } from "../../Contexts/DestinationBridgeContext";
 
 const PredefinedIcons: any = {
   ETHIcon: ETHIcon,
@@ -50,7 +51,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       fontFamily: styles.primaryFont,
-      // padding: constants.generalUnit * 3,
+      padding: constants.generalUnit * 3,
       position: "relative",
       backgroundColor: "white",
     },
@@ -353,7 +354,8 @@ type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const { walletType, setWalletType } = useNetworkManager();
+  const { walletType, setWalletType, handleSetHomeChain } = useNetworkManager();
+  const destinationBridge = useDestinationBridge();
 
   const {
     deposit,
@@ -370,7 +372,7 @@ const TransferPage = () => {
     checkSupplies,
   } = useChainbridge();
 
-  const { accounts, selectAccount } = useHomeBridge();
+  const { accounts, selectAccount, disconnect } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -435,6 +437,7 @@ const TransferPage = () => {
           if (homeConfig?.type === "Ethereum") {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
+            console.log(`Bridge Fee ${bridgeFee}`);
             return (
               parseFloat(value) + (bridgeFee || 0) <=
               tokens[preflightDetails.token].balance
@@ -528,11 +531,18 @@ const TransferPage = () => {
             <section className={classes.connected}>
               <div>
                 <div className={classes.inputLabel}>Home Network</div>
-                {/* ToDo: uncomment after enabling Cere -> Eth flow */}
                 <Typography
                   className={classes.changeButton}
                   variant="body1"
-                  onClick={() => setChangeNetworkOpen(true)}
+                  onClick={async () => {
+                    await Promise.all([
+                      destinationBridge.disconnect(),
+                      disconnect(),
+                    ]);
+                    handleSetHomeChain(undefined);
+                    setDestinationChain(undefined);
+                    setWalletType("unset");
+                  }}
                 >
                   Change
                 </Typography>
@@ -725,39 +735,30 @@ const TransferPage = () => {
                 Cere Staking
               </NavLink>
             </section>
-            <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
-            <ChangeNetworkDrawer
-              open={changeNetworkOpen}
-              close={() => setChangeNetworkOpen(false)}
-            />
-            <PreflightModalTransfer
-              open={preflightModalOpen}
-              close={() => setPreflightModalOpen(false)}
-              receiver={preflightDetails?.receiver || ""}
-              sender={address || ""}
-              start={() => {
-                setPreflightModalOpen(false);
-                preflightDetails &&
-                  deposit(
-                    preflightDetails.tokenAmount,
-                    preflightDetails.receiver,
-                    preflightDetails.token
-                  );
-              }}
-              sourceNetwork={homeConfig?.name || ""}
-              targetNetwork={destinationChainConfig?.name || ""}
-              tokenSymbol={preflightDetails?.tokenSymbol || ""}
-              value={preflightDetails?.tokenAmount || 0}
-            />
-            <TransferActiveModal
-              open={!!transactionStatus}
-              close={resetDeposit}
-            />
-            {/* This is here due to requiring router */}
-            <NetworkUnsupportedModal />
           </>
         )}
       </div>
+      <PreflightModalTransfer
+        open={preflightModalOpen}
+        close={() => setPreflightModalOpen(false)}
+        receiver={preflightDetails?.receiver || ""}
+        sender={address || ""}
+        start={() => {
+          setPreflightModalOpen(false);
+          preflightDetails &&
+            deposit(
+              preflightDetails.tokenAmount,
+              preflightDetails.receiver,
+              preflightDetails.token
+            );
+        }}
+        sourceNetwork={homeConfig?.name || ""}
+        targetNetwork={destinationChainConfig?.name || ""}
+        tokenSymbol={preflightDetails?.tokenSymbol || ""}
+        value={preflightDetails?.tokenAmount || 0}
+      />
+      <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
+      <NetworkUnsupportedModal />
     </article>
   );
 };
