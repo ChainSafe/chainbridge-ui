@@ -3,6 +3,7 @@
 ## vNext
 
 - Enable CERE native to CERE ERC20 transfers
+- Redesigned connect to wallet page
 
 ## v0.6.0
 
