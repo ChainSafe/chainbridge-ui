@@ -54,6 +54,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       padding: constants.generalUnit * 3,
       position: "relative",
       backgroundColor: "white",
+      minWidth: 460,
     },
     wrapper: {
       position: "relative",
