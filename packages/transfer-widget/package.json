@@ -1,9 +1,8 @@
 {
-  "name": "@chainsafe/chainbridge-ui-transfer-widget",
-  "version": "1.0.0",
-  "publishConfig": {
-    "access": "restricted"
-  },
+  "name": "chainbridge-ui-transfer-widget-unstable",
+  "version": "1.0.1",
+  "main": "dist/src/App.js",
+  "types": "dist/src/App.d.ts",
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
@@ -102,5 +101,8 @@
     "hooks": {
       "pre-commit": "pretty-quick 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --staged"
     }
-  }
+  },
+  "files": [
+    "dist/**/*"
+  ]
 }

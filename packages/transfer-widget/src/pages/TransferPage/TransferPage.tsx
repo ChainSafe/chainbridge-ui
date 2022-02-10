@@ -231,6 +231,7 @@ const TransferPage = () => {
             type="submit"
             fullWidth
             variant="contained"
+            className="start-transfer"
             sx={{
               backgroundColor: "#262626",
               color: "#ffffff",
@@ -243,14 +244,7 @@ const TransferPage = () => {
             Start transfer
           </Button>
         </section>
-        <section>
-          <HelpOutlineIcon
-            onClick={() => setAboutOpen(true)}
-            className={classes.faqButton}
-          />
-        </section>
       </form>
-      <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
       <ChangeNetworkDrawer
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}

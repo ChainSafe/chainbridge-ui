@@ -41,6 +41,7 @@ export default function HomeNetworkConnectView({
           <Button
             fullWidth
             variant="contained"
+            className="connect-button"
             sx={{
               backgroundColor: "#262626",
               color: "#ffffff",

@@ -28,14 +28,16 @@ if (
   });
 }
 
-const App: React.FC<{symbol?: string}> = (props) => {
-  console.log(props)
+const App: React.FC<{config?: any}> = (props) => {
+  console.log('config', props.config)
+
   const {
     __RUNTIME_CONFIG__: {
       UI: { wrapTokenPage = false } = {},
       CHAINBRIDGE: { chains },
     },
   } = window;
+  console.log("🚀 ~ file: App.tsx ~ line 39 ~ window", window.__RUNTIME_CONFIG__)
 
   const tokens = chainbridgeConfig.chains
     .filter((c) => c.type === "Ethereum")

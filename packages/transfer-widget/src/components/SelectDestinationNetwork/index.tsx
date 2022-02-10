@@ -31,7 +31,7 @@ const SelectDestinationNetwork: React.FC<ISelectDestinationNetwork> = ({
         id="select-destination-network"
         onChange={handleChange}
         label={label}
-        value={value ? value.toString() : ""}
+        value={typeof value !== 'undefined' ? value.toString() : ""}
       >
         {options.map((option: { label: any; value: any }) => (
           <MenuItem key={option.value} value={option.value}>
