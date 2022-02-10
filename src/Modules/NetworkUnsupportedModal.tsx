@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     inner: {
       width: "100% !important",
       maxWidth: "unset !important",
-      borderRadius: "5px",
+      borderRadius: 5,
       display: "flex",
       flexDirection: "row",
       padding: `${constants.generalUnit * 3}px ${constants.generalUnit * 3}px`,
