@@ -173,6 +173,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
+      fontSize: 11,
     },
     formArea: {
       "&.disabled": {
@@ -246,12 +247,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     addressInput: {
       "& > div > input": {
-        fontSize: "12px !important",
+        fontSize: "11px !important",
       },
     },
     generalInput: {
       "& > span": {
         marginBottom: constants.generalUnit,
+      },
+      "& > div > div > div > div": {
+        fontSize: "11px !important",
       },
     },
     faqButton: {
@@ -432,7 +436,7 @@ const TransferPage = () => {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
             return (
-              parseFloat(value + (bridgeFee || 0)) <=
+              parseFloat(value) + (bridgeFee || 0) <=
               tokens[preflightDetails.token].balance
             );
           }
@@ -449,7 +453,12 @@ const TransferPage = () => {
               preflightDetails.token,
               destinationChainConfig.chainId
             );
-            return Boolean(supplies);
+            // As the handleCheckSupplies function is undefined in substrateAdaptor
+            if (supplies === undefined) {
+              return true;
+            } else {
+              return Boolean(supplies);
+            }
           }
           return false;
         }

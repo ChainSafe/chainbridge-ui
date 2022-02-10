@@ -2,7 +2,7 @@
 
 ## vNext
 
-- ...
+- Enable CERE native to CERE ERC20 transfers
 
 ## v0.6.0
 
