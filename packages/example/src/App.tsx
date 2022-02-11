@@ -11,9 +11,9 @@ import {
   ChainbridgeProvider,
   NetworkManagerProvider,
   LocalProvider,
+  chainbridgeConfig
 } from "@chainsafe/chainbridge-ui-core";
 import { AppWrapper } from "./layouts";
-import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";
 import "@chainsafe/common-theme/dist/font-faces.css";
 
@@ -36,7 +36,7 @@ const App: React.FC<{}> = () => {
     },
   } = window;
 
-  const tokens = chainbridgeConfig.chains
+  const tokens = chainbridgeConfig().chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
       if (bc.networkId) {

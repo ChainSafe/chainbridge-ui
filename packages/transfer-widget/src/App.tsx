@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import { BrowserRouter as Router } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import {
   TransferPage,
@@ -13,8 +14,8 @@ import {
   ChainbridgeProvider,
   NetworkManagerProvider,
   LocalProvider,
+  chainbridgeConfig
 } from "@chainsafe/chainbridge-ui-core";
-import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";
 
 if (
@@ -28,18 +29,37 @@ if (
   });
 }
 
-const App: React.FC<{config?: any}> = (props) => {
-  console.log('config', props.config)
+const AppWrapper: React.FC<{ config?: any }> = (props) => {
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    if (!window.__RUNTIME_CONFIG__) {
+      // @ts-ignore
+      window.__RUNTIME_CONFIG__ = props.config;
+      setIsReady(true);
+    }
+  }, []);
+  return (
+    <>
+      {isReady ? (
+        <App />
+      ) : (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <CircularProgress />
+        </Box>
+      )}
+    </>
+  );
+};
 
+const App: React.FC<{}> = () => {
   const {
     __RUNTIME_CONFIG__: {
       UI: { wrapTokenPage = false } = {},
       CHAINBRIDGE: { chains },
     },
   } = window;
-  console.log("🚀 ~ file: App.tsx ~ line 39 ~ window", window.__RUNTIME_CONFIG__)
 
-  const tokens = chainbridgeConfig.chains
+  const tokens = chainbridgeConfig().chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
       if (bc.networkId) {
@@ -101,4 +121,4 @@ const App: React.FC<{config?: any}> = (props) => {
   );
 };
 
-export default App;
+export default AppWrapper;
