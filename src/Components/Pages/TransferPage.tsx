@@ -51,7 +51,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       fontFamily: styles.primaryFont,
-      padding: constants.generalUnit * 3,
+      padding: constants.generalUnit * 2.5,
       position: "relative",
       backgroundColor: "white",
       minWidth: 460,
@@ -64,33 +64,42 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+      marginTop: constants.generalUnit * 2,
     },
     logo: {
-      width: "26px",
+      width: 26,
+      height: 26,
     },
     headerText: {
       fontWeight: "bold",
       fontSize: 30,
-      lineHeight: "23px",
+      lineHeight: `${constants.generalUnit * 3}px`,
       color: "black",
       paddingLeft: 12,
     },
     selectArea: {
-      padding: "20px 28px 20px 28px",
+      padding: `${constants.generalUnit * 2.5}px ${
+        constants.generalUnit * 3
+      }px`,
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-start",
       alignItems: "center",
     },
     walletLogo: {
-      width: "403px",
-      height: "243px",
+      width: constants.generalUnit * 50,
+      height: constants.generalUnit * 30.3,
+      marginTop: constants.generalUnit * 2,
+    },
+    horizontalLine: {
+      marginTop: constants.generalUnit * 3.5,
+      color: borderColor,
     },
     walletTitle: {
-      fontSize: "30px",
-      lineHeight: "36px",
+      fontSize: 30,
+      lineHeight: `${constants.generalUnit * 4}px`,
       color: "#5E5E5E",
-      marginTop: "29px",
+      marginTop: constants.generalUnit * 3,
     },
     title: {
       fontSize: 24,
@@ -119,32 +128,33 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderBottom: "1px solid #E5E5E5",
     },
     walletDesc: {
-      font: styles.secondaryFont,
+      fontFamily: styles.secondaryFont,
       fontWeight: "normal",
-      fontSize: "16px",
-      lineHeight: "24px",
+      fontSize: 20,
+      lineHeight: `${constants.generalUnit * 4.5}px`,
       color: "#332582",
-      margin: "12px 0 29px",
+      marginTop: constants.generalUnit,
+      marginBottom: constants.generalUnit * 4,
       textAlign: "center",
     },
     EthWalletBtn: {
       width: "100%",
-      fontSize: "14px",
-      lineHeight: "45px",
+      fontSize: 14,
+      lineHeight: `${constants.generalUnit * 6}px`,
       fontWeight: "bold",
       background: "linear-gradient(105.79deg, #6300E1 1.84%, #DD00E1 92.41%)",
-      borderRadius: "5px",
+      borderRadius: 5,
       color: "#FFFFFF",
       textAlign: "center",
       marginBottom: 28,
     },
     SubsWalletBtn: {
       width: "100%",
-      fontSize: "14px",
-      lineHeight: "45px",
+      fontSize: 14,
+      lineHeight: `${constants.generalUnit * 6}px`,
       fontWeight: "bold",
       color: "white",
-      borderRadius: "5px",
+      borderRadius: 5,
       background: "linear-gradient(105.79deg, #9A1AFF 38.7%, #0028FB 102.94%)",
       textAlign: "center",
     },
@@ -175,7 +185,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
-      fontSize: 11,
+      fontSize: 12,
     },
     formArea: {
       "&.disabled": {
@@ -249,7 +259,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     addressInput: {
       "& > div > input": {
-        fontSize: "11px !important",
+        fontSize: "12px !important",
       },
     },
     generalInput: {
@@ -257,7 +267,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         marginBottom: constants.generalUnit,
       },
       "& > div > div > div > div": {
-        fontSize: "11px !important",
+        fontSize: "12px !important",
       },
     },
     faqButton: {
@@ -504,6 +514,11 @@ const TransferPage = () => {
             </span>
           )}
         </div>
+        {walletType !== "Ethereum" && walletType !== "Substrate" ? (
+          <hr className={classes.horizontalLine} />
+        ) : (
+          <></>
+        )}
         {!isReady ? (
           <div className={classes.selectArea}>
             <HomeIcon className={classes.walletLogo} />
