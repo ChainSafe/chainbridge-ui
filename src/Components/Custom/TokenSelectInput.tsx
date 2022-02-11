@@ -21,7 +21,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
 }: ITokenSelectInput) => {
   const [field, , helpers] = useField(name);
   const labelParsed = tokens[field.value]
-    ? `${label} ${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
+    ? `${label} ${tokens[field.value]?.balance}`
     : "Please select token";
 
   const [synced, setSynced] = useState();
