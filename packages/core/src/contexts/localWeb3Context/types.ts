@@ -67,13 +67,15 @@ export type LocalWeb3Context = {
   ): Promise<void>;
   resetOnboard(
     dispatcher: (action: Actions) => void,
-    onboard: OnboardAPI
+    onboard: OnboardAPI,
+    resetWalletConnect?: boolean
   ): void;
   signMessage(
     message: string,
     provider: providers.Web3Provider
   ): Promise<string>;
   dispatcher: (action: Actions) => void;
+  walletConnectReady: boolean;
 };
 
 type EthGasStationSettings = "fast" | "fastest" | "safeLow" | "average";
@@ -109,6 +111,7 @@ export type LocalWeb3State = {
   onboard: OnboardAPI;
   provider: providers.Web3Provider;
   wallet: Wallet;
+  walletConnectReady: boolean
 };
 
 export type Actions =
@@ -129,4 +132,6 @@ export type Actions =
   | { type: "setWallet"; payload: Wallet | undefined }
   | { type: "setProvider"; payload: providers.Web3Provider }
   | { type: "setNetwork"; payload: number }
-  | { type: "setOnBoard"; payload: OnboardAPI };
+  | { type: "setOnBoard"; payload: OnboardAPI }
+  | { type: 'resetWalletConnect' }
+  | { type: 'setWalletConnect', payload: Wallet | undefined }
