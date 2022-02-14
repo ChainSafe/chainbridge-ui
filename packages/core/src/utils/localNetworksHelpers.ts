@@ -45,11 +45,17 @@ export const checkIsReady = async (
   onboard: OnboardAPI,
   dispatcher: (action: Actions) => void
 ) => {
-  const isReady = await onboard?.walletCheck();
-  dispatcher({
-    type: "setIsReady",
-    payload: !!isReady,
-  });
+  let isReady: boolean |  undefined
+  try {
+    isReady = await onboard?.walletCheck();
+    dispatcher({
+      type: "setIsReady",
+      payload: !!isReady,
+    });
+
+  } catch (e) {
+    console.error("ERROR CHECK IS READY", e)
+  }
   if (!isReady) {
     dispatcher({
       type: "setBalance",
@@ -61,14 +67,23 @@ export const checkIsReady = async (
 
 export const resetOnboard = (
   dispatcher: (action: Actions) => void,
-  onboard: OnboardAPI
+  onboard: OnboardAPI,
+  resetWalletConnect?: boolean
 ) => {
-  localStorage.setItem("onboard.selectedWallet", "");
+  localStorage.clear()
+
+  if(resetWalletConnect){
+    dispatcher({
+      type: "resetWalletConnect",
+    });
+    return onboard?.walletReset();
+  }
+
   dispatcher({
     type: "setIsReady",
     payload: false,
   });
-  onboard?.walletReset();
+  return onboard?.walletReset();
 };
 
 export const checkBalanceAndAllowance = async (

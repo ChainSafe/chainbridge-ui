@@ -37,7 +37,7 @@ export interface HomeChainAdaptorContext {
   getNetworkName: (id: any) => string;
 
   connect: () => Promise<void>;
-  disconnect: () => Promise<void>;
+  disconnect: (resetWalletConnect?: boolean) => Promise<void>;
 
   deposit(
     amount: number,

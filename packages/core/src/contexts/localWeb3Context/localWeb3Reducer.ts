@@ -63,6 +63,17 @@ export const localWeb3ContextReducer = (
         ...state,
         onboard: action.payload,
       };
+    case 'resetWalletConnect':
+      return {
+        ...state,
+        isReady: false,
+        walletConnectReady: false
+      }
+    case 'setWalletConnect':
+      return {
+        ...state,
+        wallet: action.payload!,
+      }
     default:
       return state;
   }

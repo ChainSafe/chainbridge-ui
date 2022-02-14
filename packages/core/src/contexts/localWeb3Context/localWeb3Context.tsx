@@ -15,6 +15,7 @@ import {
   LocalWeb3ContextProps,
   LocalWeb3State,
 } from "./types";
+import { useOnboard } from "./customHook";
 
 const LocalProviderContext = React.createContext<LocalWeb3Context | undefined>(
   undefined
@@ -38,119 +39,7 @@ const LocalProvider = ({
         checks.push({ checkName: "network" });
       }
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const { chainId } = await provider.getNetwork();
-
-      try {
-        const onboard = Onboard({
-          ...onboardConfig,
-          // networkId: networkIds ? networkIds[0] : 1, //Default to mainnet
-          networkId: chainId,
-          walletCheck: checks,
-          subscriptions: {
-            address: (address) => {
-              dispatcher({
-                type: "setAddress",
-                payload: address,
-              });
-              checkIsReady(onboard, dispatcher);
-              return (
-                onboardConfig?.subscriptions?.address &&
-                onboardConfig?.subscriptions?.address(address)
-              );
-            },
-            wallet: (wallet) => {
-              if (wallet.provider) {
-                wallet.name &&
-                  cacheWalletSelection &&
-                  localStorage.setItem("onboard.selectedWallet", wallet.name);
-                dispatcher({
-                  type: "setWallet",
-                  payload: wallet,
-                });
-                dispatcher({
-                  type: "setProvider",
-                  payload: new ethers.providers.Web3Provider(
-                    wallet.provider,
-                    "any"
-                  ),
-                });
-              } else {
-                dispatcher({
-                  type: "setWallet",
-                  payload: undefined,
-                });
-              }
-              return (
-                onboardConfig?.subscriptions?.wallet &&
-                onboardConfig.subscriptions.wallet(wallet)
-              );
-            },
-            network: (network) => {
-              if (!networkIds || networkIds.includes(network)) {
-                onboard.config({ networkId: network });
-              }
-              wallet &&
-                wallet.provider &&
-                dispatcher({
-                  type: "setProvider",
-                  payload: new ethers.providers.Web3Provider(
-                    wallet.provider,
-                    "any"
-                  ),
-                });
-              dispatcher({
-                type: "setNetwork",
-                payload: network,
-              });
-              // setNetwork(network);
-              checkIsReady(onboard, dispatcher);
-              return (
-                onboardConfig?.subscriptions?.network &&
-                onboardConfig.subscriptions.network(network)
-              );
-            },
-            balance: (balance) => {
-              try {
-                const bal = Number(utils.formatEther(balance));
-                !isNaN(bal)
-                  ? dispatcher({ type: "setBalance", payload: bal })
-                  : dispatcher({ type: "setBalance", payload: 0 });
-              } catch (error) {
-                dispatcher({ type: "setBalance", payload: 0 });
-              }
-              return (
-                onboardConfig?.subscriptions?.balance &&
-                onboardConfig.subscriptions.balance(balance)
-              );
-            },
-          },
-        });
-
-        cacheWalletSelection &&
-          savedWallet &&
-          onboard.walletSelect(savedWallet);
-
-        dispatcher({
-          type: "setOnBoard",
-          payload: onboard,
-        });
-      } catch (error) {
-        console.log("Error initializing onboard");
-        console.log(error);
-      }
-    };
-
-    const savedWallet = localStorage.getItem("onboard.selectedWallet");
-
-    if (!savedWallet) {
-      initializeOnboard("MetaMask");
-    } else {
-      initializeOnboard(savedWallet);
-    }
-  }, []);
-
-  useEffect(() => {
+    );
     const networkTokens =
       (tokensToWatch && state.network && tokensToWatch[network]) || [];
 
@@ -179,7 +68,21 @@ const LocalProvider = ({
     tokens,
     isReady,
     gasPrice,
+    walletConnectReady,
   }: LocalWeb3State = state;
+
+  // CUSTOM HOOK FOR INITIALIZING ONBOARD
+  useOnboard(
+    networkIds,
+    checkNetwork,
+    dispatcher,
+    onboardConfig,
+    cacheWalletSelection,
+    checkIsReady,
+    wallet,
+    onboard,
+    state
+  );
 
   let onboardState;
   if (onboard !== undefined && "getState" in onboard) {
@@ -204,6 +107,7 @@ const LocalProvider = ({
         signMessage,
         refreshGasPrice,
         dispatcher,
+        walletConnectReady,
       }}
     >
       {children}

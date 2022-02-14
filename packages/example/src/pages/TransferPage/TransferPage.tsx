@@ -159,7 +159,7 @@ const TransferPage = () => {
               }}
               setValue={setValue}
               options={
-                Object.keys(tokens).map((t) => ({
+                tokens !== undefined && Object.keys(tokens).map((t) => ({
                   value: t,
                   label: (
                     <div className={classes.tokenItem}>

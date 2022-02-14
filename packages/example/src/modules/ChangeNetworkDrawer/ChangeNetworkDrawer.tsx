@@ -5,6 +5,7 @@ import {
   useDestinationBridge,
   useHomeBridge,
   useNetworkManager,
+  useWeb3 as useLocalWeb3,
 } from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
 
@@ -19,11 +20,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
 }) => {
   const classes = useStyles();
 
-  const {
-    setWalletType,
-    handleSetHomeChain,
-    setDestinationChain,
-  } = useNetworkManager();
+  const { wallet: { name } = { name: "" } } = useLocalWeb3();
   const { disconnect } = useHomeBridge();
   const destinationBridge = useDestinationBridge();
 
@@ -32,29 +29,51 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
       <Typography variant="h3" component="h2">
         Changing Networks
       </Typography>
-      <Typography className={classes.paragraph} component="p" variant="h5">
-        To change networks, please open your browser wallet and change networks
-        there. If your wallet does not support your desired home network, please
-        connect a different wallet. <br />
-        <br />
-        Note: your transfer settings will be reset.
-      </Typography>
+      {name !== "MetaMask" ? (
+        <Typography component="p" variant="h5" className={classes.paragraph}>
+          You are connected using <strong>{name}</strong>, click on the button
+          bellow to change your network
+        </Typography>
+      ) : (
+        <Typography className={classes.paragraph} component="p" variant="h5">
+          To change networks, please open your browser wallet and change
+          networks there. If your wallet does not support your desired home
+          network, please connect a different wallet. <br />
+          <br />
+          Note: your transfer settings will be reset.
+        </Typography>
+      )}
       <section className={classes.buttons}>
         <Button onClick={close} variant="outline">
           OK
         </Button>
-        <Button
-          onClick={async () => {
-            // TODO: trigger unsubscribes & clear all state
-            await Promise.all([destinationBridge.disconnect(), disconnect()]);
-            handleSetHomeChain(undefined);
-            setDestinationChain(undefined);
-            setWalletType("select");
-          }}
-          variant="outline"
-        >
-          Connect different wallet
-        </Button>
+        {name !== "MetaMask" ? (
+          <Button
+            onClick={async () => {
+              // TODO: trigger unsubscribes & clear all state
+              await Promise.all([destinationBridge.disconnect(), disconnect(true)]);
+              handleSetHomeChain(undefined);
+              setDestinationChain(undefined);
+              setWalletType("select");
+            }}
+            variant="outline"
+          >
+            Change network on {name}
+          </Button>
+        ) : (
+          <Button
+            onClick={async () => {
+              // TODO: trigger unsubscribes & clear all state
+              await Promise.all([destinationBridge.disconnect(), disconnect()]);
+              handleSetHomeChain(undefined);
+              setDestinationChain(undefined);
+              setWalletType("select");
+            }}
+            variant="outline"
+          >
+            Connect different wallet
+          </Button>
+        )}
         <a
           rel="noopener noreferrer"
           href={process.env.REACT_APP_SUPPORT_URL}
