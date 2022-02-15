@@ -144,7 +144,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       fontWeight: "bold",
       background: "linear-gradient(105.79deg, #6300E1 1.84%, #DD00E1 92.41%)",
       borderRadius: 5,
-      color: "#FFFFFF",
+      color: "white",
       textAlign: "center",
       marginBottom: 28,
     },
