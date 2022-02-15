@@ -119,7 +119,7 @@ const useStyles = makeStyles(
       vote: {
         display: "flex",
         flexDirection: "row",
-        marginTop: constants.generalUnit,
+        marginBottom: constants.generalUnit,
         "& > *": {
           "&:first-child": {
             whiteSpace: "nowrap",
@@ -167,6 +167,7 @@ const useStyles = makeStyles(
         justifyContent: "flex-start",
         alignItems: "center",
         marginTop: constants.generalUnit * 3,
+        marginBottom: constants.generalUnit * 2,
       },
       exclamation: {
         height: constants.generalUnit * 3.75,
@@ -188,6 +189,9 @@ const useStyles = makeStyles(
         fontSize: 12,
         fontStyle: "normal",
         fontWeight: "bold",
+      },
+      messageBlock: {
+        lineHeight: `${constants.generalUnit * 3.5}px`,
       },
     })
 );
@@ -292,8 +296,8 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 );
               }
             })}
-            <div>
-              This should take a few minutes. <br /> <br />
+            <div className={classes.messageBlock}>
+              This should take a few minutes. <br />
               <strong> Please do not refresh or leave the page.</strong>
             </div>
           </div>
