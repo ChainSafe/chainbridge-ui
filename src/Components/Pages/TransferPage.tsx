@@ -513,11 +513,7 @@ const TransferPage = () => {
             </span>
           )}
         </div>
-        {walletType !== "Ethereum" && walletType !== "Substrate" ? (
-          <hr className={classes.horizontalLine} />
-        ) : (
-          <></>
-        )}
+        {!isReady ? <hr className={classes.horizontalLine} /> : <></>}
         {!isReady ? (
           <div className={classes.selectArea}>
             <HomeIcon className={classes.walletLogo} />
