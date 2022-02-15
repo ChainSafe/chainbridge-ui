@@ -448,7 +448,6 @@ const TransferPage = () => {
           if (homeConfig?.type === "Ethereum") {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
-            console.log(`Bridge Fee ${bridgeFee}`);
             return (
               parseFloat(value) + (bridgeFee || 0) <=
               tokens[preflightDetails.token].balance
@@ -618,7 +617,6 @@ const TransferPage = () => {
                     disabled: !homeConfig || !address || props.isValidating,
                   })}
                 >
-                  {console.log(destinationChainConfig)}
                   <section>
                     <SelectInput
                       label="Destination Network"
