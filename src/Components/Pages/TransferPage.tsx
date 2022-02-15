@@ -58,7 +58,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     wrapper: {
       position: "relative",
-      background: "#FFFFFF",
+      background: "white",
     },
     header: {
       display: "flex",
