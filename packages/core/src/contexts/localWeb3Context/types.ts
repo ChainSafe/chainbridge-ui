@@ -129,9 +129,19 @@ export type Actions =
   | { type: "setAddress"; payload: string }
   | { type: "setBalance"; payload: number }
   | { type: "setIsReady"; payload: boolean }
-  | { type: "setWallet"; payload: Wallet | undefined }
+  | {
+    type: "setWallet"; payload: {
+      wallet: Wallet | undefined,
+      provider: providers.Web3Provider | undefined
+    }
+  }
   | { type: "setProvider"; payload: providers.Web3Provider }
-  | { type: "setNetwork"; payload: number }
+  | {
+    type: "setNetworkAnProvider"; payload: {
+      network: number,
+      provider: providers.Web3Provider | undefined
+    }
+  }
   | { type: "setOnBoard"; payload: OnboardAPI }
   | { type: 'resetWalletConnect' }
   | { type: 'setWalletConnect', payload: Wallet | undefined }

@@ -64,21 +64,19 @@ const useOnboard = (
 
                 dispatcher({
                   type: "setWallet",
-                  payload: wallet,
+                  payload: {
+                    wallet,
+                    provider: new ethers.providers.Web3Provider(
+                      wallet.provider,
+                      "any"
+                    ),
+                  },
                 });
               }
-
-              dispatcher({
-                type: "setProvider",
-                payload: new ethers.providers.Web3Provider(
-                  wallet.provider,
-                  "any"
-                ),
-              });
             } else {
               dispatcher({
                 type: "setWallet",
-                payload: undefined,
+                payload: { wallet: undefined, provider: undefined },
               });
             }
             return (
@@ -94,11 +92,14 @@ const useOnboard = (
             wallet &&
               wallet.provider &&
               dispatcher({
-                type: "setProvider",
-                payload: new ethers.providers.Web3Provider(
-                  wallet.provider,
-                  "any"
-                ),
+                type: "setNetworkAnProvider",
+                payload: {
+                  network,
+                  provider: new ethers.providers.Web3Provider(
+                    wallet.provider,
+                    "any"
+                  ),
+                },
               });
             dispatcher({
               type: "setNetwork",
