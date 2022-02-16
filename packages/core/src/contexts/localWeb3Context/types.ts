@@ -111,7 +111,8 @@ export type LocalWeb3State = {
   onboard: OnboardAPI;
   provider: providers.Web3Provider;
   wallet: Wallet;
-  walletConnectReady: boolean
+  walletConnectReady: boolean;
+  checkWallet: boolean
 };
 
 export type Actions =
@@ -137,11 +138,13 @@ export type Actions =
   }
   | { type: "setProvider"; payload: providers.Web3Provider }
   | {
-    type: "setNetworkAnProvider"; payload: {
+    type: "setNetworkAndProvider"; payload: {
       network: number,
       provider: providers.Web3Provider | undefined
     }
   }
+  | { type: "setNetwork", payload: number }
   | { type: "setOnBoard"; payload: OnboardAPI }
   | { type: 'resetWalletConnect' }
-  | { type: 'setWalletConnect', payload: Wallet | undefined }
+  | { type: 'setWalletConnect', payload: { wallet: Wallet | undefined, provider: providers.Web3Provider } }
+  | { type: 'checkWallet', payload: boolean }

@@ -48,18 +48,38 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
           OK
         </Button>
         {name !== "MetaMask" ? (
-          <Button
-            onClick={async () => {
-              // TODO: trigger unsubscribes & clear all state
-              await Promise.all([destinationBridge.disconnect(), disconnect(true)]);
-              handleSetHomeChain(undefined);
-              setDestinationChain(undefined);
-              setWalletType("select");
-            }}
-            variant="outline"
-          >
-            Change network on {name}
-          </Button>
+          <>
+            <Button
+              onClick={async () => {
+                // TODO: trigger unsubscribes & clear all state
+                await Promise.all([
+                  destinationBridge.disconnect(),
+                  disconnect(true),
+                ]);
+                handleSetHomeChain(undefined);
+                setDestinationChain(undefined);
+                setWalletType("select");
+              }}
+              variant="outline"
+            >
+              Change network on {name}
+            </Button>
+            <Button
+              onClick={async () => {
+                // TODO: trigger unsubscribes & clear all state
+                await Promise.all([
+                  destinationBridge.disconnect(),
+                  disconnect(),
+                ]);
+                handleSetHomeChain(undefined);
+                setDestinationChain(undefined);
+                setWalletType("select");
+              }}
+              variant="outline"
+            >
+              Connect different wallet
+            </Button>
+          </>
         ) : (
           <Button
             onClick={async () => {

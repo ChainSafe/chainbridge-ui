@@ -3,6 +3,7 @@ import { ethers, utils } from "ethers";
 import Onboard from "bnc-onboard";
 import { API as OnboardAPI, Wallet } from "bnc-onboard/dist/src/interfaces";
 import { Actions, LocalWeb3State } from "../types";
+import { enableWallet, enableWalletConnectModal } from "../../../utils/localNetworksHelpers";
 
 const useOnboard = (
   networkIds: Array<number> | undefined,
@@ -55,7 +56,13 @@ const useOnboard = (
 
                 dispatcher({
                   type: "setWalletConnect",
-                  payload: wallet,
+                  payload: {
+                    wallet,
+                    provider: new ethers.providers.Web3Provider(
+                      wallet.provider,
+                      "any"
+                    ),
+                  },
                 });
               } else {
                 wallet.name &&
@@ -147,6 +154,21 @@ const useOnboard = (
     // HERE WE INITIALIZE ONBOARD NO MATTER WHAT
     initializeOnboard(savedWallet);
   }, []);
+  const checkFunc = async () => {
+    const { walletConnectReady, wallet: { provider }, address } = state;
+    if (walletConnectReady) {
+      return enableWalletConnectModal(
+        provider,
+        address,
+        dispatcher
+      );
+    }
+    return enableWallet(
+      onboard,
+      dispatcher
+    )
+
+  };
   useEffect(() => {
     console.log("PROVIDER AND ONBOARD ===>", state)
     if(state.provider !== undefined && state.onboard !== undefined){
