@@ -6,6 +6,11 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Button from "@mui/material/Button";
 import clsx from "clsx";
 
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+
 import {
   useChainbridge,
   useHomeBridge,
@@ -104,152 +109,180 @@ const TransferPage = () => {
   const watchAmount = watch("tokenAmount", 0);
 
   const onSubmit: SubmitHandler<PreflightDetails> = (values) => {
+    console.log("🚀 ~ file: TransferPage.tsx ~ line 112 ~ TransferPage ~ values", values)
     setPreflightDetails({
       ...values,
       tokenSymbol: tokens[values.token].symbol || "",
     });
-    setPreflightModalOpen(true);
+    console.log('bang')
+    preflightDetails && deposit(
+      preflightDetails.tokenAmount,
+      preflightDetails.receiver,
+      preflightDetails.token
+    );
   };
 
   return (
     <div className={classes.root}>
-      <HomeNetworkConnectView
-        isReady={isReady}
-        accounts={accounts}
-        address={address}
-        classes={classes}
-        walletConnecting={walletConnecting}
-        walletType={walletType}
-        homeConfig={homeConfig}
-        setWalletType={setWalletType}
-        setChangeNetworkOpen={setChangeNetworkOpen}
-        selectAccount={selectAccount}
-      />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <SelectDestinationNetwork
-            label="Destination Network"
-            disabled={!homeConfig || formState.isSubmitting}
-            options={destinationChains.map((dc: any) => ({
-              label: dc.name,
-              value: dc.domainId,
-            }))}
-            onChange={(value: number | undefined) => setDestinationChain(value)}
-            value={destinationChainConfig?.domainId}
-          />
-        </section>
-        <section className={classes.currencySection}>
-          <section>
-            <TokenSelectInput
-              control={control}
-              rules={{ required: true }}
-              tokens={tokens}
-              name="token"
-              disabled={!destinationChainConfig || formState.isSubmitting}
-              label={`Balance: `}
-              className={classes.generalInput}
-              sync={(tokenAddress) => {
-                setPreflightDetails({
-                  ...preflightDetails,
-                  token: tokenAddress,
-                  receiver: "",
-                  tokenAmount: 0,
-                  tokenSymbol: "",
-                });
-              }}
-              setValue={setValue}
-              options={
-                Object.keys(tokens).map((t) => ({
-                  value: t,
-                  label: (
-                    <div className={classes.tokenItem}>
-                      {tokens[t]?.imageUri && (
-                        <img
-                          src={showImageUrl(tokens[t]?.imageUri)}
-                          alt={tokens[t]?.symbol}
-                        />
-                      )}
-                      <span>{tokens[t]?.symbol || t}</span>
-                    </div>
-                  ),
-                })) || []
-              }
-            />
-          </section>
-          <section>
-            <div>
-              <TokenInput
-                classNames={{
-                  input: clsx(classes.tokenInput, classes.generalInput),
-                  button: classes.maxButton,
-                }}
-                tokenSelectorKey={watchToken}
-                tokens={tokens}
-                disabled={
-                  !destinationChainConfig ||
-                  formState.isSubmitting ||
-                  !preflightDetails.token ||
-                  preflightDetails.token === ""
-                }
-                name="tokenAmount"
-                label="Amount to send"
-                setValue={setValue}
-                control={control}
-              />
-            </div>
-          </section>
-        </section>
-        <section>
-          <AddressInput
-            disabled={!destinationChainConfig || formState.isSubmitting}
-            name="receiver"
-            label="Destination Address"
-            placeholder="Please enter the receiving address"
-            senderAddress={`${address}`}
-            sendToSameAccountHelper={
-              destinationChainConfig?.type === homeConfig?.type
-            }
-            setValue={setValue}
-            control={control}
-          />
-        </section>
-        <Fees
-          amountFormikName="tokenAmount"
-          className={classes.fees}
-          fee={bridgeFee}
-          feeSymbol={homeConfig?.nativeTokenSymbol}
-          symbol={
-            preflightDetails && tokens[preflightDetails.token]
-              ? tokens[preflightDetails.token].symbol
-              : undefined
-          }
-          amount={watchAmount}
-        />
-        <section>
-          <Button
-            disabled={!destinationChainConfig || formState.isSubmitting}
-            type="submit"
-            fullWidth
-            variant="contained"
-            className="start-transfer"
-            sx={{
-              backgroundColor: "#262626",
-              color: "#ffffff",
-              ":hover": {
-                backgroundColor: "#262626",
-                opacity: 0.9,
-              },
-            }}
+        <Box sx={{ flexGrow: 1, mt: 1, mb: 3 }}>
+          <Grid
+            container
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 2 }}
           >
-            Start transfer
-          </Button>
-        </section>
+            <Grid container item xs={12} md={6} rowSpacing={{ xs: 1, md: 1 }}>
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <HomeNetworkConnectView
+                  isReady={isReady}
+                  accounts={accounts}
+                  address={address}
+                  classes={classes}
+                  walletConnecting={walletConnecting}
+                  walletType={walletType}
+                  homeConfig={homeConfig}
+                  setWalletType={setWalletType}
+                  setChangeNetworkOpen={setChangeNetworkOpen}
+                  selectAccount={selectAccount}
+                />
+              </Grid>
+              <Grid item xs={12}>
+
+                  <SelectDestinationNetwork
+                    label="Destination Network"
+                    disabled={!homeConfig || formState.isSubmitting}
+                    options={destinationChains.map((dc: any) => ({
+                      label: dc.name,
+                      value: dc.domainId,
+                    }))}
+                    onChange={(value: number | undefined) =>
+                      setDestinationChain(value)
+                    }
+                    value={destinationChainConfig?.domainId}
+                  />
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              item
+              xs={12}
+              md={6}
+              columnSpacing={1}
+              rowSpacing={1}
+            >
+              <Grid item xs={12} md={6}>
+                <TokenSelectInput
+                  control={control}
+                  rules={{ required: true }}
+                  tokens={tokens}
+                  name="token"
+                  disabled={!destinationChainConfig || formState.isSubmitting}
+                  label={`Balance: `}
+                  className={classes.generalInput}
+                  sync={(tokenAddress) => {
+                    setPreflightDetails({
+                      ...preflightDetails,
+                      token: tokenAddress,
+                      receiver: "",
+                      tokenAmount: 0,
+                      tokenSymbol: "",
+                    });
+                  }}
+                  setValue={setValue}
+                  options={
+                    Object.keys(tokens).map((t) => ({
+                      value: t,
+                      label: (
+                        <div className={classes.tokenItem}>
+                          {tokens[t]?.imageUri && (
+                            <img
+                              src={showImageUrl(tokens[t]?.imageUri)}
+                              alt={tokens[t]?.symbol}
+                            />
+                          )}
+                          <span>{tokens[t]?.symbol || t}</span>
+                        </div>
+                      ),
+                    })) || []
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TokenInput
+                  classNames={{
+                    input: clsx(classes.tokenInput, classes.generalInput),
+                    button: classes.maxButton,
+                  }}
+                  tokenSelectorKey={watchToken}
+                  tokens={tokens}
+                  disabled={
+                    !destinationChainConfig ||
+                    formState.isSubmitting ||
+                    !preflightDetails.token ||
+                    preflightDetails.token === ""
+                  }
+                  name="tokenAmount"
+                  label="Amount to send"
+                  setValue={setValue}
+                  control={control}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <AddressInput
+                  disabled={!destinationChainConfig || formState.isSubmitting}
+                  name="receiver"
+                  label="Destination Address"
+                  placeholder="Please enter the receiving address"
+                  senderAddress={`${address}`}
+                  sendToSameAccountHelper={
+                    destinationChainConfig?.type === homeConfig?.type
+                  }
+                  setValue={setValue}
+                  control={control}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
+              <Grid item xs={0} md={9}></Grid>
+              <Grid item xs={12} md={3}>
+                <Button
+                  disabled={!destinationChainConfig || formState.isSubmitting}
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  className="start-transfer"
+                  sx={{
+                    backgroundColor: "#262626",
+                    color: "#ffffff",
+                    ":hover": {
+                      backgroundColor: "#262626",
+                      opacity: 0.9,
+                    },
+                  }}
+                >
+                  Start transfer
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
       </form>
+      <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
       <ChangeNetworkDrawer
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}
       />
-      <PreflightModalTransfer
+      {/* <PreflightModalTransfer
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
         receiver={preflightDetails?.receiver || ""}
@@ -267,7 +300,7 @@ const TransferPage = () => {
         targetNetwork={destinationChainConfig?.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
         value={preflightDetails?.tokenAmount || 0}
-      />
+      /> */}
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
       {/* This is here due to requiring router */}
       <NetworkUnsupportedModal />

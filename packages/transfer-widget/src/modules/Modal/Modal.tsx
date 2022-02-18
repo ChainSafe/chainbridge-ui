@@ -13,7 +13,7 @@ const useStyles = makeStyles(
   ({ animation, constants, breakpoints, palette, overrides, zIndex }: ITheme) =>
     createStyles({
       root: {
-        position: "fixed",
+        // position: "fixed",
         zIndex: zIndex?.layer3,
         bottom: 0,
         left: 0,

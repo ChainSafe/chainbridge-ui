@@ -40,12 +40,13 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = (
     setValue,
   } = props;
   const { field, fieldState } = useController({ name, control, rules });
+  // console.log("🚀 ~ file: TokenSelectInput.tsx ~ line 43 ~ field", field)
 
   const labelParsed =
     field && tokens[field.value] ? " " : "Please select token";
   const balance = tokens[field.value]
     ? `${tokens[field.value]?.balance} ${tokens[field.value]?.symbol}`
-    : " ";
+    : "";
 
   const [synced, setSynced] = useState();
   useEffect(() => {
@@ -67,28 +68,27 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = (
 
   return (
     <Box
-      sx={{
-        display: "flex",
-      }}
+
     >
       <Box
         sx={{
-          mr: 4,
+          mt: 3,
+
         }}
       >
-        <FormControl disabled={disabled}>
+        <FormControl disabled={disabled} fullWidth>
           <InputLabel id="token-select-label">Token</InputLabel>
-          <Select {...field} label="token">
+          <Select autoWidth {...field} label="token">
             {options.map((option: any) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
             ))}
           </Select>
-          <FormHelperText>{labelParsed}</FormHelperText>
+          <FormHelperText>{balance !== '' ? `Balance: ${balance}` : " "}</FormHelperText>
         </FormControl>
       </Box>
-      <Box sx={{ flexGrow: 1 }}>
+      {/* <Box sx={{ flexGrow: 1 }}>
         <FormControl fullWidth disabled={true}>
           <TextField
             disabled={true}
@@ -99,7 +99,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = (
             value={balance}
           />
         </FormControl>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

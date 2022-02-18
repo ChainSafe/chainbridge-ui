@@ -34,7 +34,7 @@ const TokenInput: React.FC<ITokenInput> = ({
 }: ITokenInput) => {
   const { field, fieldState } = useController({ name, control });
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box sx={{ mt: 3 }}>
       <TextField
         disabled={disabled}
         error={!!fieldState.error}

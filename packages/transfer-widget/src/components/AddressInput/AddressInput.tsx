@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useController } from "react-hook-form";
 import FormControl from "@mui/material/FormControl";
+import Button from "@mui/material/Button";
 
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
@@ -29,6 +30,7 @@ const AddressInput: React.FC<IAddressInput> = ({
   control,
   setValue,
   disabled,
+  classNames,
   ...rest
 }: IAddressInput) => {
   const { field, fieldState } = useController({ name, control });
@@ -36,13 +38,8 @@ const AddressInput: React.FC<IAddressInput> = ({
   const [stored, setStored] = useState<string | undefined>();
 
   const toggleReceiver = useCallback(() => {
-    if (stored === undefined) {
-      setStored(field.value);
-      setValue(name, senderAddress);
-    } else {
-      setValue(name, "");
-      setStored(undefined);
-    }
+    setStored(field.value);
+    setValue(name, senderAddress);
   }, [name, senderAddress, field, setStored, setValue]);
 
   return (
@@ -56,9 +53,20 @@ const AddressInput: React.FC<IAddressInput> = ({
           label={label}
           placeholder={placeholder}
           disabled={Boolean(disabled && !stored)}
+          InputProps={{
+            endAdornment: (
+              !field.value && <Button
+                disabled={Boolean(disabled && !stored)}
+                sx={{minWidth: 'auto', background: "white", zIndex: 1}}
+                onClick={() => toggleReceiver()}
+                variant="outlined"
+                type="button"
+              >my&nbsp;address</Button>
+            ),
+          }}
         />
       </>
-      {sendToSameAccountHelper && (
+      {/* {sendToSameAccountHelper && (
         <FormGroup sx={{ my: 1 }}>
           <FormControlLabel
             control={
@@ -71,7 +79,7 @@ const AddressInput: React.FC<IAddressInput> = ({
             label="I want to send funds to my address"
           />
         </FormGroup>
-      )}
+      )} */}
     </FormControl>
   );
 };
