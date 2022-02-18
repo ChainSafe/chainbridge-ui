@@ -1,0 +1,269 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExplorerPage renders correctly and match Snapshot 1`] = `
+<div>
+  <div
+    class="makeStyles-root-13 makeStyles-container-32 makeStyles-justify-center-21 makeStyles-flex-wrap-wrap-30 makeStyles-grid-lg-12-82"
+  >
+    <section
+      class="makeStyles-mainContent-2"
+    >
+      <section
+        class="makeStyles-networkInfoContainer-3"
+      >
+        <div
+          class="makeStyles-networkInfo-4"
+        >
+          <div
+            class="makeStyles-networkSelection-5"
+          >
+            <h2
+              class="makeStyles-root-101 makeStyles-h2-103"
+            >
+              Transfers on
+            </h2>
+          </div>
+        </div>
+      </section>
+      <div
+        class="makeStyles-explorerTableContainer-9"
+      >
+        <div
+          class="makeStyles-explorerTable-10"
+        >
+          <table
+            class="makeStyles-root-166 makeStyles-fullWidth-167 makeStyles-root-114"
+          >
+            <thead
+              class="makeStyles-root-171"
+            >
+              <tr
+                class="makeStyles-root-172 makeStyles-row-115 classic"
+              >
+                <td
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
+                >
+                  Date
+                </td>
+                <td
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
+                >
+                  From
+                </td>
+                <td
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
+                >
+                  Transfer
+                </td>
+                <td
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
+                >
+                  Value
+                </td>
+                <td
+                  class="makeStyles-root-174 makeStyles-alignCenter-176"
+                />
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="makeStyles-root-172 makeStyles-row-115 classic"
+              >
+                <td
+                  class="makeStyles-cellRow-119 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  Sep 1, 6:53PM
+                </td>
+                <td
+                  class="makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <div
+                    class="makeStyles-accountAddress-117"
+                  >
+                    <article
+                      class="makeStyles-root-195 makeStyles-avatar-123 circle small"
+                    >
+                      <canvas
+                        class="identicon makeStyles-root-196"
+                        height="60"
+                        style="width: 60px; height: 60px;"
+                        width="60"
+                      />
+                    </article>
+                    <span>
+                      0x284D2Cb760D5A952f9Ea61fd3179F98a2CbF0B3E
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <div>
+                    <span>
+                      <img
+                        alt="fromChain"
+                        class="makeStyles-imageToken-151"
+                      />
+                      <span>
+                        Ethereum - Rinkeby
+                         to
+                      </span>
+                    </span>
+                    <span>
+                      <img
+                        class="makeStyles-imageToken-151"
+                      />
+                      <span>
+                        Ethereum - Goerli
+                      </span>
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <span
+                    class="makeStyles-amountInfo-121"
+                  >
+                    <img
+                      class="makeStyles-imageValueToken-152"
+                    />
+                    <span>
+                      1.0
+                       
+                    </span>
+                  </span>
+                </td>
+                <td
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <div
+                    class="makeStyles-viewDetailsInfo-122"
+                  >
+                    <button
+                      class="makeStyles-root-183 makeStyles-primary-184 medium"
+                    >
+                      <span
+                        class="makeStyles-root-197 makeStyles-sizeMedium-204"
+                      >
+                        <svg>
+                          directional.svg
+                        </svg>
+                      </span>
+                      View Details
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr
+                class="makeStyles-root-172 makeStyles-row-115 classic"
+              >
+                <td
+                  class="makeStyles-cellRow-119 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  Sep 2, 4:06PM
+                </td>
+                <td
+                  class="makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <div
+                    class="makeStyles-accountAddress-117"
+                  >
+                    <article
+                      class="makeStyles-root-195 makeStyles-avatar-123 circle small"
+                    >
+                      <canvas
+                        class="identicon makeStyles-root-196"
+                        height="60"
+                        style="width: 60px; height: 60px;"
+                        width="60"
+                      />
+                    </article>
+                    <span>
+                      0x6DACDc98FbB776B67278274B508bC76588DeEfC6
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <div>
+                    <span>
+                      <img
+                        alt="fromChain"
+                        class="makeStyles-imageToken-151"
+                      />
+                      <span>
+                        Ethereum - Rinkeby
+                         to
+                      </span>
+                    </span>
+                    <span>
+                      <img
+                        class="makeStyles-imageToken-151"
+                      />
+                      <span>
+                        Ethereum - Goerli
+                      </span>
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <span
+                    class="makeStyles-amountInfo-121"
+                  >
+                    <img
+                      class="makeStyles-imageValueToken-152"
+                    />
+                    <span>
+                      1.0
+                       
+                    </span>
+                  </span>
+                </td>
+                <td
+                  class="makeStyles-row-115 makeStyles-root-191 makeStyles-alignCenter-193"
+                >
+                  <div
+                    class="makeStyles-viewDetailsInfo-122"
+                  >
+                    <button
+                      class="makeStyles-root-183 makeStyles-primary-184 medium"
+                    >
+                      <span
+                        class="makeStyles-root-197 makeStyles-sizeMedium-204"
+                      >
+                        <svg>
+                          directional.svg
+                        </svg>
+                      </span>
+                      View Details
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            class="makeStyles-paginationPanel-11"
+          >
+            <button
+              class="makeStyles-root-183 makeStyles-paginationButtons-12 makeStyles-primary-184 makeStyles-disabled-190 medium"
+              disabled=""
+            >
+              ← Previous
+            </button>
+            <button
+              class="makeStyles-root-183 makeStyles-paginationButtons-12 makeStyles-primary-184 medium"
+            >
+              Next →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
