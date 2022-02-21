@@ -1,5 +1,6 @@
 import { ChainbridgeConfig, UIConfig } from "@chainsafe/chainbridge-ui-core";
 
+
 declare global {
   interface Window {
     ethereum: any;
@@ -10,4 +11,6 @@ declare global {
     };
   }
 }
+
 export {}
+

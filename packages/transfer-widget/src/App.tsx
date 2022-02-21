@@ -52,6 +52,7 @@ const AppWrapper: React.FC<{ config?: any }> = (props) => {
 };
 
 const App: React.FC<{}> = () => {
+
   const {
     __RUNTIME_CONFIG__: {
       UI: { wrapTokenPage = false } = {},
