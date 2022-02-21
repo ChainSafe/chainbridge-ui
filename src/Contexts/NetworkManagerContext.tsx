@@ -27,6 +27,7 @@ import {
   ResetAction,
   transitMessageReducer,
 } from "./Reducers/TransitMessageReducer";
+import { blockchainChainId } from "../Constants/constants";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -131,22 +132,38 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       }
       const chain = homeChains.find((c) => c.chainId === chainId);
 
+      const destinationChainId = (homeChainId: number) => {
+        switch (homeChainId) {
+          case blockchainChainId.POLYGON:
+          case blockchainChainId.ETHEREUM:
+            return [blockchainChainId.CERE];
+          case blockchainChainId.CERE:
+            return [blockchainChainId.POLYGON];
+        }
+      };
+
       if (chain) {
+        const destChainId = destinationChainId(chain.chainId);
+        console.log(`Destinationchain Id ${destChainId}`);
         setHomeChainConfig(chain);
-        setDestinationChains(
-          chainbridgeConfig.chains.filter(
-            (bridgeConfig: BridgeConfig) =>
-              bridgeConfig.chainId !== chain.chainId
+        console.log(`Home chain ${chain.name}`);
+        console.log(
+          chainbridgeConfig.chains.find((bridgeConfig: BridgeConfig) =>
+            destChainId?.includes(bridgeConfig.chainId)
           )
         );
-        if (chainbridgeConfig.chains.length === 2) {
-          setDestinationChain(
-            chainbridgeConfig.chains.find(
-              (bridgeConfig: BridgeConfig) =>
-                bridgeConfig.chainId !== chain.chainId
-            )
-          );
-        }
+
+        setDestinationChains(
+          chainbridgeConfig.chains.filter((bridgeConfig: BridgeConfig) =>
+            destChainId?.includes(bridgeConfig.chainId)
+          )
+        );
+
+        setDestinationChain(
+          chainbridgeConfig.chains.find((bridgeConfig: BridgeConfig) =>
+            destChainId?.includes(bridgeConfig.chainId)
+          )
+        );
       }
     },
     [homeChains, setHomeChainConfig]
