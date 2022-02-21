@@ -29,6 +29,7 @@ export const EVMHomeAdaptorProvider = ({
     onboard,
     resetOnboard,
     dispatcher,
+    savedWallet
   } = useLocalWeb3();
 
   const {
@@ -38,6 +39,17 @@ export const EVMHomeAdaptorProvider = ({
     handleSetHomeChain,
     homeChains,
   } = useNetworkManager();
+
+  const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
+    isReady,
+    checkIsReady,
+    dispatcher,
+    onboard,
+    homeChainConfig,
+    provider,
+    network,
+    savedWallet
+  );
 
   const [evmHomeState, dispatch] = useReducer(evmHomeReducer, {
     depositAmount: undefined,
@@ -67,15 +79,6 @@ export const EVMHomeAdaptorProvider = ({
     }
   }, [handleSetHomeChain, homeChains, network]);
 
-  const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
-    isReady,
-    checkIsReady,
-    dispatcher,
-    onboard,
-    homeChainConfig,
-    provider,
-    network
-  );
   const [bridgeFee, relayerThreshold] = useSetBridgeSettingsHook(homeBridge);
 
   const handleConnect = useCallback(async () => {

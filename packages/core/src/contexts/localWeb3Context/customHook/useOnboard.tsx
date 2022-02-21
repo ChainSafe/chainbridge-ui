@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ethers, utils } from "ethers";
 import Onboard from "bnc-onboard";
-import { API as OnboardAPI, Wallet } from "bnc-onboard/dist/src/interfaces";
+import { API as OnboardAPI } from "bnc-onboard/dist/src/interfaces";
 import { Actions, LocalWeb3State } from "../types";
-import { enableWallet, enableWalletConnectModal } from "../../../utils/localNetworksHelpers";
 
 const useOnboard = (
   networkIds: Array<number> | undefined,
@@ -42,6 +41,7 @@ const useOnboard = (
               type: "setAddress",
               payload: address,
             });
+            checkIsReady(onboard, dispatcher);
             return (
               onboardConfig?.subscriptions?.address &&
               onboardConfig?.subscriptions?.address(address)
@@ -52,7 +52,7 @@ const useOnboard = (
               // THIS IS CUSTOM SPECIAL CONDITION FOR WALLET CONNECT
               // FIGURE IT OUT A BETTER APPROACH TO THIS
               if (wallet.name === "WalletConnect" && cacheWalletSelection) {
-                localStorage.setItem("onboard.selectedWallet", "walletConnect");
+                localStorage.setItem("onboard.selectedWallet", wallet.name);
 
                 dispatcher({
                   type: "setWalletConnect",
@@ -64,6 +64,7 @@ const useOnboard = (
                     ),
                   },
                 });
+                checkIsReady(onboard, dispatcher);
               } else {
                 wallet.name &&
                   cacheWalletSelection &&
@@ -96,24 +97,12 @@ const useOnboard = (
             if (!networkIds || networkIds.includes(network)) {
               onboard.config({ networkId: network });
             }
-            wallet &&
-              wallet.provider &&
-              dispatcher({
-                type: "setNetworkAnProvider",
-                payload: {
-                  network,
-                  provider: new ethers.providers.Web3Provider(
-                    wallet.provider,
-                    "any"
-                  ),
-                },
-              });
+
             dispatcher({
               type: "setNetwork",
               payload: network,
             });
-            // setNetwork(network);
-            // checkIsReady(onboard, dispatcher);
+            checkIsReady(onboard, dispatcher);
             return (
               onboardConfig?.subscriptions?.network &&
               onboardConfig.subscriptions.network(network)
@@ -151,37 +140,15 @@ const useOnboard = (
   useEffect(() => {
     const savedWallet = localStorage.getItem("onboard.selectedWallet") || "";
 
+    dispatcher({
+      type: "setSavedWallet",
+      payload: savedWallet,
+    });
     // HERE WE INITIALIZE ONBOARD NO MATTER WHAT
     initializeOnboard(savedWallet);
   }, []);
-  const checkFunc = async () => {
-    const { walletConnectReady, wallet: { provider }, address } = state;
-    if (walletConnectReady) {
-      return enableWalletConnectModal(
-        provider,
-        address,
-        dispatcher
-      );
-    }
-    return enableWallet(
-      onboard,
-      dispatcher
-    )
 
-  };
-  useEffect(() => {
-    console.log("PROVIDER AND ONBOARD ===>", state)
-    if(state.provider !== undefined && state.onboard !== undefined){
-      console.log("SECOND CHECK IS READY")
-      check()
-    }
-  }, [state.provider, state.onboard])
-
-  useEffect(() => {
-    if(wCheck){
-      checkIsReady(state.onboard, dispatcher)
-    }
-  }, [wCheck])
+  console.log("STATE::", onboard, state);
 };
 
 export default useOnboard;

@@ -45,13 +45,19 @@ export const checkIsReady = async (
   onboard: OnboardAPI,
   dispatcher: (action: Actions) => void
 ) => {
-  let isReady: boolean |  undefined
+  let isReady: boolean | undefined
+  const { wallet } = onboard.getState()
   try {
-    isReady = await onboard?.walletCheck();
-    dispatcher({
-      type: "setIsReady",
-      payload: !!isReady,
-    });
+    if(wallet.provider !== undefined){
+      console.log("ENTERING IF", wallet.provider)
+      // debugger
+      isReady = await onboard?.walletCheck();
+      // debugger
+      dispatcher({
+        type: "setIsReady",
+        payload: !!isReady,
+      });
+    }
 
   } catch (e) {
     console.error("ERROR CHECK IS READY", e)
@@ -68,22 +74,26 @@ export const checkIsReady = async (
 export const resetOnboard = (
   dispatcher: (action: Actions) => void,
   onboard: OnboardAPI,
-  resetWalletConnect?: boolean
 ) => {
-  localStorage.clear()
-
-  if(resetWalletConnect){
-    dispatcher({
-      type: "resetWalletConnect",
-    });
-    return onboard?.walletReset();
-  }
+  localStorage.removeItem("onboard.selectedWallet");
+  const { wallet: { name }} = onboard.getState()
 
   dispatcher({
     type: "setIsReady",
     payload: false,
   });
-  return onboard?.walletReset();
+
+
+  // THIS IS BECAUSE THERE IS NO WAY TO CHANGE THE NETWORKS
+  // USING WALLET CONNECT AND AVOIDING TO OPEN THE MODAL AGAIN
+  if(name === 'WalletConnect'){
+    onboard?.walletReset();
+    localStorage.removeItem('walletconnect')
+    return window.location.reload()
+  } else {
+    return onboard?.walletReset();
+  }
+
 };
 
 export const checkBalanceAndAllowance = async (

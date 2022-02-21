@@ -112,8 +112,9 @@ export type LocalWeb3State = {
   provider: providers.Web3Provider;
   wallet: Wallet;
   walletConnectReady: boolean;
-  checkWallet: boolean
-};
+  checkWallet: boolean;
+  savedWallet: string;
+}
 
 export type Actions =
   | { type: "addToken"; payload: { id: string; token: TokenInfo } }
@@ -146,5 +147,11 @@ export type Actions =
   | { type: "setNetwork", payload: number }
   | { type: "setOnBoard"; payload: OnboardAPI }
   | { type: 'resetWalletConnect' }
-  | { type: 'setWalletConnect', payload: { wallet: Wallet | undefined, provider: providers.Web3Provider } }
+  | {
+    type: 'setWalletConnect', payload: {
+      wallet: Wallet | undefined,
+      provider: providers.Web3Provider
+    }
+  }
   | { type: 'checkWallet', payload: boolean }
+  | { type: 'setSavedWallet', payload: string }
