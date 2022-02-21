@@ -57,7 +57,7 @@ const AddressInput: React.FC<IAddressInput> = ({
             endAdornment: (
               !field.value && <Button
                 disabled={Boolean(disabled && !stored)}
-                sx={{minWidth: 'auto', background: "white", zIndex: 1}}
+                sx={{minWidth: 'auto', background: "white", zIndex: 0}}
                 onClick={() => toggleReceiver()}
                 variant="outlined"
                 type="button"

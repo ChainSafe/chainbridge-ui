@@ -109,12 +109,10 @@ const TransferPage = () => {
   const watchAmount = watch("tokenAmount", 0);
 
   const onSubmit: SubmitHandler<PreflightDetails> = (values) => {
-    console.log("🚀 ~ file: TransferPage.tsx ~ line 112 ~ TransferPage ~ values", values)
     setPreflightDetails({
       ...values,
       tokenSymbol: tokens[values.token].symbol || "",
     });
-    console.log('bang')
     preflightDetails && deposit(
       preflightDetails.tokenAmount,
       preflightDetails.receiver,
@@ -130,8 +128,22 @@ const TransferPage = () => {
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 2 }}
+            sx={{marginLeft: '0 !important'}}
           >
-            <Grid container item xs={12} md={6} rowSpacing={{ xs: 1, md: 1 }}>
+            <Grid
+              container
+              item
+              xs={12}
+              sm={6}
+              md={6}
+              rowSpacing={{ xs: 1, md: 1 }}
+              sx={{
+                paddingLeft: "16px",
+                paddingRight: "16px",
+                border: "1px solid rgba(0,0,0,0.2)",
+                borderRadius: "5px",
+              }}
+            >
               <Grid
                 item
                 xs={12}
@@ -155,28 +167,29 @@ const TransferPage = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-
-                  <SelectDestinationNetwork
-                    label="Destination Network"
-                    disabled={!homeConfig || formState.isSubmitting}
-                    options={destinationChains.map((dc: any) => ({
-                      label: dc.name,
-                      value: dc.domainId,
-                    }))}
-                    onChange={(value: number | undefined) =>
-                      setDestinationChain(value)
-                    }
-                    value={destinationChainConfig?.domainId}
-                  />
+                <SelectDestinationNetwork
+                  label="Destination Network"
+                  disabled={!homeConfig || formState.isSubmitting}
+                  options={destinationChains.map((dc: any) => ({
+                    label: dc.name,
+                    value: dc.domainId,
+                  }))}
+                  onChange={(value: number | undefined) =>
+                    setDestinationChain(value)
+                  }
+                  value={destinationChainConfig?.domainId}
+                />
               </Grid>
             </Grid>
             <Grid
               container
               item
               xs={12}
+              sm={6}
               md={6}
               columnSpacing={1}
               rowSpacing={1}
+              sx={{ paddingRight: "16px" }}
             >
               <Grid item xs={12} md={6}>
                 <TokenSelectInput
@@ -252,9 +265,19 @@ const TransferPage = () => {
             </Grid>
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
-            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
-              <Grid item xs={0} md={9}></Grid>
-              <Grid item xs={12} md={3}>
+            <Grid container columnSpacing={{ xs: 2, sm: 2, md: 2 }} sx={{marginLeft: "0 !important"}}>
+              <Grid item xs={0} sm={9} md={9}></Grid>
+              <Grid
+                container
+                item
+                xs={12}
+                sm={3}
+                md={3}
+                sx={{
+                  pl: "8px !important",
+                  pr: 1,
+                }}
+              >
                 <Button
                   disabled={!destinationChainConfig || formState.isSubmitting}
                   type="submit"
@@ -282,27 +305,7 @@ const TransferPage = () => {
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}
       />
-      {/* <PreflightModalTransfer
-        open={preflightModalOpen}
-        close={() => setPreflightModalOpen(false)}
-        receiver={preflightDetails?.receiver || ""}
-        sender={address || ""}
-        start={() => {
-          setPreflightModalOpen(false);
-          preflightDetails &&
-            deposit(
-              preflightDetails.tokenAmount,
-              preflightDetails.receiver,
-              preflightDetails.token
-            );
-        }}
-        sourceNetwork={homeConfig?.name || ""}
-        targetNetwork={destinationChainConfig?.name || ""}
-        tokenSymbol={preflightDetails?.tokenSymbol || ""}
-        value={preflightDetails?.tokenAmount || 0}
-      /> */}
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
-      {/* This is here due to requiring router */}
       <NetworkUnsupportedModal />
       <NetworkSelectModal />
     </div>
