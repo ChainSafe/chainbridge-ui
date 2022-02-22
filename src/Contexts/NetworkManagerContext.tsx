@@ -132,18 +132,20 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       }
       const chain = homeChains.find((c) => c.chainId === chainId);
 
-      const fetchDestinationChainId = (homeChainId: number) => {
+      const fetchDestinationChainIds = (homeChainId: number) => {
         switch (homeChainId) {
           case blockchainChainIds.POLYGON:
           case blockchainChainIds.ETHEREUM:
             return [blockchainChainIds.CERE];
           case blockchainChainIds.CERE:
             return [blockchainChainIds.POLYGON];
+          default:
+            return [];
         }
       };
 
       if (chain) {
-        const destinationChainId = fetchDestinationChainId(chain.chainId);
+        const destinationChainId = fetchDestinationChainIds(chain.chainId);
         setHomeChainConfig(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter((bridgeConfig: BridgeConfig) =>
