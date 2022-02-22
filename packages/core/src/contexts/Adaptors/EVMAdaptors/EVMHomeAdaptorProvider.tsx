@@ -124,8 +124,8 @@ export const EVMHomeAdaptorProvider = ({
     <HomeBridgeContext.Provider
       value={{
         connect: handleConnect,
-        disconnect: async (resetWalletConnect?: boolean) => {
-          await resetOnboard(dispatcher, onboard!, resetWalletConnect);
+        disconnect: async () => {
+          await resetOnboard(dispatcher, onboard!);
         },
         getNetworkName,
         networkId,

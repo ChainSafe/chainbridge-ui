@@ -12,9 +12,8 @@ const useOnboard = (
   cacheWalletSelection: boolean,
   checkIsReady: (
     onboard: OnboardAPI,
-    dispatcher: (action: Actions) => void
+    dispatcher: (action: Actions) => void,
   ) => void,
-  wallet: Wallet,
   onboard: OnboardAPI,
   state: LocalWeb3State
 ) => {
@@ -93,7 +92,6 @@ const useOnboard = (
             );
           },
           network: (network) => {
-            console.log("NETWORK", network);
             if (!networkIds || networkIds.includes(network)) {
               onboard.config({ networkId: network });
             }
@@ -137,6 +135,7 @@ const useOnboard = (
       console.log(error);
     }
   };
+
   useEffect(() => {
     const savedWallet = localStorage.getItem("onboard.selectedWallet") || "";
 
@@ -144,6 +143,7 @@ const useOnboard = (
       type: "setSavedWallet",
       payload: savedWallet,
     });
+
     // HERE WE INITIALIZE ONBOARD NO MATTER WHAT
     initializeOnboard(savedWallet);
   }, []);

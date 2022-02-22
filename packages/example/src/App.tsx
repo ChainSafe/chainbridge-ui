@@ -49,6 +49,11 @@ const App: React.FC<{}> = () => {
       }
     }, {});
 
+  const rpcUrls = chains.reduce(
+    (acc, { networkId, rpcUrl }) => ({ ...acc, [networkId!]: rpcUrl }),
+    {}
+  );
+
   return (
     <ErrorBoundary
       fallback={({ error, componentStack, eventId, resetError }) => (
@@ -77,7 +82,14 @@ const App: React.FC<{}> = () => {
           tokensToWatch={tokens}
           onboardConfig={{
             walletSelect: {
-              wallets: [{ walletName: "metamask", preferred: true }],
+              wallets: [
+                { walletName: "metamask" },
+                {
+                  walletName: "walletConnect",
+                  rpc: { ...rpcUrls },
+                  bridge: "https://bridge.walletconnect.org",
+                },
+              ],
             },
             subscriptions: {
               network: (network: any) =>

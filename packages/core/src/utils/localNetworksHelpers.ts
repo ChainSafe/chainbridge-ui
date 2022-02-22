@@ -83,7 +83,6 @@ export const resetOnboard = (
     payload: false,
   });
 
-
   // THIS IS BECAUSE THERE IS NO WAY TO CHANGE THE NETWORKS
   // USING WALLET CONNECT AND AVOIDING TO OPEN THE MODAL AGAIN
   if(name === 'WalletConnect'){

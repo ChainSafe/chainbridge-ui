@@ -1,6 +1,4 @@
 import React, { useEffect, useReducer } from "react";
-import Onboard from "bnc-onboard";
-import { ethers, utils } from "ethers";
 import {
   getTokenData,
   resetOnboard,
@@ -33,13 +31,6 @@ const LocalProvider = ({
   const [state, dispatcher] = useReducer(localWeb3ContextReducer, {} as any);
 
   useEffect(() => {
-    const initializeOnboard = async (savedWallet: string) => {
-      const checks = [{ checkName: "accounts" }, { checkName: "connect" }];
-      if (networkIds && checkNetwork) {
-        checks.push({ checkName: "network" });
-      }
-
-    );
     const networkTokens =
       (tokensToWatch && state.network && tokensToWatch[network]) || [];
 
@@ -69,6 +60,7 @@ const LocalProvider = ({
     isReady,
     gasPrice,
     walletConnectReady,
+    savedWallet
   }: LocalWeb3State = state;
 
   // CUSTOM HOOK FOR INITIALIZING ONBOARD
@@ -79,7 +71,6 @@ const LocalProvider = ({
     onboardConfig,
     cacheWalletSelection,
     checkIsReady,
-    wallet,
     onboard,
     state
   );
@@ -88,6 +79,7 @@ const LocalProvider = ({
   if (onboard !== undefined && "getState" in onboard) {
     onboardState = onboard?.getState();
   }
+
 
   return (
     <LocalProviderContext.Provider
@@ -108,6 +100,7 @@ const LocalProvider = ({
         refreshGasPrice,
         dispatcher,
         walletConnectReady,
+        savedWallet
       }}
     >
       {children}

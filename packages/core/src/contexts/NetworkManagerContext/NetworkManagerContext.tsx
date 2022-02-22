@@ -160,6 +160,7 @@ function selectProvider(
       ),
     },
   };
+
   return providers[typeKey][direction];
 }
 
@@ -254,14 +255,16 @@ export const NetworkManagerProvider = ({
   );
 
   const HomeProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(walletType, "home", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(walletType, "home", props)
+    },
     [walletType]
   );
 
   const DestinationProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(destinationChainConfig?.type, "destination", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(destinationChainConfig?.type, "destination", props)
+    },
     [destinationChainConfig?.type]
   );
 

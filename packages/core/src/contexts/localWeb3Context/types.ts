@@ -58,7 +58,7 @@ export type LocalWeb3Context = {
   tokens: Tokens;
   checkIsReady(
     onboard: OnboardAPI,
-    dispatcher: (action: Actions) => void
+    dispatcher: (action: Actions) => void,
   ): Promise<boolean>;
   refreshGasPrice(
     dispatcher: (action: Actions) => void,
@@ -68,7 +68,6 @@ export type LocalWeb3Context = {
   resetOnboard(
     dispatcher: (action: Actions) => void,
     onboard: OnboardAPI,
-    resetWalletConnect?: boolean
   ): void;
   signMessage(
     message: string,
@@ -76,6 +75,7 @@ export type LocalWeb3Context = {
   ): Promise<string>;
   dispatcher: (action: Actions) => void;
   walletConnectReady: boolean;
+  savedWallet: string;
 };
 
 type EthGasStationSettings = "fast" | "fastest" | "safeLow" | "average";

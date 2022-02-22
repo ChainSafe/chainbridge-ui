@@ -2,17 +2,14 @@ import React from "react";
 import {
   useNetworkManager,
   useChainbridge,
-  useWeb3 as useLocalWeb3,
 } from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
-import { Button, Dialog, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogTitle, Typography, LinearProgress } from "@mui/material";
 
 const NetworkSelectModal = () => {
   const classes = useStyles();
   const { isReady, chains } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();
-  const { wallet: { name } = { name: "" }, walletConnectReady } =
-    useLocalWeb3();
 
   const color = {
     color: "white",
@@ -70,14 +67,14 @@ const NetworkSelectModal = () => {
           </section>
         </>
       )}
-      {/* {walletType === "Substrate" && (
+      {walletType === "Substrate" && (
         <>
           <Typography variant="h2" component="p">
             Connecting to node
           </Typography>
-          <ProgressBar size="small" variant="primary" />
+          <LinearProgress variant="determinate" />
         </>
-      )} */}
+      )}
     </Dialog>
   );
 };

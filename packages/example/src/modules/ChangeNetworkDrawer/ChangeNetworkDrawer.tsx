@@ -20,6 +20,8 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
 }) => {
   const classes = useStyles();
 
+  const { setWalletType, handleSetHomeChain, setDestinationChain } =
+    useNetworkManager();
   const { wallet: { name } = { name: "" } } = useLocalWeb3();
   const { disconnect } = useHomeBridge();
   const destinationBridge = useDestinationBridge();
@@ -47,53 +49,18 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
         <Button onClick={close} variant="outline">
           OK
         </Button>
-        {name !== "MetaMask" ? (
-          <>
-            <Button
-              onClick={async () => {
-                // TODO: trigger unsubscribes & clear all state
-                await Promise.all([
-                  destinationBridge.disconnect(),
-                  disconnect(true),
-                ]);
-                handleSetHomeChain(undefined);
-                setDestinationChain(undefined);
-                setWalletType("select");
-              }}
-              variant="outline"
-            >
-              Change network on {name}
-            </Button>
-            <Button
-              onClick={async () => {
-                // TODO: trigger unsubscribes & clear all state
-                await Promise.all([
-                  destinationBridge.disconnect(),
-                  disconnect(),
-                ]);
-                handleSetHomeChain(undefined);
-                setDestinationChain(undefined);
-                setWalletType("select");
-              }}
-              variant="outline"
-            >
-              Connect different wallet
-            </Button>
-          </>
-        ) : (
-          <Button
-            onClick={async () => {
-              // TODO: trigger unsubscribes & clear all state
-              await Promise.all([destinationBridge.disconnect(), disconnect()]);
-              handleSetHomeChain(undefined);
-              setDestinationChain(undefined);
-              setWalletType("select");
-            }}
-            variant="outline"
-          >
-            Connect different wallet
-          </Button>
-        )}
+        <Button
+          onClick={async () => {
+            // TODO: trigger unsubscribes & clear all state
+            await Promise.all([destinationBridge.disconnect(), disconnect()]);
+            handleSetHomeChain(undefined);
+            setDestinationChain(undefined);
+            setWalletType("select");
+          }}
+          variant="outline"
+        >
+          Connect different wallet
+        </Button>
         <a
           rel="noopener noreferrer"
           href={process.env.REACT_APP_SUPPORT_URL}
