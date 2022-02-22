@@ -5,4 +5,10 @@ const styles = {
   greyColor: "#717171",
 };
 
-export default styles;
+const blockchainChainId = {
+  ETHEREUM: 0,
+  POLYGON: 81,
+  CERE: 1,
+};
+
+export { styles, blockchainChainId };
