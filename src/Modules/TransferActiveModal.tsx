@@ -11,7 +11,7 @@ import ExclamationCircleSvg from "./../media/Icons/exclamation-mark-icon.png";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { EvmBridgeConfig } from "../chainbridgeConfig";
-import styles from "../Constants/constants";
+import { styles } from "../Constants/constants";
 
 const useStyles = makeStyles(
   ({ animation, constants, palette, typography }: ITheme) =>

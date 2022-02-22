@@ -29,7 +29,7 @@ import WETHIcon from "../../media/tokens/weth.svg";
 import DAIIcon from "../../media/tokens/dai.svg";
 import celoUSD from "../../media/tokens/cusd.svg";
 import { ReactComponent as CEREIcon } from "../../media/tokens/cere-token.svg";
-import styles from "../../Constants/constants";
+import { styles } from "../../Constants/constants";
 import { ReactComponent as ArrowIcon } from "../../media/Icons/arrow.svg";
 import { ReactComponent as HomeIcon } from "../../media/Icons/home-icon.svg";
 import { useDestinationBridge } from "../../Contexts/DestinationBridgeContext";
