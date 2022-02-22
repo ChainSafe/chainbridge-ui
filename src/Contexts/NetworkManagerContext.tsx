@@ -145,17 +145,17 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       };
 
       if (chain) {
-        const destinationChainId = fetchDestinationChainIds(chain.chainId);
+        const destinationChainIds = fetchDestinationChainIds(chain.chainId);
         setHomeChainConfig(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter((bridgeConfig: BridgeConfig) =>
-            destinationChainId?.includes(bridgeConfig.chainId)
+            destinationChainIds?.includes(bridgeConfig.chainId)
           )
         );
 
         setDestinationChain(
           chainbridgeConfig.chains.find((bridgeConfig: BridgeConfig) =>
-            destinationChainId?.includes(bridgeConfig.chainId)
+            destinationChainIds?.includes(bridgeConfig.chainId)
           )
         );
       }
