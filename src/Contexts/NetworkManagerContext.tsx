@@ -27,7 +27,7 @@ import {
   ResetAction,
   transitMessageReducer,
 } from "./Reducers/TransitMessageReducer";
-import { blockchainChainId } from "../Constants/constants";
+import { blockchainChainIds } from "../Constants/constants";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -134,11 +134,11 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
       const fetchDestinationChainId = (homeChainId: number) => {
         switch (homeChainId) {
-          case blockchainChainId.POLYGON:
-          case blockchainChainId.ETHEREUM:
-            return [blockchainChainId.CERE];
-          case blockchainChainId.CERE:
-            return [blockchainChainId.POLYGON];
+          case blockchainChainIds.POLYGON:
+          case blockchainChainIds.ETHEREUM:
+            return [blockchainChainIds.CERE];
+          case blockchainChainIds.CERE:
+            return [blockchainChainIds.POLYGON];
         }
       };
 
