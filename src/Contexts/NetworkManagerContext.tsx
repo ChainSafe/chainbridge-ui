@@ -132,7 +132,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       }
       const chain = homeChains.find((c) => c.chainId === chainId);
 
-      const destinationChainId = (homeChainId: number) => {
+      const fetchDestinationChainId = (homeChainId: number) => {
         switch (homeChainId) {
           case blockchainChainId.POLYGON:
           case blockchainChainId.ETHEREUM:
@@ -143,17 +143,17 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       };
 
       if (chain) {
-        const destChainId = destinationChainId(chain.chainId);
+        const destinationChainId = fetchDestinationChainId(chain.chainId);
         setHomeChainConfig(chain);
         setDestinationChains(
           chainbridgeConfig.chains.filter((bridgeConfig: BridgeConfig) =>
-            destChainId?.includes(bridgeConfig.chainId)
+            destinationChainId?.includes(bridgeConfig.chainId)
           )
         );
 
         setDestinationChain(
           chainbridgeConfig.chains.find((bridgeConfig: BridgeConfig) =>
-            destChainId?.includes(bridgeConfig.chainId)
+            destinationChainId?.includes(bridgeConfig.chainId)
           )
         );
       }
