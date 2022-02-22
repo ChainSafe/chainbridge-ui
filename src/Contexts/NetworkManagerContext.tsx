@@ -144,14 +144,6 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
 
       if (chain) {
         const destChainId = destinationChainId(chain.chainId);
-        console.log(`Destinationchain Id ${destChainId}`);
-        setHomeChainConfig(chain);
-        console.log(`Home chain ${chain.name}`);
-        console.log(
-          chainbridgeConfig.chains.find((bridgeConfig: BridgeConfig) =>
-            destChainId?.includes(bridgeConfig.chainId)
-          )
-        );
 
         setDestinationChains(
           chainbridgeConfig.chains.filter((bridgeConfig: BridgeConfig) =>
