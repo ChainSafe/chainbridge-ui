@@ -4,6 +4,7 @@
 
 - Enable CERE native to CERE ERC20 transfers
 - Redesigned connect to wallet page
+- Restricted home and destination blockchains
 
 ## v0.6.0
 
