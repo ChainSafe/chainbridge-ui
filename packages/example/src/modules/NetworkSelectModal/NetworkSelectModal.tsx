@@ -2,14 +2,22 @@ import React from "react";
 import {
   useNetworkManager,
   useChainbridge,
+  useWeb3,
 } from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
-import { Button, Dialog, DialogTitle, Typography, LinearProgress } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  Typography,
+  LinearProgress,
+} from "@mui/material";
 
 const NetworkSelectModal = () => {
   const classes = useStyles();
   const { isReady, chains } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();
+  const { savedWallet } = useWeb3();
 
   const color = {
     color: "white",
@@ -32,7 +40,9 @@ const NetworkSelectModal = () => {
               alignSelf: "center",
             }}
           >
-            Please select a wallet type
+            {
+              savedWallet === "" ? "Please select a wallet type" : ""
+            }
           </DialogTitle>
           <section className={classes.buttons}>
             {chains?.every((item) => item.type === "Ethereum") ? (
@@ -44,7 +54,9 @@ const NetworkSelectModal = () => {
                   setWalletType("Ethereum");
                 }}
               >
-                Use Ethereum wallet
+                {savedWallet !== ""
+                  ? `Connect to ${savedWallet}`
+                  : "Use Ethereum wallet"}
               </Button>
             ) : (
               <>

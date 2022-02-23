@@ -42,6 +42,7 @@ export const localWeb3ContextReducer = (
       return {
         ...state,
         isReady: action.payload,
+        savedWallet: action.payload ? state.savedWallet : ""
       };
     case "setWallet": {
       const { payload: { wallet, provider } } = action
@@ -49,7 +50,7 @@ export const localWeb3ContextReducer = (
         ...state,
         wallet: wallet!,
         provider: provider!,
-        savedWallet: wallet?.name!
+        savedWallet: wallet ? wallet?.name! : ""
       };
     }
     case "setProvider":

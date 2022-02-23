@@ -136,8 +136,18 @@ export const getTokenData = async (
 ) => {
   let tokenContracts: Array<Erc20Detailed> = [];
   networkTokens.forEach(async (token: any) => {
-    const signer = await state.provider.getSigner();
-    const tokenContract = Erc20DetailedFactory.connect(token.address, signer);
+    let signer
+
+    try {
+      signer = await state.provider.getSigner();
+    } catch(e){
+      console.log("Error getting signer", e)
+    }
+
+    let tokenContract: any
+    if(signer !== undefined){
+      tokenContract = Erc20DetailedFactory.connect(token.address, signer);
+    }
 
     const newTokenInfo: TokenInfo = {
       decimals: 0,

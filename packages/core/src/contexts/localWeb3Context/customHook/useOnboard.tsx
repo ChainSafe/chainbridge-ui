@@ -12,10 +12,8 @@ const useOnboard = (
   cacheWalletSelection: boolean,
   checkIsReady: (
     onboard: OnboardAPI,
-    dispatcher: (action: Actions) => void,
+    dispatcher: (action: Actions) => void
   ) => void,
-  onboard: OnboardAPI,
-  state: LocalWeb3State
 ) => {
   const initializeOnboard = async (savedWallet: string) => {
     const checks = [{ checkName: "accounts" }, { checkName: "connect" }];

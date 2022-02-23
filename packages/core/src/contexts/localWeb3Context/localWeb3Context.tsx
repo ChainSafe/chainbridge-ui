@@ -28,7 +28,9 @@ const LocalProvider = ({
   checkNetwork = (networkIds && networkIds.length > 0) || false,
   spenderAddress,
 }: LocalWeb3ContextProps) => {
-  const [state, dispatcher] = useReducer(localWeb3ContextReducer, {} as any);
+  const [state, dispatcher] = useReducer(localWeb3ContextReducer, {
+    savedWallet: ""
+  } as any);
 
   useEffect(() => {
     const networkTokens =
@@ -71,8 +73,6 @@ const LocalProvider = ({
     onboardConfig,
     cacheWalletSelection,
     checkIsReady,
-    onboard,
-    state
   );
 
   let onboardState;

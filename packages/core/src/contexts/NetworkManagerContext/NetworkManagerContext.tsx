@@ -28,6 +28,7 @@ import {
   transitMessageReducer,
   TransitState,
 } from "../../reducers/TransitMessageReducer";
+import { useWeb3 } from "../localWeb3Context";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -191,6 +192,17 @@ export const NetworkManagerProvider = ({
     transitMessageReducer,
     { txIsDone: false, transitMessage: [] }
   );
+
+  const { onboard, savedWallet, tokens } = useWeb3();
+
+  // IF THERE IS NO WALLET BUT ONBOARD IS INITIALIZED
+  // TRIGGER THIS TO OPEN ONBOARD MODAL
+  useEffect(() => {
+    if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
+      onboard.walletSelect()
+    }
+
+  }, [onboard, savedWallet, walletType]);
 
   const handleSetHomeChain = useCallback(
     (domainId: number | undefined) => {
