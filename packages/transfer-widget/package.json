@@ -1,13 +1,15 @@
 {
-  "name": "@chainsafe/chainbridge-basic",
-  "version": "0.1.0",
-  "private": true,
+  "name": "chainbridge-ui-transfer-widget-unstable",
+  "version": "1.0.1",
+  "main": "dist/src/App.js",
+  "types": "dist/src/App.d.ts",
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",
     "@chainsafe/chainbridge-contracts": "2.0.0",
     "@chainsafe/chainbridge-ui-core": "^1.0.3",
+    "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
     "@chainsafe/web3-context": "1.2.0",
     "@hookform/resolvers": "^2.8.4",
@@ -31,7 +33,6 @@
     "react-hook-form": "^7.20.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
-    "react-toast-notifications": "2.4.0",
     "styled-components": "^5.3.3",
     "yup": "^0.29.3"
   },
@@ -61,16 +62,28 @@
     "pretty-quick": "3.0.2",
     "typescript": "^4.5.2"
   },
+  "scripts": {
+    "start": "yarn setup:copy-dev-config && craco --max_old_space_size=4096 start",
+    "build": "craco --max_old_space_size=4096 build",
+    "sentry": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); node scripts/sentry.js)",
+    "release": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); yarn build && node scripts/sentry.js)",
+    "test": "react-scripts test",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "clean:dependencies": "rm -rf ./node_modules && rm -rf ./*/**/node_modules",
+    "clean:dist": "rm -rf ./*/**/dist && rm -rf ./*/**/build && rm -rf ./*/**/storybook-static",
+    "clean": "yarn clean:dependencies && yarn clean:dist",
+    "prettier": "prettier --config .prettierrc 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --write",
+    "start:tunnel": "./ngrok http https://localhost:3000",
+    "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V",
+    "start:centrifuge": "docker-compose -f ./docker-compose-centrifuge.yml up -V",
+    "start:evm-example": "docker-compose -f ./docker-compose-node.yml up -V",
+    "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",
+    "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh",
+    "setup:copy-dev-config": "./scripts/copy-dev-config.sh"
+  },
   "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "scripts": {
-    "start": "yarn setup:copy-dev-config && craco --max_old_space_size=4096 start",
-    "setup:copy-dev-config": "./scripts/copy-dev-config.sh",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [
@@ -83,5 +96,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --staged"
+    }
+  },
+  "files": [
+    "dist/**/*"
+  ]
 }
