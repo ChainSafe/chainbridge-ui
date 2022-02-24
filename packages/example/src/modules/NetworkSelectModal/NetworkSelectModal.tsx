@@ -1,43 +1,77 @@
 import React from "react";
-import { useNetworkManager, useChainbridge } from "@chainsafe/chainbridge-ui-core";
+import {
+  useNetworkManager,
+  useChainbridge,
+  useWeb3,
+} from "@chainsafe/chainbridge-ui-core";
+import { useStyles } from "./styles";
 import {
   Button,
-  Modal,
-  ProgressBar,
+  Dialog,
+  DialogTitle,
   Typography,
-} from "@chainsafe/common-components";
-import { useStyles } from "./styles";
+  LinearProgress,
+} from "@mui/material";
 
 const NetworkSelectModal = () => {
   const classes = useStyles();
   const { isReady, chains } = useChainbridge();
   const { walletType, setWalletType } = useNetworkManager();
+  const { savedWallet } = useWeb3();
+
+  const color = {
+    color: "white",
+    backgroundColor: "black",
+    "&:hover": { backgroundColor: "black" },
+  };
 
   return (
-    <Modal
-      active={walletType !== "unset" && walletType !== "Ethereum" && !isReady}
-      closePosition="right"
-      className={classes.root}
-      injectedClass={{
-        inner: classes.slide,
-      }}
+    <Dialog
+      open={walletType !== "unset" && walletType !== "Ethereum" && !isReady}
+      fullWidth
+      maxWidth="sm"
     >
       {walletType === "select" && (
         <>
-          <Typography variant="h3" component="p">
-            Please select a wallet type
-          </Typography>
+          <DialogTitle
+            sx={{
+              display: "flex",
+              justifySelf: "center",
+              alignSelf: "center",
+            }}
+          >
+            {
+              savedWallet === "" ? "Please select a wallet type" : ""
+            }
+          </DialogTitle>
           <section className={classes.buttons}>
             {chains?.every((item) => item.type === "Ethereum") ? (
-              <Button onClick={() => setWalletType("Ethereum")}>
-                Use Ethereum wallet
+              <Button
+                sx={{ color }}
+                variant="contained"
+                onClick={() => {
+                  // console.log("SELECTING WALLET TYPE ETHEREUM");
+                  setWalletType("Ethereum");
+                }}
+              >
+                {savedWallet !== ""
+                  ? `Connect to ${savedWallet}`
+                  : "Use Ethereum wallet"}
               </Button>
             ) : (
               <>
-                <Button onClick={() => setWalletType("Ethereum")}>
+                <Button
+                  sx={{ color }}
+                  onClick={() => setWalletType("Ethereum")}
+                  variant="contained"
+                >
                   Use Ethereum wallet
                 </Button>
-                <Button onClick={() => setWalletType("Substrate")}>
+                <Button
+                  sx={{ color }}
+                  onClick={() => setWalletType("Substrate")}
+                  variant="contained"
+                >
                   Use Substrate wallet
                 </Button>
               </>
@@ -50,10 +84,10 @@ const NetworkSelectModal = () => {
           <Typography variant="h2" component="p">
             Connecting to node
           </Typography>
-          <ProgressBar size="small" variant="primary" />
+          <LinearProgress variant="determinate" />
         </>
       )}
-    </Modal>
+    </Dialog>
   );
 };
 

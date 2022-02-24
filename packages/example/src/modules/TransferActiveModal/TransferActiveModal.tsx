@@ -9,6 +9,7 @@ import {
   useHomeBridge,
   useChainbridge,
   TransactionStatus,
+  useWeb3 as useLocalWeb3
 } from "@chainsafe/chainbridge-ui-core";
 
 import InitTransferBody from "./InitTransferBody";
@@ -60,6 +61,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   close,
 }: ITransferActiveModalProps) => {
   const classes = useStyles();
+  const { savedWallet, resetOnboard, dispatcher, onboard } = useLocalWeb3()
   const {
     transactionStatus,
     relayerThreshold,
@@ -94,6 +96,10 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
           depositAmount={depositAmount}
           tokenSymbol={tokenSymbol}
           destinationChainConfig={destinationChainConfig}
+          savedWallet={savedWallet}
+          resetOnboard={resetOnboard}
+          dispatcher={dispatcher}
+          onboard={onboard!}
         />
       ),
       default: (
