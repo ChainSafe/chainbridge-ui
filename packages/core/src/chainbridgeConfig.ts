@@ -52,5 +52,6 @@ export type UIConfig = {
   transactionAutoUpdateInterval: number;
 };
 
-export const chainbridgeConfig: ChainbridgeConfig =
-  window.__RUNTIME_CONFIG__.CHAINBRIDGE;
+export const chainbridgeConfig = () => {
+  return window.__RUNTIME_CONFIG__.CHAINBRIDGE;
+}

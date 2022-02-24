@@ -43,7 +43,7 @@ const makeDeposit =
       return;
     }
 
-    const destinationChain = chainbridgeConfig.chains.find(
+    const destinationChain = chainbridgeConfig().chains.find(
       (c) => c.domainId === destinationChainId
     );
     // TODO: create separate version for substrate

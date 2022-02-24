@@ -7,7 +7,7 @@ const handleCheckSupplies = (homeChainConfig?: BridgeConfig) => async (
   destinationChainId: number
 ) => {
   if (homeChainConfig) {
-    const destinationChain = chainbridgeConfig.chains.find(
+    const destinationChain = chainbridgeConfig().chains.find(
       (c) => c.domainId === destinationChainId
     );
     const token = homeChainConfig.tokens.find(

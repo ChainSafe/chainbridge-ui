@@ -2,7 +2,7 @@ import * as yup from "yup";
 import { utils } from "ethers";
 
 import { isValidSubstrateAddress } from "../../utils/Helpers";
-import { BridgeConfig } from "../../chainbridgeConfig";
+import { BridgeConfig } from "@chainsafe/chainbridge-ui-core";
 import { PreflightDetails } from "./TransferPage";
 
 type MakeValidationSchemaOptions = {

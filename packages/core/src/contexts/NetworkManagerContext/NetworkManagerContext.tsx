@@ -215,14 +215,14 @@ export const NetworkManagerProvider = ({
       if (chain) {
         setHomeChainConfig(chain);
         setDestinationChains(
-          chainbridgeConfig.chains.filter(
+          chainbridgeConfig().chains.filter(
             (bridgeConfig: BridgeConfig) =>
               bridgeConfig.domainId !== chain.domainId
           )
         );
-        if (chainbridgeConfig.chains.length === 2) {
+        if (chainbridgeConfig().chains.length === 2) {
           setDestinationChain(
-            chainbridgeConfig.chains.find(
+            chainbridgeConfig().chains.find(
               (bridgeConfig: BridgeConfig) =>
                 bridgeConfig.domainId !== chain.domainId
             )
@@ -236,10 +236,10 @@ export const NetworkManagerProvider = ({
   useEffect(() => {
     if (walletType !== "unset") {
       if (walletType === "select") {
-        setHomeChains(chainbridgeConfig.chains);
+        setHomeChains(chainbridgeConfig().chains);
       } else {
         setHomeChains(
-          chainbridgeConfig.chains.filter(
+          chainbridgeConfig().chains.filter(
             (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType
           )
         );
