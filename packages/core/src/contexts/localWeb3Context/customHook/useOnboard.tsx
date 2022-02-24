@@ -33,7 +33,6 @@ const useOnboard = (
         walletCheck: checks,
         subscriptions: {
           address: (address: string) => {
-            console.log("SUBSCRIPTION ADDRESS", address);
             dispatcher({
               type: "setAddress",
               payload: address,
@@ -107,7 +106,6 @@ const useOnboard = (
           balance: (balance) => {
             try {
               const bal = Number(utils.formatEther(balance));
-              console.log("BAL", bal);
               !isNaN(bal)
                 ? dispatcher({ type: "setBalance", payload: bal })
                 : dispatcher({ type: "setBalance", payload: 0 });
@@ -122,7 +120,7 @@ const useOnboard = (
         },
       });
 
-      onboard.walletSelect(savedWallet);
+      cacheWalletSelection && savedWallet && onboard.walletSelect(savedWallet);
 
       dispatcher({
         type: "setOnBoard",
@@ -146,7 +144,6 @@ const useOnboard = (
     initializeOnboard(savedWallet);
   }, []);
 
-  console.log("STATE::", onboard, state);
 };
 
 export default useOnboard;

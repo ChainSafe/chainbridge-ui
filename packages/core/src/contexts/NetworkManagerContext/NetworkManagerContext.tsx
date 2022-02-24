@@ -268,14 +268,14 @@ export const NetworkManagerProvider = ({
 
   const HomeProvider = useCallback(
     (props: INetworkManagerProviderProps) => {
-      return selectProvider(walletType, "home", props)
+      return selectProvider(walletType, "home", props);
     },
     [walletType]
   );
 
   const DestinationProvider = useCallback(
     (props: INetworkManagerProviderProps) => {
-      return selectProvider(destinationChainConfig?.type, "destination", props)
+      return selectProvider(destinationChainConfig?.type, "destination", props);
     },
     [destinationChainConfig?.type]
   );

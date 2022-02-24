@@ -159,20 +159,22 @@ const TransferPage = () => {
               }}
               setValue={setValue}
               options={
-                tokens !== undefined && Object.keys(tokens).map((t) => ({
-                  value: t,
-                  label: (
-                    <div className={classes.tokenItem}>
-                      {tokens[t]?.imageUri && (
-                        <img
-                          src={showImageUrl(tokens[t]?.imageUri)}
-                          alt={tokens[t]?.symbol}
-                        />
-                      )}
-                      <span>{tokens[t]?.symbol || t}</span>
-                    </div>
-                  ),
-                })) || []
+                (tokens !== undefined &&
+                  Object.keys(tokens).map((t) => ({
+                    value: t,
+                    label: (
+                      <div className={classes.tokenItem}>
+                        {tokens[t]?.imageUri && (
+                          <img
+                            src={showImageUrl(tokens[t]?.imageUri)}
+                            alt={tokens[t]?.symbol}
+                          />
+                        )}
+                        <span>{tokens[t]?.symbol || t}</span>
+                      </div>
+                    ),
+                  }))) ||
+                []
               }
             />
           </section>

@@ -49,8 +49,6 @@ export const checkIsReady = async (
   const { wallet } = onboard.getState()
   try {
     if(wallet.provider !== undefined){
-      console.log("ENTERING IF", wallet.provider)
-      // debugger
       isReady = await onboard?.walletCheck();
       // debugger
       dispatcher({

@@ -83,7 +83,7 @@ export const EVMHomeAdaptorProvider = ({
 
   const handleConnect = useCallback(async () => {
     if (wallet && wallet.connect && network) {
-      await onboard?.walletSelect("metamask");
+      await onboard?.walletSelect(savedWallet);
       await wallet.connect();
     }
   }, [wallet, network, onboard]);
