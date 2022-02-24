@@ -1,7 +1,6 @@
 import React from "react";
 import { SelectInput } from "@chainsafe/common-components";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { Typography, Button } from '@mui/material'
 
 import { WalletType } from "@chainsafe/chainbridge-ui-core";
 import { BridgeConfig } from "../../chainbridgeConfig";

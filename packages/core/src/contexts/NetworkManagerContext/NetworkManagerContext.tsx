@@ -28,6 +28,7 @@ import {
   transitMessageReducer,
   TransitState,
 } from "../../reducers/TransitMessageReducer";
+import { useWeb3 } from "../localWeb3Context";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -160,6 +161,7 @@ function selectProvider(
       ),
     },
   };
+
   return providers[typeKey][direction];
 }
 
@@ -190,6 +192,17 @@ export const NetworkManagerProvider = ({
     transitMessageReducer,
     { txIsDone: false, transitMessage: [] }
   );
+
+  const { onboard, savedWallet, tokens } = useWeb3();
+
+  // IF THERE IS NO WALLET BUT ONBOARD IS INITIALIZED
+  // TRIGGER THIS TO OPEN ONBOARD MODAL
+  useEffect(() => {
+    if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
+      onboard.walletSelect()
+    }
+
+  }, [onboard, savedWallet, walletType]);
 
   const handleSetHomeChain = useCallback(
     (domainId: number | undefined) => {
@@ -254,14 +267,16 @@ export const NetworkManagerProvider = ({
   );
 
   const HomeProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(walletType, "home", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(walletType, "home", props);
+    },
     [walletType]
   );
 
   const DestinationProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(destinationChainConfig?.type, "destination", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(destinationChainConfig?.type, "destination", props);
+    },
     [destinationChainConfig?.type]
   );
 
