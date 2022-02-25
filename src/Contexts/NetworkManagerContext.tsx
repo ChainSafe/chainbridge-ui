@@ -27,6 +27,7 @@ import {
   ResetAction,
   transitMessageReducer,
 } from "./Reducers/TransitMessageReducer";
+import { blockchainChainIds } from "../Constants/constants";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -131,22 +132,32 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       }
       const chain = homeChains.find((c) => c.chainId === chainId);
 
+      const fetchDestinationChainIds = (homeChainId: number) => {
+        switch (homeChainId) {
+          case blockchainChainIds.POLYGON:
+          case blockchainChainIds.ETHEREUM:
+            return [blockchainChainIds.CERE];
+          case blockchainChainIds.CERE:
+            return [blockchainChainIds.POLYGON];
+          default:
+            return [];
+        }
+      };
+
       if (chain) {
+        const destinationChainIds = fetchDestinationChainIds(chain.chainId);
         setHomeChainConfig(chain);
         setDestinationChains(
-          chainbridgeConfig.chains.filter(
-            (bridgeConfig: BridgeConfig) =>
-              bridgeConfig.chainId !== chain.chainId
+          chainbridgeConfig.chains.filter((bridgeConfig: BridgeConfig) =>
+            destinationChainIds?.includes(bridgeConfig.chainId)
           )
         );
-        if (chainbridgeConfig.chains.length === 2) {
-          setDestinationChain(
-            chainbridgeConfig.chains.find(
-              (bridgeConfig: BridgeConfig) =>
-                bridgeConfig.chainId !== chain.chainId
-            )
-          );
-        }
+
+        setDestinationChain(
+          chainbridgeConfig.chains.find((bridgeConfig: BridgeConfig) =>
+            destinationChainIds?.includes(bridgeConfig.chainId)
+          )
+        );
       }
     },
     [homeChains, setHomeChainConfig]

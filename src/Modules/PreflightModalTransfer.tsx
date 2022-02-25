@@ -4,7 +4,7 @@ import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomDrawer from "../Components/Custom/CustomDrawer";
 import { Button, Typography } from "@chainsafe/common-components";
 import { shortenAddress } from "../Utils/Helpers";
-import styles from "../Constants/constants";
+import { styles } from "../Constants/constants";
 
 const arialFont = "Arial, sans-serif";
 
