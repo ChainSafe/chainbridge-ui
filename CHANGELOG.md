@@ -4,6 +4,7 @@
 
 - Enable CERE native to CERE ERC20 transfers
 - Redesigned connect to wallet page
+- Added Polygon to STAGE
 - Restricted home and destination blockchains
 
 ## v0.6.0
