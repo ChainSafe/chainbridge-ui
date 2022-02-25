@@ -2,6 +2,10 @@
 
 ## vNext
 
+- ...
+
+## v0.7.0
+
 - Enable CERE native to CERE ERC20 transfers
 - Redesigned connect to wallet page
 - Added Polygon to STAGE
