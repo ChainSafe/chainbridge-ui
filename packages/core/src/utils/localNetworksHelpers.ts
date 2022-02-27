@@ -45,11 +45,21 @@ export const checkIsReady = async (
   onboard: OnboardAPI,
   dispatcher: (action: Actions) => void
 ) => {
-  const isReady = await onboard?.walletCheck();
-  dispatcher({
-    type: "setIsReady",
-    payload: !!isReady,
-  });
+  let isReady: boolean | undefined
+  const { wallet } = onboard.getState()
+  try {
+    if(wallet.provider !== undefined){
+      isReady = await onboard?.walletCheck();
+      // debugger
+      dispatcher({
+        type: "setIsReady",
+        payload: !!isReady,
+      });
+    }
+
+  } catch (e) {
+    console.error("ERROR CHECK IS READY", e)
+  }
   if (!isReady) {
     dispatcher({
       type: "setBalance",
@@ -61,14 +71,26 @@ export const checkIsReady = async (
 
 export const resetOnboard = (
   dispatcher: (action: Actions) => void,
-  onboard: OnboardAPI
+  onboard: OnboardAPI,
 ) => {
-  localStorage.setItem("onboard.selectedWallet", "");
+  localStorage.removeItem("onboard.selectedWallet");
+  const { wallet: { name }} = onboard.getState()
+
   dispatcher({
     type: "setIsReady",
     payload: false,
   });
-  onboard?.walletReset();
+
+  // THIS IS BECAUSE THERE IS NO WAY TO CHANGE THE NETWORKS
+  // USING WALLET CONNECT AND AVOIDING TO OPEN THE MODAL AGAIN
+  if(name === 'WalletConnect'){
+    onboard?.walletReset();
+    localStorage.removeItem('walletconnect')
+    return window.location.reload()
+  } else {
+    return onboard?.walletReset();
+  }
+
 };
 
 export const checkBalanceAndAllowance = async (
@@ -112,8 +134,18 @@ export const getTokenData = async (
 ) => {
   let tokenContracts: Array<Erc20Detailed> = [];
   networkTokens.forEach(async (token: any) => {
-    const signer = await state.provider.getSigner();
-    const tokenContract = Erc20DetailedFactory.connect(token.address, signer);
+    let signer
+
+    try {
+      signer = await state.provider.getSigner();
+    } catch(e){
+      console.log("Error getting signer", e)
+    }
+
+    let tokenContract: any
+    if(signer !== undefined){
+      tokenContract = Erc20DetailedFactory.connect(token.address, signer);
+    }
 
     const newTokenInfo: TokenInfo = {
       decimals: 0,

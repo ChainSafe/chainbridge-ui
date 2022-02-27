@@ -23,7 +23,8 @@ export function useConnectWallet(
   onboard?: OnboardAPI,
   homeChainConfig?: BridgeConfig,
   provider?: providers.Web3Provider,
-  network?: number
+  network?: number,
+  savedWallet?: string
 ) {
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
@@ -41,7 +42,7 @@ export function useConnectWallet(
     setInitialising(true);
     if (!walletSelected) {
       onboard
-        .walletSelect("metamask")
+        .walletSelect(savedWallet)
         .then((success) => {
           if (window.ethereum) {
             window.ethereum.on("chainChanged", (ch: any) => {

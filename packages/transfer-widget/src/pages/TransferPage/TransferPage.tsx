@@ -301,6 +301,7 @@ const TransferPage = () => {
         </Box>
       </form>
       <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
+
       <ChangeNetworkDrawer
         open={changeNetworkOpen}
         close={() => setChangeNetworkOpen(false)}

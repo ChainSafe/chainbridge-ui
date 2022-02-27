@@ -40,7 +40,6 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = (
     setValue,
   } = props;
   const { field, fieldState } = useController({ name, control, rules });
-  // console.log("🚀 ~ file: TokenSelectInput.tsx ~ line 43 ~ field", field)
 
   const labelParsed =
     field && tokens[field.value] ? " " : "Please select token";
