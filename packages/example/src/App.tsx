@@ -11,9 +11,9 @@ import {
   ChainbridgeProvider,
   NetworkManagerProvider,
   LocalProvider,
+  chainbridgeConfig
 } from "@chainsafe/chainbridge-ui-core";
 import { AppWrapper } from "./layouts";
-import { chainbridgeConfig } from "./chainbridgeConfig";
 import { utils } from "ethers";
 import "@chainsafe/common-theme/dist/font-faces.css";
 
@@ -36,7 +36,7 @@ const App: React.FC<{}> = () => {
     },
   } = window;
 
-  const tokens = chainbridgeConfig.chains
+  const tokens = chainbridgeConfig().chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
       if (bc.networkId) {
@@ -48,6 +48,11 @@ const App: React.FC<{}> = () => {
         return tca;
       }
     }, {});
+
+  const rpcUrls = chains.reduce(
+    (acc, { networkId, rpcUrl }) => ({ ...acc, [networkId!]: rpcUrl }),
+    {}
+  );
 
   return (
     <ErrorBoundary
@@ -77,7 +82,14 @@ const App: React.FC<{}> = () => {
           tokensToWatch={tokens}
           onboardConfig={{
             walletSelect: {
-              wallets: [{ walletName: "metamask", preferred: true }],
+              wallets: [
+                { walletName: "metamask" },
+                {
+                  walletName: "walletConnect",
+                  rpc: { ...rpcUrls },
+                  bridge: "https://bridge.walletconnect.org",
+                },
+              ],
             },
             subscriptions: {
               network: (network: any) =>

@@ -9,7 +9,7 @@
     "@babel/runtime": "^7.12.1",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",
     "@chainsafe/chainbridge-contracts": "2.0.0",
-    "@chainsafe/chainbridge-ui-core": "^1.0.3",
+    "@chainsafe/chainbridge-ui-core": "link:../core",
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
     "@chainsafe/web3-context": "1.2.0",
@@ -36,7 +36,9 @@
     "react-scripts": "^3.4.4",
     "react-toast-notifications": "2.4.0",
     "styled-components": "^5.3.3",
-    "yup": "^0.29.3"
+    "yup": "^0.29.3",
+    "@walletconnect/client": "1.7.1",
+    "@walletconnect/qrcode-modal": "1.7.1"
   },
   "devDependencies": {
     "@polkadot/api": "3.11.1",
@@ -65,7 +67,7 @@
     "typescript": "^4.5.2"
   },
   "scripts": {
-    "start": "yarn setup:copy-dev-config && craco --max_old_space_size=4096 start",
+    "start": "BROWSER=no yarn setup:copy-dev-config && craco --max_old_space_size=4096 start",
     "build": "craco --max_old_space_size=4096 build",
     "sentry": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); node scripts/sentry.js)",
     "release": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); yarn build && node scripts/sentry.js)",

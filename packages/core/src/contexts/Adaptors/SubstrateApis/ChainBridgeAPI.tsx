@@ -7,7 +7,7 @@ import {
 
 export const createApi = async (rpcUrl: string) => {
   const provider = new WsProvider(rpcUrl);
-  const subChainConfig = chainbridgeConfig.chains.find(
+  const subChainConfig = chainbridgeConfig().chains.find(
     (c) => c.rpcUrl === rpcUrl
   ) as SubstrateBridgeConfig;
   const types = (await import(`./${subChainConfig.typesFileName}`)) as any;
@@ -20,7 +20,7 @@ export const submitDeposit = (
   recipient: string,
   destinationChainId: number
 ) => {
-  const subChainConfig = chainbridgeConfig.chains.find(
+  const subChainConfig = chainbridgeConfig().chains.find(
     (c) => c.domainId !== destinationChainId
   ) as SubstrateBridgeConfig;
 

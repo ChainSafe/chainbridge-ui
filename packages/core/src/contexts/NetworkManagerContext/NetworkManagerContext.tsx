@@ -28,6 +28,7 @@ import {
   transitMessageReducer,
   TransitState,
 } from "../../reducers/TransitMessageReducer";
+import { useWeb3 } from "../localWeb3Context";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -160,6 +161,7 @@ function selectProvider(
       ),
     },
   };
+
   return providers[typeKey][direction];
 }
 
@@ -191,6 +193,17 @@ export const NetworkManagerProvider = ({
     { txIsDone: false, transitMessage: [] }
   );
 
+  const { onboard, savedWallet, tokens } = useWeb3();
+
+  // IF THERE IS NO WALLET BUT ONBOARD IS INITIALIZED
+  // TRIGGER THIS TO OPEN ONBOARD MODAL
+  useEffect(() => {
+    if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
+      onboard.walletSelect()
+    }
+
+  }, [onboard, savedWallet, walletType]);
+
   const handleSetHomeChain = useCallback(
     (domainId: number | undefined) => {
       if (!domainId && domainId !== 0) {
@@ -202,14 +215,14 @@ export const NetworkManagerProvider = ({
       if (chain) {
         setHomeChainConfig(chain);
         setDestinationChains(
-          chainbridgeConfig.chains.filter(
+          chainbridgeConfig().chains.filter(
             (bridgeConfig: BridgeConfig) =>
               bridgeConfig.domainId !== chain.domainId
           )
         );
-        if (chainbridgeConfig.chains.length === 2) {
+        if (chainbridgeConfig().chains.length === 2) {
           setDestinationChain(
-            chainbridgeConfig.chains.find(
+            chainbridgeConfig().chains.find(
               (bridgeConfig: BridgeConfig) =>
                 bridgeConfig.domainId !== chain.domainId
             )
@@ -223,10 +236,10 @@ export const NetworkManagerProvider = ({
   useEffect(() => {
     if (walletType !== "unset") {
       if (walletType === "select") {
-        setHomeChains(chainbridgeConfig.chains);
+        setHomeChains(chainbridgeConfig().chains);
       } else {
         setHomeChains(
-          chainbridgeConfig.chains.filter(
+          chainbridgeConfig().chains.filter(
             (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType
           )
         );
@@ -254,14 +267,16 @@ export const NetworkManagerProvider = ({
   );
 
   const HomeProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(walletType, "home", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(walletType, "home", props);
+    },
     [walletType]
   );
 
   const DestinationProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(destinationChainConfig?.type, "destination", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(destinationChainConfig?.type, "destination", props);
+    },
     [destinationChainConfig?.type]
   );
 
