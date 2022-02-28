@@ -104,7 +104,7 @@ const ChainbridgeProvider = ({
   const { setDepositVotes, tokensDispatch } = useDestinationBridge();
 
   const resetDeposit = () => {
-    chainbridgeConfig.chains.length > 2 && setDestinationChain(undefined);
+    chainbridgeConfig().chains.length > 2 && setDestinationChain(undefined);
     setTransactionStatus(undefined);
     setDepositNonce(undefined);
     setDepositVotes(0);

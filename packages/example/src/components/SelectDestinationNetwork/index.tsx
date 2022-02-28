@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
+import {
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select, SelectChangeEvent
+} from '@mui/material'
 
 interface ISelectDestinationNetwork {
   disabled?: boolean;

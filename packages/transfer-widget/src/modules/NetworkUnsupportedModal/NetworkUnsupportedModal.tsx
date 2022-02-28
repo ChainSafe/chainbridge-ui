@@ -6,8 +6,11 @@ import {
   Typography,
 } from "@chainsafe/common-components";
 import { useLocation } from "react-router-dom";
-import { useNetworkManager, useHomeBridge } from "@chainsafe/chainbridge-ui-core";
-import { chainbridgeConfig } from "../../chainbridgeConfig";
+import {
+  useNetworkManager,
+  useHomeBridge,
+  chainbridgeConfig,
+} from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
 
 const NetworkUnsupportedModal = () => {
@@ -24,7 +27,7 @@ const NetworkUnsupportedModal = () => {
     if (pathname) {
       setOpen(!homeChainConfig && !!isReady);
       setSupportedNetworks(
-        chainbridgeConfig.chains
+        chainbridgeConfig().chains
           .filter((bc) => bc.networkId !== undefined)
           .map((bc) => Number(bc.networkId))
       );

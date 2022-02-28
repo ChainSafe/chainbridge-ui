@@ -1,7 +1,7 @@
 import React from "react";
 
 import { TransitState } from "@chainsafe/chainbridge-ui-core";
-import { BridgeConfig, EvmBridgeConfig } from "../../chainbridgeConfig";
+import { BridgeConfig, EvmBridgeConfig } from "@chainsafe/chainbridge-ui-core";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
