@@ -117,8 +117,34 @@ window.__RUNTIME_CONFIG__ = {
     ],
   },
 };
-
 ```
+
+**note: the parameters `domainId` and `networkId` are the ones that are being used by the local networks**
+
+Then you can start the UI and you can try to connect using metamask. For this you will also need to add the local nodes to the `networks` section of your metamaks. The relevant data to setup local networks on metamaks are the endpoints of the networks, already defined in the runtime config, and the `chainId` also already defined in the runtime config as `networkId`.
+
+After this you will also need to import the token to your metamask wallet. Notice that the local nodes have some accounts that hold some tokens. You can check those accounts and the private keys of them [here](https://github.com/ChainSafe/chainbridge-deploy/blob/main/cb-sol-cli/constants.js)
+
+In the case of the local setup `alice`, `bob` and `charlie` are some of the accounts with tokens. Also the three of the are the main relayers. So, if you want to import `alice` account to metamask, you will need to use [her private key](https://github.com/ChainSafe/chainbridge-deploy/blob/f2aa0932e8f98037569fb9ff7b4948be380bacab/cb-sol-cli/constants.js#L40).
+
+It is recommended that you don't use relayers accounts to test transfers in your local setup. For this you can use [chainbridge-core-example](https://github.com/ChainSafe/chainbridge-core-example) to build the binary and have access to the cli to perform some task.
+
+After you follow the instructions to build the binary you can run the following command to create an account.
+
+```bash
+./chainbridge-core-example evm-cli accounts generate
+```
+
+The output will be an address and a private key that you can use to import that account to metamask. After you have done this, if you have `alice` on metamask, you can send some native tokens to your new account through metamask.
+
+Now we are ready to mint some tokens.
+
+After minting some tokens, you can send a few to your imported account in order for you to test a transfer. Then simply run
+
+```bash
+yarn start:ui
+```
+
 
 ## FAQ
 Please check our [Q&A section](https://github.com/ChainSafe/chainbridge-ui/discussions/categories/q-a)
