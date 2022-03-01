@@ -137,14 +137,80 @@ After you follow the instructions to build the binary you can run the following 
 
 The output will be an address and a private key that you can use to import that account to metamask. After you have done this, if you have `alice` on metamask, you can send some native tokens to your new account through metamask.
 
+### Preparations before minting some tokens.
+
+We are going to need to run some commands previously the minting process. This commands use `chainbdrige-core-example`, that you already compiled in the previous steps.
+
+#### Registering resource
+
+You need to register a resource to the bridge. As we saw in the runtime config above, we have this resource, so we can use the same value for convenience.
+
+```bash
+./chainbridge-core-example \
+evm-cli \
+bridge \
+register-resource \
+--url <LOCAL-NODE-URL> \
+--private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
+--bridge <BRIDGE ADDRESS> \
+--handler <HANDLER ADDRESS> \
+--target <ERC20 ADDREESS> \
+--resource 000000000000000000000000000000e389d61c11e5fe32ec1735b3cd38c69500 //THE SAME THAT WE DEFINED IN OUR RUNTIME CONFIG
+```
+
+You will need to run this command for both of your evm nodes.
+
+#### Set burnable
+
+Afterwards we need to run the following command
+
+```bash
+./chainbridge-core-example \
+evm-cli \
+bridge \
+set-burn \
+--url <LOCAL-NODE-URL> \
+--private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
+--handler <HANDLER ADDRESS> \
+--bridge <BRIDGE ADDRESS> \
+--token-contract <ERC20 ADDRESS>
+```
+You also need to run this command for both of your nodes.
+
+### Add minter
+
+```bash
+./chainbridge-core-example \
+evm-cli \
+erc20 \
+add-minter \
+--url <LOCAL-NODE-URL> \
+--private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
+--contract <ERC20 ADDRESS> \
+--minter <ERC20 HANDLER ADDRESS>
+```
+
 Now we are ready to mint some tokens.
 
-After minting some tokens, you can send a few to your imported account in order for you to test a transfer. Then simply run
+```bash
+./chainbridge-core-example \
+evm-cli \
+erc20 \
+mint \
+--url <LOCAL-NODE-URL> \
+--private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
+--amount 200 \
+--contract <ERC20 ADDRESS>
+--recipient <RELAYER ADDRESS OR ANY VALID ADDRESS>
+```
+
+After minting some tokens, you can send a few to your imported account in order for you to test a transfer. You can use directly the account for one of the relayers, in this case `alice`, to send some tokens to your imported account. Then simply run
 
 ```bash
 yarn start:ui
 ```
 
+And that's it, you are going to see the UI connected to local networks
 
 ## FAQ
 Please check our [Q&A section](https://github.com/ChainSafe/chainbridge-ui/discussions/categories/q-a)
