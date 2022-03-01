@@ -5,30 +5,30 @@ const cereTokenDecimals = 10;
 window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
     chains: [
-      // ToDo: Uncomment when Polygon will be added
-      // {
-      //   chainId: 137,
-      //   networkId: 137,
-      //   name: "Polygon Mainnet",
-      //   decimals: cereTokenDecimals,
-      //   bridgeAddress: "0x0000000000000000000000000000000000000000",
-      //   erc20HandlerAddress: "0x0000000000000000000000000000000000000000",
-      //   rpcUrl: "",
-      //   type: "Ethereum",
-      //   nativeTokenSymbol: "MATIC",
-      //   tokens: [
-      //     {
-      //       address: "0x0000000000000000000000000000000000000000",
-      //       name: cereTokenName,
-      //       symbol: cereTokenSymbol,
-      //       imageUri: "CEREIcon",
-      //       resourceId:
-      //         "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
-      //       decimals: cereTokenDecimals,
-      //       isDoubleApproval: false,
-      //     },
-      //   ],
-      // },
+      {
+        chainId: 2,
+        networkId: 137,
+        name: "Polygon Mainnet",
+        decimals: cereTokenDecimals,
+        bridgeAddress: "",
+        erc20HandlerAddress: "",
+        rpcUrl:
+          "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
+        type: "Ethereum",
+        nativeTokenSymbol: "MATIC",
+        tokens: [
+          {
+            address: "",
+            name: cereTokenName,
+            symbol: cereTokenSymbol,
+            imageUri: "CEREIcon",
+            resourceId:
+              "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+            decimals: cereTokenDecimals,
+            isDoubleApproval: false,
+          },
+        ],
+      },
       {
         chainId: 1,
         networkId: 2,
