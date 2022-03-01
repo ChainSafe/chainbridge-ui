@@ -7,7 +7,7 @@ const styles = {
 
 const blockchainChainIds = {
   ETHEREUM: 0,
-  POLYGON: 81,
+  POLYGON: 2,
   CERE: 1,
 };
 

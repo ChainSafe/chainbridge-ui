@@ -6,7 +6,7 @@ window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
     chains: [
       {
-        chainId: 81,
+        chainId: 2,
         networkId: 80001,
         name: "Polygon Mumbai",
         decimals: cereTokenDecimals,
