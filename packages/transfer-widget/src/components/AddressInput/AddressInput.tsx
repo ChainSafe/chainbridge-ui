@@ -66,20 +66,6 @@ const AddressInput: React.FC<IAddressInput> = ({
           }}
         />
       </>
-      {/* {sendToSameAccountHelper && (
-        <FormGroup sx={{ my: 1 }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                size="small"
-                checked={stored !== undefined}
-                onChange={() => toggleReceiver()}
-              />
-            }
-            label="I want to send funds to my address"
-          />
-        </FormGroup>
-      )} */}
     </FormControl>
   );
 };
