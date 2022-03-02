@@ -10,6 +10,7 @@
 - Redesigned connect to wallet page
 - Added Polygon to STAGE
 - Restricted home and destination blockchains
+- Added maintenance page
 
 ## v0.6.0
 
