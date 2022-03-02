@@ -10,7 +10,6 @@ const App: React.FC<{}> = () => {
   const runtimeConfig = {
       INDEXER_URL: 'http://localhost:8000',
       UI: {
-        // wrapTokenPage: true,
         transactionAutoUpdateInterval: 5000
       },
       CHAINBRIDGE: {

@@ -6,7 +6,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
-import TextField from "@mui/material/TextField";
 
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
@@ -87,18 +86,6 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = (
           <FormHelperText>{balance !== '' ? `Balance: ${balance}` : " "}</FormHelperText>
         </FormControl>
       </Box>
-      {/* <Box sx={{ flexGrow: 1 }}>
-        <FormControl fullWidth disabled={true}>
-          <TextField
-            disabled={true}
-            fullWidth
-            variant="standard"
-            label="Balance"
-            helperText=" "
-            value={balance}
-          />
-        </FormControl>
-      </Box> */}
     </Box>
   );
 };
