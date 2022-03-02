@@ -42,12 +42,14 @@ export default function HomeNetworkConnectView({
             variant="contained"
             className="connect-button"
             sx={{
+              lineHeight: 3,
               backgroundColor: "#262626",
               color: "#ffffff",
               ":hover": {
                 backgroundColor: "#262626",
                 opacity: 0.9,
               },
+              mt: 3, mb: 3
             }}
             onClick={() => {
               setWalletType("select");
@@ -67,7 +69,7 @@ export default function HomeNetworkConnectView({
           ) : (
             <section className={classes.connected}>
               <div>
-                <Typography variant="body1">Home network</Typography>
+                <Typography variant="body1" className={classes.changeButton}>Home network</Typography>
                 <Typography
                   className={classes.changeButton}
                   variant="body1"
