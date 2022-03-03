@@ -498,44 +498,64 @@ const TransferPage = () => {
     <article className={classes.root}>
       <div className={classes.wrapper}>
         <div className={classes.header}>
-          {!isReady ? (
-            <>
-              <ArrowIcon className={classes.logo} />
-              <div className={classes.headerText}>Select Bridge Direction</div>
-            </>
-          ) : walletType === "Ethereum" ? (
-            <span className={classes.title}>
-              Transfer Tokens (ERC20 to Native)
-            </span>
-          ) : (
-            <span className={classes.title}>
-              Transfer Tokens (Native to ERC20)
-            </span>
-          )}
+          {process.env.REACT_APP_MAINTENANCE === "false" &&
+            (!isReady ? (
+              <>
+                <ArrowIcon className={classes.logo} />
+                <div className={classes.headerText}>
+                  Select Bridge Direction
+                </div>
+              </>
+            ) : walletType === "Ethereum" ? (
+              <span className={classes.title}>
+                Transfer Tokens (ERC20 to Native)
+              </span>
+            ) : (
+              <span className={classes.title}>
+                Transfer Tokens (Native to ERC20)
+              </span>
+            ))}
         </div>
-        {!isReady ? <hr className={classes.horizontalLine} /> : <></>}
+        {!isReady && process.env.REACT_APP_MAINTENANCE === "false" ? (
+          <hr className={classes.horizontalLine} />
+        ) : (
+          <></>
+        )}
         {!isReady ? (
           <div className={classes.selectArea}>
             <HomeIcon className={classes.walletLogo} />
-            <div className={classes.walletDesc}>
-              Move CERE tokens between
-              <br />
-              Ethereum and Cere Native Blockchain
-            </div>
-            <Button
-              variant="primary"
-              className={classes.EthWalletBtn}
-              onClick={() => setWalletType("Ethereum")}
-            >
-              Connect with ERC20 Wallet
-            </Button>
-            <Button
-              variant="primary"
-              className={classes.SubsWalletBtn}
-              onClick={() => setWalletType("Substrate")}
-            >
-              Connect with Substrate Wallet
-            </Button>
+
+            {process.env.REACT_APP_MAINTENANCE === "false" ? (
+              <>
+                <div className={classes.walletDesc}>
+                  Move CERE tokens between
+                  <br />
+                  Ethereum and Cere Native Blockchain
+                </div>
+                <Button
+                  variant="primary"
+                  className={classes.EthWalletBtn}
+                  onClick={() => setWalletType("Ethereum")}
+                >
+                  Connect with ERC20 Wallet
+                </Button>
+                <Button
+                  variant="primary"
+                  className={classes.SubsWalletBtn}
+                  onClick={() => setWalletType("Substrate")}
+                >
+                  Connect with Substrate Wallet
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className={classes.walletDesc}>
+                  Cere Bridge is under maintenance.
+                  <br />
+                  Please, try again later.
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <>
