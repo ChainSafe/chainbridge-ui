@@ -55,7 +55,7 @@ window.__RUNTIME_CONFIG__ = {
         destinationChain: true,
       },
       {
-        chainId: 1,
+        chainId: 0,
         networkId: 1,
         name: "Ethereum Mainnet",
         decimals: cereTokenDecimals,
