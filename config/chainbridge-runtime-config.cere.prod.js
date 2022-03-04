@@ -10,15 +10,15 @@ window.__RUNTIME_CONFIG__ = {
         networkId: 137,
         name: "Polygon Mainnet",
         decimals: cereTokenDecimals,
-        bridgeAddress: "",
-        erc20HandlerAddress: "",
+        bridgeAddress: "0xCaF65AB2eC9B39403966991eb34B1e8B9E44C041",
+        erc20HandlerAddress: "0x8fe028Eb002bbc3ec45c5dF8acfFf67eC95B6f88",
         rpcUrl:
           "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
         tokens: [
           {
-            address: "",
+            address: "0x2da719db753dfa10a62e140f436e1d67f2ddb0d6",
             name: cereTokenName,
             symbol: cereTokenSymbol,
             imageUri: "CEREIcon",
