@@ -33,6 +33,7 @@ export default function HomeNetworkConnectView({
   setChangeNetworkOpen,
   selectAccount,
 }: HomeNetworkConnectViewProps) {
+  console.log("🚀 ~ file: HomeNetworkConnectView.tsx ~ line 36 ~ isReady", homeConfig?.name)
   return (
     <>
       <div className={classes.walletArea}>
@@ -70,13 +71,6 @@ export default function HomeNetworkConnectView({
             <section className={classes.connected}>
               <div>
                 <Typography variant="body1" className={classes.changeButton}>Home network</Typography>
-                <Typography
-                  className={classes.changeButton}
-                  variant="body1"
-                  onClick={() => setChangeNetworkOpen(true)}
-                >
-                  Change
-                </Typography>
               </div>
               <Typography
                 component="h5"

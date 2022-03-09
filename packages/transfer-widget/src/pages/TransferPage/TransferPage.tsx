@@ -192,7 +192,7 @@ const TransferPage = () => {
               sx={{ paddingRight: "16px" }}
             >
               <Grid item xs={12} md={6}>
-                <TokenSelectInput
+                {tokens && <TokenSelectInput
                   control={control}
                   rules={{ required: true }}
                   tokens={tokens}
@@ -226,7 +226,7 @@ const TransferPage = () => {
                       ),
                     })) || []
                   }
-                />
+                />}
               </Grid>
               <Grid item xs={12} md={6}>
                 <TokenInput
@@ -307,7 +307,7 @@ const TransferPage = () => {
         close={() => setChangeNetworkOpen(false)}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
-      <NetworkUnsupportedModal />
+      {/* <NetworkUnsupportedModal /> */}
       <NetworkSelectModal />
     </div>
   );

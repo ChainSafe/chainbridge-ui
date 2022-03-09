@@ -7,6 +7,8 @@ import "./App.css";
 import "./widget.css"
 
 const App: React.FC<{}> = () => {
+  const [isConnected, setIsConnected] = useState(false)
+  const [provider, setProvider] = useState()
   const runtimeConfig = {
       INDEXER_URL: 'http://localhost:8000',
       UI: {
@@ -107,9 +109,13 @@ const App: React.FC<{}> = () => {
     <div className="wrap">
       <div className="header">
         <h1>SURF-SWAP 🏄</h1>
+        <button onClick={() => {
+          setProvider(window.ethereum)
+          setIsConnected(true)
+        }} className="topbar-connect-button">{isConnected ? "Connected" : "Connect"}</button>
       </div>
       <div className="container">
-        <Widget config={runtimeConfig} />
+        <Widget config={runtimeConfig} externalProviderSource={provider} />
       </div>
     </div>
   );

@@ -32,6 +32,7 @@ import { useWeb3 } from "../localWeb3Context";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
+  predefinedWalletType?: WalletType;
 }
 
 export type WalletType = ChainType | "select" | "unset";
@@ -167,8 +168,9 @@ function selectProvider(
 
 export const NetworkManagerProvider = ({
   children,
+  predefinedWalletType
 }: INetworkManagerProviderProps) => {
-  const [walletType, setWalletType] = useState<WalletType>("unset");
+  const [walletType, setWalletType] = useState<WalletType>("Ethereum");
 
   const [homeChainConfig, setHomeChainConfig] = useState<
     BridgeConfig | undefined
