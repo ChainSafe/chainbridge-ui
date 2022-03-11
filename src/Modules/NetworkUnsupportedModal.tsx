@@ -21,10 +21,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     inner: {
       width: "100% !important",
       maxWidth: "unset !important",
-      borderRadius: "4px",
+      borderRadius: 5,
       display: "flex",
       flexDirection: "row",
-      padding: `${constants.generalUnit * 6}px ${constants.generalUnit * 7}px`,
+      padding: `${constants.generalUnit * 3}px ${constants.generalUnit * 3}px`,
     },
     heading: {
       marginBottom: constants.generalUnit,
@@ -111,17 +111,6 @@ const NetworkUnsupportedModal = () => {
           })}{" "}
           network.
         </Typography>
-        <section className={classes.buttons}>
-          <a
-            rel="noopener noreferrer"
-            href={process.env.REACT_APP_SUPPORT_URL}
-            target="_blank"
-          >
-            <Button variant="outline">
-              Ask a question on {process.env.REACT_APP_SUPPORT_SERVICE}
-            </Button>
-          </a>
-        </section>
       </section>
     </CustomModal>
   );

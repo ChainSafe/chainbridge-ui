@@ -5,30 +5,30 @@ const cereTokenDecimals = 10;
 window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
     chains: [
-      // ToDo: Uncomment when Polygon will be added
-      // {
-      //   chainId: 81,
-      //   networkId: 80001,
-      //   name: "Polygon Mumbai",
-      //   decimals: cereTokenDecimals,
-      //   bridgeAddress: "0xBDc040b15561CFC9ED1Ce049DE8bEAbf0b520b33",
-      //   erc20HandlerAddress: "0x8Ee8876d13e79b846fb6c3e5Ffe226a2e111387a",
-      //   rpcUrl: "",
-      //   type: "Ethereum",
-      //   nativeTokenSymbol: "MATIC",
-      //   tokens: [
-      //     {
-      //       address: "0xd111d479e23A8342A81ad595Ea1CAF229B3528c3",
-      //       name: cereTokenName,
-      //       symbol: cereTokenSymbol,
-      //       imageUri: "CEREIcon",
-      //       resourceId:
-      //         "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
-      //       decimals: cereTokenDecimals,
-      //       isDoubleApproval: false,
-      //     },
-      //   ],
-      // },
+      {
+        chainId: 2,
+        networkId: 80001,
+        name: "Polygon Mumbai",
+        decimals: cereTokenDecimals,
+        bridgeAddress: "0xBDc040b15561CFC9ED1Ce049DE8bEAbf0b520b33",
+        erc20HandlerAddress: "0x8Ee8876d13e79b846fb6c3e5Ffe226a2e111387a",
+        rpcUrl:
+          "https://polygon-mumbai.infura.io/v3/178b87e860404572bc217ca53fe594bd",
+        type: "Ethereum",
+        nativeTokenSymbol: "MATIC",
+        tokens: [
+          {
+            address: "0xd111d479e23A8342A81ad595Ea1CAF229B3528c3",
+            name: cereTokenName,
+            symbol: cereTokenSymbol,
+            imageUri: "CEREIcon",
+            resourceId:
+              "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
+            decimals: cereTokenDecimals,
+            isDoubleApproval: false,
+          },
+        ],
+      },
       {
         chainId: 1,
         networkId: 2,
@@ -38,8 +38,8 @@ window.__RUNTIME_CONFIG__ = {
         type: "Substrate",
         nativeTokenSymbol: "CERE",
         chainbridgePalletName: "chainBridge",
-        bridgeFeeFunctionName: "tokenTransferFee",
-        transferPalletName: "palletBridge",
+        bridgeFeeValue: 0,
+        transferPalletName: "erc20",
         transferFunctionName: "transferNative",
         typesFileName: "bridgeTypes.json",
         tokens: [
@@ -52,16 +52,15 @@ window.__RUNTIME_CONFIG__ = {
             decimals: cereTokenDecimals,
           },
         ],
-        destinationChain: true,
       },
       {
-        chainId: 5,
+        chainId: 0,
         networkId: 5,
         name: "Ethereum Goerli",
         decimals: cereTokenDecimals,
+        rpcUrl: "https://goerli.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         bridgeAddress: "0x4E297d17A3d945Ed96dBbD205317501e92d8D6E8",
         erc20HandlerAddress: "0x92c1576845703089CF6c0788379ED81f75F45dd5",
-        rpcUrl: "",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
         tokens: [

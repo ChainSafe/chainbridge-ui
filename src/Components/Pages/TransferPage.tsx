@@ -29,7 +29,10 @@ import WETHIcon from "../../media/tokens/weth.svg";
 import DAIIcon from "../../media/tokens/dai.svg";
 import celoUSD from "../../media/tokens/cusd.svg";
 import { ReactComponent as CEREIcon } from "../../media/tokens/cere-token.svg";
-import styles from "../../Constants/constants";
+import { styles } from "../../Constants/constants";
+import { ReactComponent as ArrowIcon } from "../../media/Icons/arrow.svg";
+import { ReactComponent as HomeIcon } from "../../media/Icons/home-icon.svg";
+import { useDestinationBridge } from "../../Contexts/DestinationBridgeContext";
 
 const PredefinedIcons: any = {
   ETHIcon: ETHIcon,
@@ -48,9 +51,55 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
   createStyles({
     root: {
       fontFamily: styles.primaryFont,
-      padding: constants.generalUnit * 3,
+      padding: constants.generalUnit * 2.5,
       position: "relative",
       backgroundColor: "white",
+      minWidth: 460,
+    },
+    wrapper: {
+      position: "relative",
+      background: "white",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: constants.generalUnit * 2,
+    },
+    logo: {
+      width: 26,
+      height: 26,
+    },
+    headerText: {
+      fontWeight: "bold",
+      fontSize: 30,
+      lineHeight: `${constants.generalUnit * 3}px`,
+      color: "black",
+      paddingLeft: 12,
+    },
+    selectArea: {
+      padding: `${constants.generalUnit * 2.5}px ${
+        constants.generalUnit * 3
+      }px`,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+    walletLogo: {
+      width: constants.generalUnit * 50,
+      height: constants.generalUnit * 30.3,
+      marginTop: constants.generalUnit * 2,
+    },
+    horizontalLine: {
+      marginTop: constants.generalUnit * 3.5,
+      color: borderColor,
+    },
+    walletTitle: {
+      fontSize: 30,
+      lineHeight: `${constants.generalUnit * 4}px`,
+      color: "#5E5E5E",
+      marginTop: constants.generalUnit * 3,
     },
     title: {
       fontSize: 24,
@@ -75,12 +124,47 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         color: "white",
       },
     },
+    headerInner: {
+      borderBottom: "1px solid #E5E5E5",
+    },
+    walletDesc: {
+      fontFamily: styles.secondaryFont,
+      fontWeight: "normal",
+      fontSize: 20,
+      lineHeight: `${constants.generalUnit * 4.5}px`,
+      color: "#332582",
+      marginTop: constants.generalUnit,
+      marginBottom: constants.generalUnit * 4,
+      textAlign: "center",
+    },
+    EthWalletBtn: {
+      width: "100%",
+      fontSize: 14,
+      lineHeight: `${constants.generalUnit * 6}px`,
+      fontWeight: "bold",
+      background: "linear-gradient(105.79deg, #6300E1 1.84%, #DD00E1 92.41%)",
+      borderRadius: 5,
+      color: "white",
+      textAlign: "center",
+      marginBottom: 28,
+    },
+    SubsWalletBtn: {
+      width: "100%",
+      fontSize: 14,
+      lineHeight: `${constants.generalUnit * 6}px`,
+      fontWeight: "bold",
+      color: "white",
+      borderRadius: 5,
+      background: "linear-gradient(105.79deg, #9A1AFF 38.7%, #0028FB 102.94%)",
+      textAlign: "center",
+    },
     connecting: {
       textAlign: "center",
       marginBottom: constants.generalUnit * 2,
     },
     connected: {
       width: "100%",
+      marginBottom: constants.generalUnit * 3,
       "& > *:first-child": {
         display: "flex",
         flexDirection: "row",
@@ -101,6 +185,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       borderRadius: 2,
       color: palette.additional["gray"][9],
       marginTop: constants.generalUnit,
+      fontSize: 12,
     },
     formArea: {
       "&.disabled": {
@@ -180,6 +265,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     generalInput: {
       "& > span": {
         marginBottom: constants.generalUnit,
+      },
+      "& > div > div > div > div": {
+        fontSize: "12px !important",
       },
     },
     faqButton: {
@@ -277,7 +365,8 @@ type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const { walletType, setWalletType } = useNetworkManager();
+  const { walletType, setWalletType, handleSetHomeChain } = useNetworkManager();
+  const destinationBridge = useDestinationBridge();
 
   const {
     deposit,
@@ -294,7 +383,7 @@ const TransferPage = () => {
     checkSupplies,
   } = useChainbridge();
 
-  const { accounts, selectAccount } = useHomeBridge();
+  const { accounts, selectAccount, disconnect } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [changeNetworkOpen, setChangeNetworkOpen] = useState<boolean>(false);
@@ -360,7 +449,7 @@ const TransferPage = () => {
             return parseFloat(value) <= tokens[preflightDetails.token].balance;
           } else {
             return (
-              parseFloat(value + (bridgeFee || 0)) <=
+              parseFloat(value) + (bridgeFee || 0) <=
               tokens[preflightDetails.token].balance
             );
           }
@@ -377,7 +466,12 @@ const TransferPage = () => {
               preflightDetails.token,
               destinationChainConfig.chainId
             );
-            return Boolean(supplies);
+            // As the handleCheckSupplies function is undefined in substrateAdaptor
+            if (supplies === undefined) {
+              return true;
+            } else {
+              return Boolean(supplies);
+            }
           }
           return false;
         }
@@ -402,223 +496,278 @@ const TransferPage = () => {
 
   return (
     <article className={classes.root}>
-      <div className={classes.title}>Transfer Tokens (ERC20 to Native)</div>
-      <div className={classes.walletArea}>
-        {!isReady ? (
-          <Button
-            className={classes.connectButton}
-            fullsize
-            onClick={() => {
-              setWalletType("Ethereum");
-            }}
-          >
-            Connect to Wallet
-          </Button>
-        ) : walletConnecting ? (
-          <section className={classes.connecting}>
-            <Typography component="p" variant="h5">
-              This app requires access to your wallet, <br />
-              please login and authorize access to continue.
-            </Typography>
-          </section>
+      <div className={classes.wrapper}>
+        <div className={classes.header}>
+          {process.env.REACT_APP_MAINTENANCE === "false" &&
+            (!isReady ? (
+              <>
+                <ArrowIcon className={classes.logo} />
+                <div className={classes.headerText}>
+                  Select Bridge Direction
+                </div>
+              </>
+            ) : walletType === "Ethereum" ? (
+              <span className={classes.title}>
+                Transfer Tokens (ERC20 to Native)
+              </span>
+            ) : (
+              <span className={classes.title}>
+                Transfer Tokens (Native to ERC20)
+              </span>
+            ))}
+        </div>
+        {!isReady && process.env.REACT_APP_MAINTENANCE === "false" ? (
+          <hr className={classes.horizontalLine} />
         ) : (
-          <section className={classes.connected}>
+          <></>
+        )}
+        {!isReady ? (
+          <div className={classes.selectArea}>
+            <HomeIcon className={classes.walletLogo} />
+
+            {process.env.REACT_APP_MAINTENANCE === "false" ? (
+              <>
+                <div className={classes.walletDesc}>
+                  Move CERE tokens between
+                  <br />
+                  Ethereum and Cere Native Blockchain
+                </div>
+                <Button
+                  variant="primary"
+                  className={classes.EthWalletBtn}
+                  onClick={() => setWalletType("Ethereum")}
+                >
+                  Connect with ERC20 Wallet
+                </Button>
+                <Button
+                  variant="primary"
+                  className={classes.SubsWalletBtn}
+                  onClick={() => setWalletType("Substrate")}
+                >
+                  Connect with Substrate Wallet
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className={classes.walletDesc}>
+                  Cere Bridge is under maintenance.
+                  <br />
+                  Please, try again later.
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <>
+            <section className={classes.connected}>
+              <div>
+                <div className={classes.inputLabel}>Home Network</div>
+                <Typography
+                  className={classes.changeButton}
+                  variant="body1"
+                  onClick={async () => {
+                    await Promise.all([
+                      destinationBridge.disconnect(),
+                      disconnect(),
+                    ]);
+                    handleSetHomeChain(undefined);
+                    setDestinationChain(undefined);
+                    setWalletType("unset");
+                  }}
+                >
+                  Change
+                </Typography>
+              </div>
+              <div className={classes.networkName}>
+                {walletType === "Ethereum" ? (
+                  <ETHIcon className={classes.networkIcon} />
+                ) : (
+                  <CEREIcon className={classes.networkIcon} />
+                )}
+                {homeConfig?.name}
+              </div>
+            </section>
             <div>
-              <div className={classes.inputLabel}>Home Network</div>
-              {/* ToDo: uncomment after enabling Cere -> Eth flow */}
-              {/*<Typography*/}
-              {/*  className={classes.changeButton}*/}
-              {/*  variant="body1"*/}
-              {/*  onClick={() => setChangeNetworkOpen(true)}*/}
-              {/*>*/}
-              {/*  Change*/}
-              {/*</Typography>*/}
+              {isReady &&
+                walletType === "Substrate" &&
+                accounts &&
+                accounts.length > 0 && (
+                  <div>
+                    <section className={classes.accountSelector}>
+                      <SelectInput
+                        label="Select account"
+                        className={classes.generalInput}
+                        options={accounts.map((acc, i) => ({
+                          label: acc.address,
+                          value: i,
+                        }))}
+                        onChange={(value) =>
+                          selectAccount && selectAccount(value)
+                        }
+                        value={accounts.findIndex((v) => v.address === address)}
+                        placeholder="Select an account"
+                      />
+                    </section>
+                  </div>
+                )}
             </div>
-            <div className={classes.networkName}>
-              {walletType === "Ethereum" ? (
-                <ETHIcon className={classes.networkIcon} />
-              ) : (
-                <CEREIcon className={classes.networkIcon} />
+            <Formik
+              initialValues={{
+                tokenAmount: 0,
+                token: "",
+                receiver: "",
+              }}
+              validateOnChange={false}
+              validationSchema={transferSchema}
+              onSubmit={(values) => {
+                setPreflightDetails({
+                  ...values,
+                  tokenSymbol: tokens[values.token].symbol || "",
+                });
+                setPreflightModalOpen(true);
+              }}
+            >
+              {(props) => (
+                <Form
+                  className={clsx(classes.formArea, {
+                    disabled: !homeConfig || !address || props.isValidating,
+                  })}
+                >
+                  <section>
+                    <SelectInput
+                      label="Destination Network"
+                      className={classes.generalInput}
+                      disabled={!homeConfig}
+                      options={destinationChains.map((dc) => ({
+                        label: dc.name,
+                        value: dc.chainId,
+                      }))}
+                      onChange={(value) => setDestinationChain(value)}
+                      value={destinationChainConfig?.chainId}
+                    />
+                  </section>
+                  <section className={classes.currencySection}>
+                    <section>
+                      <div
+                        className={clsx(
+                          classes.tokenInputArea,
+                          classes.generalInput
+                        )}
+                      >
+                        <TokenInput
+                          classNames={{
+                            input: clsx(
+                              classes.tokenInput,
+                              classes.generalInput
+                            ),
+                            button: classes.maxButton,
+                          }}
+                          tokenSelectorKey="token"
+                          tokens={tokens}
+                          disabled={
+                            !destinationChainConfig ||
+                            !preflightDetails.token ||
+                            preflightDetails.token === ""
+                          }
+                          name="tokenAmount"
+                          label="I want to send"
+                        />
+                      </div>
+                    </section>
+                    <section className={classes.currencySelector}>
+                      <TokenSelectInput
+                        tokens={tokens}
+                        name="token"
+                        disabled={!destinationChainConfig}
+                        label={`Balance: `}
+                        className={classes.generalInput}
+                        placeholder=""
+                        sync={(tokenAddress) => {
+                          setPreflightDetails({
+                            ...preflightDetails,
+                            token: tokenAddress,
+                            receiver: "",
+                            tokenAmount: 0,
+                            tokenSymbol: "",
+                          });
+                        }}
+                        options={
+                          Object.keys(tokens).map((t) => ({
+                            value: t,
+                            label: (
+                              <div className={classes.tokenItem}>
+                                <span>{tokens[t]?.symbol || t}</span>
+                              </div>
+                            ),
+                          })) || []
+                        }
+                      />
+                    </section>
+                  </section>
+                  <section>
+                    <AddressInput
+                      disabled={!destinationChainConfig}
+                      name="receiver"
+                      label="Destination Address"
+                      placeholder="Please enter the receiving address..."
+                      className={classes.address}
+                      classNames={{
+                        input: classes.addressInput,
+                      }}
+                      senderAddress={`${address}`}
+                      sendToSameAccountHelper={
+                        destinationChainConfig?.type === homeConfig?.type
+                      }
+                    />
+                  </section>
+                  <FeesFormikWrapped
+                    amountFormikName="tokenAmount"
+                    className={classes.fees}
+                    fee={bridgeFee}
+                    feeSymbol={homeConfig?.nativeTokenSymbol}
+                    symbol={
+                      preflightDetails && tokens[preflightDetails.token]
+                        ? tokens[preflightDetails.token].symbol
+                        : undefined
+                    }
+                  />
+                  <section>
+                    <Button
+                      type="submit"
+                      fullsize
+                      variant="primary"
+                      className={classes.transferButton}
+                    >
+                      Start Transfer
+                    </Button>
+                  </section>
+                </Form>
               )}
-              {homeConfig?.name}
-            </div>
-          </section>
+            </Formik>
+            <section className={classes.footer}>
+              <NavLink
+                style={{ textDecoration: "none" }}
+                className={classes.footerText}
+                to={{ pathname: "https://cere.network/" }}
+                target="_blank"
+              >
+                Cere Homepage
+              </NavLink>
+              <NavLink
+                style={{ textDecoration: "none" }}
+                className={classes.footerText}
+                to={{
+                  pathname:
+                    "https://explorer.cere.network/?rpc=wss%3A%2F%2Frpc.mainnet.cere.network%3A9945#/staking",
+                }}
+                target="_blank"
+              >
+                Cere Staking
+              </NavLink>
+            </section>
+          </>
         )}
       </div>
-      {isReady &&
-        walletType === "Substrate" &&
-        accounts &&
-        accounts.length > 0 && (
-          <div>
-            <section className={classes.accountSelector}>
-              <SelectInput
-                label="Select account"
-                className={classes.generalInput}
-                options={accounts.map((acc, i) => ({
-                  label: acc.address,
-                  value: i,
-                }))}
-                onChange={(value) => selectAccount && selectAccount(value)}
-                value={accounts.findIndex((v) => v.address === address)}
-                placeholder="Select an account"
-              />
-            </section>
-          </div>
-        )}
-      <Formik
-        initialValues={{
-          tokenAmount: 0,
-          token: "",
-          receiver: "",
-        }}
-        validateOnChange={false}
-        validationSchema={transferSchema}
-        onSubmit={(values) => {
-          setPreflightDetails({
-            ...values,
-            tokenSymbol: tokens[values.token].symbol || "",
-          });
-          setPreflightModalOpen(true);
-        }}
-      >
-        {(props) => (
-          <Form
-            className={clsx(classes.formArea, {
-              disabled: !homeConfig || !address || props.isValidating,
-            })}
-          >
-            {console.log(destinationChainConfig)}
-            <section>
-              <SelectInput
-                label="Destination Network"
-                className={classes.generalInput}
-                disabled={!homeConfig}
-                options={destinationChains.map((dc) => ({
-                  label: dc.name,
-                  value: dc.chainId,
-                }))}
-                onChange={(value) => setDestinationChain(value)}
-                value={destinationChainConfig?.chainId}
-              />
-            </section>
-            <section className={classes.currencySection}>
-              <section>
-                <div
-                  className={clsx(classes.tokenInputArea, classes.generalInput)}
-                >
-                  <TokenInput
-                    classNames={{
-                      input: clsx(classes.tokenInput, classes.generalInput),
-                      button: classes.maxButton,
-                    }}
-                    tokenSelectorKey="token"
-                    tokens={tokens}
-                    disabled={
-                      !destinationChainConfig ||
-                      !preflightDetails.token ||
-                      preflightDetails.token === ""
-                    }
-                    name="tokenAmount"
-                    label="I want to send"
-                  />
-                </div>
-              </section>
-              <section className={classes.currencySelector}>
-                <TokenSelectInput
-                  tokens={tokens}
-                  name="token"
-                  disabled={!destinationChainConfig}
-                  label={`Balance: `}
-                  className={classes.generalInput}
-                  placeholder=""
-                  sync={(tokenAddress) => {
-                    setPreflightDetails({
-                      ...preflightDetails,
-                      token: tokenAddress,
-                      receiver: "",
-                      tokenAmount: 0,
-                      tokenSymbol: "",
-                    });
-                  }}
-                  options={
-                    Object.keys(tokens).map((t) => ({
-                      value: t,
-                      label: (
-                        <div className={classes.tokenItem}>
-                          <span>{tokens[t]?.symbol || t}</span>
-                        </div>
-                      ),
-                    })) || []
-                  }
-                />
-              </section>
-            </section>
-            <section>
-              <AddressInput
-                disabled={!destinationChainConfig}
-                name="receiver"
-                label="Destination Address"
-                placeholder="Please enter the receiving address..."
-                className={classes.address}
-                classNames={{
-                  input: classes.addressInput,
-                }}
-                senderAddress={`${address}`}
-                sendToSameAccountHelper={
-                  destinationChainConfig?.type === homeConfig?.type
-                }
-              />
-            </section>
-            <FeesFormikWrapped
-              amountFormikName="tokenAmount"
-              className={classes.fees}
-              fee={bridgeFee}
-              feeSymbol={homeConfig?.nativeTokenSymbol}
-              symbol={
-                preflightDetails && tokens[preflightDetails.token]
-                  ? tokens[preflightDetails.token].symbol
-                  : undefined
-              }
-            />
-            <section>
-              <Button
-                type="submit"
-                fullsize
-                variant="primary"
-                className={classes.transferButton}
-              >
-                Start Transfer
-              </Button>
-            </section>
-          </Form>
-        )}
-      </Formik>
-      <section className={classes.footer}>
-        <NavLink
-          style={{ textDecoration: "none" }}
-          className={classes.footerText}
-          to={{ pathname: "https://cere.network/" }}
-          target="_blank"
-        >
-          Cere Homepage
-        </NavLink>
-        <NavLink
-          style={{ textDecoration: "none" }}
-          className={classes.footerText}
-          to={{
-            pathname:
-              "https://explorer.cere.network/?rpc=wss%3A%2F%2Frpc.mainnet.cere.network%3A9945#/staking",
-          }}
-          target="_blank"
-        >
-          Cere Staking
-        </NavLink>
-      </section>
-      <AboutDrawer open={aboutOpen} close={() => setAboutOpen(false)} />
-      <ChangeNetworkDrawer
-        open={changeNetworkOpen}
-        close={() => setChangeNetworkOpen(false)}
-      />
       <PreflightModalTransfer
         open={preflightModalOpen}
         close={() => setPreflightModalOpen(false)}
@@ -639,7 +788,6 @@ const TransferPage = () => {
         value={preflightDetails?.tokenAmount || 0}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
-      {/* This is here due to requiring router */}
       <NetworkUnsupportedModal />
     </article>
   );
