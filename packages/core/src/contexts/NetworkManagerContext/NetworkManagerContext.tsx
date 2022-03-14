@@ -170,7 +170,7 @@ export const NetworkManagerProvider = ({
   children,
   predefinedWalletType
 }: INetworkManagerProviderProps) => {
-  const [walletType, setWalletType] = useState<WalletType>("Ethereum");
+  const [walletType, setWalletType] = useState<WalletType>(predefinedWalletType ?? "Ethereum");
 
   const [homeChainConfig, setHomeChainConfig] = useState<
     BridgeConfig | undefined

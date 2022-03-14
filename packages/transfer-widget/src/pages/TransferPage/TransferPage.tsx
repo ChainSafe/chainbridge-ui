@@ -192,10 +192,10 @@ const TransferPage = () => {
               sx={{ paddingRight: "16px" }}
             >
               <Grid item xs={12} md={6}>
-                {tokens && <TokenSelectInput
+                {true && <TokenSelectInput
                   control={control}
                   rules={{ required: true }}
-                  tokens={tokens}
+                  tokens={tokens ?? []}
                   name="token"
                   disabled={!destinationChainConfig || formState.isSubmitting}
                   label={`Balance: `}
@@ -211,7 +211,7 @@ const TransferPage = () => {
                   }}
                   setValue={setValue}
                   options={
-                    Object.keys(tokens).map((t) => ({
+                    tokens ? Object.keys(tokens).map((t) => ({
                       value: t,
                       label: (
                         <div className={classes.tokenItem}>
@@ -224,7 +224,7 @@ const TransferPage = () => {
                           <span>{tokens[t]?.symbol || t}</span>
                         </div>
                       ),
-                    })) || []
+                    })) : []
                   }
                 />}
               </Grid>

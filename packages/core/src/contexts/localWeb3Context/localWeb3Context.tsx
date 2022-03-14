@@ -24,6 +24,7 @@ const LocalProviderContext = React.createContext<LocalWeb3Context | undefined>(
 const createLocalProvider = ({
   children,
   externalProvider,
+  useExternalProvider,
   tokensToWatch,
   onboardConfig,
   cacheWalletSelection = true,
@@ -57,7 +58,7 @@ const createLocalProvider = ({
   }, [externalProvider])
 
   useEffect(() => {
-    if (externalProvider) {
+    if (useExternalProvider) {
       const networkTokens =
       (tokensToWatch && eNetwork && tokensToWatch[eNetwork.chainId]) || [];
 
@@ -113,28 +114,24 @@ const createLocalProvider = ({
   // CUSTOM HOOK FOR INITIALIZING ONBOARD
   let onboardState;
 
-  // if (!externalProvider) {
-    // useOnboard(
-    //   networkIds,
-    //   checkNetwork,
-    //   dispatcher,
-    //   onboardConfig,
-    //   cacheWalletSelection,
-    //   checkIsReady,
-    // );
+    useOnboard(
+      networkIds,
+      checkNetwork,
+      dispatcher,
+      onboardConfig,
+      cacheWalletSelection,
+      checkIsReady,
+      externalProvider,
+      useExternalProvider
+    );
 
-    if (onboard !== undefined && "getState" in onboard) {
+    if (!useExternalProvider && onboard !== undefined && "getState" in onboard) {
       onboardState = onboard?.getState();
     }
-  // }
-
-
-  // console.log("🚀 ~ file: localWeb3Context.tsx ~ line 61 ~ useEffect ~ externalProvider", externalProvider)
-
 
   return (
     <LocalProviderContext.Provider
-      value={externalProvider ? {
+      value={useExternalProvider ? {
         address: externalAddress,
         ethBalance: balance,
         isReady: true,
@@ -201,7 +198,6 @@ const createExternalProvider = ({
     async function getNetworkInfo() {
       const signer = externalProvider.getSigner();
       const accountAddress = await signer.getAddress()
-      console.log("Account:", accountAddress);
       const balance = await externalProvider.getBalance(accountAddress)
       setBalance( Number(ethers.utils.formatEther(balance)))
       setExternalAddress(accountAddress)
@@ -260,6 +256,8 @@ const createExternalProvider = ({
         gasPrice,
         isMobile: false,
         walletConnectReady: false,
+
+        useExternalProvider,
 
         resetOnboard,
         refreshGasPrice,

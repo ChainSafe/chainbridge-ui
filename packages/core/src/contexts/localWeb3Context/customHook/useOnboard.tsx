@@ -14,6 +14,8 @@ const useOnboard = (
     onboard: OnboardAPI,
     dispatcher: (action: Actions) => void
   ) => void,
+  externalProvider?: any,
+  useExternalProvider?: any
 ) => {
   const initializeOnboard = async (savedWallet: string) => {
     const checks = [{ checkName: "accounts" }, { checkName: "connect" }];
@@ -141,7 +143,9 @@ const useOnboard = (
     });
 
     // HERE WE INITIALIZE ONBOARD NO MATTER WHAT
-    initializeOnboard(savedWallet);
+    if (!useExternalProvider) {
+      initializeOnboard(savedWallet);
+    }
   }, []);
 
 };

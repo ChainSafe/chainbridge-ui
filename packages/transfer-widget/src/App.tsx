@@ -30,7 +30,7 @@ if (
   });
 }
 
-const AppWrapper: React.FC<{ config?: any, externalProviderSource?: any }> = (props) => {
+const AppWrapper: React.FC<{ config?: any, useExternalProvider?: any, externalProviderSource?: any }> = (props) => {
   const [isReady, setIsReady] = useState(false);
 
   const externalProvider = props.externalProviderSource ? new ethers.providers.Web3Provider(props.externalProviderSource, "any") : undefined
@@ -44,7 +44,7 @@ const AppWrapper: React.FC<{ config?: any, externalProviderSource?: any }> = (pr
   return (
     <>
       {isReady ? (
-        <App externalProvider={externalProvider} />
+        <App externalProvider={externalProvider} useExternalProvider={props.useExternalProvider} />
       ) : (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
@@ -54,7 +54,7 @@ const AppWrapper: React.FC<{ config?: any, externalProviderSource?: any }> = (pr
   );
 };
 
-const App: React.FC<{externalProvider?: any}> = ({externalProvider}) => {
+const App: React.FC<{externalProvider?: any, useExternalProvider?: any}> = ({externalProvider, useExternalProvider}) => {
   const {
     __RUNTIME_CONFIG__: {
       UI: { wrapTokenPage = false } = {},
@@ -98,6 +98,7 @@ const App: React.FC<{externalProvider?: any}> = ({externalProvider}) => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
         <LocalProvider
+          useExternalProvider={useExternalProvider}
           externalProvider={externalProvider}
           networkIds={[5]}
           checkNetwork={false}

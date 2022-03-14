@@ -33,7 +33,6 @@ export default function HomeNetworkConnectView({
   setChangeNetworkOpen,
   selectAccount,
 }: HomeNetworkConnectViewProps) {
-  console.log("🚀 ~ file: HomeNetworkConnectView.tsx ~ line 36 ~ isReady", homeConfig?.name)
   return (
     <>
       <div className={classes.walletArea}>
@@ -77,7 +76,7 @@ export default function HomeNetworkConnectView({
                 variant="h5"
                 className={classes.networkName}
               >
-                {homeConfig?.name}
+                {homeConfig?.name ?? 'Connect the wallet'}
               </Typography>
             </section>
           ))}

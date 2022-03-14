@@ -28,3 +28,12 @@
   margin: 5px;
 }
 
+.topbar-connect-button.connected {
+  color: white;
+  background-color: #00e861;
+  border-radius: 10px;
+  border: none;
+  padding: 5px 10px;
+  margin: 5px;
+}
+

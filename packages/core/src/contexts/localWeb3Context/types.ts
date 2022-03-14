@@ -47,6 +47,7 @@ export type Tokens = {
 
 export type LocalWeb3Context = {
   externalProvider?: any;
+  useExternalProvider?: any;
   address?: string;
   ethBalance?: number;
   gasPrice: number;
@@ -89,6 +90,7 @@ export type TokensToWatch = {
 };
 
 export type LocalWeb3ContextProps = {
+  useExternalProvider?: any;
   externalProvider?: any;
   cacheWalletSelection?: boolean;
   checkNetwork?: boolean;
