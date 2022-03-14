@@ -16,6 +16,7 @@ window.__RUNTIME_CONFIG__ = {
           "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
+        availableAsHomeNetwork: true,
         tokens: [
           {
             address: "0x2da719db753dfa10a62e140f436e1d67f2ddb0d6",
@@ -37,6 +38,7 @@ window.__RUNTIME_CONFIG__ = {
         rpcUrl: "wss://rpc.mainnet.cere.network:9945",
         type: "Substrate",
         nativeTokenSymbol: "CERE",
+        availableAsHomeNetwork: false,
         chainbridgePalletName: "chainBridge",
         bridgeFeeFunctionName: "tokenTransferFee",
         transferPalletName: "palletBridge",
@@ -64,6 +66,7 @@ window.__RUNTIME_CONFIG__ = {
         rpcUrl: "",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
+        availableAsHomeNetwork: true,
         tokens: [
           {
             address: "0x2da719db753dfa10a62e140f436e1d67f2ddb0d6",

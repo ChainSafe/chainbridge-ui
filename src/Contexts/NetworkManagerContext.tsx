@@ -130,7 +130,9 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setHomeChainConfig(undefined);
         return;
       }
-      const chain = homeChains.find((c) => c.chainId === chainId);
+      const chain = homeChains.find(
+        (c) => c.chainId === chainId && c.availableAsHomeNetwork
+      );
 
       const fetchDestinationChainIds = (homeChainId: number) => {
         switch (homeChainId) {
