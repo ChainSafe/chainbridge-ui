@@ -2,7 +2,8 @@
 
 ## vNext
 
-- ...
+- Added option to disable "Connect with Substrate Wallet" from env
+- Added config to disable home network from config
 
 ## v0.7.0
 
