@@ -16,7 +16,7 @@ window.__RUNTIME_CONFIG__ = {
           "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
-        availableAsHomeNetwork: false,
+        availableAsHomeNetwork: true,
         tokens: [
           {
             address: "0x2da719db753dfa10a62e140f436e1d67f2ddb0d6",
