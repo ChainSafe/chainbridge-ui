@@ -539,13 +539,18 @@ const TransferPage = () => {
                 >
                   Connect with ERC20 Wallet
                 </Button>
-                <Button
-                  variant="primary"
-                  className={classes.SubsWalletBtn}
-                  onClick={() => setWalletType("Substrate")}
-                >
-                  Connect with Substrate Wallet
-                </Button>
+                {process.env.REACT_APP_CONNECT_WITH_SUBSTRATE_WALLET_ENABLED ===
+                  "true" && (
+                  <>
+                    <Button
+                      variant="primary"
+                      className={classes.SubsWalletBtn}
+                      onClick={() => setWalletType("Substrate")}
+                    >
+                      Connect with Substrate Wallet
+                    </Button>
+                  </>
+                )}
               </>
             ) : (
               <>
