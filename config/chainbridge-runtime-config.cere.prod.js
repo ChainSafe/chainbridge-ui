@@ -38,6 +38,7 @@ window.__RUNTIME_CONFIG__ = {
         rpcUrl: "wss://rpc.mainnet.cere.network:9945",
         type: "Substrate",
         nativeTokenSymbol: "CERE",
+        availableAsHomeNetwork: false,
         chainbridgePalletName: "chainBridge",
         bridgeFeeFunctionName: "tokenTransferFee",
         transferPalletName: "palletBridge",
