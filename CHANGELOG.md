@@ -2,7 +2,7 @@
 
 ## vNext
 
-- ...
+- Added Polygon to titles
 
 ## v0.8.0
 
