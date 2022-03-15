@@ -30,28 +30,39 @@ After you cloned `chainbridge-core` you can run the following command:
 make local-setup
 ```
 
-This command is going to run a script that creates two evm nodes and I will run three relayers. After this is going to deploy all the contracts to the `evm` nodes. This process could take a couple of minutes to complete. After that, you are going to see the following message:
+This command is going to run a script that creates two evm nodes and I will run three relayers. After this is going to deploy all the contracts to the `evm` nodes. This process could take a couple of minutes to complete. After that, you are going to see something like this message (notice that addresses could be different on your sde)
 
 ```bash
 ===============================================
 🎉🎉🎉 ChainBridge Successfully Deployed 🎉🎉🎉
 
 - Chain 1 -
-Bridge: 0xd606A00c1A39dA53EA7Bb3Ab570BBE40b156EB66
-ERC20: 0xb911DF90bCccd3D76a1d8f5fDcd32471e28Cc2c1
-ERC20 Handler: 0x05C5AFACf64A6082D4933752FfB447AED63581b1
-Generic Handler: 0x77d273266ee4859b8564562A72E433fe5C0D9F44
-Asset Store: 0x034dCF9Efd1cc360C456ad853E64000E1cA49290
+Bridge: 0x061EC76fa79d1e13B88B7Aa89BfC3E45f49373e7
+ERC20: 0xc24b07722486e80f4dB2E0bD8Eb21E257B357684
+ERC20 Handler: 0xa7FC82fEb6Acaf8B08c28a890a3dF6c70Ea752d0
+Generic Handler: 0x88bEfC9924f4F1C5e5c70D78E6BbA20d9E2F636C
+Asset Store: 0x21114F42f4253B267441eB96902eA011aAFC360c
 
 - Chain 2 -
-Bridge: 0xd606A00c1A39dA53EA7Bb3Ab570BBE40b156EB66
-ERC20: 0xb911DF90bCccd3D76a1d8f5fDcd32471e28Cc2c1
-ERC20 Handler: 0x05C5AFACf64A6082D4933752FfB447AED63581b1
-Generic Handler: 0x77d273266ee4859b8564562A72E433fe5C0D9F44
-Asset Store: 0x034dCF9Efd1cc360C456ad853E64000E1cA49290
+Bridge: 0x26c2e726e80C56d9002cEED7b127036292c3064E
+ERC20: 0x8f677D365252A44A347C25370A9a9F6308746D19
+ERC20 Handler: 0xCF7cDB2C0C222632512621146273a00f1bE33143
+Generic Handler: 0x6CCE395E5D267a53A75e0Ea5410BcBDfC7137A9d
+Asset Store: 0x7565ed83a5ce9e7CcD5Dddd5d3DEc11B98C62ea5
 
 ===============================================
 ```
+
+Alongside with this final log, you should be able to lookup for the `resourceId` thas is being set in the deployments for the `ERC20` tokens. It should appear after the deploying of the `ERC20` contracts. The logs are going to be something like this:
+
+```bash
+{"level":"debug","time":"2022-03-14T23:57:32-03:00","message":"Erc20 deployed to: 0xc24b07722486e80f4dB2E0bD8Eb21E257B357684; \n Erc20 Handler deployed to: 0xa7FC82fEb6Acaf8B08c28a890a3dF6c70Ea752d0"}
+{"level":"debug","time":"2022-03-14T23:57:32-03:00","message":"resourceID 0000000000000000000000c24b07722486e80f4db2e0bd8eb21e257b35768400"}
+{"level":"debug","time":"2022-03-14T23:57:32-03:00","message":"Suggested GP 1000000007"}
+
+```
+
+So the `resourceId` for `Chain 1` is going to be in this case: `0000000000000000000000c24b07722486e80f4db2e0bd8eb21e257b35768400`. (Again, this logs are going to be different when you run the command)
 
 This means that you have all the address that you need to run the UI locally. A quick note aside: if you want to check the logs of your nodes or the relayers, you can go `/e2e/evm-evm` folder and run the following command:
 
@@ -77,19 +88,19 @@ window.__RUNTIME_CONFIG__ = {
         networkId: 422,
         name: "Local EVM 1",
         decimals: 18,
-        bridgeAddress: "0xd606A00c1A39dA53EA7Bb3Ab570BBE40b156EB66",
-        erc20HandlerAddress: "0x05C5AFACf64A6082D4933752FfB447AED63581b1",
+        bridgeAddress: "0x061EC76fa79d1e13B88B7Aa89BfC3E45f49373e7",
+        erc20HandlerAddress: "0xa7FC82fEb6Acaf8B08c28a890a3dF6c70Ea752d0",
         rpcUrl: "http://localhost:8545",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
         tokens: [
           {
-            address: "0xb911DF90bCccd3D76a1d8f5fDcd32471e28Cc2c1",
+            address: "0xc24b07722486e80f4dB2E0bD8Eb21E257B357684",
             name: "an ERC20",
             symbol: "ERC20",
             imageUri: "WETHIcon",
             resourceId:
-              "0x000000000000000000000000000000e389d61c11e5fe32ec1735b3cd38c69500",
+              "0000000000000000000000c24b07722486e80f4db2e0bd8eb21e257b35768400",
           },
         ],
       },
@@ -98,19 +109,19 @@ window.__RUNTIME_CONFIG__ = {
         networkId: 422,
         name: "Local EVM 2",
         decimals: 18,
-        bridgeAddress: "0xd606A00c1A39dA53EA7Bb3Ab570BBE40b156EB66",
-        erc20HandlerAddress: "0x05C5AFACf64A6082D4933752FfB447AED63581b1",
+        bridgeAddress: "0x26c2e726e80C56d9002cEED7b127036292c3064E",
+        erc20HandlerAddress: "0xCF7cDB2C0C222632512621146273a00f1bE33143",
         rpcUrl: "http://localhost:8547",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
         tokens: [
           {
-            address: "0xb911DF90bCccd3D76a1d8f5fDcd32471e28Cc2c1",
+            address: "0x8f677D365252A44A347C25370A9a9F6308746D19",
             name: "an ERC20",
             symbol: "ERC20",
             imageUri: "WETHIcon",
             resourceId:
-              "0x000000000000000000000000000000e389d61c11e5fe32ec1735b3cd38c69500",
+              "00000000000000000000008f677d365252a44a347c25370a9a9f6308746d1900",
           },
         ],
       },
@@ -137,60 +148,16 @@ After you follow the instructions to build the binary you can run the following 
 
 The output will be an address and a private key that you can use to import that account to metamask. After you have done this, if you have `alice` on metamask, you can send some native tokens to your new account through metamask.
 
-### Preparations before minting some tokens.
-
-We are going to need to run some commands previously the minting process. This commands use `chainbdrige-core-example`, that you already compiled in the previous steps.
-
-#### Registering resource
-
-You need to register a resource to the bridge. As we saw in the runtime config above, we have this resource, so we can use the same value for convenience.
+For this setup the `bridge` admin is going to be `Eve`. You can check this by searching into the logs for the mint of 10 `TST` (the ERC20 token symbol). The output of the logs would look something like this:
 
 ```bash
-./chainbridge-core-example \
-evm-cli \
-bridge \
-register-resource \
---url <LOCAL-NODE-URL> \
---private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
---bridge <BRIDGE ADDRESS> \
---handler <HANDLER ADDRESS> \
---target <ERC20 ADDREESS> \
---resource 000000000000000000000000000000e389d61c11e5fe32ec1735b3cd38c69500 //THE SAME THAT WE DEFINED IN OUR RUNTIME CONFIG
+{"level":"debug","time":"2022-03-14T23:57:37-03:00","message":"Minting tokens 0x4CEEf6139f00F9F4535Ad19640Ff7A0137708485 10000000000000000000"}
 ```
 
-You will need to run this command for both of your evm nodes.
+### Minting some tokens.
 
-#### Set burnable
 
-Afterwards we need to run the following command
-
-```bash
-./chainbridge-core-example \
-evm-cli \
-bridge \
-set-burn \
---url <LOCAL-NODE-URL> \
---private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
---handler <HANDLER ADDRESS> \
---bridge <BRIDGE ADDRESS> \
---token-contract <ERC20 ADDRESS>
-```
-You also need to run this command for both of your nodes.
-
-### Add minter
-
-```bash
-./chainbridge-core-example \
-evm-cli \
-erc20 \
-add-minter \
---url <LOCAL-NODE-URL> \
---private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
---contract <ERC20 ADDRESS> \
---minter <ERC20 HANDLER ADDRESS>
-```
-
-Now we are ready to mint some tokens.
+Now we are ready to mint some tokens. Eve has 10 TST tokens already minted, but we can mint more.
 
 ```bash
 ./chainbridge-core-example \
@@ -198,7 +165,7 @@ evm-cli \
 erc20 \
 mint \
 --url <LOCAL-NODE-URL> \
---private-key <PRIVATE-KEY ALICE | BOB | CHARLIE> \
+--private-key <PRIVATE-KEY EVE> \
 --amount 200 \
 --contract <ERC20 ADDRESS>
 --recipient <RELAYER ADDRESS OR ANY VALID ADDRESS>
