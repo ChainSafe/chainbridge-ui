@@ -34,11 +34,10 @@ export const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     },
     changeButton: {
       cursor: "pointer",
+      lineHeight: 1
     },
     networkName: {
-      padding: `${constants.generalUnit * 2}px ${
-        constants.generalUnit * 1.5
-      }px`,
+      padding: "11px 10px",
       border: `1px solid ${palette.additional["gray"][6]}`,
       borderRadius: 2,
       color: palette.additional["gray"][9],
