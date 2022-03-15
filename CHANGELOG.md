@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.9.0
+
+- Added Polygon to titles
+
 ## v0.8.0
 
 - Added option to disable "Connect with Substrate Wallet" from env

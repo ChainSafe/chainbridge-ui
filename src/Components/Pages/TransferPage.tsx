@@ -130,7 +130,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
     walletDesc: {
       fontFamily: styles.secondaryFont,
       fontWeight: "normal",
-      fontSize: 20,
+      fontSize: 17,
       lineHeight: `${constants.generalUnit * 4.5}px`,
       color: "#332582",
       marginTop: constants.generalUnit,
@@ -530,7 +530,7 @@ const TransferPage = () => {
                 <div className={classes.walletDesc}>
                   Move CERE tokens between
                   <br />
-                  Ethereum and Cere Native Blockchain
+                  Ethereum/Polygon and Cere Native Blockchain
                 </div>
                 <Button
                   variant="primary"
