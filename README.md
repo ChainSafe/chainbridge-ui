@@ -30,7 +30,7 @@ After you cloned `chainbridge-core` you can run the following command:
 make local-setup
 ```
 
-This command is going to run a script that creates two evm nodes and I will run three relayers. After this is going to deploy all the contracts to the `evm` nodes. This process could take a couple of minutes to complete. After that, you are going to see something like this message (notice that addresses could be different on your sde)
+This command is going to run a script that creates two evm nodes and I will run three relayers. After this is going to deploy all the contracts to the `evm` nodes. This process could take a couple of minutes to complete. After that, you are going to see something like this message (notice that addresses could be different on your side)
 
 ```bash
 ===============================================
@@ -53,16 +53,9 @@ Asset Store: 0x7565ed83a5ce9e7CcD5Dddd5d3DEc11B98C62ea5
 ===============================================
 ```
 
-Alongside with this final log, you should be able to lookup for the `resourceId` thas is being set in the deployments for the `ERC20` tokens. It should appear after the deploying of the `ERC20` contracts. The logs are going to be something like this:
+Alongside with this final log, you should be able to lookup for the `resourceId` thas is being set in the deployments for the `ERC20` tokens. It should appear after the deploying of the `ERC20` contracts. Find in the logs the seting up of the burnable for the `ERC20` contract address and you will find the `resourceId` for first and second node.
 
-```bash
-{"level":"debug","time":"2022-03-14T23:57:32-03:00","message":"Erc20 deployed to: 0xc24b07722486e80f4dB2E0bD8Eb21E257B357684; \n Erc20 Handler deployed to: 0xa7FC82fEb6Acaf8B08c28a890a3dF6c70Ea752d0"}
-{"level":"debug","time":"2022-03-14T23:57:32-03:00","message":"resourceID 0000000000000000000000c24b07722486e80f4db2e0bd8eb21e257b35768400"}
-{"level":"debug","time":"2022-03-14T23:57:32-03:00","message":"Suggested GP 1000000007"}
-
-```
-
-So the `resourceId` for `Chain 1` is going to be in this case: `0000000000000000000000c24b07722486e80f4db2e0bd8eb21e257b35768400`. (Again, this logs are going to be different when you run the command)
+So the `resourceId` for `Chain 1` is going to be in this case: `0x0000000000000000000000000000000000000000000000000000000000000200`. (Again, this logs are going to be different when you run the command)
 
 This means that you have all the address that you need to run the UI locally. A quick note aside: if you want to check the logs of your nodes or the relayers, you can go `/e2e/evm-evm` folder and run the following command:
 
@@ -100,7 +93,7 @@ window.__RUNTIME_CONFIG__ = {
             symbol: "ERC20",
             imageUri: "WETHIcon",
             resourceId:
-              "0000000000000000000000c24b07722486e80f4db2e0bd8eb21e257b35768400",
+              "0x0000000000000000000000000000000000000000000000000000000000000200",
           },
         ],
       },
@@ -121,7 +114,7 @@ window.__RUNTIME_CONFIG__ = {
             symbol: "ERC20",
             imageUri: "WETHIcon",
             resourceId:
-              "00000000000000000000008f677d365252a44a347c25370a9a9f6308746d1900",
+              "0x0000000000000000000000000000000000000000000000000000000000000200",
           },
         ],
       },
@@ -131,6 +124,8 @@ window.__RUNTIME_CONFIG__ = {
 ```
 
 **note: the parameters `domainId` and `networkId` are the ones that are being used by the local networks**
+
+**note 2: remember that this values are for reference**
 
 Then you can start the UI and you can try to connect using metamask. For this you will also need to add the local nodes to the `networks` section of your metamaks. The relevant data to setup local networks on metamaks are the endpoints of the networks, already defined in the runtime config, and the `chainId` also already defined in the runtime config as `networkId`.
 
