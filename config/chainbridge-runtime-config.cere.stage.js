@@ -16,6 +16,7 @@ window.__RUNTIME_CONFIG__ = {
           "https://polygon-mumbai.infura.io/v3/178b87e860404572bc217ca53fe594bd",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
+        availableAsHomeNetwork: true,
         tokens: [
           {
             address: "0xd111d479e23A8342A81ad595Ea1CAF229B3528c3",
@@ -37,6 +38,7 @@ window.__RUNTIME_CONFIG__ = {
         rpcUrl: "wss://rpc.testnet.cere.network:9945",
         type: "Substrate",
         nativeTokenSymbol: "CERE",
+        availableAsHomeNetwork: false,
         chainbridgePalletName: "chainBridge",
         bridgeFeeValue: 0,
         transferPalletName: "erc20",
@@ -63,6 +65,7 @@ window.__RUNTIME_CONFIG__ = {
         erc20HandlerAddress: "0x92c1576845703089CF6c0788379ED81f75F45dd5",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
+        availableAsHomeNetwork: true,
         tokens: [
           {
             address: "0x0b10e304088b2BA2B2acfD2f72573FAaD31a13A5",
