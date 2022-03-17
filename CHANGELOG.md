@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.10.0
+
+- Fixed responsiveness for mobile devices
+
 ## v0.9.0
 
 - Added Polygon to titles

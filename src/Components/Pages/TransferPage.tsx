@@ -54,7 +54,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       padding: constants.generalUnit * 2.5,
       position: "relative",
       backgroundColor: "white",
-      minWidth: 460,
+      minWidth: 400,
+      ["@media only screen and (max-width: 360px)"]: {
+        minWidth: 320,
+      },
     },
     wrapper: {
       position: "relative",
@@ -76,6 +79,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       lineHeight: `${constants.generalUnit * 3}px`,
       color: "black",
       paddingLeft: 12,
+      ["@media only screen and (max-width: 360px)"]: {
+        fontSize: 24,
+      },
     },
     selectArea: {
       padding: `${constants.generalUnit * 2.5}px ${
@@ -85,6 +91,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: "column",
       justifyContent: "flex-start",
       alignItems: "center",
+      ["@media only screen and (max-width: 360px)"]: {
+        width: 320,
+      },
     },
     walletLogo: {
       width: constants.generalUnit * 50,
@@ -107,6 +116,9 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       color: "black",
       textAlign: "center",
       paddingBottom: constants.generalUnit * 3.75,
+      ["@media (max-width: 350px)"]: {
+        fontSize: 20,
+      },
     },
     walletArea: {
       display: "flex",
