@@ -2,7 +2,7 @@
 
 ## vNext
 
-- ...
+- Fixed responsiveness for mobile devices
 
 ## v0.9.0
 

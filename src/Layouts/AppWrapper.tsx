@@ -53,10 +53,10 @@ const useStyles = makeStyles(
       },
       pageArea: {
         height: "100%",
-        overflow: "hidden",
+        overflow: "auto",
         boxShadow: "20px 4px 72px rgba(85, 85, 85, 0.15)",
         borderRadius: 4,
-        maxWidth: 460,
+        width: "fit-content",
       },
       navTabs: {
         // position: "absolute",
