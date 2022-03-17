@@ -65,7 +65,10 @@ const NetworkUnsupportedModal = () => {
 
   const [open, setOpen] = useState(false);
   const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
-  const ethereumNetworkIds = [1, 5];
+  const ethereumNetworkIds = [1, 5, 137, 80001];
+  const [supportedEthereumNetworks, setSupportedEthereumNetworks] = useState<
+    string
+  >("");
 
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
@@ -75,6 +78,18 @@ const NetworkUnsupportedModal = () => {
           .filter((bc) => bc.networkId !== undefined)
           .map((bc) => Number(bc.networkId))
       );
+      let hasOneEthereumNetwork = false;
+      let ethereumNetworks = "";
+      for (let i = 0; i < supportedNetworks.length; i++) {
+        if (ethereumNetworkIds.includes(supportedNetworks[i])) {
+          if (hasOneEthereumNetwork) {
+            ethereumNetworks += ", ";
+          }
+          ethereumNetworks += getNetworkName(supportedNetworks[i]);
+          hasOneEthereumNetwork = true;
+        }
+      }
+      setSupportedEthereumNetworks(ethereumNetworks);
     } else {
       setOpen(false);
       setSupportedNetworks([]);
@@ -98,18 +113,12 @@ const NetworkUnsupportedModal = () => {
         </Typography>
         <Typography component="p" variant="body1">
           This app does not currently support transfers on{" "}
-          {getNetworkName(networkId)}. Please change networks from within your
+          {getNetworkName(networkId)}. Please, change network from within your
           browser wallet.
         </Typography>
         <br />
         <Typography component="p" variant="body1">
-          Please change to{" "}
-          {supportedNetworks.map((i) => {
-            if (ethereumNetworkIds.includes(i)) {
-              return `${getNetworkName(i)}`;
-            }
-          })}{" "}
-          network.
+          Please change to {supportedEthereumNetworks} network(s).
         </Typography>
       </section>
     </CustomModal>
