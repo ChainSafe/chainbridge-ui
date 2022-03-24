@@ -7,6 +7,7 @@ import {
   refreshGasPrice,
   signMessage,
   checkIsReady,
+  getNetworkInfo
 } from "../../utils/localNetworksHelpers";
 import { Erc20Detailed } from "../../Contracts/Erc20Detailed";
 import { localWeb3ContextReducer } from "./localWeb3Reducer";
@@ -41,19 +42,8 @@ const LocalProvider = ({
   const [balance, setBalance] = useState<number>()
 
   useEffect(() => {
-
-    async function getNetworkInfo() {
-      const signer = externalProvider.getSigner();
-      const accountAddress = await signer.getAddress()
-      console.log("Account:", accountAddress);
-      const balance = await externalProvider.getBalance(accountAddress)
-      setBalance( Number(ethers.utils.formatEther(balance)))
-      setExternalAddress(accountAddress)
-      const externalNetworkInfo = await externalProvider.getNetwork()
-      setENetwork(externalNetworkInfo)
-    }
     if (externalProvider) {
-      getNetworkInfo()
+      getNetworkInfo(externalProvider, setBalance, setExternalAddress, setENetwork)
     }
   }, [externalProvider])
 

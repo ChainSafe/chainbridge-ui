@@ -391,3 +391,19 @@ export const signMessage = async (
   ]);
   return sig;
 };
+
+export async function getNetworkInfo(
+  externalProvider: providers.Web3Provider,
+  setBalance: React.Dispatch<React.SetStateAction<number | undefined>>,
+  setExternalAddress: React.Dispatch<React.SetStateAction<string | undefined>>,
+  setENetwork:  React.Dispatch<React.SetStateAction<ethers.providers.Network | undefined>>
+) {
+  const signer = externalProvider.getSigner();
+  const accountAddress = await signer.getAddress();
+  console.log("Account:", accountAddress);
+  const balance = await externalProvider.getBalance(accountAddress);
+  setBalance(Number(ethers.utils.formatEther(balance)));
+  setExternalAddress(accountAddress);
+  const externalNetworkInfo = await externalProvider.getNetwork();
+  setENetwork(externalNetworkInfo);
+}
