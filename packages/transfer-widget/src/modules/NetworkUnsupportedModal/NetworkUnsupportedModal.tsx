@@ -16,7 +16,7 @@ import { useStyles } from "./styles";
 const NetworkUnsupportedModal = () => {
   const classes = useStyles();
   const { homeChainConfig } = useNetworkManager();
-  const { getNetworkName, wrapTokenConfig, isReady, networkId } =
+  const { getNetworkName, isReady, networkId } =
     useHomeBridge();
   const pathname = '/transfer';
 
@@ -35,7 +35,7 @@ const NetworkUnsupportedModal = () => {
       setOpen(false);
       setSupportedNetworks([]);
     }
-  }, [pathname, setOpen, homeChainConfig, isReady, wrapTokenConfig]);
+  }, [pathname, setOpen, homeChainConfig, isReady]);
 
   return (
     <CustomModal

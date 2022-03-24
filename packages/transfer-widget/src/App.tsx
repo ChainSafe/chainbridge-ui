@@ -16,7 +16,8 @@ import {
   LocalProvider,
   chainbridgeConfig
 } from "@chainsafe/chainbridge-ui-core";
-import { utils } from "ethers";
+import { utils, ethers } from "ethers";
+
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -29,8 +30,10 @@ if (
   });
 }
 
-const AppWrapper: React.FC<{ config?: any }> = (props) => {
+const AppWrapper: React.FC<{ config?: any, useExternalProvider?: any, externalProviderSource?: any }> = (props) => {
   const [isReady, setIsReady] = useState(false);
+
+  const externalProvider = props.externalProviderSource ? new ethers.providers.Web3Provider(props.externalProviderSource, "any") : undefined
   useEffect(() => {
     if (!window.__RUNTIME_CONFIG__) {
       // @ts-ignore
@@ -41,7 +44,7 @@ const AppWrapper: React.FC<{ config?: any }> = (props) => {
   return (
     <>
       {isReady ? (
-        <App />
+        <App externalProvider={externalProvider} useExternalProvider={props.useExternalProvider} />
       ) : (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
@@ -51,7 +54,7 @@ const AppWrapper: React.FC<{ config?: any }> = (props) => {
   );
 };
 
-const App: React.FC<{}> = () => {
+const App: React.FC<{externalProvider?: any, useExternalProvider?: any}> = ({externalProvider, useExternalProvider}) => {
   const {
     __RUNTIME_CONFIG__: {
       UI: { wrapTokenPage = false } = {},
@@ -95,6 +98,8 @@ const App: React.FC<{}> = () => {
       <ThemeSwitcher themes={{ light: lightTheme }}>
         <CssBaseline />
         <LocalProvider
+          useExternalProvider={useExternalProvider}
+          externalProvider={externalProvider}
           networkIds={[5]}
           checkNetwork={false}
           tokensToWatch={tokens}
@@ -110,7 +115,7 @@ const App: React.FC<{}> = () => {
             },
           }}
         >
-          <NetworkManagerProvider>
+          <NetworkManagerProvider predefinedWalletType={externalProvider ? 'Ethereum' : undefined}>
             <ChainbridgeProvider chains={chains}>
               <TransferPage />
             </ChainbridgeProvider>
@@ -120,5 +125,6 @@ const App: React.FC<{}> = () => {
     </ErrorBoundary>
   );
 };
+
 
 export default AppWrapper;

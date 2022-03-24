@@ -1,10 +1,13 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
+import {ethers} from "ethers";
 import {
   getTokenData,
+  getTokenDataDirect,
   resetOnboard,
   refreshGasPrice,
   signMessage,
   checkIsReady,
+  getNetworkInfo
 } from "../../utils/localNetworksHelpers";
 import { Erc20Detailed } from "../../Contracts/Erc20Detailed";
 import { localWeb3ContextReducer } from "./localWeb3Reducer";
@@ -21,6 +24,8 @@ const LocalProviderContext = React.createContext<LocalWeb3Context | undefined>(
 
 const LocalProvider = ({
   children,
+  externalProvider,
+  useExternalProvider,
   tokensToWatch,
   onboardConfig,
   cacheWalletSelection = true,
@@ -31,6 +36,37 @@ const LocalProvider = ({
   const [state, dispatcher] = useReducer(localWeb3ContextReducer, {
     savedWallet: ""
   } as any);
+
+  const [eNetwork, setENetwork] = useState<ethers.providers.Network>()
+  const [externalAddress, setExternalAddress] = useState<string>()
+  const [balance, setBalance] = useState<number>()
+
+  useEffect(() => {
+    if (externalProvider) {
+      getNetworkInfo(externalProvider, setBalance, setExternalAddress, setENetwork)
+    }
+  }, [externalProvider])
+
+  useEffect(() => {
+    if (useExternalProvider) {
+      const networkTokens =
+      (tokensToWatch && eNetwork && tokensToWatch[eNetwork.chainId]) || [];
+
+      let tokenContracts: Array<Erc20Detailed> = [];
+      if (externalProvider && externalAddress && networkTokens.length > 0) {
+        getTokenDataDirect(networkTokens, dispatcher, externalAddress, externalProvider, spenderAddress);
+      }
+      return () => {
+        if (tokenContracts.length > 0) {
+          tokenContracts.forEach((tc) => {
+            tc.removeAllListeners();
+          });
+          tokenContracts = [];
+          dispatcher({ type: "resetTokens" });
+        }
+      };
+    }
+  }, [eNetwork, externalAddress, externalProvider]);
 
   useEffect(() => {
     const networkTokens =
@@ -49,7 +85,7 @@ const LocalProvider = ({
         dispatcher({ type: "resetTokens" });
       }
     };
-  }, [state.network, state.provider, state.address]);
+  }, [state.network, state.provider, state.address, externalProvider]);
 
   const {
     address,
@@ -66,24 +102,46 @@ const LocalProvider = ({
   }: LocalWeb3State = state;
 
   // CUSTOM HOOK FOR INITIALIZING ONBOARD
-  useOnboard(
-    networkIds,
-    checkNetwork,
-    dispatcher,
-    onboardConfig,
-    cacheWalletSelection,
-    checkIsReady,
-  );
-
   let onboardState;
-  if (onboard !== undefined && "getState" in onboard) {
-    onboardState = onboard?.getState();
-  }
 
+    useOnboard(
+      networkIds,
+      checkNetwork,
+      dispatcher,
+      onboardConfig,
+      cacheWalletSelection,
+      checkIsReady,
+      externalProvider,
+      useExternalProvider
+    );
+
+    if (!useExternalProvider && onboard !== undefined && "getState" in onboard) {
+      onboardState = onboard?.getState();
+    }
 
   return (
     <LocalProviderContext.Provider
-      value={{
+      value={useExternalProvider ? {
+        address: externalAddress,
+        ethBalance: balance,
+        isReady: true,
+        network: eNetwork?.chainId,
+        onboard: onboard,
+        provider: externalProvider,
+        savedWallet: "",
+        tokens: tokens,
+        wallet: undefined,
+
+        gasPrice,
+        isMobile: false,
+        walletConnectReady: false,
+
+        resetOnboard,
+        refreshGasPrice,
+        signMessage,
+        checkIsReady,
+        dispatcher,
+      } : {
         address,
         provider,
         network,
@@ -106,7 +164,7 @@ const LocalProvider = ({
       {children}
     </LocalProviderContext.Provider>
   );
-};
+}
 
 const useWeb3 = () => {
   const context = React.useContext(LocalProviderContext);

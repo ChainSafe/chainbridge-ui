@@ -70,20 +70,13 @@ export default function HomeNetworkConnectView({
             <section className={classes.connected}>
               <div>
                 <Typography variant="body1" className={classes.changeButton}>Home network</Typography>
-                <Typography
-                  className={classes.changeButton}
-                  variant="body1"
-                  onClick={() => setChangeNetworkOpen(true)}
-                >
-                  Change
-                </Typography>
               </div>
               <Typography
                 component="h5"
                 variant="h5"
                 className={classes.networkName}
               >
-                {homeConfig?.name}
+                {homeConfig?.name ?? 'Connect the wallet'}
               </Typography>
             </section>
           ))}
