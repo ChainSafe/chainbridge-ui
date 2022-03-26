@@ -1,5 +1,5 @@
-import React, { useEffect, useReducer, useState } from "react";
-import {ethers} from "ethers";
+import React, { useState, useEffect, useReducer } from "react";
+import ethers from "ethers";
 import {
   getTokenData,
   getTokenDataDirect,
@@ -7,7 +7,6 @@ import {
   refreshGasPrice,
   signMessage,
   checkIsReady,
-  getNetworkInfo
 } from "../../utils/localNetworksHelpers";
 import { Erc20Detailed } from "../../Contracts/Erc20Detailed";
 import { localWeb3ContextReducer } from "./localWeb3Reducer";
@@ -16,7 +15,13 @@ import {
   LocalWeb3ContextProps,
   LocalWeb3State,
 } from "./types";
-import { useOnboard } from "./customHook";
+// import { hooks, connector } from './connectors/metaMask'
+// import { useSafeAppConnection, SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react';
+
+import { hooks, connector } from './connectors/walletConnect'
+
+// import { useOnboard } from "./customHook";
+
 
 const LocalProviderContext = React.createContext<LocalWeb3Context | undefined>(
   undefined
@@ -24,7 +29,7 @@ const LocalProviderContext = React.createContext<LocalWeb3Context | undefined>(
 
 const LocalProvider = ({
   children,
-  externalProvider,
+  // externalProvider,
   useExternalProvider,
   tokensToWatch,
   onboardConfig,
@@ -33,48 +38,67 @@ const LocalProvider = ({
   checkNetwork = (networkIds && networkIds.length > 0) || false,
   spenderAddress,
 }: LocalWeb3ContextProps) => {
+  const { useChainId, useAccounts, useError, useIsActivating, useIsActive, useProvider, useENSNames } = hooks
+
   const [state, dispatcher] = useReducer(localWeb3ContextReducer, {
     savedWallet: ""
   } as any);
 
-  const [eNetwork, setENetwork] = useState<ethers.providers.Network>()
+  // const [eNetwork, setENetwork] = useState<ethers.providers.Network>()
   const [externalAddress, setExternalAddress] = useState<string>()
   const [balance, setBalance] = useState<number>()
 
-  useEffect(() => {
-    if (externalProvider) {
-      getNetworkInfo(externalProvider, setBalance, setExternalAddress, setENetwork)
-    }
-  }, [externalProvider])
+  const externalProvider = useProvider()
+  const accounts = useAccounts()
+  const chainId = useChainId()
+  const isActive = useIsActive()
+
+
 
   useEffect(() => {
-    if (useExternalProvider) {
-      const networkTokens =
-      (tokensToWatch && eNetwork && tokensToWatch[eNetwork.chainId]) || [];
 
-      let tokenContracts: Array<Erc20Detailed> = [];
-      if (externalProvider && externalAddress && networkTokens.length > 0) {
-        getTokenDataDirect(networkTokens, dispatcher, externalAddress, externalProvider, spenderAddress);
+    async function getNetworkInfo() {
+      // const signer = externalProvider.getSigner();
+      if (externalProvider && accounts?.length) {
+        const accountAddress = accounts ? accounts[0] : ''
+        console.log("Account:", accountAddress);
+        const balance = await externalProvider.getBalance(accountAddress)
+        setBalance( Number(ethers.utils.formatEther(balance)))
       }
-      return () => {
-        if (tokenContracts.length > 0) {
-          tokenContracts.forEach((tc) => {
-            tc.removeAllListeners();
-          });
-          tokenContracts = [];
-          dispatcher({ type: "resetTokens" });
-        }
-      };
     }
-  }, [eNetwork, externalAddress, externalProvider]);
+    if (externalProvider) {
+      getNetworkInfo()
+      setExternalAddress(accounts ? accounts[0] : '')
+    }
+  }, [externalProvider, accounts])
+
+  useEffect(() => {
+    void connector.connectEagerly()
+    // setTimeout(async () =>{
+    //     void connector.activate()
+    // }, 3000)
+    // void gnosis.activate()
+
+    // const triedToConnectToSafe = useSafeAppConnection(safeMultisigConnector);
+    // connector.isSafeApp().then((loadedInSafe) => {
+    // //   if (loadedInSafe) {
+    // //     // On success active flag will change and in that case we'll set tried to true, check the hook below
+    // //     activate(connector, undefined, true).catch(() => {
+    // //       setTried(true);
+    // //     });
+    // //   } else {
+    // //     setTried(true);
+    // //   }
+    // });
+  }, [])
 
   useEffect(() => {
     const networkTokens =
-      (tokensToWatch && state.network && tokensToWatch[network]) || [];
+    (tokensToWatch && chainId && tokensToWatch[chainId]) || [];
 
     let tokenContracts: Array<Erc20Detailed> = [];
-    if (state.provider && state.address && networkTokens.length > 0) {
-      getTokenData(networkTokens, dispatcher, state, spenderAddress);
+    if (externalProvider && externalAddress && networkTokens.length > 0) {
+      getTokenDataDirect(networkTokens, dispatcher, externalAddress, externalProvider, spenderAddress);
     }
     return () => {
       if (tokenContracts.length > 0) {
@@ -85,8 +109,9 @@ const LocalProvider = ({
         dispatcher({ type: "resetTokens" });
       }
     };
-  }, [state.network, state.provider, state.address, externalProvider]);
+  }, [externalProvider, accounts, externalAddress]);
 
+  // get state from reducer
   const {
     address,
     provider,
@@ -101,38 +126,20 @@ const LocalProvider = ({
     savedWallet
   }: LocalWeb3State = state;
 
-  // CUSTOM HOOK FOR INITIALIZING ONBOARD
-  let onboardState;
-
-    useOnboard(
-      networkIds,
-      checkNetwork,
-      dispatcher,
-      onboardConfig,
-      cacheWalletSelection,
-      checkIsReady,
-      externalProvider,
-      useExternalProvider
-    );
-
-    if (!useExternalProvider && onboard !== undefined && "getState" in onboard) {
-      onboardState = onboard?.getState();
-    }
-
   return (
     <LocalProviderContext.Provider
-      value={useExternalProvider ? {
+      value={{
         address: externalAddress,
         ethBalance: balance,
-        isReady: true,
-        network: eNetwork?.chainId,
+        isReady: isActive,
+        network: chainId,
         onboard: onboard,
         provider: externalProvider,
         savedWallet: "",
         tokens: tokens,
         wallet: undefined,
 
-        gasPrice,
+        gasPrice: 0,
         isMobile: false,
         walletConnectReady: false,
 
@@ -141,24 +148,6 @@ const LocalProvider = ({
         signMessage,
         checkIsReady,
         dispatcher,
-      } : {
-        address,
-        provider,
-        network,
-        wallet,
-        onboard,
-        ethBalance,
-        tokens,
-        resetOnboard,
-        isReady,
-        checkIsReady,
-        gasPrice,
-        isMobile: !!onboardState?.mobileDevice,
-        signMessage,
-        refreshGasPrice,
-        dispatcher,
-        walletConnectReady,
-        savedWallet
       }}
     >
       {children}
