@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.10.2
+
+- Enabled Cere -> Polygon
+
 ## v0.10.1
 
 - Use Cere archive instead of full node rpc
