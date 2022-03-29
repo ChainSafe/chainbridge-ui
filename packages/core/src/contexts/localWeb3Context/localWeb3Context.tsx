@@ -10,7 +10,7 @@ import {
   getNetworkInfo
 } from "../../utils/localNetworksHelpers";
 import { Erc20Detailed } from "../../Contracts/Erc20Detailed";
-import { localWeb3ContextReducer } from "./localWeb3Reducer";
+import { localWeb3ContextReducer } from "../../reducers/web3Reducers";
 import {
   LocalWeb3Context,
   LocalWeb3ContextProps,
