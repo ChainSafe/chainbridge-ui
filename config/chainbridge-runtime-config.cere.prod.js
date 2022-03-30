@@ -16,6 +16,8 @@ window.__RUNTIME_CONFIG__ = {
           "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
+        defaultGasPrice: 800,
+        defaultGasPriceIncreaseInPercents: 10,
         availableAsHomeNetwork: true,
         tokens: [
           {
@@ -65,6 +67,7 @@ window.__RUNTIME_CONFIG__ = {
         rpcUrl: "https://mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
+        defaultGasPrice: 400,
         availableAsHomeNetwork: true,
         tokens: [
           {

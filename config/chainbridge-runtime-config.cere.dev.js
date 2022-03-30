@@ -16,6 +16,8 @@ window.__RUNTIME_CONFIG__ = {
           "https://polygon-mumbai.infura.io/v3/178b87e860404572bc217ca53fe594bd",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
+        defaultGasPrice: 800,
+        defaultGasPriceIncreaseInPercents: 10,
         availableAsHomeNetwork: true,
         tokens: [
           {
@@ -65,6 +67,7 @@ window.__RUNTIME_CONFIG__ = {
         erc20HandlerAddress: "0xf934Bfc8B5241b6C9e0DfC9A329AD687e79c5498",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
+        defaultGasPrice: 400,
         availableAsHomeNetwork: true,
         tokens: [
           {
