@@ -133,15 +133,24 @@ export async function getPriceCompatibility(
           9
         )
       ).toString();
+      console.log(
+        `No fee data. gasPriceCompatibility is ${gasPriceCompatibility}`
+      );
     } else {
       gasPriceCompatibility = BigNumber.from(feeData.gasPrice);
       const increaseByPercents =
         (homeChainConfig as EvmBridgeConfig)
           .defaultGasPriceIncreaseInPercents || 0;
+      console.log(
+        `Has fee data. gasPriceCompatibility is ${gasPriceCompatibility}`
+      );
       if (increaseByPercents > 0) {
         gasPriceCompatibility = gasPriceCompatibility
           .add(gasPriceCompatibility.div(increaseByPercents))
           .toString();
+        console.log(
+          `Increased. gasPriceCompatibility is ${gasPriceCompatibility}`
+        );
       }
     }
   }
