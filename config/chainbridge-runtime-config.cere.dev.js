@@ -17,6 +17,7 @@ window.__RUNTIME_CONFIG__ = {
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
         defaultGasPrice: 800,
+        gasPriceSuggestionEnabled: true,
         defaultGasPriceIncreaseInPercents: 10,
         availableAsHomeNetwork: true,
         tokens: [
