@@ -7,13 +7,13 @@ window.__RUNTIME_CONFIG__ = {
     chains: [
       {
         chainId: 2,
-        networkId: 80001,
-        name: "Polygon Mumbai",
+        networkId: 137,
+        name: "Polygon Mainnet",
         decimals: cereTokenDecimals,
-        bridgeAddress: "0xBDc040b15561CFC9ED1Ce049DE8bEAbf0b520b33",
-        erc20HandlerAddress: "0x8Ee8876d13e79b846fb6c3e5Ffe226a2e111387a",
+        bridgeAddress: "0xCaF65AB2eC9B39403966991eb34B1e8B9E44C041",
+        erc20HandlerAddress: "0x8fe028Eb002bbc3ec45c5dF8acfFf67eC95B6f88",
         rpcUrl:
-          "https://polygon-mumbai.infura.io/v3/178b87e860404572bc217ca53fe594bd",
+          "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
         defaultGasPrice: 800,
@@ -22,7 +22,7 @@ window.__RUNTIME_CONFIG__ = {
         availableAsHomeNetwork: true,
         tokens: [
           {
-            address: "0xd111d479e23A8342A81ad595Ea1CAF229B3528c3",
+            address: "0x2da719db753dfa10a62e140f436e1d67f2ddb0d6",
             name: cereTokenName,
             symbol: cereTokenSymbol,
             imageUri: "CEREIcon",
@@ -36,9 +36,9 @@ window.__RUNTIME_CONFIG__ = {
       {
         chainId: 1,
         networkId: 2,
-        name: "Cere Testnet",
+        name: "Cere Mainnet",
         decimals: cereTokenDecimals,
-        rpcUrl: "wss://rpc.testnet.cere.network:9945",
+        rpcUrl: "wss://archive.mainnet.cere.network:9945",
         type: "Substrate",
         nativeTokenSymbol: "CERE",
         availableAsHomeNetwork: true,
@@ -60,19 +60,19 @@ window.__RUNTIME_CONFIG__ = {
       },
       {
         chainId: 0,
-        networkId: 5,
-        name: "Ethereum Goerli",
+        networkId: 1,
+        name: "Ethereum Mainnet",
         decimals: cereTokenDecimals,
-        rpcUrl: "https://goerli.infura.io/v3/0aca1499facc499bb195d2d437f78603",
-        bridgeAddress: "0x4E297d17A3d945Ed96dBbD205317501e92d8D6E8",
-        erc20HandlerAddress: "0x92c1576845703089CF6c0788379ED81f75F45dd5",
+        bridgeAddress: "0xCaF65AB2eC9B39403966991eb34B1e8B9E44C041",
+        erc20HandlerAddress: "0x8fe028Eb002bbc3ec45c5dF8acfFf67eC95B6f88",
+        rpcUrl: "https://mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
         defaultGasPrice: 400,
         availableAsHomeNetwork: true,
         tokens: [
           {
-            address: "0x0b10e304088b2BA2B2acfD2f72573FAaD31a13A5",
+            address: "0x2da719db753dfa10a62e140f436e1d67f2ddb0d6",
             name: cereTokenName,
             symbol: cereTokenSymbol,
             imageUri: "CEREIcon",
