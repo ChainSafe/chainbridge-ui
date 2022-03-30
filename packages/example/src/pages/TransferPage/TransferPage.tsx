@@ -10,6 +10,7 @@ import {
   useChainbridge,
   useHomeBridge,
   useNetworkManager,
+  useWeb3
 } from "@chainsafe/chainbridge-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
@@ -31,6 +32,7 @@ import {
 } from "../../components";
 
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
+import ConnectionDialog from "./ConnectionDialog";
 
 import makeValidationSchema from "./makeValidationSchema";
 
@@ -44,6 +46,8 @@ export type PreflightDetails = {
 const TransferPage = () => {
   const classes = useStyles();
   const { walletType, setWalletType } = useNetworkManager();
+
+  const { dispatcher } = useWeb3();
 
   const {
     deposit,
@@ -124,6 +128,7 @@ const TransferPage = () => {
         setWalletType={setWalletType}
         setChangeNetworkOpen={setChangeNetworkOpen}
         selectAccount={selectAccount}
+        dispatcher={dispatcher}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
@@ -140,27 +145,26 @@ const TransferPage = () => {
         </section>
         <section className={classes.currencySection}>
           <section>
-            <TokenSelectInput
-              control={control}
-              rules={{ required: true }}
-              tokens={tokens}
-              name="token"
-              disabled={!destinationChainConfig || formState.isSubmitting}
-              label={`Balance: `}
-              className={classes.generalInput}
-              sync={(tokenAddress) => {
-                setPreflightDetails({
-                  ...preflightDetails,
-                  token: tokenAddress,
-                  receiver: "",
-                  tokenAmount: 0,
-                  tokenSymbol: "",
-                });
-              }}
-              setValue={setValue}
-              options={
-                (tokens !== undefined &&
-                  Object.keys(tokens).map((t) => ({
+              <TokenSelectInput
+                control={control}
+                rules={{ required: true }}
+                tokens={tokens ?? []}
+                name="token"
+                disabled={!destinationChainConfig || formState.isSubmitting}
+                label={`Balance: `}
+                className={classes.generalInput}
+                sync={(tokenAddress) => {
+                  setPreflightDetails({
+                    ...preflightDetails,
+                    token: tokenAddress,
+                    receiver: "",
+                    tokenAmount: 0,
+                    tokenSymbol: "",
+                  });
+                }}
+                setValue={setValue}
+                options={
+                  tokens ? Object.keys(tokens).map((t) => ({
                     value: t,
                     label: (
                       <div className={classes.tokenItem}>
@@ -173,10 +177,9 @@ const TransferPage = () => {
                         <span>{tokens[t]?.symbol || t}</span>
                       </div>
                     ),
-                  }))) ||
-                []
-              }
-            />
+                  })) : []
+                }
+              />
           </section>
           <section>
             <div>
@@ -215,7 +218,7 @@ const TransferPage = () => {
             control={control}
           />
         </section>
-        <Fees
+        {/* <Fees
           amountFormikName="tokenAmount"
           className={classes.fees}
           fee={bridgeFee}
@@ -226,7 +229,7 @@ const TransferPage = () => {
               : undefined
           }
           amount={watchAmount}
-        />
+        /> */}
         <section>
           <Button
             disabled={!destinationChainConfig || formState.isSubmitting}
@@ -278,7 +281,7 @@ const TransferPage = () => {
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
       {/* This is here due to requiring router */}
-      <NetworkUnsupportedModal />
+      {/* <NetworkUnsupportedModal /> */}
       <NetworkSelectModal />
     </div>
   );

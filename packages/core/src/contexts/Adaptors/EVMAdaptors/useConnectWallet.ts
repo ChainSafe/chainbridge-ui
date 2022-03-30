@@ -26,6 +26,8 @@ export function useConnectWallet(
   network?: number,
   savedWallet?: string
 ) {
+  // console.log("🚀 ~ file: useConnectWallet.ts ~ line 25 ~ homeChainConfig", homeChainConfig)
+
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -37,25 +39,28 @@ export function useConnectWallet(
   );
 
   useEffect(() => {
-    if (initialising || homeBridge || !onboard) return;
+    if (initialising || homeBridge) return;
     console.log("starting init");
-    setInitialising(true);
+    // setInitialising(true);
     if (!walletSelected) {
-      onboard
-        .walletSelect(savedWallet)
-        .then((success) => {
+      // onboard
+      //   .walletSelect(savedWallet)
+      //   .then((success) => {
           if (window.ethereum) {
             window.ethereum.on("chainChanged", (ch: any) => {
               window.location.reload();
             });
           }
 
-          setWalletSelected(success);
-          if (success) {
-            checkIsReady(onboard, dispatcher)
-              .then((success) => {
-                if (success) {
+          // setWalletSelected(success);
+          // if (success) {
+            // checkIsReady(onboard, dispatcher)
+            //   .then((success) => {
+                // if (success) {
+                  // console.log(homeChainConfig, network, isReady, provider)
+
                   if (homeChainConfig && network && isReady && provider) {
+                    // console.log('GO')
                     const signer = provider.getSigner();
                     if (!signer) {
                       console.log("No signer");
@@ -84,25 +89,26 @@ export function useConnectWallet(
                       );
                       setWrapper(connectedWeth);
                     }
+                    setInitialising(false);
                   }
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              })
-              .finally(() => {
-                setInitialising(false);
-              });
-          }
-        })
-        .catch((error) => {
-          setInitialising(false);
-          console.error(error);
-        });
+                // }
+              // })
+              // .catch((error) => {
+              //   console.error(error);
+              // })
+              // .finally(() => {
+              //   setInitialising(false);
+              // });
+          // }
+        // })
+        // .catch((error) => {
+        //   setInitialising(false);
+        //   console.error(error);
+        // });
     } else {
-      checkIsReady(onboard, dispatcher)
-        .then((success) => {
-          if (success) {
+      // checkIsReady(onboard, dispatcher)
+      //   .then((success) => {
+          // if (success) {
             if (homeChainConfig && network && isReady && provider) {
               const signer = provider.getSigner();
               if (!signer) {
@@ -133,14 +139,14 @@ export function useConnectWallet(
                 setWrapper(connectedWeth);
               }
             }
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setInitialising(false);
-        });
+          // }
+        // })
+        // .catch((error) => {
+        //   console.error(error);
+        // })
+        // .finally(() => {
+        //   setInitialising(false);
+        // });
     }
   }, [
     initialising,
@@ -153,6 +159,7 @@ export function useConnectWallet(
     onboard,
     walletSelected,
   ]);
+  // console.log("🚀 ~ file: useConnectWallet.ts ~ line 161 ~ homeBridge", homeBridge)
 
   return { homeBridge, wrapper, wrapTokenConfig };
 }
