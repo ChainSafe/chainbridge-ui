@@ -34,6 +34,7 @@ export type EvmBridgeConfig = BridgeConfig & {
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
   blockExplorer?: string;
   defaultGasPrice?: number;
+  gasPriceSuggestionEnabled?: boolean;
   defaultGasPriceIncreaseInPercents?: number;
   deployedBlockNumber?: number;
 };

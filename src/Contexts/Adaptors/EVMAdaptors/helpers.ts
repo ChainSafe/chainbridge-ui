@@ -136,7 +136,7 @@ export async function getPriceCompatibility(
       console.log(
         `No fee data. gasPriceCompatibility is ${gasPriceCompatibility}`
       );
-    } else {
+    } else if ((homeChainConfig as EvmBridgeConfig).gasPriceSuggestionEnabled) {
       gasPriceCompatibility = BigNumber.from(feeData.gasPrice);
       const increaseByPercents =
         (homeChainConfig as EvmBridgeConfig)
