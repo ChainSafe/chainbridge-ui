@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.10.3
+
+- Added gas price suggestion for Polygon
+
 ## v0.10.2
 
 - Enabled Cere -> Polygon
