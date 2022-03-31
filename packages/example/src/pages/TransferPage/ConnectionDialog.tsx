@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -54,12 +54,13 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 export default function ConnectionDialog({
   dispatcher,
   open,
-  handleClose
+  handleClose,
 }: {
   dispatcher: any;
   open: boolean;
   handleClose: any;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   // const [open, setOpen] = React.useState(false);
 
   // const handleClickOpen = () => {
@@ -71,7 +72,6 @@ export default function ConnectionDialog({
   return (
     <div>
       <BootstrapDialog
-
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -82,12 +82,22 @@ export default function ConnectionDialog({
         >
           Connect to a wallet
         </BootstrapDialogTitle>
-        <DialogContent dividers sx={{width: 300}}>
+        <DialogContent dividers sx={{ width: 300 }}>
           <Typography gutterBottom>
-            <ConnectToMetamask dispatcher={dispatcher} handleClose={handleClose} />
+            <ConnectToMetamask
+              dispatcher={dispatcher}
+              handleClose={handleClose}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
           </Typography>
           <Typography gutterBottom>
-            <ConnectToWalletConnect dispatcher={dispatcher} handleClose={handleClose} />
+            <ConnectToWalletConnect
+              dispatcher={dispatcher}
+              handleClose={handleClose}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
           </Typography>
         </DialogContent>
       </BootstrapDialog>

@@ -2,20 +2,24 @@ import React, { useEffect } from "react";
 import { initializeConnector } from "@web3-react/core";
 import { WalletConnect } from "@web3-react/walletconnect";
 import { Typography, Button } from "@mui/material";
+import { WalletconnectIcon } from "@fusion-icons/react/web3";
+
+function convertToWc() {
+  const result = window.__RUNTIME_CONFIG__.CHAINBRIDGE.chains.map((chain) => [
+    chain.networkId!,
+    chain.rpcUrl,
+  ]);
+  return Object.fromEntries(result);
+}
+convertToWc();
 
 export const [walletConnect, hooks] = initializeConnector<WalletConnect>(
   (actions) =>
     new WalletConnect(actions, {
-      rpc: {
-        4: [
-          "https://eth-rinkeby.alchemyapi.io/v2/Pgb6UvWBwyYNRyn1_19HqhSpbRtK-74W",
-        ],
-        5: [
-          "https://eth-goerli.alchemyapi.io/v2/9jcoyKYv-uf2VMIALqA_ul6qBT5sXMJh",
-        ],
-      },
+      rpc: convertToWc(),
     })
 );
+
 const {
   useChainId,
   useAccounts,
@@ -30,9 +34,13 @@ const {
 const ConnectToWallet = ({
   dispatcher,
   handleClose,
+  isLoading,
+  setIsLoading,
 }: {
   dispatcher: any;
   handleClose: any;
+  isLoading: boolean;
+  setIsLoading: any;
 }) => {
   const chainId = useChainId();
   const accounts = useAccounts();
@@ -42,6 +50,10 @@ const ConnectToWallet = ({
   const provider = useProvider();
 
   const isActive = useIsActive();
+
+  useEffect(() => {
+    setIsLoading(isActivating);
+  }, [isActivating]);
 
   useEffect(() => {
     if (isActive) {
@@ -61,14 +73,24 @@ const ConnectToWallet = ({
 
   return (
     <Button
+      size="large"
+      endIcon={
+        <WalletconnectIcon
+          width="32"
+          height="32"
+          strokeWidth="2"
+          stroke="#1976d2"
+        />
+      }
       fullWidth
       variant="outlined"
-      sx={{ textAlign: 'left'}}
+      sx={{ justifyContent: "space-between" }}
       onClick={() => {
         walletConnect.activate();
       }}
+      disabled={isLoading}
     >
-      walletConnect
+      WalletConnect
     </Button>
   );
 };

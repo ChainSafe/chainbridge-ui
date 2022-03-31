@@ -2696,6 +2696,11 @@
     "@ethersproject/properties" "^5.5.0"
     "@ethersproject/strings" "^5.5.0"
 
+"@fusion-icons/react@0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@fusion-icons/react/-/react-0.0.0.tgz#061c12b4edae01d823dd1dfea686effd86ef0098"
+  integrity sha512-UiQzPbuYlIeWlHPLYlJwG7gDcPzCwTSS4ZKN6/edy9aEhH3MuBDP3RjxNkaTSPCqhmawMbyoHZXZBFHyEQ22hQ==
+
 "@gar/promisify@^1.0.1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
