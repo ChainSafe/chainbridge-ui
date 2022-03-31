@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.10.4
+
+- Updated "STAKE ON CERE MAINNET" link
+
 ## v0.10.3
 
 - Added gas price suggestion for Polygon
