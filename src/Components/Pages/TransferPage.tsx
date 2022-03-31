@@ -775,7 +775,7 @@ const TransferPage = () => {
                 className={classes.footerText}
                 to={{
                   pathname:
-                    "https://explorer.cere.network/?rpc=wss%3A%2F%2Frpc.mainnet.cere.network%3A9945#/staking",
+                    "https://cere-network.medium.com/how-to-bridge-to-cere-mainnet-and-stake-e3ad3fe1a594",
                 }}
                 target="_blank"
               >
