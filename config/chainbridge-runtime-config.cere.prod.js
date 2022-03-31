@@ -16,6 +16,9 @@ window.__RUNTIME_CONFIG__ = {
           "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
+        defaultGasPrice: 800,
+        gasPriceSuggestionEnabled: true,
+        defaultGasPriceIncreaseInPercents: 10,
         availableAsHomeNetwork: true,
         tokens: [
           {
@@ -35,7 +38,7 @@ window.__RUNTIME_CONFIG__ = {
         networkId: 2,
         name: "Cere Mainnet",
         decimals: cereTokenDecimals,
-        rpcUrl: "wss://archive.mainnet.cere.network:9945",
+        rpcUrl: "wss://rpc.mainnet.cere.network:9945",
         type: "Substrate",
         nativeTokenSymbol: "CERE",
         availableAsHomeNetwork: true,
@@ -65,6 +68,7 @@ window.__RUNTIME_CONFIG__ = {
         rpcUrl: "https://mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
+        defaultGasPrice: 400,
         availableAsHomeNetwork: true,
         tokens: [
           {
