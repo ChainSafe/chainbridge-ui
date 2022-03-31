@@ -99,13 +99,13 @@ export async function hasTokenSupplies(
   }
 }
 
-export async function detectEIP1559MaxFeePerGas(
+export async function getEIP1559FeeData(
   provider: ethers.providers.Web3Provider
-): Promise<boolean> {
+): Promise<any> {
   try {
     const feeData = await provider.getFeeData();
     if (typeof feeData.maxFeePerGas !== "undefined") {
-      return true;
+      return feeData;
     }
   } catch (error) {
     console.warn(error);
@@ -113,7 +113,7 @@ export async function detectEIP1559MaxFeePerGas(
       "Can't access fee data for EIP-1559, fallback to legacy transaction"
     );
   }
-  return false;
+  return undefined;
 }
 
 export async function getPriceCompatibility(
@@ -123,8 +123,8 @@ export async function getPriceCompatibility(
 ) {
   let gasPriceCompatibility = undefined;
   if (provider) {
-    const hasMaxPrice = await detectEIP1559MaxFeePerGas(provider);
-    if (!hasMaxPrice) {
+    const feeData = await getEIP1559FeeData(provider);
+    if (!feeData) {
       gasPriceCompatibility = BigNumber.from(
         utils.parseUnits(
           (
@@ -133,6 +133,25 @@ export async function getPriceCompatibility(
           9
         )
       ).toString();
+      console.log(
+        `No fee data. gasPriceCompatibility is ${gasPriceCompatibility}`
+      );
+    } else if ((homeChainConfig as EvmBridgeConfig).gasPriceSuggestionEnabled) {
+      gasPriceCompatibility = BigNumber.from(feeData.gasPrice);
+      const increaseByPercents =
+        (homeChainConfig as EvmBridgeConfig)
+          .defaultGasPriceIncreaseInPercents || 0;
+      console.log(
+        `Has fee data. gasPriceCompatibility is ${gasPriceCompatibility}`
+      );
+      if (increaseByPercents > 0) {
+        gasPriceCompatibility = gasPriceCompatibility
+          .add(gasPriceCompatibility.div(increaseByPercents))
+          .toString();
+        console.log(
+          `Increased. gasPriceCompatibility is ${gasPriceCompatibility}`
+        );
+      }
     }
   }
   return gasPriceCompatibility;
