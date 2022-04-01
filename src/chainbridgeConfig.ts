@@ -20,6 +20,7 @@ export type BridgeConfig = {
   chainId: number;
   name: string;
   rpcUrl: string;
+  rpcFallbackUrls?: string[];
   type: ChainType;
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
