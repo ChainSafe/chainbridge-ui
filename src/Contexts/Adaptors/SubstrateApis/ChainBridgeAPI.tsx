@@ -5,8 +5,12 @@ import {
   SubstrateBridgeConfig,
 } from "../../../chainbridgeConfig";
 
-export const createApi = async (rpcUrl: string) => {
-  const provider = new WsProvider(rpcUrl);
+export const createApi = async (rpcUrl: string, rpcFallbackUrls?: string[]) => {
+  let urls = [rpcUrl];
+  if (rpcFallbackUrls) {
+    urls = urls.concat(rpcFallbackUrls);
+  }
+  const provider = new WsProvider(urls);
   const subChainConfig = chainbridgeConfig.chains.find(
     (c) => c.rpcUrl === rpcUrl
   ) as SubstrateBridgeConfig;

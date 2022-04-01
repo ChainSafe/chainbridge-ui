@@ -59,7 +59,7 @@ export const SubstrateHomeAdaptorProvider = ({
     // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
     if (!homeChainConfig || initiaising || api) return;
     setInitialising(true);
-    createApi(homeChainConfig.rpcUrl)
+    createApi(homeChainConfig.rpcUrl, homeChainConfig.rpcFallbackUrls)
       .then((api) => {
         setApi(api);
         setInitialising(false);
@@ -340,7 +340,10 @@ export const SubstrateDestinationAdaptorProvider = ({
     // set thus triggering this
     if (!destinationChainConfig || initiaising || api) return;
     setInitialising(true);
-    createApi(destinationChainConfig.rpcUrl)
+    createApi(
+      destinationChainConfig.rpcUrl,
+      destinationChainConfig.rpcFallbackUrls
+    )
       .then((api) => {
         setApi(api);
         setInitialising(false);
