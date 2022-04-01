@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.10.5
+
+- Added fallback urls
+
 ## v0.10.4
 
 - Updated "STAKE ON CERE MAINNET" link
