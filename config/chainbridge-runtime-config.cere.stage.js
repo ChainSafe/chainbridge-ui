@@ -39,6 +39,7 @@ window.__RUNTIME_CONFIG__ = {
         name: "Cere Testnet",
         decimals: cereTokenDecimals,
         rpcUrl: "wss://rpc.testnet.cere.network:9945",
+        rpcFallbackUrls: ["wss://archive.testnet.cere.network:9945"],
         type: "Substrate",
         nativeTokenSymbol: "CERE",
         availableAsHomeNetwork: true,
