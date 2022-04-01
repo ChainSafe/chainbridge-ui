@@ -61,14 +61,7 @@ export default function ConnectionDialog({
   handleClose: any;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  // const [open, setOpen] = React.useState(false);
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
   return (
     <div>
       <BootstrapDialog

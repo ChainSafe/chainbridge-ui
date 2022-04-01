@@ -10,7 +10,7 @@ import {
   useChainbridge,
   useHomeBridge,
   useNetworkManager,
-  useWeb3
+  useWeb3,
 } from "@chainsafe/chainbridge-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
@@ -32,7 +32,6 @@ import {
 } from "../../components";
 
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
-import ConnectionDialog from "./ConnectionDialog";
 
 import makeValidationSchema from "./makeValidationSchema";
 
@@ -145,41 +144,43 @@ const TransferPage = () => {
         </section>
         <section className={classes.currencySection}>
           <section>
-              <TokenSelectInput
-                control={control}
-                rules={{ required: true }}
-                tokens={tokens ?? []}
-                name="token"
-                disabled={!destinationChainConfig || formState.isSubmitting}
-                label={`Balance: `}
-                className={classes.generalInput}
-                sync={(tokenAddress) => {
-                  setPreflightDetails({
-                    ...preflightDetails,
-                    token: tokenAddress,
-                    receiver: "",
-                    tokenAmount: 0,
-                    tokenSymbol: "",
-                  });
-                }}
-                setValue={setValue}
-                options={
-                  tokens ? Object.keys(tokens).map((t) => ({
-                    value: t,
-                    label: (
-                      <div className={classes.tokenItem}>
-                        {tokens[t]?.imageUri && (
-                          <img
-                            src={showImageUrl(tokens[t]?.imageUri)}
-                            alt={tokens[t]?.symbol}
-                          />
-                        )}
-                        <span>{tokens[t]?.symbol || t}</span>
-                      </div>
-                    ),
-                  })) : []
-                }
-              />
+            <TokenSelectInput
+              control={control}
+              rules={{ required: true }}
+              tokens={tokens ?? []}
+              name="token"
+              disabled={!destinationChainConfig || formState.isSubmitting}
+              label={`Balance: `}
+              className={classes.generalInput}
+              sync={(tokenAddress) => {
+                setPreflightDetails({
+                  ...preflightDetails,
+                  token: tokenAddress,
+                  receiver: "",
+                  tokenAmount: 0,
+                  tokenSymbol: "",
+                });
+              }}
+              setValue={setValue}
+              options={
+                tokens
+                  ? Object.keys(tokens).map((t) => ({
+                      value: t,
+                      label: (
+                        <div className={classes.tokenItem}>
+                          {tokens[t]?.imageUri && (
+                            <img
+                              src={showImageUrl(tokens[t]?.imageUri)}
+                              alt={tokens[t]?.symbol}
+                            />
+                          )}
+                          <span>{tokens[t]?.symbol || t}</span>
+                        </div>
+                      ),
+                    }))
+                  : []
+              }
+            />
           </section>
           <section>
             <div>
