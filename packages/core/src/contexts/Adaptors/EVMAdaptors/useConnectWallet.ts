@@ -26,7 +26,6 @@ export function useConnectWallet(
   network?: number,
   savedWallet?: string
 ) {
-  // console.log("🚀 ~ file: useConnectWallet.ts ~ line 25 ~ homeChainConfig", homeChainConfig)
 
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
@@ -41,112 +40,75 @@ export function useConnectWallet(
   useEffect(() => {
     if (initialising || homeBridge) return;
     console.log("starting init");
-    // setInitialising(true);
     if (!walletSelected) {
-      // onboard
-      //   .walletSelect(savedWallet)
-      //   .then((success) => {
-          if (window.ethereum) {
-            window.ethereum.on("chainChanged", (ch: any) => {
-              window.location.reload();
-            });
-          }
+      if (window.ethereum) {
+        window.ethereum.on("chainChanged", (ch: any) => {
+          window.location.reload();
+        });
+      }
 
-          // setWalletSelected(success);
-          // if (success) {
-            // checkIsReady(onboard, dispatcher)
-            //   .then((success) => {
-                // if (success) {
-                  // console.log(homeChainConfig, network, isReady, provider)
+      if (homeChainConfig && network && isReady && provider) {
+        const signer = provider.getSigner();
+        if (!signer) {
+          console.log("No signer");
+          setInitialising(false);
+          return;
+        }
 
-                  if (homeChainConfig && network && isReady && provider) {
-                    // console.log('GO')
-                    const signer = provider.getSigner();
-                    if (!signer) {
-                      console.log("No signer");
-                      setInitialising(false);
-                      return;
-                    }
+        const bridge = BridgeFactory.connect(
+          (homeChainConfig as EvmBridgeConfig).bridgeAddress,
+          signer
+        );
+        setHomeBridge(bridge);
 
-                    const bridge = BridgeFactory.connect(
-                      (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                      signer
-                    );
-                    setHomeBridge(bridge);
+        const wrapperToken = homeChainConfig.tokens.find(
+          (token) => token.isNativeWrappedToken
+        );
 
-                    const wrapperToken = homeChainConfig.tokens.find(
-                      (token) => token.isNativeWrappedToken
-                    );
-
-                    if (!wrapperToken) {
-                      setWrapperConfig(undefined);
-                      setWrapper(undefined);
-                    } else {
-                      setWrapperConfig(wrapperToken);
-                      const connectedWeth = WethFactory.connect(
-                        wrapperToken.address,
-                        signer
-                      );
-                      setWrapper(connectedWeth);
-                    }
-                    setInitialising(false);
-                  }
-                // }
-              // })
-              // .catch((error) => {
-              //   console.error(error);
-              // })
-              // .finally(() => {
-              //   setInitialising(false);
-              // });
-          // }
-        // })
-        // .catch((error) => {
-        //   setInitialising(false);
-        //   console.error(error);
-        // });
+        if (!wrapperToken) {
+          setWrapperConfig(undefined);
+          setWrapper(undefined);
+        } else {
+          setWrapperConfig(wrapperToken);
+          const connectedWeth = WethFactory.connect(
+            wrapperToken.address,
+            signer
+          );
+          setWrapper(connectedWeth);
+        }
+        setInitialising(false);
+      }
     } else {
-      // checkIsReady(onboard, dispatcher)
-      //   .then((success) => {
-          // if (success) {
-            if (homeChainConfig && network && isReady && provider) {
-              const signer = provider.getSigner();
-              if (!signer) {
-                console.log("No signer");
-                setInitialising(false);
-                return;
-              }
+      if (homeChainConfig && network && isReady && provider) {
+        const signer = provider.getSigner();
+        if (!signer) {
+          console.log("No signer");
+          setInitialising(false);
+          return;
+        }
 
-              const bridge = BridgeFactory.connect(
-                (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                signer
-              );
-              setHomeBridge(bridge);
+        const bridge = BridgeFactory.connect(
+          (homeChainConfig as EvmBridgeConfig).bridgeAddress,
+          signer
+        );
+        setHomeBridge(bridge);
 
-              const wrapperToken = homeChainConfig.tokens.find(
-                (token) => token.isNativeWrappedToken
-              );
+        const wrapperToken = homeChainConfig.tokens.find(
+          (token) => token.isNativeWrappedToken
+        );
 
-              if (!wrapperToken) {
-                setWrapperConfig(undefined);
-                setWrapper(undefined);
-              } else {
-                setWrapperConfig(wrapperToken);
-                const connectedWeth = WethFactory.connect(
-                  wrapperToken.address,
-                  signer
-                );
-                setWrapper(connectedWeth);
-              }
-            }
-          // }
-        // })
-        // .catch((error) => {
-        //   console.error(error);
-        // })
-        // .finally(() => {
-        //   setInitialising(false);
-        // });
+        if (!wrapperToken) {
+          setWrapperConfig(undefined);
+          setWrapper(undefined);
+        } else {
+          setWrapperConfig(wrapperToken);
+          const connectedWeth = WethFactory.connect(
+            wrapperToken.address,
+            signer
+          );
+          setWrapper(connectedWeth);
+        }
+      }
     }
   }, [
     initialising,
@@ -159,7 +121,6 @@ export function useConnectWallet(
     onboard,
     walletSelected,
   ]);
-  // console.log("🚀 ~ file: useConnectWallet.ts ~ line 161 ~ homeBridge", homeBridge)
 
   return { homeBridge, wrapper, wrapTokenConfig };
 }

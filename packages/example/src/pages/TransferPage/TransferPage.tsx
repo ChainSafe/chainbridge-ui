@@ -219,18 +219,18 @@ const TransferPage = () => {
             control={control}
           />
         </section>
-        {/* <Fees
+        <Fees
           amountFormikName="tokenAmount"
           className={classes.fees}
           fee={bridgeFee}
           feeSymbol={homeConfig?.nativeTokenSymbol}
           symbol={
-            preflightDetails && tokens[preflightDetails.token]
+            preflightDetails && !!tokens && tokens[preflightDetails.token]
               ? tokens[preflightDetails.token].symbol
               : undefined
           }
           amount={watchAmount}
-        /> */}
+        />
         <section>
           <Button
             disabled={!destinationChainConfig || formState.isSubmitting}
