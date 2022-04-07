@@ -130,7 +130,7 @@ export const checkBalanceAndAllowance = async (
 export const getTokenData = async (
   networkTokens: any,
   dispatcher: (action: Actions) => void,
-  state: LocalWeb3State,
+  state: any,
   spenderAddress: string | undefined
 ) => {
   let tokenContracts: Array<Erc20Detailed> = [];

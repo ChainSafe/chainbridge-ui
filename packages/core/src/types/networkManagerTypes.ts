@@ -27,12 +27,12 @@ export type TransactionStatus =
 
 export type NetworkManagerState = {
   walletType: WalletType
-  homeChainConfig: BridgeConfig
+  homeChainConfig?: BridgeConfig
   homeChains: Array<BridgeConfig>
-  destinationChainConfig: BridgeConfig
-  destinationChains : Array<BridgeConfig>
-  transactionStatus: TransactionStatus
-  depositNonce: string
+  destinationChainConfig?: BridgeConfig
+  destinationChains: Array<BridgeConfig>
+  transactionStatus?: TransactionStatus
+  depositNonce?: string
   depositVotes: number // WE ARE NO REALLY USING THIS ON THE CONTEXT PROVIDER
   txIsDone: boolean
   transitMessage: Array<TransitMessage>

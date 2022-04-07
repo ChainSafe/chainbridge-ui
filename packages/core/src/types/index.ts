@@ -7,3 +7,4 @@ export {
   LocalWeb3State,
   Actions
 } from './web3Types'
+export * from './networkManagerTypes'

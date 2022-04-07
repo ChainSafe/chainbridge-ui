@@ -1258,6 +1258,7 @@
     bnc-onboard "1.37.2"
     ethers "^5.4.5"
     react "^16.13.1"
+    react-combine-reducers "^1.1.1"
 
 "@chainsafe/common-components@1.0.26":
   version "1.0.26"
@@ -5502,6 +5503,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-combine-reducers@^1.1.1":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-combine-reducers/-/react-combine-reducers-1.0.0.tgz#1dbfa398872890f23b5c450de9f8fc1af9ad90d0"
+  integrity sha512-FRR5PBN1/2xZ83huIC/H8JHE51srN5cW216qwebauNVv6SXPkyH8RWwIqSUkxhaw8bYwZGyVQ++o/uBYvdLBBw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@*", "@types/react-dom@^17.0.1":
   version "17.0.11"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.11.tgz#e1eadc3c5e86bdb5f7684e00274ae228e7bcc466"
@@ -8814,6 +8822,11 @@ core-js@^3.5.0:
   version "3.20.2"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.20.2.tgz#46468d8601eafc8b266bd2dd6bf9dee622779581"
   integrity sha512-nuqhq11DcOAbFBV4zCbKeGbKQsUDRqTX0oqx7AttUBuqe3h20ixsE039QHelbL6P4h+9kytVqyEtyZ6gsiwEYw==
+
+core-js@^3.6.5:
+  version "3.21.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.21.1.tgz#f2e0ddc1fc43da6f904706e8e955bc19d06a0d94"
+  integrity sha512-FRq5b/VMrWlrmCzwRrpDYNxyHP9BcAZC+xHJaqTgIE5091ZV1NTmyh0sGOg5XqpnHvR0svdy0sv1gWA1zmhxig==
 
 core-util-is@1.0.2:
   version "1.0.2"
@@ -17752,6 +17765,13 @@ react-blockies@^1.4.1:
   integrity sha512-4N015X5oPNnD3xQPsiqolOFzPZSSWyc5mJhJUZShUCHtiGUxVN+1qsWTcglkHMNySux9hUofaispqcw9QkWP5Q==
   dependencies:
     prop-types "^15.5.10"
+
+react-combine-reducers@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-combine-reducers/-/react-combine-reducers-1.1.1.tgz#e746e9bce279d8b1e83d8e5b8a07e80c18e472ed"
+  integrity sha512-wHVJj9RdtoqSY8np9CFgOjUxHZwrlKvETOyJ3EZwDrVkQ8evz/Kl9khZ1ZzcirdNwAAWa2gDNqPfDsYtMtoHBQ==
+  dependencies:
+    core-js "^3.6.5"
 
 react-dev-utils@^10.2.1:
   version "10.2.1"

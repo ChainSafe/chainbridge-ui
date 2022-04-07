@@ -69,3 +69,6 @@ const networkManagerReducer = (
       return state
   }
 }
+
+export default networkManagerReducer
+

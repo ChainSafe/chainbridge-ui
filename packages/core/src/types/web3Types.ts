@@ -102,18 +102,18 @@ export type LocalWeb3ContextProps = {
 };
 
 export type LocalWeb3State = {
-  tokens: Tokens;
-  address: string;
-  ethBalance: number;
-  gasPrice: number;
+  tokens?: Tokens;
+  address?: string;
+  ethBalance?: number;
+  gasPrice?: number;
   isReady: boolean;
-  network: number;
-  onboard: OnboardAPI;
-  provider: providers.Web3Provider;
-  wallet: Wallet;
-  walletConnectReady: boolean;
-  checkWallet: boolean;
-  savedWallet: string;
+  network?: number;
+  onboard?: OnboardAPI;
+  provider?: providers.Web3Provider;
+  wallet?: Wallet;
+  walletConnectReady?: boolean;
+  checkWallet?: boolean;
+  savedWallet?: string;
 }
 
 export type Actions =
