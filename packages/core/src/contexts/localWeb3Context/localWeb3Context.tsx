@@ -7,6 +7,7 @@ import {
   refreshGasPrice,
   signMessage,
   checkIsReady,
+  getNetworkInfo
 } from "../../utils/localNetworksHelpers";
 import { Erc20Detailed } from "../../Contracts/Erc20Detailed";
 import { localWeb3ContextReducer } from "./localWeb3Reducer";
@@ -22,7 +23,7 @@ const LocalProviderContext = React.createContext<LocalWeb3Context | undefined>(
 
 const LocalProvider = ({
   children,
-  // externalProvider,
+  externalProvider,
   useExternalProvider,
   tokensToWatch,
   onboardConfig,
@@ -31,9 +32,26 @@ const LocalProvider = ({
   checkNetwork = (networkIds && networkIds.length > 0) || false,
   spenderAddress,
 }: LocalWeb3ContextProps) => {
+  // Injecting extrenal provider for widget
+  useEffect(() => {
+    if (useExternalProvider && externalProvider) {
+      getNetworkInfo(externalProvider).then(({accountAddress, externalNetworkInfo}) => {
+        dispatcher({
+          type: "setAll",
+          payload: {
+            provider: externalProvider,
+            accounts: [],
+            isActive: true,
+            chainId: externalNetworkInfo.chainId,
+            address: accountAddress,
+          },
+        });
+      })
+    }
+  }, [externalProvider])
 
   const [state, dispatcher] = useReducer(localWeb3ContextReducer, {
-    savedWallet: ""
+    savedWallet: "",
   } as any);
 
   const [balance, setBalance] = useState<number>()
@@ -56,9 +74,9 @@ const LocalProvider = ({
   useEffect(() => {
     const networkTokens =
     (tokensToWatch && network && tokensToWatch[network]) || [];
-
     let tokenContracts: Array<Erc20Detailed> = [];
     if (provider && address && networkTokens.length > 0) {
+
       provider.getBalance(address).then(value => {
         setBalance( Number(utils.formatEther(value)))
       })
@@ -73,7 +91,7 @@ const LocalProvider = ({
         dispatcher({ type: "resetTokens" });
       }
     };
-  }, [provider, network, address]);
+  }, [provider, network, address, externalProvider]);
 
   return (
     <LocalProviderContext.Provider
