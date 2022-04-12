@@ -1,9 +1,11 @@
 import React from "react";
 import { SelectInput } from "@chainsafe/common-components";
-import { Typography, Button } from '@mui/material'
+import { Typography, Button } from "@mui/material";
 
 import { WalletType } from "@chainsafe/chainbridge-ui-core";
 import { BridgeConfig } from "../../chainbridgeConfig";
+
+import { ConnectionDialog } from "../../modules";
 
 type HomeNetworkConnectViewProps = {
   isReady: boolean | undefined;
@@ -16,6 +18,7 @@ type HomeNetworkConnectViewProps = {
   accounts: Array<any> | undefined;
   selectAccount: any;
   address: string | undefined;
+  dispatcher: any;
 };
 
 export default function HomeNetworkConnectView({
@@ -32,9 +35,23 @@ export default function HomeNetworkConnectView({
   setWalletType,
   setChangeNetworkOpen,
   selectAccount,
+  dispatcher,
 }: HomeNetworkConnectViewProps) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
+      <ConnectionDialog
+        dispatcher={dispatcher}
+        open={open}
+        handleClose={handleClose}
+      />
       <div className={classes.walletArea}>
         {!isReady && (
           <Button
@@ -48,9 +65,7 @@ export default function HomeNetworkConnectView({
                 opacity: 0.9,
               },
             }}
-            onClick={() => {
-              setWalletType("select");
-            }}
+            onClick={handleClickOpen}
           >
             Connect
           </Button>

@@ -136,26 +136,39 @@ export type Actions =
   | { type: "setBalance"; payload: number }
   | { type: "setIsReady"; payload: boolean }
   | {
-    type: "setWallet"; payload: {
-      wallet: Wallet | undefined,
-      provider: providers.Web3Provider | undefined
+      type: "setWallet";
+      payload: {
+        wallet: Wallet | undefined;
+        provider: providers.Web3Provider | undefined;
+      };
     }
-  }
   | { type: "setProvider"; payload: providers.Web3Provider }
   | {
-    type: "setNetworkAndProvider"; payload: {
-      network: number,
-      provider: providers.Web3Provider | undefined
+      type: "setNetworkAndProvider";
+      payload: {
+        network: number;
+        provider: providers.Web3Provider | undefined;
+      };
     }
-  }
-  | { type: "setNetwork", payload: number }
+  | { type: "setNetwork"; payload: number }
   | { type: "setOnBoard"; payload: OnboardAPI }
-  | { type: 'resetWalletConnect' }
+  | { type: "resetWalletConnect" }
   | {
-    type: 'setWalletConnect', payload: {
-      wallet: Wallet | undefined,
-      provider: providers.Web3Provider
+      type: "setWalletConnect";
+      payload: {
+        wallet: Wallet | undefined;
+        provider: providers.Web3Provider;
+      };
     }
-  }
-  | { type: 'checkWallet', payload: boolean }
-  | { type: 'setSavedWallet', payload: string }
+  | { type: "checkWallet"; payload: boolean }
+  | { type: "setSavedWallet"; payload: string }
+  | {
+      type: "setAll";
+      payload: {
+        provider: providers.Web3Provider;
+        isActive: boolean;
+        chainId: number;
+        accounts: any;
+        address: string,
+      };
+    };

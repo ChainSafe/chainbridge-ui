@@ -10,6 +10,7 @@ import {
   useChainbridge,
   useHomeBridge,
   useNetworkManager,
+  useWeb3,
 } from "@chainsafe/chainbridge-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
@@ -44,6 +45,8 @@ export type PreflightDetails = {
 const TransferPage = () => {
   const classes = useStyles();
   const { walletType, setWalletType } = useNetworkManager();
+
+  const { dispatcher } = useWeb3();
 
   const {
     deposit,
@@ -124,6 +127,7 @@ const TransferPage = () => {
         setWalletType={setWalletType}
         setChangeNetworkOpen={setChangeNetworkOpen}
         selectAccount={selectAccount}
+        dispatcher={dispatcher}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
@@ -143,7 +147,7 @@ const TransferPage = () => {
             <TokenSelectInput
               control={control}
               rules={{ required: true }}
-              tokens={tokens}
+              tokens={tokens ?? []}
               name="token"
               disabled={!destinationChainConfig || formState.isSubmitting}
               label={`Balance: `}
@@ -159,22 +163,22 @@ const TransferPage = () => {
               }}
               setValue={setValue}
               options={
-                (tokens !== undefined &&
-                  Object.keys(tokens).map((t) => ({
-                    value: t,
-                    label: (
-                      <div className={classes.tokenItem}>
-                        {tokens[t]?.imageUri && (
-                          <img
-                            src={showImageUrl(tokens[t]?.imageUri)}
-                            alt={tokens[t]?.symbol}
-                          />
-                        )}
-                        <span>{tokens[t]?.symbol || t}</span>
-                      </div>
-                    ),
-                  }))) ||
-                []
+                tokens
+                  ? Object.keys(tokens).map((t) => ({
+                      value: t,
+                      label: (
+                        <div className={classes.tokenItem}>
+                          {tokens[t]?.imageUri && (
+                            <img
+                              src={showImageUrl(tokens[t]?.imageUri)}
+                              alt={tokens[t]?.symbol}
+                            />
+                          )}
+                          <span>{tokens[t]?.symbol || t}</span>
+                        </div>
+                      ),
+                    }))
+                  : []
               }
             />
           </section>
@@ -221,7 +225,7 @@ const TransferPage = () => {
           fee={bridgeFee}
           feeSymbol={homeConfig?.nativeTokenSymbol}
           symbol={
-            preflightDetails && tokens[preflightDetails.token]
+            preflightDetails && !!tokens && tokens[preflightDetails.token]
               ? tokens[preflightDetails.token].symbol
               : undefined
           }
@@ -278,7 +282,7 @@ const TransferPage = () => {
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
       {/* This is here due to requiring router */}
-      <NetworkUnsupportedModal />
+      {/* <NetworkUnsupportedModal /> */}
       <NetworkSelectModal />
     </div>
   );

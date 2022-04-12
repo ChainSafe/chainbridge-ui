@@ -24,6 +24,8 @@
     "@polkadot/util-crypto": "5.6.3",
     "@sentry/react": "^5.26.0",
     "@use-it/interval": "^1.0.0",
+    "@walletconnect/client": "1.7.1",
+    "@walletconnect/qrcode-modal": "1.7.1",
     "clsx": "^1.1.1",
     "dayjs": "^1.9.1",
     "ethers": "^5.4.5",
@@ -37,8 +39,13 @@
     "react-toast-notifications": "2.4.0",
     "styled-components": "^5.3.3",
     "yup": "^0.29.3",
-    "@walletconnect/client": "1.7.1",
-    "@walletconnect/qrcode-modal": "1.7.1"
+    "@walletconnect/ethereum-provider": "^1.7.5",
+    "@web3-react/core": "8.0.19-beta.0",
+    "@web3-react/empty": "8.0.10-beta.0",
+    "@web3-react/metamask": "8.0.16-beta.0",
+    "@web3-react/types": "8.0.10-beta.0",
+    "@web3-react/walletconnect": "8.0.23-beta.0",
+    "@fusion-icons/react": "0.0.0"
   },
   "devDependencies": {
     "@polkadot/api": "3.11.1",
