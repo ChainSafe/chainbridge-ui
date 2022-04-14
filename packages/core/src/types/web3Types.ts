@@ -12,7 +12,14 @@ import {
   Overrides,
 } from "ethers";
 import { BigNumber as BN } from "bignumber.js";
-import { TokenConfig } from "../chainbridgeConfig";
+import {
+  BridgeConfig,
+  chainbridgeConfig,
+  ChainType,
+  TokenConfig
+} from "../chainbridgeConfig";
+
+export type WalletType = ChainType | "select" | "unset";
 
 export type TokenInfo = {
   name?: string;
@@ -45,6 +52,12 @@ export type Tokens = {
   [address: string]: TokenInfo;
 };
 
+export type TransactionStatus =
+  | "Initializing Transfer"
+  | "In Transit"
+  | "Transfer Completed"
+  | "Transfer Aborted";
+
 export type LocalWeb3Context = {
   address?: string;
   ethBalance?: number;
@@ -76,6 +89,25 @@ export type LocalWeb3Context = {
   dispatcher: (action: Actions) => void;
   walletConnectReady: boolean;
   savedWallet: string;
+
+  walletType: WalletType;
+  setWalletType: (walletType: WalletType) => void;
+
+  domainId?: number;
+
+  homeChainConfig: BridgeConfig | undefined;
+  destinationChainConfig: BridgeConfig | undefined;
+
+  destinationChains: Array<{ domainId: number; name: string }>;
+  homeChains: BridgeConfig[];
+  handleSetHomeChain: (domainId: number | undefined) => void;
+  setDestinationChain: (domainId: number | undefined) => void;
+
+  transactionStatus?: TransactionStatus;
+  setTransactionStatus: (message: TransactionStatus | undefined) => void;
+
+  setDepositNonce: (input: string | undefined) => void;
+  depositNonce: string | undefined;
 };
 
 type EthGasStationSettings = "fast" | "fastest" | "safeLow" | "average";
@@ -102,7 +134,7 @@ export type LocalWeb3ContextProps = {
 };
 
 export type LocalWeb3State = {
-  tokens?: Tokens;
+  tokens: Tokens;
   address?: string;
   ethBalance?: number;
   gasPrice?: number;

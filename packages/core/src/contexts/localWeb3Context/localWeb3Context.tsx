@@ -28,6 +28,7 @@ import {
   LocalWeb3Context,
   LocalWeb3ContextProps,
   LocalWeb3State,
+  Tokens
 } from "../../types";
 import {NetworkManagerState, WalletType} from "../../types"
 import combineReducers from 'react-combine-reducers';
@@ -70,6 +71,7 @@ const [comibenedReducer, initialCombinedReducers] = combineReducers<CombinedRedu
   localWeb3: [localWeb3ContextReducer, {
     savedWallet: "",
     isReady: false,
+    tokens: {}
   }],
   networkManager: [networkManagerReducer, initialNetworkManager]
 });
@@ -355,10 +357,29 @@ const LocalProvider = ({
         checkIsReady,
         dispatcher,
         walletConnectReady: walletConnectReady ?? false,
-        savedWallet: savedWallet ?? ''
+        savedWallet: savedWallet ?? "",
+
+        domainId: networkManager.homeChainConfig?.domainId,
+        homeChainConfig: networkManager.homeChainConfig,
+        setWalletType: (data) =>
+          dispatcher({ type: "setWalletType", payload: data }),
+        walletType: networkManager.walletType,
+        homeChains: networkManager.homeChains,
+        destinationChains: networkManager.destinationChains,
+        handleSetHomeChain,
+        setDestinationChain: handleSetDestination,
+        destinationChainConfig: networkManager.destinationChainConfig,
+        transactionStatus: networkManager.transactionStatus,
+        setTransactionStatus: (data) =>
+          dispatcher({ type: "setTransactionStatus", payload: data }),
+        depositNonce: networkManager.depositNonce,
+        setDepositNonce: (data) =>
+          dispatcher({ type: "setDepositNonce", payload: data }),
       }}
     >
-      {children}
+      <HomeProvider>
+        <DestinationProvider>{children}</DestinationProvider>
+      </HomeProvider>
     </LocalProviderContext.Provider>
   );
 }

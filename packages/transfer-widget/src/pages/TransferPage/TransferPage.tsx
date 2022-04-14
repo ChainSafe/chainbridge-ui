@@ -15,6 +15,7 @@ import {
   useChainbridge,
   useHomeBridge,
   useNetworkManager,
+  useWeb3
 } from "@chainsafe/chainbridge-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
@@ -48,7 +49,7 @@ export type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const { walletType, setWalletType } = useNetworkManager();
+  const { walletType, setWalletType } = useWeb3();
 
   const {
     deposit,

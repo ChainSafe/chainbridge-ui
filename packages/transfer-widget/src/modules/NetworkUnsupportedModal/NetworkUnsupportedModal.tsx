@@ -10,13 +10,14 @@ import {
   useNetworkManager,
   useHomeBridge,
   chainbridgeConfig,
+  useWeb3
 } from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
 
 const NetworkUnsupportedModal = () => {
   const classes = useStyles();
-  const { homeChainConfig } = useNetworkManager();
-  const { getNetworkName, isReady, networkId } =
+  const { homeChainConfig } = useWeb3();
+  const { getNetworkName, wrapTokenConfig, isReady, networkId } =
     useHomeBridge();
   const pathname = '/transfer';
 

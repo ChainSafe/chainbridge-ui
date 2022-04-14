@@ -44,7 +44,7 @@ export type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const { walletType, setWalletType } = useNetworkManager();
+  const { walletType, setWalletType } = useWeb3();
 
   const { dispatcher } = useWeb3();
 

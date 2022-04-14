@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from "react";
-import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
+import { useWeb3 } from "../../index";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { transitMessageReducer } from "../../../reducers/TransitMessageReducer";
@@ -18,7 +18,7 @@ export const EVMDestinationAdaptorProvider = ({
     homeChainConfig,
     setTransactionStatus,
     transactionStatus,
-  } = useNetworkManager();
+  } = useWeb3();
 
   const [state, dispatch] = useReducer(evmDestinationReducer, {
     transferTxHash: "",

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useReducer } from "react";
-import { useNetworkManager } from "../../NetworkManagerContext";
+import { useWeb3 } from "../../index";
 import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { getNetworkName } from "../../../utils/Helpers";
@@ -38,7 +38,7 @@ export const EVMHomeAdaptorProvider = ({
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
-  } = useNetworkManager();
+  } = useWeb3();
 
   const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
     isReady,

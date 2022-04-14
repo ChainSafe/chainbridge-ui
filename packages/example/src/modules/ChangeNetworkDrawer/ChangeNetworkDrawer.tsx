@@ -21,7 +21,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
   const classes = useStyles();
 
   const { setWalletType, handleSetHomeChain, setDestinationChain } =
-    useNetworkManager();
+  useLocalWeb3();
   const { wallet: { name } = { name: "" } } = useLocalWeb3();
   const { disconnect } = useHomeBridge();
   const destinationBridge = useDestinationBridge();

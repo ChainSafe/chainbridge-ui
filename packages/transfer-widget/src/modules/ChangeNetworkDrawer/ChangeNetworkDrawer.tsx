@@ -5,6 +5,7 @@ import {
   useDestinationBridge,
   useHomeBridge,
   useNetworkManager,
+  useWeb3
 } from "@chainsafe/chainbridge-ui-core";
 import { useStyles } from "./styles";
 
@@ -23,7 +24,7 @@ const ChangeNetworkDrawer: React.FC<IChangeNetworkDrawerProps> = ({
     setWalletType,
     handleSetHomeChain,
     setDestinationChain,
-  } = useNetworkManager();
+  } = useWeb3();
   const { disconnect } = useHomeBridge();
   const destinationBridge = useDestinationBridge();
 
