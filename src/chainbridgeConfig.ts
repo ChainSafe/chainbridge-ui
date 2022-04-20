@@ -48,6 +48,7 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   transferPalletName: string;
   transferFunctionName: string;
   typesFileName: string;
+  existentialDepositPlusNetworkFee: number;
 };
 
 export type ChainbridgeConfig = {
