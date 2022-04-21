@@ -2,6 +2,7 @@ import React from "react";
 
 import { Typography } from "@chainsafe/common-components";
 import { useFormikContext } from "formik";
+import { toFixedWithoutRounding } from "../../../Utils/Helpers";
 
 interface IFeesFormikWrapped {
   className?: string;
@@ -26,8 +27,8 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
         <>
           <Typography component="p">Transfer Amount</Typography>
           <Typography component="p">
-            {Number((values as Record<string, any>)[amountFormikName])?.toFixed(
-              3
+            {toFixedWithoutRounding(
+              Number((values as Record<string, any>)[amountFormikName])
             )}{" "}
             {symbol}
           </Typography>

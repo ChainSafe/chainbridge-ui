@@ -14,3 +14,17 @@ export const isValidSubstrateAddress = (address: string) => {
     return false;
   }
 };
+
+export const toFixedWithoutRounding = (num: number, digits?: number) => {
+  try {
+    const re = new RegExp("^-?\\d+(?:.\\d{0," + (digits || 3) + "})?");
+    // @ts-ignore
+    return num.toString().match(re)[0];
+  } catch (error) {
+    console.error(
+      `Failed to convert '${num}' to string with fixed digits in fraction`,
+      error
+    );
+    return "NaN";
+  }
+};
