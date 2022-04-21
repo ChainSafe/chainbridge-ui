@@ -47,7 +47,7 @@ window.__RUNTIME_CONFIG__ = {
         transferPalletName: "erc20",
         transferFunctionName: "transferNative",
         typesFileName: "bridgeTypes.json",
-        existentialDepositPlusNetworkFee: "0.03",
+        existentialDepositPlusNetworkFee: "1.03",
         tokens: [
           {
             address: "cere-native",
