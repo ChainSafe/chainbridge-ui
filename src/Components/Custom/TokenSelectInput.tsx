@@ -5,6 +5,7 @@ import {
   FormikSelectInput,
 } from "@chainsafe/common-components";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
+import { toFixedWithoutRounding } from "../../Utils/Helpers";
 
 interface ITokenSelectInput extends IFormikSelectInputProps {
   tokens: Tokens;
@@ -21,7 +22,7 @@ const TokenSelectInput: React.FC<ITokenSelectInput> = ({
 }: ITokenSelectInput) => {
   const [field, , helpers] = useField(name);
   const labelParsed = tokens[field.value]
-    ? `${label} ${tokens[field.value]?.balance}`
+    ? `${label} ${toFixedWithoutRounding(tokens[field.value]?.balance)}`
     : "Please select token";
 
   const [synced, setSynced] = useState();

@@ -21,6 +21,7 @@ import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
 import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
+import { toFixedWithoutRounding } from "../../Utils/Helpers";
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -145,10 +146,15 @@ export const SubstrateHomeAdaptorProvider = ({
               balance: Math.max(
                 0,
                 parseFloat(
-                  utils.formatUnits(balance, homeChainConfig.decimals)
-                ) -
-                  (homeChainConfig as SubstrateBridgeConfig)
-                    .existentialDepositPlusNetworkFee
+                  toFixedWithoutRounding(
+                    parseFloat(
+                      utils.formatUnits(balance, homeChainConfig.decimals)
+                    ) -
+                      (homeChainConfig as SubstrateBridgeConfig)
+                        .existentialDepositPlusNetworkFee,
+                    homeChainConfig.decimals
+                  )
+                )
               ),
               balanceBN: new BN(balance).shiftedBy(-homeChainConfig.decimals),
               name: homeChainConfig.tokens[0].name,
