@@ -69,15 +69,6 @@ export type LocalWeb3Context = {
   provider?: providers.Web3Provider;
   wallet?: Wallet;
   tokens: Tokens;
-  checkIsReady(
-    onboard: OnboardAPI,
-    dispatcher: (action: Actions) => void,
-  ): Promise<boolean>;
-  refreshGasPrice(
-    dispatcher: (action: Actions) => void,
-    ethGasStationApiKey: string,
-    gasPriceSetting: any
-  ): Promise<void>;
   resetOnboard(
     dispatcher: (action: Actions) => void,
     onboard: OnboardAPI,
@@ -120,6 +111,8 @@ export type TokensToWatch = {
 };
 
 export type LocalWeb3ContextProps = {
+  useExternalProvider?: any;
+  externalProvider?: any;
   cacheWalletSelection?: boolean;
   checkNetwork?: boolean;
   children: React.ReactNode;
@@ -187,3 +180,13 @@ export type Actions =
   }
   | { type: 'checkWallet', payload: boolean }
   | { type: 'setSavedWallet', payload: string }
+  | {
+    type: "setAll";
+    payload: {
+      provider: providers.Web3Provider;
+      isActive: boolean;
+      chainId: number;
+      accounts: any;
+      address: string,
+    };
+  };

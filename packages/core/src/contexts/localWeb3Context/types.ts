@@ -58,15 +58,6 @@ export type LocalWeb3Context = {
   provider?: providers.Web3Provider;
   wallet?: Wallet;
   tokens: Tokens;
-  checkIsReady(
-    onboard: OnboardAPI,
-    dispatcher: (action: Actions) => void,
-  ): Promise<boolean>;
-  refreshGasPrice(
-    dispatcher: (action: Actions) => void,
-    ethGasStationApiKey: string,
-    gasPriceSetting: any
-  ): Promise<void>;
   resetOnboard(
     dispatcher: (action: Actions) => void,
     onboard: OnboardAPI,

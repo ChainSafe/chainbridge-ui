@@ -5,7 +5,8 @@ import {
   Actions,
   LocalWeb3State,
   TokenInfo,
-} from "../contexts/localWeb3Context/types";
+} from "../types";
+
 import { API as OnboardAPI } from "bnc-onboard/dist/src/interfaces";
 import { Erc20Detailed } from "../Contracts/Erc20Detailed";
 

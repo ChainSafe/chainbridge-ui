@@ -65,6 +65,12 @@ const networkManagerReducer = (
     case "setTransactionIsDone":
       //TODO SAME CHECK HERE RELATED OF WHAT TO DO WITH THE STATE
       return state
+    case "setAll":
+      const { walletType } = action.payload
+      return {
+        ...state,
+        walletType
+      }
     default:
       return state
   }

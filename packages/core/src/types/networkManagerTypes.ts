@@ -48,3 +48,4 @@ export type Actions =
   | { type: "addMessage", payload: TransitMessage }
   | { type: "resetMessages" }
   | { type: "setTransactionIsDone" }
+  | { type: "setAll", payload: { walletType: WalletType} }

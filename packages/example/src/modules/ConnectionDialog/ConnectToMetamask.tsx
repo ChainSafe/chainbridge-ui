@@ -53,6 +53,7 @@ const ConnectToMetamask = ({
           isActive,
           chainId,
           address: account,
+          walletType: "Ethereum"
         },
       });
       handleClose();

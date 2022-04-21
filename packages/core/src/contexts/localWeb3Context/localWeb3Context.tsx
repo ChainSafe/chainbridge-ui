@@ -17,9 +17,7 @@ import {
   getTokenData,
   getTokenDataDirect,
   resetOnboard,
-  refreshGasPrice,
   signMessage,
-  checkIsReady,
   getNetworkInfo
 } from "../../utils/localNetworksHelpers";
 import { Erc20Detailed } from "../../Contracts/Erc20Detailed";
@@ -169,29 +167,54 @@ const LocalProvider = ({
   checkNetwork = (networkIds && networkIds.length > 0) || false,
   spenderAddress,
 }: LocalWeb3ContextProps) => {
-  const [state, dispatcher] = useReducer(comibenedReducer, initialCombinedReducers);
+  // Injecting extrenal provider for widget
+  useEffect(() => {
+    if (useExternalProvider && externalProvider) {
+      getNetworkInfo(externalProvider).then(
+        ({ accountAddress, externalNetworkInfo }) => {
+          dispatcher({
+            type: "setAll",
+            payload: {
+              provider: externalProvider,
+              accounts: [],
+              isActive: true,
+              chainId: externalNetworkInfo.chainId,
+              address: accountAddress,
+              walletType: "Ethereum",
+            },
+          });
+        }
+      );
+    }
+  }, [externalProvider]);
+
+  const [state, dispatcher] = useReducer(
+    comibenedReducer,
+    initialCombinedReducers
+  );
   const { localWeb3, networkManager } = state;
 
-  const [balance, setBalance] = useState<number>()
-
-    // get state from reducer
-    const {
-      address,
-      provider,
-      network,
-      wallet,
-      onboard,
-      ethBalance,
-      tokens,
-      isReady,
-      gasPrice,
-      walletConnectReady,
-      savedWallet
-    }: LocalWeb3State = state;
+  // get state from reducer
+  const {
+    address,
+    provider,
+    network,
+    wallet,
+    onboard,
+    ethBalance,
+    tokens,
+    isReady,
+    gasPrice,
+    walletConnectReady,
+    savedWallet,
+  }: LocalWeb3State = localWeb3;
 
   useEffect(() => {
     const networkTokens =
-      (tokensToWatch && localWeb3.network && tokensToWatch[localWeb3.network]) || [];
+      (tokensToWatch &&
+        localWeb3.network &&
+        tokensToWatch[localWeb3.network]) ||
+      [];
 
     let tokenContracts: Array<Erc20Detailed> = [];
     if (localWeb3.provider && localWeb3.address && networkTokens.length > 0) {
@@ -208,41 +231,27 @@ const LocalProvider = ({
     };
   }, [localWeb3.network, localWeb3.provider, localWeb3.address]);
 
-  const {
-    address,
-    provider,
-    network,
-    wallet,
-    onboard,
-    ethBalance,
-    tokens,
-    isReady,
-    gasPrice,
-    walletConnectReady,
-    savedWallet
-  }: LocalWeb3State = localWeb3;
+  // // CUSTOM HOOK FOR INITIALIZING ONBOARD
+  // useOnboard(
+  //   networkIds,
+  //   checkNetwork,
+  //   dispatcher,
+  //   onboardConfig,
+  //   cacheWalletSelection,
+  //   checkIsReady,
+  // );
 
-  // CUSTOM HOOK FOR INITIALIZING ONBOARD
-  useOnboard(
-    networkIds,
-    checkNetwork,
-    dispatcher,
-    onboardConfig,
-    cacheWalletSelection,
-    checkIsReady,
-  );
+  // let onboardState;
+  // if (onboard !== undefined && "getState" in onboard) {
+  //   onboardState = onboard?.getState();
+  // }
 
-  let onboardState;
-  if (onboard !== undefined && "getState" in onboard) {
-    onboardState = onboard?.getState();
-  }
+  // useEffect(() => {
+  //   if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
+  //     onboard.walletSelect()
+  //   }
 
-  useEffect(() => {
-    if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
-      onboard.walletSelect()
-    }
-
-  }, [localWeb3.onboard, localWeb3.savedWallet, networkManager.walletType]);
+  // }, [localWeb3.onboard, localWeb3.savedWallet, networkManager.walletType]);
 
   const handleSetHomeChain = useCallback(
     (domainId: number | undefined) => {
@@ -281,7 +290,10 @@ const LocalProvider = ({
   useEffect(() => {
     if (networkManager.walletType !== "unset") {
       if (networkManager.walletType === "select") {
-        dispatcher({ type: "setHomeChains", payload: chainbridgeConfig().chains });
+        dispatcher({
+          type: "setHomeChains",
+          payload: chainbridgeConfig().chains,
+        });
       } else {
         dispatcher({
           type: "setHomeChains",
@@ -294,32 +306,41 @@ const LocalProvider = ({
     } else {
       dispatcher({
         type: "setHomeChains",
-        payload: []
+        payload: [],
       });
     }
   }, [networkManager.walletType]);
 
-    const handleSetDestination = useCallback(
+  const handleSetDestination = useCallback(
     (domainId: number | undefined) => {
       if (domainId === undefined) {
         dispatcher({
           type: "setDestinationChain",
-          payload: undefined
+          payload: undefined,
         });
-      } else if (networkManager.homeChainConfig && !networkManager.depositNonce) {
-        const chain = networkManager.destinationChains.find((c) => c.domainId === domainId);
+      } else if (
+        networkManager.homeChainConfig &&
+        !networkManager.depositNonce
+      ) {
+        const chain = networkManager.destinationChains.find(
+          (c) => c.domainId === domainId
+        );
         if (!chain) {
           throw new Error("Invalid destination chain selected");
         }
         dispatcher({
           type: "setDestinationChain",
-          payload: chain
+          payload: chain,
         });
       } else {
         throw new Error("Home chain not selected");
       }
     },
-    [networkManager.depositNonce, networkManager.destinationChains, networkManager.homeChainConfig]
+    [
+      networkManager.depositNonce,
+      networkManager.destinationChains,
+      networkManager.homeChainConfig,
+    ]
   );
 
   const HomeProvider = useCallback(
@@ -331,7 +352,11 @@ const LocalProvider = ({
 
   const DestinationProvider = useCallback(
     (props: INetworkManagerProviderProps) => {
-      return selectProvider(networkManager.destinationChainConfig?.type, "destination", props);
+      return selectProvider(
+        networkManager.destinationChainConfig?.type,
+        "destination",
+        props
+      );
     },
     [networkManager.destinationChainConfig?.type]
   );
@@ -348,13 +373,9 @@ const LocalProvider = ({
         tokens: tokens ?? {},
         resetOnboard,
         isReady,
-        checkIsReady,
         gasPrice: gasPrice ?? 0,
-        isMobile: !!onboardState?.mobileDevice,
+        isMobile: false,
         signMessage,
-        refreshGasPrice,
-        signMessage,
-        checkIsReady,
         dispatcher,
         walletConnectReady: walletConnectReady ?? false,
         savedWallet: savedWallet ?? "",

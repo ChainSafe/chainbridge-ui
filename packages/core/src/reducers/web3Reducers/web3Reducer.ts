@@ -92,6 +92,15 @@ const localWeb3ContextReducer = (
         ...state,
         savedWallet: action.payload
       }
+    case 'setAll':
+      const { payload: { provider, isActive, chainId, address } } = action
+      return {
+        ...state,
+        provider,
+        address,
+        isReady: isActive,
+        network: chainId,
+      }
     default:
       return state;
   }

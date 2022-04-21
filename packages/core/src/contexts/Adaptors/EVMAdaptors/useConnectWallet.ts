@@ -8,23 +8,14 @@ import {
   EvmBridgeConfig,
   TokenConfig,
 } from "../../../chainbridgeConfig";
-import { API as OnboardAPI } from "bnc-onboard/dist/src/interfaces";
 import { Weth } from "../../../Contracts/Weth";
 import { WethFactory } from "../../../Contracts/WethFactory";
-import { Actions } from "../../localWeb3Context/types";
 
 export function useConnectWallet(
   isReady: boolean,
-  checkIsReady: (
-    onboard: OnboardAPI,
-    dispatcher: (action: Actions) => void
-  ) => Promise<boolean>,
-  dispatcher: (action: Actions) => void,
-  onboard?: OnboardAPI,
   homeChainConfig?: BridgeConfig,
   provider?: providers.Web3Provider,
   network?: number,
-  savedWallet?: string
 ) {
 
   const [initialising, setInitialising] = useState(false);
@@ -115,10 +106,8 @@ export function useConnectWallet(
     homeChainConfig,
     isReady,
     provider,
-    checkIsReady,
     network,
     homeBridge,
-    onboard,
     walletSelected,
   ]);
 

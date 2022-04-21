@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useReducer } from "react";
-import { useWeb3 } from "../../index";
 import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { getNetworkName } from "../../../utils/Helpers";
@@ -24,31 +23,23 @@ export const EVMHomeAdaptorProvider = ({
     address,
     tokens,
     wallet,
-    checkIsReady,
     ethBalance,
     onboard,
     resetOnboard,
     dispatcher,
-    savedWallet
-  } = useLocalWeb3();
-
-  const {
+    savedWallet,
     homeChainConfig,
     setTransactionStatus,
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
-  } = useWeb3();
+  } = useLocalWeb3();
 
   const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
     isReady,
-    checkIsReady,
-    dispatcher,
-    onboard,
     homeChainConfig,
     provider,
     network,
-    savedWallet
   );
 
   const [evmHomeState, dispatch] = useReducer(evmHomeReducer, {
