@@ -2,7 +2,7 @@
 
 ## vNext
 
-- ...
+- Added transferable balance
 
 ## v0.10.5
 
