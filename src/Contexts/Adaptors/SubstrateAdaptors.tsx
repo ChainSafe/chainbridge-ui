@@ -142,8 +142,11 @@ export const SubstrateHomeAdaptorProvider = ({
             [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
               decimals:
                 homeChainConfig.tokens[0].decimals ?? homeChainConfig.decimals,
-              balance: parseInt(
-                utils.formatUnits(balance, homeChainConfig.decimals)
+              balance: Math.max(
+                0,
+                parseInt(utils.formatUnits(balance, homeChainConfig.decimals)) -
+                  (homeChainConfig as SubstrateBridgeConfig)
+                    .existentialDepositPlusNetworkFee
               ),
               balanceBN: new BN(balance).shiftedBy(-homeChainConfig.decimals),
               name: homeChainConfig.tokens[0].name,
