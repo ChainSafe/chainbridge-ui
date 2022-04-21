@@ -696,7 +696,7 @@ const TransferPage = () => {
                         tokens={tokens}
                         name="token"
                         disabled={!destinationChainConfig}
-                        label={`Balance: `}
+                        label={`Transferable balance: `}
                         className={classes.generalInput}
                         placeholder=""
                         sync={(tokenAddress) => {
