@@ -20,12 +20,18 @@
 
 ## Install
 
+### Install dependencies
+
+For installing the dependencies use the command:
+
 ```
 yarn install
 ```
 
-Create a `.env` file based on the `.env.example` file in the root of the project.
-Get a Blocknative DAPP ID (here)[https://explorer.blocknative.com/account] and populate the respective field in the `.env` file
+### Update configs
+
+1. Copy to `.env` file in the root of the project the content from `.env.dev`, `.env.stage` or `env.prod` depending on the environment you want to run.
+1. Copy to `chainbridge-runtime-config.js` file in the `public` folder the content from `chainbridge-runtime-config.cere.dev.js`, `chainbridge-runtime-config.cere.stage.js` or `chainbridge-runtime-config.cere.prod.js` in `config` folder depending on the environment you want to run.
 
 ## Usage
 
@@ -36,13 +42,6 @@ For running a local instance use the command:
 ```
 yarn start
 ```
-
-The codebase is configured to be run against the Geth <> Substrate node that can be set up by following the guide [here](https://chainbridge.chainsafe.io/local/) or executing:
-
-- `yarn start:substrate` to start,
-- `yarn setup:example` to initialize
-
-Should the substrate chain you are targetting require different type definitions, the type definitions file should be added to `src/Contexts/Adaptors/SubstrateApis/` and the file name for the types set in the substrate bridge configs.
 
 ### Build
 
