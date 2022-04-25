@@ -231,28 +231,6 @@ const LocalProvider = ({
     };
   }, [localWeb3.network, localWeb3.provider, localWeb3.address]);
 
-  // // CUSTOM HOOK FOR INITIALIZING ONBOARD
-  // useOnboard(
-  //   networkIds,
-  //   checkNetwork,
-  //   dispatcher,
-  //   onboardConfig,
-  //   cacheWalletSelection,
-  //   checkIsReady,
-  // );
-
-  // let onboardState;
-  // if (onboard !== undefined && "getState" in onboard) {
-  //   onboardState = onboard?.getState();
-  // }
-
-  // useEffect(() => {
-  //   if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
-  //     onboard.walletSelect()
-  //   }
-
-  // }, [localWeb3.onboard, localWeb3.savedWallet, networkManager.walletType]);
-
   const handleSetHomeChain = useCallback(
     (domainId: number | undefined) => {
       if (!domainId && domainId !== 0) {
