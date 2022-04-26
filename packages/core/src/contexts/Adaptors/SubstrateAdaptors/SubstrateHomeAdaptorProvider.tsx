@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
-import { useNetworkManager } from "../../NetworkManagerContext";
+import { useWeb3 } from "../../index";
 import { createApi } from "../SubstrateApis/ChainBridgeAPI";
 import { IHomeBridgeProviderProps, InjectedAccountType } from "../interfaces";
 
@@ -31,7 +31,7 @@ export const SubstrateHomeAdaptorProvider = ({
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
-  } = useNetworkManager();
+  } = useWeb3();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
     undefined

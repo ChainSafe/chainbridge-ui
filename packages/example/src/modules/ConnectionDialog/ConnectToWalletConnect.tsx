@@ -65,6 +65,7 @@ const ConnectToWallet = ({
           isActive,
           chainId,
           address: account,
+          walletType: "Ethereum"
         },
       });
       handleClose();

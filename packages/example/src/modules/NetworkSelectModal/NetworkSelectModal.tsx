@@ -16,7 +16,7 @@ import {
 const NetworkSelectModal = () => {
   const classes = useStyles();
   const { isReady, chains } = useChainbridge();
-  const { walletType, setWalletType } = useNetworkManager();
+  const { walletType, setWalletType } = useWeb3();
   const { savedWallet } = useWeb3();
 
   const color = {

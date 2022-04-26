@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useReducer } from "react";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
-import { useNetworkManager } from "../../NetworkManagerContext";
+import { useWeb3 } from "../../index";
 import { createApi } from "../SubstrateApis/ChainBridgeAPI";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { ApiPromise } from "@polkadot/api";
@@ -12,7 +12,7 @@ const SubstrateDestinationAdaptorProvider = ({
   children,
 }: IDestinationBridgeProviderProps) => {
   const { depositNonce, destinationChainConfig, setTransactionStatus } =
-    useNetworkManager();
+    useWeb3();
 
   const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(

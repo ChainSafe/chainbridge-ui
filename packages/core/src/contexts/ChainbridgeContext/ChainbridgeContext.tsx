@@ -10,8 +10,8 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { TransitState } from "../../reducers/TransitMessageReducer";
 import {
   TransactionStatus,
-  useNetworkManager,
-} from "../NetworkManagerContext/NetworkManagerContext";
+  useWeb3,
+} from "../../index";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { useDestinationBridge } from "../DestinationBridgeContext";
 
@@ -79,7 +79,7 @@ const ChainbridgeProvider = ({
     homeChainConfig,
     destinationChains,
     domainId,
-  } = useNetworkManager();
+  } = useWeb3();
 
   const {
     connect,

@@ -11,7 +11,7 @@ import {
   ChainbridgeProvider,
   NetworkManagerProvider,
   LocalProvider,
-  chainbridgeConfig
+  chainbridgeConfig,
 } from "@chainsafe/chainbridge-ui-core";
 import { AppWrapper } from "./layouts";
 import { utils } from "ethers";
@@ -36,8 +36,8 @@ const App: React.FC<{}> = () => {
     },
   } = window;
 
-  const tokens = chainbridgeConfig().chains
-    .filter((c) => c.type === "Ethereum")
+  const tokens = chainbridgeConfig()
+    .chains.filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
       if (bc.networkId) {
         return {
@@ -99,15 +99,13 @@ const App: React.FC<{}> = () => {
             },
           }}
         >
-          <NetworkManagerProvider>
-            <ChainbridgeProvider chains={chains}>
-              <Router>
-                <AppWrapper wrapTokenPage={wrapTokenPage}>
-                  <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
-                </AppWrapper>
-              </Router>
-            </ChainbridgeProvider>
-          </NetworkManagerProvider>
+          <ChainbridgeProvider chains={chains}>
+            <Router>
+              <AppWrapper wrapTokenPage={wrapTokenPage}>
+                <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
+              </AppWrapper>
+            </Router>
+          </ChainbridgeProvider>
         </LocalProvider>
       </ThemeSwitcher>
     </ErrorBoundary>
