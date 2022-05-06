@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.11.2
+
+- Available balance should be used as base for calculating transferable balance
+
 ## v0.11.1
 
 - Show transfer amount with fixed digits in fraction
