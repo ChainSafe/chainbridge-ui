@@ -237,6 +237,7 @@ export const SubstrateHomeAdaptorProvider = ({
             api,
             amount,
             recipient,
+            (homeChainConfig as SubstrateBridgeConfig).chainId,
             destinationChainId
           );
 

@@ -7,6 +7,8 @@ import {
   chainbridgeConfig,
   EvmBridgeConfig,
   TokenConfig,
+  getСhainConfig,
+  getСhainTransferFallback,
 } from "../../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 import { Weth } from "../../../Contracts/Weth";
@@ -18,6 +20,11 @@ import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
+import {
+  createApi as createCereApi,
+  getBridgeProposalVotes,
+  VoteStatus,
+} from "../SubstrateApis/ChainBridgeAPI";
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -399,6 +406,13 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce) => {
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
+            initFallbackMechanism(
+              homeChainConfig.chainId,
+              destinationChainId,
+              recipient,
+              depositNonce,
+              amount
+            );
           }
         );
 
@@ -483,6 +497,41 @@ export const EVMHomeAdaptorProvider = ({
       console.error(error);
       return "";
     }
+  };
+
+  const initFallbackMechanism = async (
+    srcChainId: number,
+    destinationChainId: number,
+    recipient: string,
+    depositNonce: number,
+    decimalAmount: number
+  ): Promise<void> => {
+    const dstChainConfig = getСhainConfig(destinationChainId);
+    const { intervalMs } = getСhainTransferFallback(
+      srcChainId,
+      destinationChainId
+    );
+
+    setInterval(async () => {
+      const cereApi = await createCereApi(dstChainConfig.rpcUrl);
+      const { status } = await getBridgeProposalVotes(
+        cereApi,
+        srcChainId,
+        destinationChainId,
+        recipient,
+        depositNonce,
+        decimalAmount
+      );
+      console.log({ "Proposal votes status": status });
+      switch (status) {
+        case VoteStatus.APPROVED:
+          setTransactionStatus("Transfer Completed");
+          break;
+        case VoteStatus.REJECTED:
+          setTransactionStatus("Transfer Aborted");
+          break;
+      }
+    }, intervalMs);
   };
 
   return (
