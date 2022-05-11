@@ -10,9 +10,9 @@ import {
 const base = new BigNumber(10);
 
 export enum VoteStatus {
-  REJECTED = "Rejected",
-  ACTIVE = "Active",
+  INITIATED = "Initiated",
   APPROVED = "Approved",
+  REJECTED = "Rejected",
 }
 
 export type GetBridgeProsalVotesRes = {
@@ -62,7 +62,7 @@ export const getBridgeProposalVotes = async (
   recipient: string,
   depositNonce: number,
   decimalAmount: number
-) => {
+): Promise<GetBridgeProsalVotesRes | undefined> => {
   const dstChainConfig = getСhainConfig(dstChainId);
   const decimals = new BigNumber(dstChainConfig.decimals);
 
@@ -88,10 +88,5 @@ export const decimalToBalance = async (
 ) => {
   const amount = new BigNumber(decimalAmount);
   const balance = amount.multipliedBy(base.pow(decimals));
-  console.log({
-    decimalAmount: decimalAmount.toString(),
-    decimals: decimals.toString(),
-    balance: balance.toString(),
-  });
-  return api.registry.createType("Balance", balance);
+  return api.registry.createType("Balance", balance.toString());
 };

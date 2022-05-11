@@ -410,8 +410,8 @@ export const EVMHomeAdaptorProvider = ({
               homeChainConfig.chainId,
               destinationChainId,
               recipient,
-              depositNonce,
-              amount
+              parseInt(depositNonce.toString()),
+              parseFloat(amount.toString())
             );
           }
         );
@@ -514,7 +514,7 @@ export const EVMHomeAdaptorProvider = ({
 
     setInterval(async () => {
       const cereApi = await createCereApi(dstChainConfig.rpcUrl);
-      const { status } = await getBridgeProposalVotes(
+      const res = await getBridgeProposalVotes(
         cereApi,
         srcChainId,
         destinationChainId,
@@ -522,8 +522,8 @@ export const EVMHomeAdaptorProvider = ({
         depositNonce,
         decimalAmount
       );
-      console.log({ "Proposal votes status": status });
-      switch (status) {
+      console.log("Proposal votes status", res?.status);
+      switch (res?.status) {
         case VoteStatus.APPROVED:
           setTransactionStatus("Transfer Completed");
           break;
