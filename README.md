@@ -187,8 +187,18 @@ mint \
 
 ```
 
-After minting some tokens, you can send a few to your imported account in order for you to test a transfer or you just can mint to your testing account in metamask. Finally simply run
+After minting some tokens, you can send a few to your imported account in order for you to test a transfer or you just can mint to your testing account in metamask.
 
+## Starting UI
+First install dependencies
+```bash
+yarn install
+```
+Then build a core ui library
+```bash
+yarn build:core
+```
+Finally run ui
 ```bash
 yarn start:ui
 ```
