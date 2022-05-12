@@ -17,7 +17,8 @@ export type ChainType = "Ethereum" | "Substrate";
 
 export type TransferFallback = {
   chainId: number;
-  intervalMs: number;
+  delayMs: number;
+  delayRatio: number;
 };
 
 export type BridgeConfig = {
@@ -72,7 +73,7 @@ export const getСhainConfig = (chainId: number) => {
   ) as SubstrateBridgeConfig;
 };
 
-export const getСhainTransferFallback = (
+export const getСhainTransferFallbackConfig = (
   chainId: number,
   destinationChainId: number
 ) => {

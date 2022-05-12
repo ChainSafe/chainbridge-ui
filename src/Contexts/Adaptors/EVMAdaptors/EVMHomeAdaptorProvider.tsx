@@ -8,7 +8,7 @@ import {
   EvmBridgeConfig,
   TokenConfig,
   getСhainConfig,
-  getСhainTransferFallback,
+  getСhainTransferFallbackConfig,
 } from "../../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 import { Weth } from "../../../Contracts/Weth";
@@ -20,6 +20,7 @@ import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
+import { fallback } from "../../../Utils/Helpers";
 import {
   createApi as createCereApi,
   getBridgeProposalVotes,
@@ -507,13 +508,13 @@ export const EVMHomeAdaptorProvider = ({
     decimalAmount: number
   ): Promise<void> => {
     const dstChainConfig = getСhainConfig(destinationChainId);
-    const { intervalMs } = getСhainTransferFallback(
+    const { delayMs, delayRatio } = getСhainTransferFallbackConfig(
       srcChainId,
       destinationChainId
     );
+    const cereApi = await createCereApi(dstChainConfig.rpcUrl);
 
-    setInterval(async () => {
-      const cereApi = await createCereApi(dstChainConfig.rpcUrl);
+    fallback(delayMs, delayRatio, async () => {
       const res = await getBridgeProposalVotes(
         cereApi,
         srcChainId,
@@ -526,14 +527,15 @@ export const EVMHomeAdaptorProvider = ({
       switch (res?.status) {
         case VoteStatus.APPROVED:
           setTransactionStatus("Transfer Completed");
-          break;
+          return false;
         case VoteStatus.REJECTED:
           setTransactionStatus("Transfer Aborted");
-          break;
+          return false;
+        default:
+          return true;
       }
-    }, intervalMs);
+    });
   };
-
   return (
     <HomeBridgeContext.Provider
       value={{
