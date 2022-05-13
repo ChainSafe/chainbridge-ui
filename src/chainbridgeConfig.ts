@@ -68,9 +68,9 @@ export const chainbridgeConfig: ChainbridgeConfig =
   window.__RUNTIME_CONFIG__.CHAINBRIDGE;
 
 export const getСhainConfig = (chainId: number) => {
-  return chainbridgeConfig.chains.find(
-    (c) => c.chainId === chainId
-  ) as SubstrateBridgeConfig;
+  return chainbridgeConfig.chains.find((c) => c.chainId === chainId) as
+    | EvmBridgeConfig
+    | SubstrateBridgeConfig;
 };
 
 export const getСhainTransferFallbackConfig = (

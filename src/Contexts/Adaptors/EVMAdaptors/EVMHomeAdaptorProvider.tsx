@@ -7,8 +7,6 @@ import {
   chainbridgeConfig,
   EvmBridgeConfig,
   TokenConfig,
-  getСhainConfig,
-  getСhainTransferFallbackConfig,
 } from "../../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 import { Weth } from "../../../Contracts/Weth";
@@ -18,14 +16,7 @@ import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
-
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
-import { fallback } from "../../../Utils/Helpers";
-import {
-  createApi as createCereApi,
-  getBridgeProposalVotes,
-  VoteStatus,
-} from "../SubstrateApis/ChainBridgeAPI";
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -87,6 +78,9 @@ export const EVMHomeAdaptorProvider = ({
     homeChains,
     setNetworkId,
     setWalletType,
+    depositAmount,
+    setDepositAmount,
+    setDepositRecipient,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -95,7 +89,6 @@ export const EVMHomeAdaptorProvider = ({
   );
   const [bridgeFee, setBridgeFee] = useState<number | undefined>();
 
-  const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("");
 
   // Contracts
@@ -331,6 +324,7 @@ export const EVMHomeAdaptorProvider = ({
         return;
       }
       setTransactionStatus("Initializing Transfer");
+      setDepositRecipient(recipient);
       setDepositAmount(amount);
       setSelectedToken(tokenAddress);
       const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
@@ -407,13 +401,6 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce) => {
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
-            initFallbackMechanism(
-              homeChainConfig.chainId,
-              destinationChainId,
-              recipient,
-              parseInt(depositNonce.toString()),
-              parseFloat(amount.toString())
-            );
           }
         );
 
@@ -498,43 +485,6 @@ export const EVMHomeAdaptorProvider = ({
       console.error(error);
       return "";
     }
-  };
-
-  const initFallbackMechanism = async (
-    srcChainId: number,
-    destinationChainId: number,
-    recipient: string,
-    depositNonce: number,
-    decimalAmount: number
-  ): Promise<void> => {
-    const dstChainConfig = getСhainConfig(destinationChainId);
-    const { delayMs, delayRatio } = getСhainTransferFallbackConfig(
-      srcChainId,
-      destinationChainId
-    );
-    const cereApi = await createCereApi(dstChainConfig.rpcUrl);
-
-    fallback(delayMs, delayRatio, async () => {
-      const res = await getBridgeProposalVotes(
-        cereApi,
-        srcChainId,
-        destinationChainId,
-        recipient,
-        depositNonce,
-        decimalAmount
-      );
-      console.log("Proposal votes status", res?.status);
-      switch (res?.status) {
-        case VoteStatus.APPROVED:
-          setTransactionStatus("Transfer Completed");
-          return false;
-        case VoteStatus.REJECTED:
-          setTransactionStatus("Transfer Aborted");
-          return false;
-        default:
-          return true;
-      }
-    });
   };
   return (
     <HomeBridgeContext.Provider

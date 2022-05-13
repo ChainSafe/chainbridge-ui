@@ -2,7 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { HomeBridgeContext } from "../HomeBridgeContext";
 import { useNetworkManager } from "../NetworkManagerContext";
-import { createApi, submitDeposit } from "./SubstrateApis/ChainBridgeAPI";
+import {
+  createApi,
+  submitDeposit,
+  getBridgeProposalVotes,
+  VoteStatus,
+} from "./SubstrateApis/ChainBridgeAPI";
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
@@ -20,8 +25,12 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
-import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
+import {
+  SubstrateBridgeConfig,
+  getСhainTransferFallbackConfig,
+} from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
+import { fallback } from "../../Utils/Helpers";
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -337,11 +346,15 @@ export const SubstrateDestinationAdaptorProvider = ({
 }: IDestinationBridgeProviderProps) => {
   const {
     depositNonce,
+    homeChainConfig,
     destinationChainConfig,
     setDepositVotes,
     depositVotes,
     tokensDispatch,
+    transactionStatus,
     setTransactionStatus,
+    depositAmount,
+    depositRecipient,
   } = useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -438,6 +451,49 @@ export const SubstrateDestinationAdaptorProvider = ({
     setTransactionStatus,
     tokensDispatch,
   ]);
+
+  const initFallbackMechanism = useCallback(async (): Promise<void> => {
+    const srcChainId = homeChainConfig?.chainId as number;
+    const destinationChainId = destinationChainConfig?.chainId as number;
+    const { delayMs, delayRatio } = getСhainTransferFallbackConfig(
+      srcChainId,
+      destinationChainId
+    );
+    const cereApi = await createApi(destinationChainConfig?.rpcUrl as string);
+
+    fallback(delayMs, delayRatio, async () => {
+      const res = await getBridgeProposalVotes(
+        cereApi,
+        srcChainId,
+        destinationChainId,
+        depositRecipient as string,
+        parseInt(depositNonce as string),
+        depositAmount as number
+      );
+      console.log("Proposal votes status", res?.status);
+      switch (res?.status) {
+        case VoteStatus.APPROVED:
+          setTransactionStatus("Transfer Completed");
+          return false;
+        case VoteStatus.REJECTED:
+          setTransactionStatus("Transfer Aborted");
+          return false;
+        default:
+          return true;
+      }
+    });
+  }, [
+    homeChainConfig?.chainId,
+    destinationChainConfig?.chainId,
+    depositRecipient,
+    depositNonce,
+    depositAmount,
+  ]);
+
+  useEffect(() => {
+    console.log({ transactionStatus }, "!!!"); // todo: check why get transaction status update several times on the same status
+    if (transactionStatus === "Initializing Transfer") initFallbackMechanism();
+  }, [transactionStatus]);
 
   return (
     <DestinationBridgeContext.Provider

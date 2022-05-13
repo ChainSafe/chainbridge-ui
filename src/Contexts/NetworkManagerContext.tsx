@@ -89,6 +89,12 @@ interface NetworkManagerContext {
 
   setTransferTxHash: (input: string) => void;
   transferTxHash: string;
+
+  setDepositRecipient: (input: string | undefined) => void;
+  depositRecipient: string | undefined;
+
+  setDepositAmount: (input: number | undefined) => void;
+  depositAmount: number | undefined;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -122,6 +128,12 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
     []
+  );
+  const [depositRecipient, setDepositRecipient] = useState<string | undefined>(
+    undefined
+  );
+  const [depositAmount, setDepositAmount] = useState<number | undefined>(
+    undefined
   );
 
   const handleSetHomeChain = useCallback(
@@ -214,6 +226,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         </SubstrateDestinationAdaptorProvider>
       );
     } else {
+      // todo: understand why we need this part
       return (
         <DestinationBridgeContext.Provider
           value={{
@@ -250,6 +263,10 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         tokensDispatch,
         setTransferTxHash,
         transferTxHash,
+        depositRecipient,
+        setDepositRecipient,
+        depositAmount,
+        setDepositAmount,
       }}
     >
       {walletType === "Ethereum" ? (

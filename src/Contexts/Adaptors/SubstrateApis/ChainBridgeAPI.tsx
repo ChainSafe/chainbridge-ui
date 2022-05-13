@@ -42,7 +42,7 @@ export const submitDeposit = (
   srcChainId: number,
   dstChainId: number
 ) => {
-  const subChainConfig = getСhainConfig(srcChainId);
+  const subChainConfig = getСhainConfig(srcChainId) as SubstrateBridgeConfig;
 
   return api.tx[subChainConfig.transferPalletName][
     subChainConfig.transferFunctionName
