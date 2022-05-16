@@ -35,7 +35,7 @@ window.__RUNTIME_CONFIG__ = {
         transferFallback: [
           {
             chainId: 1,
-            delayMs: 6 * 60 * 1000,
+            delayMs: 4 * 60 * 1000,
             delayRatio: 1.3,
           },
         ],
@@ -67,13 +67,8 @@ window.__RUNTIME_CONFIG__ = {
         ],
         transferFallback: [
           {
-            chainId: 0,
-            delayMs: 6 * 60 * 1000,
-            delayRatio: 1.3,
-          },
-          {
             chainId: 2,
-            delayMs: 6 * 60 * 1000,
+            delayMs: 3 * 60 * 1000,
             delayRatio: 1.3,
           },
         ],

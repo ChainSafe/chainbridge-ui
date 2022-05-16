@@ -95,6 +95,9 @@ interface NetworkManagerContext {
 
   setDepositAmount: (input: number | undefined) => void;
   depositAmount: number | undefined;
+
+  setFallbackInitialized: (input: boolean) => void;
+  fallbackInitialized: boolean;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -135,6 +138,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   const [depositAmount, setDepositAmount] = useState<number | undefined>(
     undefined
   );
+
+  const [fallbackInitialized, setFallbackInitialized] = useState(false);
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
@@ -267,6 +272,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setDepositRecipient,
         depositAmount,
         setDepositAmount,
+        fallbackInitialized,
+        setFallbackInitialized,
       }}
     >
       {walletType === "Ethereum" ? (

@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
-import { EvmBridgeConfig } from "../../../chainbridgeConfig";
+import {
+  EvmBridgeConfig,
+  getСhainTransferFallbackConfig,
+} from "../../../chainbridgeConfig";
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
-
-import { getProvider } from "./helpers";
+import { getProvider, getErc20ProposalHash, VoteStatus } from "./helpers";
+import { fallback } from "../../../Utils/Helpers";
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -17,10 +20,15 @@ export const EVMDestinationAdaptorProvider = ({
     destinationChainConfig,
     homeChainConfig,
     tokensDispatch,
+    transactionStatus,
     setTransactionStatus,
     setTransferTxHash,
     setDepositVotes,
     depositVotes,
+    depositRecipient,
+    depositAmount,
+    fallbackInitialized,
+    setFallbackInitialized,
   } = useNetworkManager();
 
   const [destinationBridge, setDestinationBridge] = useState<
@@ -38,7 +46,7 @@ export const EVMDestinationAdaptorProvider = ({
       );
       setDestinationBridge(bridge);
     }
-  }, [destinationChainConfig, destinationBridge]);
+  }, [destinationChainConfig, destinationBridge, transactionStatus]);
 
   useEffect(() => {
     if (
@@ -144,6 +152,60 @@ export const EVMDestinationAdaptorProvider = ({
     setTransferTxHash,
     tokensDispatch,
   ]);
+
+  const initFallbackMechanism = useCallback(async (): Promise<void> => {
+    setFallbackInitialized(true);
+    const srcChainId = homeChainConfig?.chainId as number;
+    const destinationChainId = destinationChainConfig?.chainId as number;
+    const { delayMs, delayRatio } = getСhainTransferFallbackConfig(
+      srcChainId,
+      destinationChainId
+    );
+    const erc20ProposalHash = getErc20ProposalHash(
+      (destinationChainConfig as EvmBridgeConfig).erc20HandlerAddress,
+      depositAmount as number,
+      depositRecipient as string
+    );
+
+    fallback(delayMs, delayRatio, async () => {
+      const res = await destinationBridge?.getProposal(
+        srcChainId,
+        parseInt(depositNonce as string),
+        erc20ProposalHash
+      );
+      const status = res ? res[4] : undefined;
+      console.log("Proposal votes status", status);
+      switch (status) {
+        case VoteStatus.EXECUTED:
+          setTransactionStatus("Transfer Completed");
+          setFallbackInitialized(false);
+          return false;
+        case VoteStatus.CANCELLED:
+          setTransactionStatus("Transfer Aborted");
+          setFallbackInitialized(false);
+          return false;
+        default:
+          return true;
+      }
+    });
+  }, [
+    homeChainConfig,
+    destinationChainConfig,
+    depositRecipient,
+    depositNonce,
+    depositAmount,
+    destinationBridge,
+  ]);
+
+  useEffect(() => {
+    console.log({ transactionStatus }); // ToDo: check why get transaction status update several times on the same status
+    if (
+      transactionStatus === "In Transit" &&
+      destinationBridge &&
+      !fallbackInitialized
+    )
+      initFallbackMechanism();
+  }, [transactionStatus, destinationBridge]);
 
   return (
     <DestinationBridgeContext.Provider

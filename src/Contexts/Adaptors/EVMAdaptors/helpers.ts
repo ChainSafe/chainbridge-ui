@@ -156,3 +156,33 @@ export async function getPriceCompatibility(
   }
   return gasPriceCompatibility;
 }
+
+const getHexTokenCents = (decimalAmount: number, decimals: number) =>
+  BigNumber.from(
+    utils.parseUnits(decimalAmount.toString(), decimals)
+  ).toHexString();
+
+const getEthBridgeData = (decimalAmount: number, recipient: string) =>
+  "0x" +
+  utils.hexZeroPad(getHexTokenCents(decimalAmount, 10), 32).substr(2) +
+  utils.hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32).substr(2) +
+  recipient.substr(2);
+
+export function getErc20ProposalHash(
+  erc20AddressHandlerContract: string,
+  decimalAmount: number,
+  recipient: string
+) {
+  const data =
+    erc20AddressHandlerContract +
+    getEthBridgeData(decimalAmount, recipient).substr(2);
+  return utils.keccak256(data);
+}
+
+export enum VoteStatus {
+  INACTIVE = 0,
+  ACTIVE = 1,
+  PASSED = 2,
+  EXECUTED = 3,
+  CANCELLED = 4,
+}
