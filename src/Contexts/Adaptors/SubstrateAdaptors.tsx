@@ -479,10 +479,12 @@ export const SubstrateDestinationAdaptorProvider = ({
       console.log("Proposal votes status", res?.status);
       switch (res?.status) {
         case VoteStatus.APPROVED:
+          console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
           return false;
         case VoteStatus.REJECTED:
+          console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
           return false;

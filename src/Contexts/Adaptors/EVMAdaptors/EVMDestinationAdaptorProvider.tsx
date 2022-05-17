@@ -178,10 +178,12 @@ export const EVMDestinationAdaptorProvider = ({
       console.log("Proposal votes status", status);
       switch (status) {
         case VoteStatus.EXECUTED:
+          console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
           return false;
         case VoteStatus.CANCELLED:
+          console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
           return false;
