@@ -36,7 +36,7 @@ window.__RUNTIME_CONFIG__ = {
           {
             chainId: 1,
             delayMs: 4 * 60 * 1000,
-            delayRatio: 1.3,
+            pollingIntervalMs: 2000,
           },
         ],
       },
@@ -69,7 +69,7 @@ window.__RUNTIME_CONFIG__ = {
           {
             chainId: 2,
             delayMs: 3 * 60 * 1000,
-            delayRatio: 1.3,
+            pollingIntervalMs: 2000,
           },
         ],
       },
@@ -101,7 +101,7 @@ window.__RUNTIME_CONFIG__ = {
           {
             chainId: 1,
             delayMs: 6 * 60 * 1000,
-            delayRatio: 1.3,
+            pollingIntervalMs: 2000,
           },
         ],
       },

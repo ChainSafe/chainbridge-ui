@@ -10,7 +10,7 @@ import { useNetworkManager } from "../../NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { getProvider, getErc20ProposalHash, VoteStatus } from "./helpers";
-import { fallback } from "../../../Utils/Helpers";
+import { Fallback } from "../../../Utils/Fallback";
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -27,8 +27,8 @@ export const EVMDestinationAdaptorProvider = ({
     depositVotes,
     depositRecipient,
     depositAmount,
-    fallbackInitialized,
-    setFallbackInitialized,
+    fallback,
+    setFallback,
   } = useNetworkManager();
 
   const [destinationBridge, setDestinationBridge] = useState<
@@ -102,10 +102,12 @@ export const EVMDestinationAdaptorProvider = ({
             case 3:
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
+              fallback?.stop();
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
+              fallback?.stop();
               break;
           }
         }
@@ -154,10 +156,9 @@ export const EVMDestinationAdaptorProvider = ({
   ]);
 
   const initFallbackMechanism = useCallback(async (): Promise<void> => {
-    setFallbackInitialized(true);
     const srcChainId = homeChainConfig?.chainId as number;
     const destinationChainId = destinationChainConfig?.chainId as number;
-    const { delayMs, delayRatio } = getСhainTransferFallbackConfig(
+    const { delayMs, pollingIntervalMs } = getСhainTransferFallbackConfig(
       srcChainId,
       destinationChainId
     );
@@ -167,7 +168,7 @@ export const EVMDestinationAdaptorProvider = ({
       depositRecipient as string
     );
 
-    fallback(delayMs, delayRatio, async () => {
+    const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
       const res = await destinationBridge?.getProposal(
         srcChainId,
         parseInt(depositNonce as string),
@@ -178,16 +179,18 @@ export const EVMDestinationAdaptorProvider = ({
       switch (status) {
         case VoteStatus.EXECUTED:
           setTransactionStatus("Transfer Completed");
-          setFallbackInitialized(false);
+          fallback.stop();
           return false;
         case VoteStatus.CANCELLED:
           setTransactionStatus("Transfer Aborted");
-          setFallbackInitialized(false);
+          fallback.stop();
           return false;
         default:
           return true;
       }
     });
+    fallback.init();
+    setFallback(fallback);
   }, [
     homeChainConfig,
     destinationChainConfig,
@@ -202,10 +205,10 @@ export const EVMDestinationAdaptorProvider = ({
     if (
       transactionStatus === "In Transit" &&
       destinationBridge &&
-      !fallbackInitialized
+      !fallback?.initialized()
     )
       initFallbackMechanism();
-  }, [transactionStatus, destinationBridge]);
+  }, [transactionStatus, destinationBridge, fallback]);
 
   return (
     <DestinationBridgeContext.Provider

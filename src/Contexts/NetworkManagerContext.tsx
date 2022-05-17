@@ -28,6 +28,7 @@ import {
   transitMessageReducer,
 } from "./Reducers/TransitMessageReducer";
 import { blockchainChainIds } from "../Constants/constants";
+import { Fallback } from "../Utils/Fallback";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -96,8 +97,8 @@ interface NetworkManagerContext {
   setDepositAmount: (input: number | undefined) => void;
   depositAmount: number | undefined;
 
-  setFallbackInitialized: (input: boolean) => void;
-  fallbackInitialized: boolean;
+  setFallback: (input: Fallback | undefined) => void;
+  fallback: Fallback | undefined;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -139,7 +140,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     undefined
   );
 
-  const [fallbackInitialized, setFallbackInitialized] = useState(false);
+  const [fallback, setFallback] = useState<Fallback | undefined>(undefined);
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
@@ -272,8 +273,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setDepositRecipient,
         depositAmount,
         setDepositAmount,
-        fallbackInitialized,
-        setFallbackInitialized,
+        fallback,
+        setFallback,
       }}
     >
       {walletType === "Ethereum" ? (

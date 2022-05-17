@@ -28,14 +28,3 @@ export const toFixedWithoutRounding = (num: number, digits?: number) => {
     return "NaN";
   }
 };
-
-export const fallback = (
-  delayMs: number,
-  delayRatio: number,
-  shouldContinue: () => Promise<boolean>
-): void => {
-  setTimeout(async () => {
-    if (await shouldContinue())
-      fallback(delayMs * delayRatio, delayRatio, shouldContinue);
-  }, delayMs * delayRatio);
-};

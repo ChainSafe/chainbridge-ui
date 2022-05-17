@@ -30,7 +30,7 @@ import {
   getСhainTransferFallbackConfig,
 } from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
-import { fallback } from "../../Utils/Helpers";
+import { Fallback } from "../../Utils/Fallback";
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -50,6 +50,7 @@ export const SubstrateHomeAdaptorProvider = ({
     depositAmount,
     setDepositAmount,
     setDepositRecipient,
+    fallback,
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
@@ -293,6 +294,7 @@ export const SubstrateHomeAdaptorProvider = ({
             .catch((error: any) => {
               console.log(":( transaction failed", error);
               setTransactionStatus("Transfer Aborted");
+              fallback?.stop();
             });
         }
       }
@@ -358,8 +360,8 @@ export const SubstrateDestinationAdaptorProvider = ({
     setTransactionStatus,
     depositAmount,
     depositRecipient,
-    setFallbackInitialized,
-    fallbackInitialized,
+    setFallback,
+    fallback,
   } = useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -436,6 +438,7 @@ export const SubstrateDestinationAdaptorProvider = ({
           ) {
             setDepositVotes(depositVotes + 1);
             setTransactionStatus("Transfer Completed");
+            fallback?.stop();
           }
         });
       });
@@ -458,14 +461,13 @@ export const SubstrateDestinationAdaptorProvider = ({
   ]);
 
   const initFallbackMechanism = useCallback(async (): Promise<void> => {
-    setFallbackInitialized(true);
     const srcChainId = homeChainConfig?.chainId as number;
     const destinationChainId = destinationChainConfig?.chainId as number;
-    const { delayMs, delayRatio } = getСhainTransferFallbackConfig(
+    const { delayMs, pollingIntervalMs } = getСhainTransferFallbackConfig(
       srcChainId,
       destinationChainId
     );
-    fallback(delayMs, delayRatio, async () => {
+    const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
       const res = await getBridgeProposalVotes(
         api as ApiPromise,
         srcChainId,
@@ -478,16 +480,18 @@ export const SubstrateDestinationAdaptorProvider = ({
       switch (res?.status) {
         case VoteStatus.APPROVED:
           setTransactionStatus("Transfer Completed");
-          setFallbackInitialized(false);
+          fallback.stop();
           return false;
         case VoteStatus.REJECTED:
           setTransactionStatus("Transfer Aborted");
-          setFallbackInitialized(false);
+          fallback.stop();
           return false;
         default:
           return true;
       }
     });
+    fallback.init();
+    setFallback(fallback);
   }, [
     api,
     homeChainConfig,
@@ -499,9 +503,9 @@ export const SubstrateDestinationAdaptorProvider = ({
 
   useEffect(() => {
     console.log({ transactionStatus }); // ToDo: check why get transaction status update several times on the same status
-    if (transactionStatus === "In Transit" && api && !fallbackInitialized)
+    if (transactionStatus === "In Transit" && api && !fallback?.initialized())
       initFallbackMechanism();
-  }, [transactionStatus, api, fallbackInitialized]);
+  }, [transactionStatus, api, fallback]);
 
   return (
     <DestinationBridgeContext.Provider

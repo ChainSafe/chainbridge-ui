@@ -32,6 +32,13 @@ window.__RUNTIME_CONFIG__ = {
             isDoubleApproval: false,
           },
         ],
+        transferFallback: [
+          {
+            chainId: 1,
+            delayMs: 4 * 60 * 1000,
+            pollingIntervalMs: 2000,
+          },
+        ],
       },
       {
         chainId: 1,
@@ -59,6 +66,13 @@ window.__RUNTIME_CONFIG__ = {
             decimals: cereTokenDecimals,
           },
         ],
+        transferFallback: [
+          {
+            chainId: 2,
+            delayMs: 3 * 60 * 1000,
+            pollingIntervalMs: 2000,
+          },
+        ],
       },
       {
         chainId: 0,
@@ -82,6 +96,13 @@ window.__RUNTIME_CONFIG__ = {
               "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
             decimals: cereTokenDecimals,
             isDoubleApproval: false,
+          },
+        ],
+        transferFallback: [
+          {
+            chainId: 1,
+            delayMs: 6 * 60 * 1000,
+            pollingIntervalMs: 2000,
           },
         ],
       },

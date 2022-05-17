@@ -81,6 +81,7 @@ export const EVMHomeAdaptorProvider = ({
     depositAmount,
     setDepositAmount,
     setDepositRecipient,
+    fallback,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -415,6 +416,7 @@ export const EVMHomeAdaptorProvider = ({
       } catch (error) {
         console.error(error);
         setTransactionStatus("Transfer Aborted");
+        fallback?.stop();
         setSelectedToken(tokenAddress);
       }
     },
