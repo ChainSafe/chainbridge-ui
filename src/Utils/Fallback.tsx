@@ -15,7 +15,7 @@ export class Fallback {
         if (!res) this.stop();
       }, this.pollingIntervalMs);
     }, this.delayMs);
-    console.log("Fallback is started");
+    console.log("Fallback started");
   }
 
   stop() {
