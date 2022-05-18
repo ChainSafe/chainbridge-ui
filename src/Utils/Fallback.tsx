@@ -9,13 +9,13 @@ export class Fallback {
   ) {}
 
   async init() {
-    console.log("Fallback initialized");
     this.timeout = setTimeout(async () => {
       this.interval = setInterval(async () => {
         const res = await this.pollingCallback();
         if (!res) this.stop();
       }, this.pollingIntervalMs);
     }, this.delayMs);
+    console.log("Fallback is initializing");
   }
 
   stop() {
