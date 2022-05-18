@@ -2,11 +2,7 @@
 
 ## vNext
 
-- ...
-
-## v0.11.2
-
-- Implement fallback mechanism
+- Implemented fallback mechanism
 
 ## v0.11.1
 

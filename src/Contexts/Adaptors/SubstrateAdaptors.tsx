@@ -498,7 +498,7 @@ export const SubstrateDestinationAdaptorProvider = ({
           return true;
       }
     });
-    fallback.init();
+    fallback.start();
     setFallback(fallback);
   }, [
     api,

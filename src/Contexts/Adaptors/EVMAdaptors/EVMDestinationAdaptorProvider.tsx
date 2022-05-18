@@ -203,7 +203,7 @@ export const EVMDestinationAdaptorProvider = ({
           return true;
       }
     });
-    fallback.init();
+    fallback.start();
     setFallback(fallback);
   }, [
     homeChainConfig,
