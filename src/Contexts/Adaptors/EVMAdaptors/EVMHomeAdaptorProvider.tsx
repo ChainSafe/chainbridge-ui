@@ -16,7 +16,6 @@ import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
-
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
 
 export const EVMHomeAdaptorProvider = ({
@@ -79,6 +78,10 @@ export const EVMHomeAdaptorProvider = ({
     homeChains,
     setNetworkId,
     setWalletType,
+    depositAmount,
+    setDepositAmount,
+    setDepositRecipient,
+    fallback,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -87,7 +90,6 @@ export const EVMHomeAdaptorProvider = ({
   );
   const [bridgeFee, setBridgeFee] = useState<number | undefined>();
 
-  const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("");
 
   // Contracts
@@ -323,6 +325,7 @@ export const EVMHomeAdaptorProvider = ({
         return;
       }
       setTransactionStatus("Initializing Transfer");
+      setDepositRecipient(recipient);
       setDepositAmount(amount);
       setSelectedToken(tokenAddress);
       const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
@@ -413,6 +416,7 @@ export const EVMHomeAdaptorProvider = ({
       } catch (error) {
         console.error(error);
         setTransactionStatus("Transfer Aborted");
+        fallback?.stop();
         setSelectedToken(tokenAddress);
       }
     },
@@ -484,7 +488,6 @@ export const EVMHomeAdaptorProvider = ({
       return "";
     }
   };
-
   return (
     <HomeBridgeContext.Provider
       value={{

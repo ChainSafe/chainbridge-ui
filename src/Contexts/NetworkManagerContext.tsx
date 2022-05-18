@@ -28,6 +28,7 @@ import {
   transitMessageReducer,
 } from "./Reducers/TransitMessageReducer";
 import { blockchainChainIds } from "../Constants/constants";
+import { Fallback } from "../Utils/Fallback";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -89,6 +90,15 @@ interface NetworkManagerContext {
 
   setTransferTxHash: (input: string) => void;
   transferTxHash: string;
+
+  setDepositRecipient: (input: string | undefined) => void;
+  depositRecipient: string | undefined;
+
+  setDepositAmount: (input: number | undefined) => void;
+  depositAmount: number | undefined;
+
+  setFallback: (input: Fallback | undefined) => void;
+  fallback: Fallback | undefined;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -123,6 +133,14 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     transitMessageReducer,
     []
   );
+  const [depositRecipient, setDepositRecipient] = useState<string | undefined>(
+    undefined
+  );
+  const [depositAmount, setDepositAmount] = useState<number | undefined>(
+    undefined
+  );
+
+  const [fallback, setFallback] = useState<Fallback | undefined>(undefined);
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
@@ -214,6 +232,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         </SubstrateDestinationAdaptorProvider>
       );
     } else {
+      // todo: understand why we need this part
       return (
         <DestinationBridgeContext.Provider
           value={{
@@ -250,6 +269,12 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         tokensDispatch,
         setTransferTxHash,
         transferTxHash,
+        depositRecipient,
+        setDepositRecipient,
+        depositAmount,
+        setDepositAmount,
+        fallback,
+        setFallback,
       }}
     >
       {walletType === "Ethereum" ? (

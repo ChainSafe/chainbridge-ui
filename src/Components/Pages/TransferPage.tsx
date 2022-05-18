@@ -794,7 +794,7 @@ const TransferPage = () => {
           setPreflightModalOpen(false);
           preflightDetails &&
             deposit(
-              preflightDetails.tokenAmount,
+              parseFloat(preflightDetails.tokenAmount.toString()),
               preflightDetails.receiver,
               preflightDetails.token
             );

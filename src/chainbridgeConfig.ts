@@ -15,6 +15,14 @@ export type TokenConfig = {
 
 export type ChainType = "Ethereum" | "Substrate";
 
+export type TransferFallback = {
+  chainId: number;
+  delayMs: number;
+  blockTimeMs: number;
+  pollingMaxIntervalMs: number;
+  pollingMinIntervalMs: number;
+};
+
 export type BridgeConfig = {
   networkId?: number;
   chainId: number;
@@ -26,6 +34,7 @@ export type BridgeConfig = {
   nativeTokenSymbol: string;
   decimals: number;
   availableAsHomeNetwork?: boolean;
+  transferFallback: TransferFallback[];
 };
 
 export type EvmBridgeConfig = BridgeConfig & {
@@ -59,3 +68,19 @@ export type UIConfig = { wrapTokenPage: boolean };
 
 export const chainbridgeConfig: ChainbridgeConfig =
   window.__RUNTIME_CONFIG__.CHAINBRIDGE;
+
+export const getСhainConfig = (chainId: number) => {
+  return chainbridgeConfig.chains.find((c) => c.chainId === chainId) as
+    | EvmBridgeConfig
+    | SubstrateBridgeConfig;
+};
+
+export const getСhainTransferFallbackConfig = (
+  chainId: number,
+  destinationChainId: number
+) => {
+  const chainConfig = getСhainConfig(chainId);
+  return chainConfig.transferFallback.find(
+    (fallback) => fallback.chainId === destinationChainId
+  ) as TransferFallback;
+};

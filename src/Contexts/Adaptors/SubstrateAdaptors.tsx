@@ -2,7 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { DestinationBridgeContext } from "../DestinationBridgeContext";
 import { HomeBridgeContext } from "../HomeBridgeContext";
 import { useNetworkManager } from "../NetworkManagerContext";
-import { createApi, submitDeposit } from "./SubstrateApis/ChainBridgeAPI";
+import {
+  createApi,
+  submitDeposit,
+  getBridgeProposalVotes,
+  VoteStatus,
+} from "./SubstrateApis/ChainBridgeAPI";
 import {
   IDestinationBridgeProviderProps,
   IHomeBridgeProviderProps,
@@ -20,8 +25,12 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { UnsubscribePromise, VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
-import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
+import {
+  SubstrateBridgeConfig,
+  getСhainTransferFallbackConfig,
+} from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
+import { Fallback } from "../../Utils/Fallback";
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -38,6 +47,10 @@ export const SubstrateHomeAdaptorProvider = ({
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
+    depositAmount,
+    setDepositAmount,
+    setDepositRecipient,
+    fallback,
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
@@ -45,7 +58,6 @@ export const SubstrateHomeAdaptorProvider = ({
   );
   const [bridgeFee, setBridgeFee] = useState<number | undefined>(undefined);
 
-  const [depositAmount, setDepositAmount] = useState<number | undefined>();
   const [selectedToken, setSelectedToken] = useState<string>("CSS");
 
   const [tokens, setTokens] = useState<Tokens>({});
@@ -236,12 +248,14 @@ export const SubstrateHomeAdaptorProvider = ({
             api,
             amount,
             recipient,
+            (homeChainConfig as SubstrateBridgeConfig).chainId,
             destinationChainId
           );
 
           const injector = await web3FromSource(targetAccount.meta.source);
-          setTransactionStatus("Initializing Transfer");
           setDepositAmount(amount);
+          setDepositRecipient(recipient);
+          setTransactionStatus("Initializing Transfer");
           transferExtrinsic
             .signAndSend(
               address,
@@ -279,6 +293,7 @@ export const SubstrateHomeAdaptorProvider = ({
             .catch((error: any) => {
               console.log(":( transaction failed", error);
               setTransactionStatus("Transfer Aborted");
+              fallback?.stop();
             });
         }
       }
@@ -335,11 +350,17 @@ export const SubstrateDestinationAdaptorProvider = ({
 }: IDestinationBridgeProviderProps) => {
   const {
     depositNonce,
+    homeChainConfig,
     destinationChainConfig,
     setDepositVotes,
     depositVotes,
     tokensDispatch,
+    transactionStatus,
     setTransactionStatus,
+    depositAmount,
+    depositRecipient,
+    setFallback,
+    fallback,
   } = useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -359,7 +380,7 @@ export const SubstrateDestinationAdaptorProvider = ({
         setInitialising(false);
       })
       .catch(console.error);
-  }, [destinationChainConfig, api, initiaising]);
+  }, [destinationChainConfig, api, initiaising, transactionStatus]);
 
   const [listenerActive, setListenerActive] = useState<
     UnsubscribePromise | undefined
@@ -416,6 +437,7 @@ export const SubstrateDestinationAdaptorProvider = ({
           ) {
             setDepositVotes(depositVotes + 1);
             setTransactionStatus("Transfer Completed");
+            fallback?.stop();
           }
         });
       });
@@ -436,6 +458,61 @@ export const SubstrateDestinationAdaptorProvider = ({
     setTransactionStatus,
     tokensDispatch,
   ]);
+
+  const initFallbackMechanism = useCallback(async (): Promise<void> => {
+    const srcChainId = homeChainConfig?.chainId as number;
+    const destinationChainId = destinationChainConfig?.chainId as number;
+    const {
+      delayMs,
+      pollingMinIntervalMs,
+      pollingMaxIntervalMs,
+      blockTimeMs,
+    } = getСhainTransferFallbackConfig(srcChainId, destinationChainId);
+    const pollingIntervalMs = Math.min(
+      Math.max(pollingMinIntervalMs, 3 * blockTimeMs),
+      pollingMaxIntervalMs
+    );
+    const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
+      const res = await getBridgeProposalVotes(
+        api as ApiPromise,
+        srcChainId,
+        destinationChainId,
+        depositRecipient as string,
+        parseInt(depositNonce as string),
+        depositAmount as number
+      );
+      console.log("Proposal votes status", res?.status);
+      switch (res?.status) {
+        case VoteStatus.APPROVED:
+          console.log("Transfer completed in fallback mechanism");
+          setTransactionStatus("Transfer Completed");
+          fallback.stop();
+          return false;
+        case VoteStatus.REJECTED:
+          console.log("Transfer aborted in fallback mechanism");
+          setTransactionStatus("Transfer Aborted");
+          fallback.stop();
+          return false;
+        default:
+          return true;
+      }
+    });
+    fallback.start();
+    setFallback(fallback);
+  }, [
+    api,
+    homeChainConfig,
+    destinationChainConfig,
+    depositRecipient,
+    depositNonce,
+    depositAmount,
+  ]);
+
+  useEffect(() => {
+    console.log({ transactionStatus }); // ToDo: check why get transaction status update several times on the same status
+    if (transactionStatus === "In Transit" && api && !fallback?.initialized())
+      initFallbackMechanism();
+  }, [transactionStatus, api, fallback]);
 
   return (
     <DestinationBridgeContext.Provider
