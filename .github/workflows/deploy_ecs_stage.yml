@@ -1,13 +1,18 @@
 name: Deploy ECS
 
+# on:
+#   workflow_run:
+#     workflows:
+#       - build-and-deploy
+#     branches:
+#       - main
+#     types:
+#       - completed
+
 on:
-  workflow_run:
-    workflows:
-      - build-and-deploy
+  push:
     branches:
-      - main
-    types:
-      - completed
+      - devops/add-ecs-deploy
 
 env:
   AWS_REGION: "us-east-2"
