@@ -158,16 +158,22 @@ export const EVMDestinationAdaptorProvider = ({
   const initFallbackMechanism = useCallback(async (): Promise<void> => {
     const srcChainId = homeChainConfig?.chainId as number;
     const destinationChainId = destinationChainConfig?.chainId as number;
-    const { delayMs, pollingIntervalMs } = getСhainTransferFallbackConfig(
-      srcChainId,
-      destinationChainId
-    );
+    const {
+      delayMs,
+      pollingMinIntervalMs,
+      pollingMaxIntervalMs,
+      blockTimeMs,
+    } = getСhainTransferFallbackConfig(srcChainId, destinationChainId);
     const erc20ProposalHash = getErc20ProposalHash(
       (destinationChainConfig as EvmBridgeConfig).erc20HandlerAddress,
       depositAmount as number,
       depositRecipient as string
     );
 
+    const pollingIntervalMs = Math.min(
+      Math.max(pollingMinIntervalMs, 3 * blockTimeMs),
+      pollingMaxIntervalMs
+    );
     const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
       const res = await destinationBridge?.getProposal(
         srcChainId,

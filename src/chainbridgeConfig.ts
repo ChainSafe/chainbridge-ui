@@ -18,7 +18,9 @@ export type ChainType = "Ethereum" | "Substrate";
 export type TransferFallback = {
   chainId: number;
   delayMs: number;
-  pollingIntervalMs: number;
+  blockTimeMs: number;
+  pollingMaxIntervalMs: number;
+  pollingMinIntervalMs: number;
 };
 
 export type BridgeConfig = {

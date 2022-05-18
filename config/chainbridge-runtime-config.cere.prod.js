@@ -36,7 +36,9 @@ window.__RUNTIME_CONFIG__ = {
           {
             chainId: 1,
             delayMs: 4 * 60 * 1000,
-            pollingIntervalMs: 2000,
+            blockTimeMs: 6000,
+            pollingMinIntervalMs: 15000,
+            pollingMaxIntervalMs: 30000,
           },
         ],
       },
@@ -70,7 +72,9 @@ window.__RUNTIME_CONFIG__ = {
           {
             chainId: 2,
             delayMs: 3 * 60 * 1000,
-            pollingIntervalMs: 2000,
+            blockTimeMs: 3000,
+            pollingMinIntervalMs: 15000,
+            pollingMaxIntervalMs: 30000,
           },
         ],
       },
@@ -102,7 +106,9 @@ window.__RUNTIME_CONFIG__ = {
           {
             chainId: 1,
             delayMs: 6 * 60 * 1000,
-            pollingIntervalMs: 2000,
+            blockTimeMs: 6000,
+            pollingMinIntervalMs: 15000,
+            pollingMaxIntervalMs: 30000,
           },
         ],
       },
