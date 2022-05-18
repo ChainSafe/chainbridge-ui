@@ -3,6 +3,11 @@
 ## vNext
 
 - Implemented fallback mechanism for Polygon, Ethereum to Cere, Cere to Polygon transfer flows to be able to update transaction status window in the case blockchain response didn't reach client.
+- Updated Testnet urls
+
+## v0.11.2
+
+- Available balance should be used as base for calculating transferable balance
 
 ## v0.11.1
 

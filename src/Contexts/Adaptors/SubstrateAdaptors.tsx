@@ -146,29 +146,28 @@ export const SubstrateHomeAdaptorProvider = ({
     if (!homeChainConfig || !address) return;
     let unsubscribe: VoidFn | undefined;
     if (api) {
-      api.query.system
-        .account(address, (result) => {
-          const {
-            data: { free: balance },
-          } = result.toJSON() as any;
+      api.derive.balances
+        .all(address, (result) => {
+          const balance = result.availableBalance.toString();
+          const transferableBalance = Math.max(
+            0,
+            parseFloat(
+              toFixedWithoutRounding(
+                parseFloat(
+                  utils.formatUnits(balance, homeChainConfig.decimals)
+                ) -
+                  (homeChainConfig as SubstrateBridgeConfig)
+                    .existentialDepositPlusNetworkFee,
+                homeChainConfig.decimals
+              )
+            )
+          );
           setTokens({
             [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
               decimals:
                 homeChainConfig.tokens[0].decimals ?? homeChainConfig.decimals,
-              balance: Math.max(
-                0,
-                parseFloat(
-                  toFixedWithoutRounding(
-                    parseFloat(
-                      utils.formatUnits(balance, homeChainConfig.decimals)
-                    ) -
-                      (homeChainConfig as SubstrateBridgeConfig)
-                        .existentialDepositPlusNetworkFee,
-                    homeChainConfig.decimals
-                  )
-                )
-              ),
-              balanceBN: new BN(balance).shiftedBy(-homeChainConfig.decimals),
+              balance: transferableBalance,
+              balanceBN: new BN(transferableBalance),
               name: homeChainConfig.tokens[0].name,
               symbol: homeChainConfig.tokens[0].symbol,
             },
