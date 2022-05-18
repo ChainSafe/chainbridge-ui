@@ -175,11 +175,17 @@ export const EVMDestinationAdaptorProvider = ({
       pollingMaxIntervalMs
     );
     const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
-      const res = await destinationBridge?.getProposal(
-        srcChainId,
-        parseInt(depositNonce as string),
-        erc20ProposalHash
-      );
+      let res;
+      try {
+        res = await destinationBridge?.getProposal(
+          srcChainId,
+          parseInt(depositNonce as string),
+          erc20ProposalHash
+        );
+      } catch (error) {
+        console.error(error);
+      }
+
       const status = res ? res[4] : undefined;
       console.log("Proposal votes status", status);
       switch (status) {

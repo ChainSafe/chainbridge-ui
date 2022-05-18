@@ -4,6 +4,10 @@
 
 - ...
 
+## v0.11.2
+
+- Implement fallback mechanism
+
 ## v0.11.1
 
 - Show transfer amount with fixed digits in fraction

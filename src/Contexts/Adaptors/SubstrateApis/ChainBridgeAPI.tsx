@@ -58,13 +58,13 @@ export const submitDeposit = (
 export const getBridgeProposalVotes = async (
   api: ApiPromise,
   srcChainId: number,
-  dstChainId: number,
+  destinationChainId: number,
   recipient: string,
   depositNonce: number,
   decimalAmount: number
 ): Promise<GetBridgeProsalVotesRes | undefined> => {
-  const dstChainConfig = getСhainConfig(dstChainId);
-  const decimals = new BigNumber(dstChainConfig.decimals);
+  const destinationChainConfig = getСhainConfig(destinationChainId);
+  const decimals = new BigNumber(destinationChainConfig.decimals);
 
   const call = api.registry.createType("Call", {
     args: [
