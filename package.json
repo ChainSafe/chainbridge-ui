@@ -23,6 +23,7 @@
     "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-ga4": "^1.4.1",
     "react-scripts": "3.4.3",
     "react-toast-notifications": "2.4.0",
     "yup": "^0.29.3"

@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 import {
   EvmBridgeConfig,
   getСhainTransferFallbackConfig,
+  chainbridgeConfig,
 } from "../../../chainbridgeConfig";
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { getProvider, getErc20ProposalHash, VoteStatus } from "./helpers";
 import { Fallback } from "../../../Utils/Fallback";
+import { GA } from "../../../Utils/GA";
+const ga = new GA({
+  trackingId: chainbridgeConfig.ga.trackingId,
+  appName: chainbridgeConfig.ga.appName,
+  env: process.env.NODE_ENV,
+});
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -29,6 +36,7 @@ export const EVMDestinationAdaptorProvider = ({
     depositAmount,
     fallback,
     setFallback,
+    address,
   } = useNetworkManager();
 
   const [destinationBridge, setDestinationBridge] = useState<
@@ -103,11 +111,23 @@ export const EVMDestinationAdaptorProvider = ({
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
+              ga.event("transfer_completed", {
+                address,
+                recipient: depositRecipient,
+                nonce: parseInt(depositNonce),
+                amount: depositAmount,
+              });
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
+              ga.event("transfer_aborted", {
+                address,
+                recipient: depositRecipient,
+                nonce: parseInt(depositNonce),
+                amount: depositAmount,
+              });
               break;
           }
         }
@@ -153,6 +173,7 @@ export const EVMDestinationAdaptorProvider = ({
     setTransactionStatus,
     setTransferTxHash,
     tokensDispatch,
+    fallback,
   ]);
 
   const initFallbackMechanism = useCallback(async (): Promise<void> => {
@@ -193,11 +214,23 @@ export const EVMDestinationAdaptorProvider = ({
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
+          ga.event("fallback_transfer_completed", {
+            address: address,
+            recipient: depositRecipient,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount,
+          });
           return false;
         case VoteStatus.CANCELLED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
+          ga.event("fallback_transfer_aborted", {
+            address: address,
+            recipient: depositRecipient,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount,
+          });
           return false;
         default:
           return true;
@@ -219,7 +252,7 @@ export const EVMDestinationAdaptorProvider = ({
     if (
       transactionStatus === "In Transit" &&
       destinationBridge &&
-      !fallback?.initialized()
+      !fallback?.started()
     )
       initFallbackMechanism();
   }, [transactionStatus, destinationBridge, fallback]);

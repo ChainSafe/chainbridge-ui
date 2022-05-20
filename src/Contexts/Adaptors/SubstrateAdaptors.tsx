@@ -28,9 +28,16 @@ import { utils } from "ethers";
 import {
   SubstrateBridgeConfig,
   getСhainTransferFallbackConfig,
+  chainbridgeConfig,
 } from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
 import { Fallback } from "../../Utils/Fallback";
+import { GA } from "../../Utils/GA";
+const ga = new GA({
+  trackingId: chainbridgeConfig.ga.trackingId,
+  appName: chainbridgeConfig.ga.appName,
+  env: process.env.NODE_ENV,
+});
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -39,7 +46,6 @@ export const SubstrateHomeAdaptorProvider = ({
   const [api, setApi] = useState<ApiPromise | undefined>();
   const [isReady, setIsReady] = useState(false);
   const [accounts, setAccounts] = useState<InjectedAccountType[]>([]);
-  const [address, setAddress] = useState<string | undefined>(undefined);
 
   const {
     homeChainConfig,
@@ -49,8 +55,11 @@ export const SubstrateHomeAdaptorProvider = ({
     homeChains,
     depositAmount,
     setDepositAmount,
+    depositRecipient,
     setDepositRecipient,
     fallback,
+    address,
+    setAddress,
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
@@ -279,8 +288,15 @@ export const SubstrateHomeAdaptorProvider = ({
                   ]
                     .chainNonces(destinationChainId)
                     .then((response) => {
-                      setDepositNonce(`${response.toJSON()}`);
+                      const depositNonce = `${response.toJSON()}`;
+                      setDepositNonce(depositNonce);
                       setTransactionStatus("In Transit");
+                      ga.event("transfer_intransit", {
+                        address,
+                        recipient: depositRecipient,
+                        amount: depositAmount,
+                        nonce: parseInt(depositNonce),
+                      });
                     })
                     .catch((error) => {
                       console.error(error);
@@ -361,6 +377,7 @@ export const SubstrateDestinationAdaptorProvider = ({
     depositRecipient,
     setFallback,
     fallback,
+    address,
   } = useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -438,6 +455,12 @@ export const SubstrateDestinationAdaptorProvider = ({
             setDepositVotes(depositVotes + 1);
             setTransactionStatus("Transfer Completed");
             fallback?.stop();
+            ga.event("transfer_completed", {
+              address,
+              recipient: depositRecipient,
+              nonce: parseInt(depositNonce),
+              amount: depositAmount,
+            });
           }
         });
       });
@@ -487,11 +510,23 @@ export const SubstrateDestinationAdaptorProvider = ({
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
+          ga.event("fallback_transfer_completed", {
+            address: address,
+            recipient: depositRecipient,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount,
+          });
           return false;
         case VoteStatus.REJECTED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
+          ga.event("fallback_transfer_aborted", {
+            address: address,
+            recipient: depositRecipient,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount,
+          });
           return false;
         default:
           return true;
@@ -510,7 +545,7 @@ export const SubstrateDestinationAdaptorProvider = ({
 
   useEffect(() => {
     console.log({ transactionStatus }); // ToDo: check why get transaction status update several times on the same status
-    if (transactionStatus === "In Transit" && api && !fallback?.initialized())
+    if (transactionStatus === "In Transit" && api && !fallback?.started())
       initFallbackMechanism();
   }, [transactionStatus, api, fallback]);
 

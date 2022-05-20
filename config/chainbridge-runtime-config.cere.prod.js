@@ -4,6 +4,10 @@ const cereTokenDecimals = 10;
 
 window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
+    ga: {
+      trackingId: "G-EVYKNM010Y",
+      appName: "chainbridge",
+    },
     chains: [
       {
         chainId: 2,

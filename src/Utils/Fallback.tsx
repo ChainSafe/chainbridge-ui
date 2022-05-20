@@ -8,17 +8,17 @@ export class Fallback {
     private pollingCallback: () => Promise<boolean>
   ) {}
 
-  async start() {
-    this.timeout = setTimeout(async () => {
+  start(): void {
+    this.timeout = setTimeout(() => {
       this.interval = setInterval(async () => {
         const res = await this.pollingCallback();
-        if (!res) this.stop();
+        if (!res && this.started()) this.stop();
       }, this.pollingIntervalMs);
     }, this.delayMs);
     console.log("Fallback started");
   }
 
-  stop() {
+  stop(): void {
     if (this.timeout) {
       clearTimeout(this.timeout);
       this.timeout = undefined;
@@ -30,7 +30,7 @@ export class Fallback {
     console.log("Fallback stopped");
   }
 
-  initialized() {
-    return this.timeout || this.interval;
+  started(): boolean {
+    return !!(this.timeout || this.interval);
   }
 }

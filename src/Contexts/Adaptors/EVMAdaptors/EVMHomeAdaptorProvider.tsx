@@ -17,6 +17,12 @@ import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
+import { GA } from "../../../Utils/GA";
+const ga = new GA({
+  trackingId: chainbridgeConfig.ga.trackingId,
+  appName: chainbridgeConfig.ga.appName,
+  env: process.env.NODE_ENV,
+});
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -402,6 +408,12 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce) => {
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
+            ga.event("transfer_intransit", {
+              address,
+              recipient,
+              nonce: parseInt(depositNonce),
+              amount: depositAmount,
+            });
           }
         );
 
@@ -416,8 +428,13 @@ export const EVMHomeAdaptorProvider = ({
       } catch (error) {
         console.error(error);
         setTransactionStatus("Transfer Aborted");
-        fallback?.stop();
         setSelectedToken(tokenAddress);
+        fallback?.stop();
+        ga.event("transfer_aborted", {
+          address,
+          recipient,
+          amount: depositAmount,
+        });
       }
     },
     [
