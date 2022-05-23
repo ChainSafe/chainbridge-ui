@@ -245,10 +245,10 @@ export const EVMDestinationAdaptorProvider = ({
     depositNonce,
     depositAmount,
     destinationBridge,
+    fallback,
   ]);
 
   useEffect(() => {
-    console.log({ transactionStatus }); // ToDo: check why get transaction status update several times on the same status
     if (
       transactionStatus === "In Transit" &&
       destinationBridge &&

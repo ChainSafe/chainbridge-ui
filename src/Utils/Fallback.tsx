@@ -19,6 +19,7 @@ export class Fallback {
   }
 
   stop(): void {
+    if (!this.started()) return;
     if (this.timeout) {
       clearTimeout(this.timeout);
       this.timeout = undefined;

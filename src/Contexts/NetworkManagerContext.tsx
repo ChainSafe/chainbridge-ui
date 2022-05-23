@@ -16,10 +16,8 @@ import {
   EVMHomeAdaptorProvider,
 } from "./Adaptors/EVMAdaptors";
 import { IDestinationBridgeProviderProps } from "./Adaptors/interfaces";
-import {
-  SubstrateDestinationAdaptorProvider,
-  SubstrateHomeAdaptorProvider,
-} from "./Adaptors/SubstrateAdaptors";
+import { SubstrateHomeAdaptorProvider } from "./Adaptors/SubstrateHomeAdaptor";
+import { SubstrateDestinationAdaptorProvider } from "./Adaptors/SubstrateDestinationAdaptor";
 import { DestinationBridgeContext } from "./DestinationBridgeContext";
 import { HomeBridgeContext } from "./HomeBridgeContext";
 import {
