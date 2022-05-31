@@ -1,7 +1,9 @@
 {
   "name": "@chainsafe/explorer-ui",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
   "dependencies": {
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
@@ -41,10 +43,11 @@
     "pretty-quick": "3.0.2"
   },
   "scripts": {
-    "start": "PORT=3003 BROWSER=none craco --max_old_space_size=4096 start",
+    "start": "yarn setup:copy-dev-config && PORT=3003 BROWSER=none craco --max_old_space_size=4096 start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "setup:copy-dev-config": "./scripts/copy-dev-config.sh"
   },
   "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {
