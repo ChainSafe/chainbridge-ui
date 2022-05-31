@@ -10,7 +10,6 @@ import { useStyles } from "./styles";
 
 const ROUTE_LINKS_HEADERS = [
   { route: "/transfer", label: "Transfer" },
-  { route: "/explorer/transaction/list", label: "Explorer" },
 ];
 
 interface IAppHeader {}
