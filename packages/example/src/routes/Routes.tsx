@@ -11,11 +11,9 @@ import {
 } from "react-router-dom";
 
 import {
-  TransactionPage,
   WrapperPage,
   TransferPage,
 } from "../pages";
-import { ExplorerProvider } from "@chainsafe/chainbridge-ui-core";
 
 export const ROUTE_LINKS = {
   Transfer: "/transfer",
