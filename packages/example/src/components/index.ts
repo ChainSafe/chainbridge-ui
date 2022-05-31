@@ -1,4 +1,3 @@
-export { default as ExplorerTable } from "./ExplorerTable";
 export { default as AddressInput } from "./AddressInput";
 export { default as AddressOrLink } from "./AddressOrLink";
 export { default as CustomDrawer } from "./CustomDrawer";

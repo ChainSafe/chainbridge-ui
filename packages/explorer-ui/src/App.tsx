@@ -9,7 +9,7 @@ import {
   ChainbridgeProvider,
   LocalProvider,
 } from "@chainsafe/chainbridge-ui-core";
-import { ExplorerPage } from "./pages";
+import { ExplorerPage, TransactionPage } from "./pages";
 import { utils } from "ethers";
 import { Header } from "./components";
 
@@ -78,6 +78,11 @@ function App() {
               <Route exact path={ROUTE_LINKS.ExplorerDetailed}>
                 <ExplorerProvider>
                   <ExplorerPage />
+                </ExplorerProvider>
+              </Route>
+              <Route exact path={ROUTE_LINKS.TransactionPage}>
+                <ExplorerProvider>
+                  <TransactionPage />
                 </ExplorerProvider>
               </Route>
             </Switch>
