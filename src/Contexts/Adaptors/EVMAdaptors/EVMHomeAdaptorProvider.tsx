@@ -17,14 +17,6 @@ import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
-import AnalyticsService from "../../../Services/Analytics";
-const analytics = new AnalyticsService({
-  ga: {
-    trackingId: chainbridgeConfig.ga.trackingId,
-    appName: chainbridgeConfig.ga.appName,
-    env: process.env.NODE_ENV,
-  },
-});
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -90,6 +82,7 @@ export const EVMHomeAdaptorProvider = ({
     setDepositAmount,
     setDepositRecipient,
     fallback,
+    analytics,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -410,7 +403,7 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce) => {
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
-            analytics.transferIntransitEvent({
+            analytics.trackTransferInTransitEvent({
               address,
               recipient,
               nonce: parseInt(depositNonce),
@@ -432,7 +425,7 @@ export const EVMHomeAdaptorProvider = ({
         setTransactionStatus("Transfer Aborted");
         setSelectedToken(tokenAddress);
         fallback?.stop();
-        analytics.transferAbortedEvent({
+        analytics.trackTransferAbortedEvent({
           address,
           recipient,
           amount: depositAmount as number,

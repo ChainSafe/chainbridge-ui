@@ -27,6 +27,7 @@ import {
 } from "./Reducers/TransitMessageReducer";
 import { blockchainChainIds } from "../Constants/constants";
 import { Fallback } from "../Utils/Fallback";
+import AnalyticsService from "../Services/Analytics";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -100,6 +101,8 @@ interface NetworkManagerContext {
 
   setAddress: (input: string | undefined) => void;
   address: string | undefined;
+
+  analytics: AnalyticsService;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -144,6 +147,16 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   const [fallback, setFallback] = useState<Fallback | undefined>(undefined);
 
   const [address, setAddress] = useState<string | undefined>(undefined);
+
+  const [analytics] = useState(
+    new AnalyticsService({
+      ga: {
+        trackingId: chainbridgeConfig.ga.trackingId,
+        appName: chainbridgeConfig.ga.appName,
+        env: process.env.NODE_ENV,
+      },
+    })
+  );
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
@@ -280,6 +293,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setFallback,
         address,
         setAddress,
+        analytics,
       }}
     >
       {walletType === "Ethereum" ? (

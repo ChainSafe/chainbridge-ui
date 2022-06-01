@@ -16,14 +16,6 @@ import {
   chainbridgeConfig,
 } from "../../chainbridgeConfig";
 import { Fallback } from "../../Utils/Fallback";
-import AnalyticsService from "../../Services/Analytics";
-const analytics = new AnalyticsService({
-  ga: {
-    trackingId: chainbridgeConfig.ga.trackingId,
-    appName: chainbridgeConfig.ga.appName,
-    env: process.env.NODE_ENV,
-  },
-});
 
 export const SubstrateDestinationAdaptorProvider = ({
   children,
@@ -42,6 +34,7 @@ export const SubstrateDestinationAdaptorProvider = ({
     setFallback,
     fallback,
     address,
+    analytics,
   } = useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -120,7 +113,7 @@ export const SubstrateDestinationAdaptorProvider = ({
             setDepositVotes(depositVotes + 1);
             setTransactionStatus("Transfer Completed");
             fallback?.stop();
-            analytics.transferCompletedEvent({
+            analytics.tracktTransferCompletedEvent({
               address: address as string,
               recipient: depositRecipient as string,
               nonce: parseInt(depositNonce),
@@ -176,7 +169,7 @@ export const SubstrateDestinationAdaptorProvider = ({
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
-          analytics.fallbackTransferCompletedEvent({
+          analytics.trackTransferCompletedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
@@ -187,7 +180,7 @@ export const SubstrateDestinationAdaptorProvider = ({
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
-          analytics.fallbackTransferAbortedEvent({
+          analytics.trackTransferAbortedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),

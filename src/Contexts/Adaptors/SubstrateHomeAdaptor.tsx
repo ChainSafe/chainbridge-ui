@@ -15,19 +15,8 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
-import {
-  SubstrateBridgeConfig,
-  chainbridgeConfig,
-} from "../../chainbridgeConfig";
+import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
-import AnalyticsService from "../../Services/Analytics";
-const analytics = new AnalyticsService({
-  ga: {
-    trackingId: chainbridgeConfig.ga.trackingId,
-    appName: chainbridgeConfig.ga.appName,
-    env: process.env.NODE_ENV,
-  },
-});
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -50,6 +39,7 @@ export const SubstrateHomeAdaptorProvider = ({
     fallback,
     address,
     setAddress,
+    analytics,
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
@@ -281,7 +271,7 @@ export const SubstrateHomeAdaptorProvider = ({
                       const depositNonce = `${response.toJSON()}`;
                       setDepositNonce(depositNonce);
                       setTransactionStatus("In Transit");
-                      analytics.transferIntransitEvent({
+                      analytics.trackTransferInTransitEvent({
                         address,
                         recipient: depositRecipient as string,
                         nonce: parseInt(depositNonce),

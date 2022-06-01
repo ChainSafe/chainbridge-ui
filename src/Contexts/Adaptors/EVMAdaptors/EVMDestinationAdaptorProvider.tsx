@@ -5,21 +5,12 @@ import { useEffect, useState } from "react";
 import {
   EvmBridgeConfig,
   getСhainTransferFallbackConfig,
-  chainbridgeConfig,
 } from "../../../chainbridgeConfig";
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { getProvider, getErc20ProposalHash, VoteStatus } from "./helpers";
 import { Fallback } from "../../../Utils/Fallback";
-import AnalyticsService from "../../../Services/Analytics";
-const analytics = new AnalyticsService({
-  ga: {
-    trackingId: chainbridgeConfig.ga.trackingId,
-    appName: chainbridgeConfig.ga.appName,
-    env: process.env.NODE_ENV,
-  },
-});
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -39,6 +30,7 @@ export const EVMDestinationAdaptorProvider = ({
     fallback,
     setFallback,
     address,
+    analytics,
   } = useNetworkManager();
 
   const [destinationBridge, setDestinationBridge] = useState<
@@ -113,7 +105,7 @@ export const EVMDestinationAdaptorProvider = ({
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
-              analytics.transferCompletedEvent({
+              analytics.tracktTransferCompletedEvent({
                 address: address as string,
                 recipient: depositRecipient as string,
                 nonce: parseInt(depositNonce),
@@ -124,7 +116,7 @@ export const EVMDestinationAdaptorProvider = ({
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
-              analytics.transferAbortedEvent({
+              analytics.trackTransferAbortedEvent({
                 address: address as string,
                 recipient: depositRecipient as string,
                 nonce: parseInt(depositNonce),
@@ -216,7 +208,7 @@ export const EVMDestinationAdaptorProvider = ({
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
-          analytics.fallbackTransferCompletedEvent({
+          analytics.trackTransferCompletedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
@@ -227,7 +219,7 @@ export const EVMDestinationAdaptorProvider = ({
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
-          analytics.fallbackTransferAbortedEvent({
+          analytics.trackTransferAbortedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),

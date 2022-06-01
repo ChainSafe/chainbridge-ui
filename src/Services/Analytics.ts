@@ -22,13 +22,13 @@ class AnalyticsService {
     this.ga = new GA(options.ga);
   }
 
-  transferIntransitEvent({
+  trackTransferInTransitEvent({
     address,
     recipient,
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("transfer_intransit", {
+    this.ga.event("transfer_in_transit", {
       address,
       recipient,
       nonce,
@@ -36,7 +36,7 @@ class AnalyticsService {
     });
   }
 
-  transferCompletedEvent({
+  tracktTransferCompletedEvent({
     address,
     recipient,
     nonce,
@@ -50,13 +50,13 @@ class AnalyticsService {
     });
   }
 
-  fallbackTransferCompletedEvent({
+  trackTransferCompletedFromFallbackEvent({
     address,
     recipient,
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("fallback_transfer_completed", {
+    this.ga.event("transfer_completed_fallback", {
       address,
       recipient,
       nonce,
@@ -64,7 +64,7 @@ class AnalyticsService {
     });
   }
 
-  transferAbortedEvent({
+  trackTransferAbortedEvent({
     address,
     recipient,
     nonce,
@@ -78,13 +78,13 @@ class AnalyticsService {
     });
   }
 
-  fallbackTransferAbortedEvent({
+  trackTransferAbortedFromFallbackEvent({
     address,
     recipient,
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("fallback_transfer_aborted", {
+    this.ga.event("transfer_aborted_fallback", {
       address,
       recipient,
       nonce,
