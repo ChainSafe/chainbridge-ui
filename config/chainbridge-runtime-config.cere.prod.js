@@ -6,7 +6,7 @@ window.__RUNTIME_CONFIG__ = {
   CHAINBRIDGE: {
     ga: {
       trackingId: "G-EVYKNM010Y",
-      appName: "chainbridge",
+      appName: "chainbridge-ui",
     },
     chains: [
       {

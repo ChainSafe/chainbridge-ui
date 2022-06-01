@@ -16,11 +16,13 @@ import {
   chainbridgeConfig,
 } from "../../chainbridgeConfig";
 import { Fallback } from "../../Utils/Fallback";
-import { GA } from "../../Utils/GA";
-const ga = new GA({
-  trackingId: chainbridgeConfig.ga.trackingId,
-  appName: chainbridgeConfig.ga.appName,
-  env: process.env.NODE_ENV,
+import AnalyticsService from "../../Services/Analytics";
+const analytics = new AnalyticsService({
+  ga: {
+    trackingId: chainbridgeConfig.ga.trackingId,
+    appName: chainbridgeConfig.ga.appName,
+    env: process.env.NODE_ENV,
+  },
 });
 
 export const SubstrateDestinationAdaptorProvider = ({
@@ -118,11 +120,11 @@ export const SubstrateDestinationAdaptorProvider = ({
             setDepositVotes(depositVotes + 1);
             setTransactionStatus("Transfer Completed");
             fallback?.stop();
-            ga.event("transfer_completed", {
-              address,
-              recipient: depositRecipient,
+            analytics.transferCompletedEvent({
+              address: address as string,
+              recipient: depositRecipient as string,
               nonce: parseInt(depositNonce),
-              amount: depositAmount,
+              amount: depositAmount as number,
             });
           }
         });
@@ -174,22 +176,22 @@ export const SubstrateDestinationAdaptorProvider = ({
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
-          ga.event("fallback_transfer_completed", {
-            address: address,
-            recipient: depositRecipient,
+          analytics.fallbackTransferCompletedEvent({
+            address: address as string,
+            recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
-            amount: depositAmount,
+            amount: depositAmount as number,
           });
           return false;
         case VoteStatus.REJECTED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
-          ga.event("fallback_transfer_aborted", {
-            address: address,
-            recipient: depositRecipient,
+          analytics.fallbackTransferAbortedEvent({
+            address: address as string,
+            recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
-            amount: depositAmount,
+            amount: depositAmount as number,
           });
           return false;
         default:
@@ -209,7 +211,7 @@ export const SubstrateDestinationAdaptorProvider = ({
   ]);
 
   useEffect(() => {
-    console.log({ transactionStatus }); // ToDo: check why get transaction status update several times on the same status
+    console.log({ transactionStatus });
   }, [transactionStatus]);
 
   useEffect(() => {

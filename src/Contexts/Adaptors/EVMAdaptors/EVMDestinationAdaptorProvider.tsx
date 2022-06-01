@@ -12,11 +12,13 @@ import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { getProvider, getErc20ProposalHash, VoteStatus } from "./helpers";
 import { Fallback } from "../../../Utils/Fallback";
-import { GA } from "../../../Utils/GA";
-const ga = new GA({
-  trackingId: chainbridgeConfig.ga.trackingId,
-  appName: chainbridgeConfig.ga.appName,
-  env: process.env.NODE_ENV,
+import AnalyticsService from "../../../Services/Analytics";
+const analytics = new AnalyticsService({
+  ga: {
+    trackingId: chainbridgeConfig.ga.trackingId,
+    appName: chainbridgeConfig.ga.appName,
+    env: process.env.NODE_ENV,
+  },
 });
 
 export const EVMDestinationAdaptorProvider = ({
@@ -111,22 +113,22 @@ export const EVMDestinationAdaptorProvider = ({
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
-              ga.event("transfer_completed", {
-                address,
-                recipient: depositRecipient,
+              analytics.transferCompletedEvent({
+                address: address as string,
+                recipient: depositRecipient as string,
                 nonce: parseInt(depositNonce),
-                amount: depositAmount,
+                amount: depositAmount as number,
               });
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
-              ga.event("transfer_aborted", {
-                address,
-                recipient: depositRecipient,
+              analytics.transferAbortedEvent({
+                address: address as string,
+                recipient: depositRecipient as string,
                 nonce: parseInt(depositNonce),
-                amount: depositAmount,
+                amount: depositAmount as number,
               });
               break;
           }
@@ -214,22 +216,22 @@ export const EVMDestinationAdaptorProvider = ({
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
-          ga.event("fallback_transfer_completed", {
-            address: address,
-            recipient: depositRecipient,
+          analytics.fallbackTransferCompletedEvent({
+            address: address as string,
+            recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
-            amount: depositAmount,
+            amount: depositAmount as number,
           });
           return false;
         case VoteStatus.CANCELLED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
-          ga.event("fallback_transfer_aborted", {
-            address: address,
-            recipient: depositRecipient,
+          analytics.fallbackTransferAbortedEvent({
+            address: address as string,
+            recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
-            amount: depositAmount,
+            amount: depositAmount as number,
           });
           return false;
         default:

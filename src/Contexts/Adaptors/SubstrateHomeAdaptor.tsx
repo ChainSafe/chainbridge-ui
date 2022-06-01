@@ -20,11 +20,13 @@ import {
   chainbridgeConfig,
 } from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
-import { GA } from "../../Utils/GA";
-const ga = new GA({
-  trackingId: chainbridgeConfig.ga.trackingId,
-  appName: chainbridgeConfig.ga.appName,
-  env: process.env.NODE_ENV,
+import AnalyticsService from "../../Services/Analytics";
+const analytics = new AnalyticsService({
+  ga: {
+    trackingId: chainbridgeConfig.ga.trackingId,
+    appName: chainbridgeConfig.ga.appName,
+    env: process.env.NODE_ENV,
+  },
 });
 
 export const SubstrateHomeAdaptorProvider = ({
@@ -279,11 +281,11 @@ export const SubstrateHomeAdaptorProvider = ({
                       const depositNonce = `${response.toJSON()}`;
                       setDepositNonce(depositNonce);
                       setTransactionStatus("In Transit");
-                      ga.event("transfer_intransit", {
+                      analytics.transferIntransitEvent({
                         address,
-                        recipient: depositRecipient,
-                        amount: depositAmount,
+                        recipient: depositRecipient as string,
                         nonce: parseInt(depositNonce),
+                        amount: depositAmount as number,
                       });
                     })
                     .catch((error) => {
