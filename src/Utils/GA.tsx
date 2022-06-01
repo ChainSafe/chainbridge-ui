@@ -22,7 +22,7 @@ export class GA {
     this.env = options.env;
   }
 
-  event(name: string, data: EventData) {
+  trackEvent(name: string, data: EventData) {
     data.appName = this.appName;
     data.env = this.env;
     data.date = new Date().toISOString();

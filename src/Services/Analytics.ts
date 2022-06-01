@@ -28,7 +28,7 @@ class AnalyticsService {
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("transfer_in_transit", {
+    this.ga.trackEvent("transfer_in_transit", {
       address,
       recipient,
       nonce,
@@ -42,7 +42,7 @@ class AnalyticsService {
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("transfer_completed", {
+    this.ga.trackEvent("transfer_completed", {
       address,
       recipient,
       nonce,
@@ -56,7 +56,7 @@ class AnalyticsService {
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("transfer_completed_fallback", {
+    this.ga.trackEvent("transfer_completed_fallback", {
       address,
       recipient,
       nonce,
@@ -70,7 +70,7 @@ class AnalyticsService {
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("transfer_aborted", {
+    this.ga.trackEvent("transfer_aborted", {
       address,
       recipient,
       nonce,
@@ -84,7 +84,7 @@ class AnalyticsService {
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.event("transfer_aborted_fallback", {
+    this.ga.trackEvent("transfer_aborted_fallback", {
       address,
       recipient,
       nonce,
