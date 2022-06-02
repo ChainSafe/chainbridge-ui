@@ -36,7 +36,7 @@ class AnalyticsService {
     });
   }
 
-  tracktTransferCompletedEvent({
+  trackTransferCompletedEvent({
     address,
     recipient,
     nonce,
@@ -56,7 +56,7 @@ class AnalyticsService {
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.trackEvent("transfer_completed_fallback", {
+    this.ga.trackEvent("transfer_completed_from_fallback", {
       address,
       recipient,
       nonce,

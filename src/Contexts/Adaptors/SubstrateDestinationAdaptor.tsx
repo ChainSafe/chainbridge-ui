@@ -113,7 +113,7 @@ export const SubstrateDestinationAdaptorProvider = ({
             setDepositVotes(depositVotes + 1);
             setTransactionStatus("Transfer Completed");
             fallback?.stop();
-            analytics.tracktTransferCompletedEvent({
+            analytics.trackTransferCompletedEvent({
               address: address as string,
               recipient: depositRecipient as string,
               nonce: parseInt(depositNonce),

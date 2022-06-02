@@ -102,10 +102,11 @@ export const EVMDestinationAdaptorProvider = ({
               });
               break;
             case 3:
+              if (transactionStatus === "Transfer Completed") return;
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
-              analytics.tracktTransferCompletedEvent({
+              analytics.trackTransferCompletedEvent({
                 address: address as string,
                 recipient: depositRecipient as string,
                 nonce: parseInt(depositNonce),
@@ -248,7 +249,6 @@ export const EVMDestinationAdaptorProvider = ({
       transactionStatus === "In Transit" &&
       destinationBridge &&
       !fallback?.started();
-    if (canInitFallback) initFallbackMechanism();
   }, [transactionStatus, destinationBridge, fallback]);
 
   return (
