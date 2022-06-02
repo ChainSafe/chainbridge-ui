@@ -1,56 +1,89 @@
-import React, { createContext, useContext } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import { useWeb3 } from "../localWeb3Context";
-import { BridgeData, Chainbridge} from '@chainsafe/chainbridge-sdk-core'
+import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
+import { chainbridgeReducer, ChainbridgeState } from '../../reducers'
 
 interface IBridgeContext {
   children: React.ReactNode | React.ReactNode[];
 }
 
-const BridgeContext = createContext(undefined);
+type BridgeContext = ChainbridgeState
+
+const BridgeContext = createContext<BridgeContext | undefined>(undefined);
 
 const BridgeProvider = ({ children }: IBridgeContext) => {
-  const { homeChains } = useWeb3()
-  console.log("homechains", homeChains)
+  const { homeChains, ...rest } = useWeb3();
+  const initState: ChainbridgeState = {
+    chainbridgeInstance: undefined,
+    chainbridgeData: undefined
+  }
+  const [bridgeState, bridgeDispatcher] = useReducer(
+    chainbridgeReducer,
+    initState
+  );
 
-  const bridgeSetup: BridgeData = homeChains.reduce((acc, chain, idx) => {
-    const { bridgeAddress, erc20HandlerAddress, tokens, rpcUrl, domainId, decimals } = chain
+  console.log("homechains", homeChains);
+  console.log("rest", rest);
 
-    // NOTE: ASUMPTION HERE IS THAT WE HAVE ONLY ONE TOKEN
-    const [{ address, resourceId }] = tokens
+  useEffect(() => {
+    if (homeChains.length) {
+      const bridgeSetup: BridgeData = homeChains.reduce((acc, chain, idx) => {
+        const {
+          bridgeAddress,
+          erc20HandlerAddress,
+          tokens,
+          rpcUrl,
+          domainId,
+          decimals,
+        } = chain;
 
-    acc = {
-      ...acc,
-      [`chain${idx + 1}`]: {
-        bridgeAddress,
-        erc20Address: address,
-        erc20HandlerAddress,
-        rpcURL: rpcUrl,
-        domainId,
-        erc20ResourceID: resourceId,
-        decimals
-      }
+        // NOTE: ASUMPTION HERE IS THAT WE HAVE ONLY ONE TOKEN
+        const [{ address, resourceId }] = tokens;
+
+        acc = {
+          ...acc,
+          [`chain${idx + 1}`]: {
+            bridgeAddress,
+            erc20Address: address,
+            erc20HandlerAddress,
+            rpcURL: rpcUrl,
+            domainId,
+            erc20ResourceID: resourceId,
+            decimals,
+          },
+        };
+
+        return acc;
+      }, {} as BridgeData);
+
+      bridgeDispatcher({
+        type: "setInstanceAndData",
+        bridgeSetup
+      })
     }
+  }, [homeChains]);
 
-    return acc
-  }, {} as BridgeData)
+  console.log("bridgeState", bridgeState)
 
-  console.log("peo", bridgeSetup);
   return (
-    <BridgeContext.Provider value={undefined}>
+    <BridgeContext.Provider value={{ ...bridgeState }}>
       {children}
     </BridgeContext.Provider>
   );
 };
 
 const useBridge = () => {
-  const context = useContext(BridgeContext)
-  if(context === undefined){
-    throw new Error(
-      "useBridge must be called within a BridgeProvider"
-    );
+  const context = useContext(BridgeContext);
+  if (context === undefined) {
+    throw new Error("useBridge must be called within a BridgeProvider");
   }
 
-  return context
-}
+  return context;
+};
 
 export { BridgeProvider, useBridge };
