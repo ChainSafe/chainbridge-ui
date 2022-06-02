@@ -20,7 +20,8 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
   const { homeChains, ...rest } = useWeb3();
   const initState: ChainbridgeState = {
     chainbridgeInstance: undefined,
-    chainbridgeData: undefined
+    chainbridgeData: undefined,
+    bridgeSetup: undefined
   }
   const [bridgeState, bridgeDispatcher] = useReducer(
     chainbridgeReducer,

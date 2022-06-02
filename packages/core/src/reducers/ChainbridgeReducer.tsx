@@ -2,7 +2,8 @@ import { BridgeData, BridgeEvents, Chainbridge } from "@chainsafe/chainbridge-sd
 
 export type ChainbridgeState = {
   chainbridgeInstance: Chainbridge | undefined;
-  chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents } | undefined
+  chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents } | undefined;
+  bridgeSetup: BridgeData | undefined
 }
 
 export type ChainbridgeReducerAction = | { type: 'setInstanceAndData', bridgeSetup: BridgeData }
@@ -19,7 +20,8 @@ export const chainbridgeReducer = (
       return {
         ...state,
         chainbridgeInstance: chainbridge,
-        chainbridgeData: chainbridgeConnected
+        chainbridgeData: chainbridgeConnected,
+        bridgeSetup: action.bridgeSetup
       }
     }
     default:
