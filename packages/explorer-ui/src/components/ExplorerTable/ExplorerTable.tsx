@@ -14,6 +14,8 @@ import {
 import {
   DepositRecord,
   TransferDetails,
+  EvmBridgeConfig,
+  SubstrateBridgeConfig
 } from "@chainsafe/chainbridge-ui-core";
 import {
   formatTransferDate,
@@ -26,10 +28,6 @@ import {
 } from "../../utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
 import DetailView from "../DetailView/DetailView";
-import {
-  EvmBridgeConfig,
-  SubstrateBridgeConfig,
-} from "../../chainbridgeConfig";
 import { useStyles } from "./styles";
 
 // TODO: just for mocking purposes
