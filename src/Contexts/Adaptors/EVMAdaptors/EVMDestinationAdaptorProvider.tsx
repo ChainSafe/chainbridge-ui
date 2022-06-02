@@ -102,6 +102,7 @@ export const EVMDestinationAdaptorProvider = ({
               });
               break;
             case 3:
+              console.log("Transfer Completed Check!!!");
               if (transactionStatus === "Transfer Completed") return;
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
@@ -249,6 +250,7 @@ export const EVMDestinationAdaptorProvider = ({
       transactionStatus === "In Transit" &&
       destinationBridge &&
       !fallback?.started();
+    if (canInitFallback) initFallbackMechanism();
   }, [transactionStatus, destinationBridge, fallback]);
 
   return (
