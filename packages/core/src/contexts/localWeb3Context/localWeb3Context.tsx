@@ -253,7 +253,7 @@ const LocalProvider = ({
 
         if (chainbridgeConfig().chains.length === 2) {
           dispatcher({
-            type: "setDestinationChains",
+            type: "setDestinationChain",
             payload: chainbridgeConfig().chains.find(
               (bridgeConfig: BridgeConfig) =>
                 bridgeConfig.domainId !== chain.domainId
