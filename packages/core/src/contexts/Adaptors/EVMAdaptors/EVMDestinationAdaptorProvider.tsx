@@ -8,6 +8,7 @@ import { evmDestinationReducer } from "../../../reducers/EvmDestinationReducer";
 import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
 import handleProposalVote from "./handleProposalVote";
+import { useBridge } from "../../Bridge";
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -19,6 +20,8 @@ export const EVMDestinationAdaptorProvider = ({
     setTransactionStatus,
     transactionStatus,
   } = useWeb3();
+
+  const { chainbridgeData, chainbridgeInstance, bridgeSetup } = useBridge()
 
   const [state, dispatch] = useReducer(evmDestinationReducer, {
     transferTxHash: "",

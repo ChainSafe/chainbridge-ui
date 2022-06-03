@@ -100,9 +100,11 @@ function selectProvider(
         </BridgeProvider>
       ),
       destination: (
-        <EVMDestinationAdaptorProvider>
-          {props.children}
-        </EVMDestinationAdaptorProvider>
+        <BridgeProvider>
+          <EVMDestinationAdaptorProvider>
+            {props.children}
+          </EVMDestinationAdaptorProvider>
+        </BridgeProvider>
       ),
     },
     substrate: {
