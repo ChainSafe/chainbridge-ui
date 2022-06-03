@@ -9,6 +9,7 @@ import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
 import handleProposalVote from "./handleProposalVote";
 import { useBridge } from "../../Bridge";
+import { computeDirections } from "../../../utils/Helpers";
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -23,6 +24,11 @@ export const EVMDestinationAdaptorProvider = ({
 
   const { chainbridgeData, chainbridgeInstance, bridgeSetup } = useBridge()
 
+  const computedDirections = computeDirections(
+    bridgeSetup!,
+    destinationChainConfig!,
+    homeChainConfig!
+  )
   const [state, dispatch] = useReducer(evmDestinationReducer, {
     transferTxHash: "",
     depositVotes: 0,
@@ -56,7 +62,9 @@ export const EVMDestinationAdaptorProvider = ({
         destinationChainConfig,
         setTransactionStatus,
         setTransferTxHash,
-        tokensDispatch
+        tokensDispatch,
+        chainbridgeData!,
+        computedDirections!
       );
 
       handleProposalVote(

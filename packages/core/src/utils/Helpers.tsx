@@ -1,8 +1,13 @@
 import dayjs from "dayjs";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { DepositRecord, TransferDetails } from "../reducers/TransfersReducer";
-import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
+import {
+  BridgeConfig,
+  EvmBridgeConfig,
+  SubstrateBridgeConfig,
+} from "../chainbridgeConfig";
 import { isCelo } from "../contexts/Adaptors/EVMAdaptors/helpers";
+import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
 const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
 const { hexToU8a, isHex } = require("@polkadot/util");
 
@@ -309,4 +314,30 @@ export const computeTransferDetails = (
     toChain,
     pillColorStatus,
   };
+};
+
+export const computeDirections = (
+  bridgeSetup: BridgeData,
+  destinationChainConfig: BridgeConfig,
+  homeConfig: BridgeConfig
+): { from: "chain1" | "chain2"; to: "chain1" | "chain2" } | undefined => {
+  if (bridgeSetup !== undefined) {
+    return Object.keys(bridgeSetup!).reduce((acc, chain) => {
+      if (
+        Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+        homeConfig!.domainId
+      ) {
+        acc = { ...acc, from: chain };
+        return acc;
+      }
+      if (
+        Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+        destinationChainConfig?.domainId
+      ) {
+        acc = { ...acc, to: chain };
+        return acc;
+      }
+    }, {} as any);
+  }
+  return undefined;
 };

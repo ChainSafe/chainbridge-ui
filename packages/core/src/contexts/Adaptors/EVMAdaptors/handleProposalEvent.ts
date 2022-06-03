@@ -7,6 +7,7 @@ import {
   AddMessageAction,
   ResetAction,
 } from "../../../reducers/TransitMessageReducer";
+import { BridgeData, BridgeEvents, Directions } from "@chainsafe/chainbridge-sdk-core";
 const handleProposalEvent = (
   destinationBridge: Bridge,
   homeChainConfig: BridgeConfig,
@@ -14,10 +15,18 @@ const handleProposalEvent = (
   destinationChainConfig: BridgeConfig,
   setTransactionStatus: (message: TransactionStatus | undefined) => void,
   setTransferTxHash: (input: string) => void,
-  tokensDispatch: Dispatch<AddMessageAction | ResetAction>
+  tokensDispatch: Dispatch<AddMessageAction | ResetAction>,
+  chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents },
+  computedDirections: { from: Directions, to: Directions }
 ) => {
-  destinationBridge.on(
-    destinationBridge.filters.ProposalEvent(null, null, null, null),
+
+  const { from, to } = computedDirections
+
+  const events = chainbridgeData![from as keyof BridgeData]
+
+  console.log("events", events)
+
+  events?.proposalEvents![to as keyof BridgeData](
     async (
       originDomainId: number,
       depositNonce: number,
@@ -62,6 +71,6 @@ const handleProposalEvent = (
           break;
       }
     }
-  );
+  )
 };
 export default handleProposalEvent;

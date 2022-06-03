@@ -45,6 +45,7 @@ const makeDeposit =
     }
 
     const events = chainbridgeData![paramsForDeposit.from as keyof BridgeData]
+
     const { erc20Address: tokenAddress } = bridgeSetup![paramsForDeposit.from as keyof BridgeData]
 
     setTransactionStatus("Initializing Transfer");
