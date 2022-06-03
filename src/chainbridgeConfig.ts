@@ -61,6 +61,11 @@ export type SubstrateBridgeConfig = BridgeConfig & {
 };
 
 export type ChainbridgeConfig = {
+  ga: {
+    trackingId: string;
+    appName: string;
+    env: string;
+  };
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 

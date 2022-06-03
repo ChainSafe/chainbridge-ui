@@ -16,10 +16,8 @@ import {
   EVMHomeAdaptorProvider,
 } from "./Adaptors/EVMAdaptors";
 import { IDestinationBridgeProviderProps } from "./Adaptors/interfaces";
-import {
-  SubstrateDestinationAdaptorProvider,
-  SubstrateHomeAdaptorProvider,
-} from "./Adaptors/SubstrateAdaptors";
+import { SubstrateHomeAdaptorProvider } from "./Adaptors/SubstrateHomeAdaptor";
+import { SubstrateDestinationAdaptorProvider } from "./Adaptors/SubstrateDestinationAdaptor";
 import { DestinationBridgeContext } from "./DestinationBridgeContext";
 import { HomeBridgeContext } from "./HomeBridgeContext";
 import {
@@ -29,6 +27,7 @@ import {
 } from "./Reducers/TransitMessageReducer";
 import { blockchainChainIds } from "../Constants/constants";
 import { Fallback } from "../Utils/Fallback";
+import AnalyticsService from "../Services/Analytics";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -99,6 +98,11 @@ interface NetworkManagerContext {
 
   setFallback: (input: Fallback | undefined) => void;
   fallback: Fallback | undefined;
+
+  setAddress: (input: string | undefined) => void;
+  address: string | undefined;
+
+  analytics: AnalyticsService;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -141,6 +145,18 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   );
 
   const [fallback, setFallback] = useState<Fallback | undefined>(undefined);
+
+  const [address, setAddress] = useState<string | undefined>(undefined);
+
+  const [analytics] = useState(
+    new AnalyticsService({
+      ga: {
+        trackingId: chainbridgeConfig.ga.trackingId,
+        appName: chainbridgeConfig.ga.appName,
+        env: process.env.REACT_APP_ENV as string,
+      },
+    })
+  );
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
@@ -275,6 +291,9 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setDepositAmount,
         fallback,
         setFallback,
+        address,
+        setAddress,
+        analytics,
       }}
     >
       {walletType === "Ethereum" ? (

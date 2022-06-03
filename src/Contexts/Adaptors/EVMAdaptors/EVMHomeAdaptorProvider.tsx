@@ -82,6 +82,8 @@ export const EVMHomeAdaptorProvider = ({
     setDepositAmount,
     setDepositRecipient,
     fallback,
+    analytics,
+    setAddress,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -324,6 +326,7 @@ export const EVMHomeAdaptorProvider = ({
         console.log("Invalid token selected");
         return;
       }
+      setAddress(address);
       setTransactionStatus("Initializing Transfer");
       setDepositRecipient(recipient);
       setDepositAmount(amount);
@@ -402,6 +405,12 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce) => {
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
+            analytics.trackTransferInTransitEvent({
+              address,
+              recipient,
+              nonce: parseInt(depositNonce),
+              amount: depositAmount as number,
+            });
           }
         );
 
@@ -416,8 +425,13 @@ export const EVMHomeAdaptorProvider = ({
       } catch (error) {
         console.error(error);
         setTransactionStatus("Transfer Aborted");
-        fallback?.stop();
         setSelectedToken(tokenAddress);
+        fallback?.stop();
+        analytics.trackTransferAbortedEvent({
+          address,
+          recipient,
+          amount: depositAmount as number,
+        });
       }
     },
     [

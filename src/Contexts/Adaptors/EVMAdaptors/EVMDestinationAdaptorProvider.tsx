@@ -29,6 +29,8 @@ export const EVMDestinationAdaptorProvider = ({
     depositAmount,
     fallback,
     setFallback,
+    address,
+    analytics,
   } = useNetworkManager();
 
   const [destinationBridge, setDestinationBridge] = useState<
@@ -100,14 +102,28 @@ export const EVMDestinationAdaptorProvider = ({
               });
               break;
             case 3:
+              console.log("Transfer Completed Check!!!");
+              if (transactionStatus === "Transfer Completed") return;
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
+              analytics.trackTransferCompletedEvent({
+                address: address as string,
+                recipient: depositRecipient as string,
+                nonce: parseInt(depositNonce),
+                amount: depositAmount as number,
+              });
               break;
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
               fallback?.stop();
+              analytics.trackTransferAbortedEvent({
+                address: address as string,
+                recipient: depositRecipient as string,
+                nonce: parseInt(depositNonce),
+                amount: depositAmount as number,
+              });
               break;
           }
         }
@@ -153,6 +169,7 @@ export const EVMDestinationAdaptorProvider = ({
     setTransactionStatus,
     setTransferTxHash,
     tokensDispatch,
+    fallback,
   ]);
 
   const initFallbackMechanism = useCallback(async (): Promise<void> => {
@@ -193,11 +210,23 @@ export const EVMDestinationAdaptorProvider = ({
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
           fallback.stop();
+          analytics.trackTransferCompletedFromFallbackEvent({
+            address: address as string,
+            recipient: depositRecipient as string,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount as number,
+          });
           return false;
         case VoteStatus.CANCELLED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
           fallback.stop();
+          analytics.trackTransferAbortedFromFallbackEvent({
+            address: address as string,
+            recipient: depositRecipient as string,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount as number,
+          });
           return false;
         default:
           return true;
@@ -212,16 +241,16 @@ export const EVMDestinationAdaptorProvider = ({
     depositNonce,
     depositAmount,
     destinationBridge,
+    fallback,
   ]);
 
   useEffect(() => {
-    console.log({ transactionStatus }); // ToDo: check why get transaction status update several times on the same status
-    if (
+    const canInitFallback =
+      process.env.REACT_APP_TRANSFER_FALLBACK_ENABLED === "true" &&
       transactionStatus === "In Transit" &&
       destinationBridge &&
-      !fallback?.initialized()
-    )
-      initFallbackMechanism();
+      !fallback?.started();
+    if (canInitFallback) initFallbackMechanism();
   }, [transactionStatus, destinationBridge, fallback]);
 
   return (
