@@ -83,6 +83,7 @@ export const EVMHomeAdaptorProvider = ({
     setDepositRecipient,
     fallback,
     analytics,
+    setAddress,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -325,6 +326,7 @@ export const EVMHomeAdaptorProvider = ({
         console.log("Invalid token selected");
         return;
       }
+      setAddress(address);
       setTransactionStatus("Initializing Transfer");
       setDepositRecipient(recipient);
       setDepositAmount(amount);

@@ -273,7 +273,7 @@ export const SubstrateHomeAdaptorProvider = ({
                       setTransactionStatus("In Transit");
                       analytics.trackTransferInTransitEvent({
                         address,
-                        recipient: depositRecipient as string,
+                        recipient,
                         nonce: parseInt(depositNonce),
                         amount: depositAmount as number,
                       });

@@ -13,7 +13,6 @@ import { UnsubscribePromise } from "@polkadot/api/types";
 import {
   SubstrateBridgeConfig,
   getСhainTransferFallbackConfig,
-  chainbridgeConfig,
 } from "../../chainbridgeConfig";
 import { Fallback } from "../../Utils/Fallback";
 

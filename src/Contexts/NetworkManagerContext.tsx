@@ -153,7 +153,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       ga: {
         trackingId: chainbridgeConfig.ga.trackingId,
         appName: chainbridgeConfig.ga.appName,
-        env: process.env.NODE_ENV,
+        env: process.env.REACT_APP_ENV as string,
       },
     })
   );

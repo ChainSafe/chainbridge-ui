@@ -4,10 +4,10 @@ dotenv.config();
 
 async function createReleaseAndUpload() {
   const release = process.env.REACT_APP_SENTRY_RELEASE;
-  const environment = process.env.REACT_APP_SENTRY_ENV;
+  const environment = process.env.REACT_APP_ENV;
 
   if (!release || !environment) {
-    console.warn("REACT_APP_SENTRY_RELEASE or REACT_APP_SENTRY_ENV is not set");
+    console.warn("REACT_APP_SENTRY_RELEASE or REACT_APP_ENV is not set");
     return;
   }
 

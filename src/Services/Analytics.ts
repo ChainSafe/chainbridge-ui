@@ -29,8 +29,8 @@ class AnalyticsService {
     amount,
   }: TransferEventData) {
     this.ga.trackEvent("transfer_in_transit", {
-      address,
-      recipient,
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
       nonce,
       amount,
     });
@@ -43,8 +43,8 @@ class AnalyticsService {
     amount,
   }: TransferEventData) {
     this.ga.trackEvent("transfer_completed", {
-      address,
-      recipient,
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
       nonce,
       amount,
     });
@@ -57,8 +57,8 @@ class AnalyticsService {
     amount,
   }: TransferEventData) {
     this.ga.trackEvent("transfer_completed_from_fallback", {
-      address,
-      recipient,
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
       nonce,
       amount,
     });
@@ -71,8 +71,8 @@ class AnalyticsService {
     amount,
   }: TransferEventData) {
     this.ga.trackEvent("transfer_aborted", {
-      address,
-      recipient,
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
       nonce,
       amount,
     });
@@ -85,8 +85,8 @@ class AnalyticsService {
     amount,
   }: TransferEventData) {
     this.ga.trackEvent("transfer_aborted_fallback", {
-      address,
-      recipient,
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
       nonce,
       amount,
     });
