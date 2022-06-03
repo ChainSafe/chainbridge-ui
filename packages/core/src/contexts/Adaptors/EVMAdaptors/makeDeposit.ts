@@ -32,17 +32,11 @@ const makeDeposit =
     bridgeSetup?: BridgeData
   ) =>
   async (
-    amount: number,
-    recipient: string,
-    // tokenAddress: string,
-    // destinationChainId: number
-    from: Directions,
-    to: Directions
+    paramsForDeposit: {amount: number, recipient: string, from: Directions, to: Directions}
   ) => {
 
-    console.log("from and to", from, to)
     const token = homeChainConfig!.tokens.find(
-      (token) => token.address === tokenAddress
+      (token) => token.address === bridgeSetup![paramsForDeposit.from as keyof BridgeData].erc20Address
     );
 
     if (!token) {
@@ -50,11 +44,11 @@ const makeDeposit =
       return;
     }
 
-    const events = chainbridgeData![from as keyof BridgeData]
-    const { erc20Address: tokenAddress } = bridgeSetup![from as keyof BridgeData]
+    const events = chainbridgeData![paramsForDeposit.from as keyof BridgeData]
+    const { erc20Address: tokenAddress } = bridgeSetup![paramsForDeposit.from as keyof BridgeData]
 
     setTransactionStatus("Initializing Transfer");
-    setDepositAmount(amount);
+    setDepositAmount(paramsForDeposit.amount);
     setSelectedToken(tokenAddress);
 
     try {
@@ -65,7 +59,7 @@ const makeDeposit =
       );
 
       const currentAllowance = await chainbridgeInstance?.checkCurrentAllowance(
-        from,
+        paramsForDeposit.from,
         address!
       )
 
@@ -74,13 +68,13 @@ const makeDeposit =
         currentAllowance
       );
       // TODO extract token allowance logic to separate function
-      if (currentAllowance! < amount) {
+      if (currentAllowance! < paramsForDeposit.amount) {
         if (currentAllowance! > 0 &&
           token.isDoubleApproval
         ) {
           await chainbridgeInstance!.approve(
             "0",
-            from
+            paramsForDeposit.from
           )
         }
       }
@@ -100,10 +94,10 @@ const makeDeposit =
       })
 
       await chainbridgeInstance?.deposit(
-        amount,
-        recipient,
-        from,
-        to
+        paramsForDeposit.amount,
+        paramsForDeposit.recipient,
+        paramsForDeposit.from,
+        paramsForDeposit.to
       )
 
       return Promise.resolve();

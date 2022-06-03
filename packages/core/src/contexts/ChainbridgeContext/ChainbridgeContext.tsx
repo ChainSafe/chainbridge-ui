@@ -8,12 +8,10 @@ import {
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { TransitState } from "../../reducers/TransitMessageReducer";
-import {
-  TransactionStatus,
-  useWeb3,
-} from "../../index";
+import { TransactionStatus, useWeb3 } from "../../index";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { useDestinationBridge } from "../DestinationBridgeContext";
+import { Directions } from "@chainsafe/chainbridge-sdk-core";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -27,11 +25,12 @@ type ChainbridgeContext = {
   setDestinationChain: (domainId: number | undefined) => void;
   destinationChains: Array<{ domainId: number; name: string }>;
   destinationChainConfig?: BridgeConfig;
-  deposit(
-    amount: number,
-    recipient: string,
-    tokenAddress: string
-  ): Promise<void>;
+  deposit(params: {
+    amount: number;
+    recipient: string;
+    from: Directions;
+    to: Directions;
+  }): Promise<void>;
   resetDeposit(): void;
   // depositVotes: number;
   relayerThreshold?: number;
