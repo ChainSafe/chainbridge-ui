@@ -99,12 +99,13 @@ const makeDeposit =
         setTransactionStatus("In Transit");
         setHomeTransferTxHash(tx.transactionHash);
       })
-
+      const feeData = ''
       await chainbridgeInstance?.deposit(
         Number(paramsForDeposit.amount),
         paramsForDeposit.recipient,
         paramsForDeposit.from,
-        paramsForDeposit.to
+        paramsForDeposit.to,
+        feeData
       )
 
       return Promise.resolve();
