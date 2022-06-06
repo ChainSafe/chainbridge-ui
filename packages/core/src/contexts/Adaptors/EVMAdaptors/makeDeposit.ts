@@ -32,7 +32,7 @@ const makeDeposit =
     bridgeSetup?: BridgeData
   ) =>
   async (
-    paramsForDeposit: {amount: number, recipient: string, from: Directions, to: Directions}
+    paramsForDeposit: {amount: string, recipient: string, from: Directions, to: Directions}
   ) => {
 
     const token = homeChainConfig!.tokens.find(
@@ -49,7 +49,7 @@ const makeDeposit =
     const { erc20Address: tokenAddress } = bridgeSetup![paramsForDeposit.from as keyof BridgeData]
 
     setTransactionStatus("Initializing Transfer");
-    setDepositAmount(paramsForDeposit.amount);
+    setDepositAmount(Number(paramsForDeposit.amount));
     setSelectedToken(tokenAddress);
 
     try {
@@ -68,8 +68,9 @@ const makeDeposit =
         "🚀  currentAllowance",
         currentAllowance
       );
+
       // TODO extract token allowance logic to separate function
-      if (currentAllowance! < paramsForDeposit.amount) {
+      if (currentAllowance! < Number(paramsForDeposit.amount)) {
         if (currentAllowance! > 0 &&
           token.isDoubleApproval
         ) {
@@ -78,6 +79,10 @@ const makeDeposit =
             paramsForDeposit.from
           )
         }
+        await chainbridgeInstance!.approve(
+          paramsForDeposit.amount,
+          paramsForDeposit.from
+        )
       }
 
       events?.bridgeEvents((
@@ -95,7 +100,7 @@ const makeDeposit =
       })
 
       await chainbridgeInstance?.deposit(
-        paramsForDeposit.amount,
+        Number(paramsForDeposit.amount),
         paramsForDeposit.recipient,
         paramsForDeposit.from,
         paramsForDeposit.to
