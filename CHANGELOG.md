@@ -2,6 +2,10 @@
 
 ## vNext
 
+- ...
+
+## v0.13.0
+
 - Implemented fallback mechanism for Polygon, Ethereum to Cere, Cere to Polygon transfer flows to be able to update transaction status window in the case blockchain response didn't reach client with GA integration
 
 ## v0.12.0
