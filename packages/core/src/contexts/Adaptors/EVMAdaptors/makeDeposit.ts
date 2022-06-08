@@ -83,6 +83,7 @@ const makeDeposit =
           paramsForDeposit.amount,
           paramsForDeposit.from
         )
+
       }
 
       events?.bridgeEvents((

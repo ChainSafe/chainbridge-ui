@@ -9,9 +9,6 @@ import {
 } from "../../../reducers/TransitMessageReducer";
 import { BridgeData, BridgeEvents, Directions } from "@chainsafe/chainbridge-sdk-core";
 const handleProposalEvent = (
-  destinationBridge: Bridge,
-  homeChainConfig: BridgeConfig,
-  depositNonce: string,
   destinationChainConfig: BridgeConfig,
   setTransactionStatus: (message: TransactionStatus | undefined) => void,
   setTransferTxHash: (input: string) => void,
@@ -23,8 +20,6 @@ const handleProposalEvent = (
   const { from, to } = computedDirections
 
   const events = chainbridgeData![from as keyof BridgeData]
-
-  console.log("events", events)
 
   events?.proposalEvents![to as keyof BridgeData](
     async (

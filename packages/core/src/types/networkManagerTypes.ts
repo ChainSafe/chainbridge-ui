@@ -49,3 +49,4 @@ export type Actions =
   | { type: "resetMessages" }
   | { type: "setTransactionIsDone" }
   | { type: "setAll", payload: { walletType: WalletType} }
+  | { type: "setDepositNonce", payload: string | undefined }

@@ -28,9 +28,6 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
     initState
   );
 
-  console.log("homechains", homeChains);
-  console.log("rest", rest);
-
   useEffect(() => {
     if (homeChains.length) {
       const bridgeSetup: BridgeData = homeChains.reduce((acc, chain, idx) => {
@@ -69,7 +66,6 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
     }
   }, [homeChains]);
 
-  console.log("bridgeState", bridgeState)
 
   return (
     <BridgeContext.Provider value={{ ...bridgeState }}>

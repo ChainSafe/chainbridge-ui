@@ -12,6 +12,8 @@ import { TransactionStatus, useWeb3 } from "../../index";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { useDestinationBridge } from "../DestinationBridgeContext";
 import { Directions } from "@chainsafe/chainbridge-sdk-core";
+import { useBridge } from '../Bridge'
+import { computeDirections } from "../../utils/Helpers";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -100,6 +102,8 @@ const ChainbridgeProvider = ({
     handleCheckSupplies,
   } = useHomeBridge();
 
+  const { chainbridgeInstance, bridgeSetup } = useBridge()
+
   const { setDepositVotes, tokensDispatch } = useDestinationBridge();
 
   const resetDeposit = () => {
@@ -115,14 +119,11 @@ const ChainbridgeProvider = ({
   };
 
   const handleDeposit = useCallback(
-    async (amount: number, recipient: string, tokenAddress: string) => {
+    async (paramsForDeposit: { amount: number, recipient: string, from: Directions, to: Directions }) => {
       if (chainConfig && destinationChainConfig) {
         return await deposit(
-          amount,
-          recipient,
-          tokenAddress,
-          destinationChainConfig.domainId
-        );
+          paramsForDeposit
+        )
       }
     },
     [deposit, destinationChainConfig, chainConfig]

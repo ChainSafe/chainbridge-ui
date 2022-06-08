@@ -41,19 +41,6 @@ const LocalProviderContext = React.createContext<LocalWeb3Context | undefined>(
   undefined
 );
 
-const initialNetworkManager: NetworkManagerState = {
-  walletType: "unset",
-  homeChainConfig: undefined,
-  homeChains: [],
-  destinationChainConfig: undefined,
-  destinationChains: [],
-  transactionStatus: undefined,
-  depositNonce: undefined,
-  depositVotes: 0,
-  txIsDone: false,
-  transitMessage: [],
-};
-
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
 }
@@ -69,19 +56,6 @@ type Action = {
 };
 
 type CombinedReducer = (state: CombinedState, action: Action) => CombinedState;
-
-const [comibenedReducer, initialCombinedReducers] =
-  combineReducers<CombinedReducer>({
-    localWeb3: [
-      localWeb3ContextReducer,
-      {
-        savedWallet: "",
-        isReady: false,
-        tokens: {},
-      },
-    ],
-    networkManager: [networkManagerReducer, initialNetworkManager],
-  });
 
 function selectProvider(
   type: string | undefined,
@@ -181,6 +155,31 @@ const LocalProvider = ({
   checkNetwork = (networkIds && networkIds.length > 0) || false,
   spenderAddress,
 }: LocalWeb3ContextProps) => {
+  const initialNetworkManager: NetworkManagerState = {
+    walletType: "unset",
+    homeChainConfig: undefined,
+    homeChains: [],
+    destinationChainConfig: undefined,
+    destinationChains: [],
+    transactionStatus: undefined,
+    depositVotes: 0,
+    txIsDone: false,
+    transitMessage: [],
+  };
+
+  const [combinedReducers, initialCombinedReducers] =
+    combineReducers<CombinedReducer>({
+      localWeb3: [
+        localWeb3ContextReducer,
+        {
+          savedWallet: "",
+          isReady: false,
+          tokens: {},
+        },
+      ],
+      networkManager: [networkManagerReducer, initialNetworkManager],
+    });
+
   // Injecting extrenal provider for widget
   useEffect(() => {
     if (useExternalProvider && externalProvider) {
@@ -203,7 +202,7 @@ const LocalProvider = ({
   }, [externalProvider]);
 
   const [state, dispatcher] = useReducer(
-    comibenedReducer,
+    combinedReducers,
     initialCombinedReducers
   );
   const { localWeb3, networkManager } = state;
@@ -277,7 +276,7 @@ const LocalProvider = ({
       }
     },
     [networkManager.homeChains]
-  );
+    );
 
   useEffect(() => {
     if (networkManager.walletType !== "unset") {
@@ -386,8 +385,7 @@ const LocalProvider = ({
         setTransactionStatus: (data) =>
           dispatcher({ type: "setTransactionStatus", payload: data }),
         depositNonce: networkManager.depositNonce,
-        setDepositNonce: (data) =>
-          dispatcher({ type: "setDepositNonce", payload: data }),
+        setDepositNonce: (data) => dispatcher({ type: "setDepositNonce", payload: data })
       }}
     >
       <HomeProvider>
