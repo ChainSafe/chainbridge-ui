@@ -1,6 +1,11 @@
 name: Deploy ECS
 
 on:
+  push:
+    branches:
+      - devops/add-ecs
+
+on:
   workflow_run:
     workflows:
       - Docker build and push
