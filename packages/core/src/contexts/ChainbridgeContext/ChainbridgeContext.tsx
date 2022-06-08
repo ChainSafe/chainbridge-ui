@@ -8,12 +8,12 @@ import {
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { TransitState } from "../../reducers/TransitMessageReducer";
-import {
-  TransactionStatus,
-  useWeb3,
-} from "../../index";
+import { TransactionStatus, useWeb3 } from "../../index";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { useDestinationBridge } from "../DestinationBridgeContext";
+import { Directions } from "@chainsafe/chainbridge-sdk-core";
+import { useBridge } from '../Bridge'
+import { computeDirections } from "../../utils/Helpers";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
@@ -27,11 +27,12 @@ type ChainbridgeContext = {
   setDestinationChain: (domainId: number | undefined) => void;
   destinationChains: Array<{ domainId: number; name: string }>;
   destinationChainConfig?: BridgeConfig;
-  deposit(
-    amount: number,
-    recipient: string,
-    tokenAddress: string
-  ): Promise<void>;
+  deposit(params: {
+    amount: number;
+    recipient: string;
+    from: Directions;
+    to: Directions;
+  }): Promise<void>;
   resetDeposit(): void;
   // depositVotes: number;
   relayerThreshold?: number;
@@ -101,6 +102,8 @@ const ChainbridgeProvider = ({
     handleCheckSupplies,
   } = useHomeBridge();
 
+  const { chainbridgeInstance, bridgeSetup } = useBridge()
+
   const { setDepositVotes, tokensDispatch } = useDestinationBridge();
 
   const resetDeposit = () => {
@@ -116,14 +119,11 @@ const ChainbridgeProvider = ({
   };
 
   const handleDeposit = useCallback(
-    async (amount: number, recipient: string, tokenAddress: string) => {
+    async (paramsForDeposit: { amount: number, recipient: string, from: Directions, to: Directions }) => {
       if (chainConfig && destinationChainConfig) {
         return await deposit(
-          amount,
-          recipient,
-          tokenAddress,
-          destinationChainConfig.domainId
-        );
+          paramsForDeposit
+        )
       }
     },
     [deposit, destinationChainConfig, chainConfig]

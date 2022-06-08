@@ -12,6 +12,7 @@ import {
   NetworkManagerProvider,
   LocalProvider,
   chainbridgeConfig,
+  BridgeProvider,
 } from "@chainsafe/chainbridge-ui-core";
 import { AppWrapper } from "./layouts";
 import { utils } from "ethers";
@@ -99,13 +100,15 @@ const App: React.FC<{}> = () => {
             },
           }}
         >
-          <ChainbridgeProvider chains={chains}>
-            <Router>
-              <AppWrapper wrapTokenPage={wrapTokenPage}>
-                <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
-              </AppWrapper>
-            </Router>
-          </ChainbridgeProvider>
+          <BridgeProvider>
+            <ChainbridgeProvider chains={chains}>
+              <Router>
+                <AppWrapper wrapTokenPage={wrapTokenPage}>
+                  <ChainbridgeRoutes wrapTokenPage={wrapTokenPage} />
+                </AppWrapper>
+              </Router>
+            </ChainbridgeProvider>
+          </BridgeProvider>
         </LocalProvider>
       </ThemeSwitcher>
     </ErrorBoundary>

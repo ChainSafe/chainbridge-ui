@@ -29,6 +29,7 @@ import {
   TransitState,
 } from "../../reducers/TransitMessageReducer";
 import { useWeb3 } from "../localWeb3Context";
+import { BridgeProvider } from "../Bridge";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -96,11 +97,17 @@ function selectProvider(
     : String(type).toLocaleLowerCase();
   const providers: { [key: string]: any } = {
     ethereum: {
-      home: <EVMHomeAdaptorProvider>{props.children}</EVMHomeAdaptorProvider>,
+      home: (
+        <BridgeProvider>
+          <EVMHomeAdaptorProvider>{props.children}</EVMHomeAdaptorProvider>
+        </BridgeProvider>
+      ),
       destination: (
-        <EVMDestinationAdaptorProvider>
-          {props.children}
-        </EVMDestinationAdaptorProvider>
+        <BridgeProvider>
+          <EVMDestinationAdaptorProvider>
+            {props.children}
+          </EVMDestinationAdaptorProvider>
+        </BridgeProvider>
       ),
     },
     substrate: {
@@ -168,9 +175,11 @@ function selectProvider(
 
 export const NetworkManagerProvider = ({
   children,
-  predefinedWalletType
+  predefinedWalletType,
 }: INetworkManagerProviderProps) => {
-  const [walletType, setWalletType] = useState<WalletType>(predefinedWalletType ?? "Ethereum");
+  const [walletType, setWalletType] = useState<WalletType>(
+    predefinedWalletType ?? "Ethereum"
+  );
 
   const [homeChainConfig, setHomeChainConfig] = useState<
     BridgeConfig | undefined
@@ -186,9 +195,11 @@ export const NetworkManagerProvider = ({
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
   >(undefined);
+
   const [depositNonce, setDepositNonce] = useState<string | undefined>(
     undefined
   );
+
   const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
@@ -201,9 +212,8 @@ export const NetworkManagerProvider = ({
   // TRIGGER THIS TO OPEN ONBOARD MODAL
   useEffect(() => {
     if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
-      onboard.walletSelect()
+      onboard.walletSelect();
     }
-
   }, [onboard, savedWallet, walletType]);
 
   const handleSetHomeChain = useCallback(

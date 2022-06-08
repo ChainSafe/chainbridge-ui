@@ -71,6 +71,12 @@ const networkManagerReducer = (
         ...state,
         walletType
       }
+    case 'setDepositNonce': {
+      return {
+        depositNonce: action.payload,
+        ...state
+      }
+    }
     default:
       return state
   }

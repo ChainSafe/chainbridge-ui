@@ -11,6 +11,7 @@ import makeUnwrappedToken from "./makeUnwrappedToken";
 import makeHandleCheckSupplies from "./makeHandleCheckSupplies";
 import { useSetBridgeSettingsHook } from "./useSetBridgeSettingsHook";
 import { useConnectWallet } from "./useConnectWallet";
+import { useBridge } from "../../Bridge";
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -34,6 +35,8 @@ export const EVMHomeAdaptorProvider = ({
     handleSetHomeChain,
     homeChains,
   } = useLocalWeb3();
+
+  const { chainbridgeData, chainbridgeInstance, bridgeSetup } = useBridge()
 
   const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
     isReady,
@@ -92,7 +95,10 @@ export const EVMHomeAdaptorProvider = ({
     homeBridge,
     provider,
     address,
-    bridgeFee
+    bridgeFee,
+    chainbridgeData,
+    chainbridgeInstance,
+    bridgeSetup
   );
 
   const wrapToken = makeWrappedToken(

@@ -11,6 +11,7 @@ import {
 } from "../../../chainbridgeConfig";
 
 import { getPriceCompatibility } from "./helpers";
+import { BridgeData, BridgeEvents, Chainbridge, Directions } from "@chainsafe/chainbridge-sdk-core";
 
 const makeDeposit =
   (
@@ -25,33 +26,17 @@ const makeDeposit =
     homeBridge?: Bridge,
     provider?: providers.Web3Provider,
     address?: string,
-    bridgeFee?: number
+    bridgeFee?: number,
+    chainbridgeData?: { chain1: BridgeEvents, chain2: BridgeEvents },
+    chainbridgeInstance?: Chainbridge,
+    bridgeSetup?: BridgeData
   ) =>
   async (
-    amount: number,
-    recipient: string,
-    tokenAddress: string,
-    destinationChainId: number
+    paramsForDeposit: {amount: string, recipient: string, from: Directions, to: Directions}
   ) => {
-    if (!homeChainConfig || !homeBridge) {
-      console.error("Home bridge contract is not instantiated");
-      return;
-    }
-    const signer = provider?.getSigner();
-    if (!address || !signer) {
-      console.log("No signer");
-      return;
-    }
 
-    const destinationChain = chainbridgeConfig().chains.find(
-      (c) => c.domainId === destinationChainId
-    );
-    // TODO: create separate version for substrate
-    if (destinationChain?.type === "Substrate") {
-      recipient = `0x${Buffer.from(decodeAddress(recipient)).toString("hex")}`;
-    }
-    const token = homeChainConfig.tokens.find(
-      (token) => token.address === tokenAddress
+    const token = homeChainConfig!.tokens.find(
+      (token) => token.address === bridgeSetup![paramsForDeposit.from as keyof BridgeData].erc20Address
     );
 
     if (!token) {
@@ -59,27 +44,13 @@ const makeDeposit =
       return;
     }
 
-    setTransactionStatus("Initializing Transfer");
-    setDepositAmount(amount);
-    setSelectedToken(tokenAddress);
-    const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
-    const erc20Decimals = token.decimals ?? homeChainConfig.decimals;
+    const events = chainbridgeData![paramsForDeposit.from as keyof BridgeData]
 
-    const data =
-      "0x" +
-      utils
-        .hexZeroPad(
-          // TODO Wire up dynamic token decimals
-          BigNumber.from(
-            utils.parseUnits(amount.toString(), erc20Decimals)
-          ).toHexString(),
-          32
-        )
-        .substr(2) + // Deposit Amount (32 bytes)
-      utils
-        .hexZeroPad(utils.hexlify((recipient.length - 2) / 2), 32)
-        .substr(2) + // len(recipientAddress) (32 bytes)
-      recipient.substr(2); // recipientAddress (?? bytes)
+    const { erc20Address: tokenAddress } = bridgeSetup![paramsForDeposit.from as keyof BridgeData]
+
+    setTransactionStatus("Initializing Transfer");
+    setDepositAmount(Number(paramsForDeposit.amount));
+    setSelectedToken(tokenAddress);
 
     try {
       const gasPriceCompatibility = await getPriceCompatibility(
@@ -88,67 +59,53 @@ const makeDeposit =
         gasPrice
       );
 
-      const currentAllowance = await erc20.allowance(
-        address,
-        (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress
-      );
+      const currentAllowance = await chainbridgeInstance?.checkCurrentAllowance(
+        paramsForDeposit.from,
+        address!
+      )
+
       console.log(
         "🚀  currentAllowance",
-        utils.formatUnits(currentAllowance, erc20Decimals)
+        currentAllowance
       );
+
       // TODO extract token allowance logic to separate function
-      if (Number(utils.formatUnits(currentAllowance, erc20Decimals)) < amount) {
-        if (
-          Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
+      if (currentAllowance! < Number(paramsForDeposit.amount)) {
+        if (currentAllowance! > 0 &&
           token.isDoubleApproval
         ) {
-          //We need to reset the user's allowance to 0 before we give them a new allowance
-          //TODO Should we alert the user this is happening here?
-          await (
-            await erc20.approve(
-              (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
-              BigNumber.from(utils.parseUnits("0", erc20Decimals)),
-              {
-                gasPrice: gasPriceCompatibility,
-              }
-            )
-          ).wait(1);
-        }
-        await (
-          await erc20.approve(
-            (homeChainConfig as EvmBridgeConfig).erc20HandlerAddress,
-            BigNumber.from(utils.parseUnits(amount.toString(), erc20Decimals)),
-            {
-              gasPrice: gasPriceCompatibility,
-            }
+          await chainbridgeInstance!.approve(
+            "0",
+            paramsForDeposit.from
           )
-        ).wait(1);
+        }
+        await chainbridgeInstance!.approve(
+          paramsForDeposit.amount,
+          paramsForDeposit.from
+        )
+
       }
 
-      // TODO do we really need once() here?
-      homeBridge.once(
-        homeBridge.filters.Deposit(null, null, null, address, null, null),
-        (
-          destinationDomainId: number,
-          resourceId: string,
-          depositNonce: number,
-          user: string,
-          data: string,
-          handlerResponse: string,
-          tx: Event
-        ) => {
-          setDepositNonce(`${depositNonce.toString()}`);
-          setTransactionStatus("In Transit");
-          setHomeTransferTxHash(tx.transactionHash);
-        }
-      );
+      events?.bridgeEvents((
+        destinationDomainId: number,
+        resourceId: string,
+        depositNonce: number,
+        user: string,
+        data: string,
+        handlerResponse: string,
+        tx: Event
+      ) => {
+        setDepositNonce(`${depositNonce.toString()}`);
+        setTransactionStatus("In Transit");
+        setHomeTransferTxHash(tx.transactionHash);
+      })
 
-      await (
-        await homeBridge.deposit(destinationChainId, token.resourceId, data, {
-          gasPrice: gasPriceCompatibility,
-          value: utils.parseUnits((bridgeFee || 0).toString(), 18),
-        })
-      ).wait();
+      await chainbridgeInstance?.deposit(
+        Number(paramsForDeposit.amount),
+        paramsForDeposit.recipient,
+        paramsForDeposit.from,
+        paramsForDeposit.to
+      )
 
       return Promise.resolve();
     } catch (error) {

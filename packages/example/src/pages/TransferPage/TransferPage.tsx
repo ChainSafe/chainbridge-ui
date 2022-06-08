@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import clsx from "clsx";
 
 import {
+  useBridge,
   useChainbridge,
   useHomeBridge,
   useNetworkManager,
@@ -34,6 +35,7 @@ import {
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
 
 import makeValidationSchema from "./makeValidationSchema";
+import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
 
 export type PreflightDetails = {
   tokenAmount: number;
@@ -63,6 +65,7 @@ const TransferPage = () => {
     checkSupplies,
   } = useChainbridge();
 
+  const { bridgeSetup } = useBridge()
   const { accounts, selectAccount } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -267,12 +270,40 @@ const TransferPage = () => {
         receiver={preflightDetails?.receiver || ""}
         sender={address || ""}
         start={() => {
+          const directionsForDeposit: {
+            from: "chain1" | "chain2";
+            to: "chain1" | "chain2";
+          } = Object.keys(bridgeSetup!).reduce((acc, chain) => {
+            if (
+              Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+              homeConfig!.domainId
+            ) {
+              acc = { ...acc, from: chain };
+              return acc;
+            }
+            if (
+              Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+              destinationChainConfig?.domainId
+            ) {
+              acc = { ...acc, to: chain };
+              return acc;
+            }
+          }, {} as any);
+
+
+          const { from, to: destinationChainDirection } = directionsForDeposit
+
+          const paramsForDeposit = {
+            amount: preflightDetails.tokenAmount,
+            recipient: preflightDetails.receiver,
+            from,
+            to: destinationChainDirection
+          }
+
           setPreflightModalOpen(false);
           preflightDetails &&
             deposit(
-              preflightDetails.tokenAmount,
-              preflightDetails.receiver,
-              preflightDetails.token
+              paramsForDeposit
             );
         }}
         sourceNetwork={homeConfig?.name || ""}
