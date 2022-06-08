@@ -1,0 +1,71 @@
+{
+  "name": "@chainsafe/explorer-ui",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/runtime": "^7.12.1",
+    "@chainsafe/common-theme": "1.0.10",
+    "styled-components": "^5.3.3",
+    "@mui/material": "^5.2.1",
+    "@mui/styled-engine-sc": "^5.1.0",
+    "@material-ui/styles": "4.10.0",
+    "@mui/icons-material": "^5.2.1",
+    "@mui/lab": "^5.0.0-alpha.57",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.4",
+    "typescript": "^4.6.4",
+    "web-vitals": "^2.1.4",
+    "@emotion/react": "11.9.0",
+    "@emotion/styled": "11.8.1"
+  },
+  "devDependencies": {
+    "@polkadot/api": "3.11.1",
+    "@polkadot/typegen": "^4.11.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.0.4",
+    "@testing-library/user-event": "^12.1.7",
+    "@types/history": "^4.7.8",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.8",
+    "@types/react": "^16.9.52",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.2.0",
+    "@types/styled-components": "^5.1.15",
+    "craco": "^0.0.3",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-only-warn": "^1.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.0",
+    "pretty-quick": "3.0.2"
+  },
+  "scripts": {
+    "start": "yarn setup:copy-dev-config && PORT=3003 BROWSER=none craco --max_old_space_size=4096 start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "setup:copy-dev-config": "./scripts/copy-dev-config.sh"
+  },
+  "cracoConfig": "./craco.config.cjs",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

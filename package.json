@@ -21,6 +21,7 @@
   "scripts": {
     "start:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c start",
     "build:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c build",
+    "build:explorer": "yarn wsrun -p @chainsafe/explorer-ui -c build",
     "start:basic": "yarn wsrun -p @chainsafe/chainbridge-basic -c start",
     "build:core": "yarn wsrun -p @chainsafe/chainbridge-ui-core -c build",
     "publish:core": "yarn wsrun -p @chainsafe/chainbridge-ui-core -c publish",
@@ -37,7 +38,8 @@
     "start-evm-example:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c start:evm-example",
     "setup-example:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c setup:example",
     "setup-centrifuge:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c setup:centrifuge",
-    "start:example": "yarn wsrun -p example -c start"
+    "start:example": "yarn wsrun -p example -c start",
+    "start:explorer-ui": "yarn wsrun -p @chainsafe/explorer-ui -c start"
   },
   "workspaces": {
     "packages": [

@@ -60,7 +60,7 @@ const ExplorerPage = () => {
       ...explorerState,
       transferDetails: txDetail,
     });
-    history.push(`/explorer/transaction/detail-view/${txDetail?.id}`);
+    history.push(`/transaction/detail-view/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -68,7 +68,7 @@ const ExplorerPage = () => {
     explorerPageDispatcher({
       type: "cleanTransferDetails",
     });
-    history.push("/explorer/transaction/list");
+    history.push("/");
   };
 
   const handleTimelineButtonClick = () =>
@@ -91,7 +91,7 @@ const ExplorerPage = () => {
   }, [transfers]);
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", marginTop: '20px'}}>
       <section className={classes.mainContent}>
         <section className={classes.networkInfoContainer}>
           <div className={classes.networkInfo}>

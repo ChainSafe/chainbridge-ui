@@ -53,6 +53,7 @@ describe("DetailView", () => {
           handleTimelineButtonClick={jest.fn()}
           timelineButtonClicked={false}
           handleClose={jest.fn()}
+          // @ts-ignore-line
           classes={{
             transferDetailContainer: "",
             transferDetailSection: "",

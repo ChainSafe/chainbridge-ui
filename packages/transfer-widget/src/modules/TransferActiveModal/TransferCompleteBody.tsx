@@ -23,6 +23,11 @@ export default function TransferCompleteBody({
   tokenSymbol?: string;
   destinationChainConfig?: BridgeConfig;
 }) {
+  const {
+    __RUNTIME_CONFIG__: {
+      UI_EXPLORER_URL
+    }
+   } = window
   return (
     <>
       <Typography sx={{ mt: 3, mb: 4 }} component="p">
@@ -38,7 +43,7 @@ export default function TransferCompleteBody({
             (homeConfig as EvmBridgeConfig).blockExplorer &&
             homeTransferTxHash && (
               <Button
-                href={`/explorer/transaction/${homeTransferTxHash}`}
+                href={`${UI_EXPLORER_URL}/explorer/transaction/${homeTransferTxHash}`}
                 size="small"
                 className={classes.button}
                 variant="outlined"

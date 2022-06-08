@@ -36,6 +36,9 @@ export default function TransferCompleteBody({
   dispatcher: (action: Actions) => void;
   onboard: OnboardAPI;
 }) {
+  const {
+    __RUNTIME_CONFIG__: { UI_EXPLORER_URL },
+  } = window;
   const [reload, setReload] = useState(false);
 
   const execTimeout = () => {
@@ -72,7 +75,7 @@ export default function TransferCompleteBody({
             (homeConfig as EvmBridgeConfig).blockExplorer &&
             homeTransferTxHash && (
               <Button
-                href={`/explorer/transaction/${homeTransferTxHash}`}
+                href={`${UI_EXPLORER_URL}/explorer/transaction/${homeTransferTxHash}`}
                 size="small"
                 className={classes.button}
                 variant="outlined"
