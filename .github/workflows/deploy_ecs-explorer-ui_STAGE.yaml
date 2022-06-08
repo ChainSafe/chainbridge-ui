@@ -15,7 +15,7 @@ on:
 
 env:
   AWS_REGION: "us-east-2"
-  ECR_REPOSITORY: bridge-ui-stage
+  ECR_REPOSITORY: explorer-ui-stage
   ENVIRONMENT: STAGE
 
 jobs:
@@ -53,6 +53,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ecs/task_definition_${{ env.ENVIRONMENT }}.json
-          service: bridge-ui-service-${{ env.ENVIRONMENT }}
-          cluster: bridge-ui-${{ env.ENVIRONMENT }}
+          service: explorer-ui-service-${{ env.ENVIRONMENT }}
+          cluster: explorer-ui-${{ env.ENVIRONMENT }}
           wait-for-service-stability: true
