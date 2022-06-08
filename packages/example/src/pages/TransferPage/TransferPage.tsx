@@ -67,7 +67,6 @@ const TransferPage = () => {
   } = useChainbridge();
   const [customFee, setCustomFee] = useState<FeeOracleResult>()
   const { chainbridgeData, chainbridgeInstance, bridgeSetup } = useBridge()
-  // console.log("🚀 ~ file: TransferPage.tsx ~ line 70 ~ TransferPage ~ chainbridgeInstance", chainbridgeInstance)
   const { accounts, selectAccount } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -113,7 +112,6 @@ const TransferPage = () => {
   const destAddress = watch("receiver", address)
 
   async function setFee(amount: string){
-    console.log("🚀 ~ file: TransferPage.tsx ~ line 117 ~ setFee ~ preflightDetails", destAddress)
     if (chainbridgeInstance && amount && address) {
       const fee = await chainbridgeInstance.fetchFeeData({
         amount: amount,
@@ -129,7 +127,6 @@ const TransferPage = () => {
   }
 
   useEffect(() => {
-    // setCustomFee(watchAmount)
     setFee(watchAmount)
   }, [watchAmount, preflightDetails])
 
