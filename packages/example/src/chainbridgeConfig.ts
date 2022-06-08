@@ -43,7 +43,13 @@ export type SubstrateBridgeConfig = BridgeConfig & {
   blockExplorer?: string;
 };
 
+export type FeeOracleData = {
+	feeOracleBaseUrl: string;
+	feeOracleHandlerAddress: string;
+}
+
 export type ChainbridgeConfig = {
+  feeOracleSetup: FeeOracleData,
   chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
 };
 

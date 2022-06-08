@@ -9,7 +9,7 @@ interface IPreflightModalTransferProps {
   close: () => void;
   sender: string;
   receiver: string;
-  value: number;
+  value: string;
   tokenSymbol: string;
   sourceNetwork: string;
   targetNetwork: string;

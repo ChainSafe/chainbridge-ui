@@ -72,21 +72,21 @@ export default function makeValidationSchema({
         }
         return false;
       })
-      .test(
-        "Bridge Supplies",
-        "Not enough tokens on the destination chain. Please contact support.",
-        async (value) => {
-          if (checkSupplies && destinationChainConfig && value) {
-            const supplies = await checkSupplies(
-              parseFloat(value),
-              preflightDetails.token,
-              destinationChainConfig.domainId
-            );
-            return Boolean(supplies);
-          }
-          return false;
-        }
-      )
+      // .test(
+      //   "Bridge Supplies",
+      //   "Not enough tokens on the destination chain. Please contact support.",
+      //   async (value) => {
+      //     if (checkSupplies && destinationChainConfig && value) {
+      //       const supplies = await checkSupplies(
+      //         parseFloat(value),
+      //         preflightDetails.token,
+      //         destinationChainConfig.domainId
+      //       );
+      //       return Boolean(supplies);
+      //     }
+      //     return false;
+      //   }
+      // )
       .test("Min", "Less than minimum", (value) => {
         if (value) {
           return parseFloat(value) > 0;

@@ -41,10 +41,11 @@ export interface HomeChainAdaptorContext {
   disconnect: (resetWalletConnect?: boolean) => Promise<void>;
 
   deposit(params: {
-    amount: number;
+    amount: string;
     recipient: string;
     from: Directions;
     to: Directions;
+    feeData: string;
   }): Promise<void>;
 
   relayerThreshold: number | undefined;

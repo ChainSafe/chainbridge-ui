@@ -7,10 +7,10 @@ import Typography from "@mui/material/Typography";
 interface IFeesFormikWrapped {
   className?: string;
   symbol?: string;
-  fee?: number;
+  fee?: number | string;
   feeSymbol?: string;
   amountFormikName: string;
-  amount?: number;
+  amount?: string;
 }
 
 const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
@@ -21,6 +21,7 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
   amountFormikName,
   amount,
 }: IFeesFormikWrapped) => {
+  console.log("🚀 ~ file: index.tsx ~ line 24 ~ fee", fee)
   // const { values } = useFormikContext();
 
   return (
@@ -30,7 +31,7 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
           <>
             <Typography component="p">Bridge Fee</Typography>
             <Typography component="p">
-              {fee} {feeSymbol}
+              {Number(fee).toFixed(2)} {feeSymbol}
             </Typography>
           </>
         )}
@@ -40,7 +41,7 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
           <>
             <Typography component="p">Transfer Amount:</Typography>
             <Typography component="p">
-              {Number(amount)?.toFixed(3)} {symbol}
+              {(Number(amount) - Number(fee)).toFixed(2)} {symbol}
             </Typography>
           </>
         )}
