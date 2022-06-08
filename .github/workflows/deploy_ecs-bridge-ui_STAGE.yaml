@@ -21,7 +21,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy Bridge UI
     runs-on: ubuntu-18.04
 
     permissions:

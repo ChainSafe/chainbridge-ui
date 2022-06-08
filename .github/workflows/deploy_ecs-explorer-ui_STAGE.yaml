@@ -20,7 +20,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy Explorer UI
     runs-on: ubuntu-18.04
 
     permissions:
