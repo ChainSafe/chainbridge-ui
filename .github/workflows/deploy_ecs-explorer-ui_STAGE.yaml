@@ -1,4 +1,4 @@
-name: Deploy ECS
+name: Deploy ECS Explorer UI
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Deploy ECS
+name: Deploy ECS Bridge UI
 
 on:
   push:
