@@ -19,9 +19,6 @@
     "@mui/lab": "^5.0.0-alpha.57",
     "@mui/material": "^5.2.1",
     "@mui/styled-engine-sc": "^5.1.0",
-    "@polkadot/keyring": "5.6.3",
-    "@polkadot/util": "5.6.3",
-    "@polkadot/util-crypto": "5.6.3",
     "@sentry/react": "^5.26.0",
     "@use-it/interval": "^1.0.0",
     "@walletconnect/client": "1.7.1",
@@ -48,8 +45,6 @@
     "@fusion-icons/react": "0.0.0"
   },
   "devDependencies": {
-    "@polkadot/api": "3.11.1",
-    "@polkadot/typegen": "^4.11.2",
     "@sentry/cli": "1.58.0",
     "@sheerun/mutationobserver-shim": "^0.3.3",
     "@testing-library/jest-dom": "^5.11.4",
@@ -85,7 +80,6 @@
     "clean": "yarn clean:dependencies && yarn clean:dist",
     "prettier": "prettier --config .prettierrc 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --write",
     "start:tunnel": "./ngrok http https://localhost:3000",
-    "start:substrate": "docker-compose -f ./docker-compose-substrate.yml up -V",
     "start:centrifuge": "docker-compose -f ./docker-compose-centrifuge.yml up -V",
     "start:evm-example": "docker-compose -f ./docker-compose-node.yml up -V",
     "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",

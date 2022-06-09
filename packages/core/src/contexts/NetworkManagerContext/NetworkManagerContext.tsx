@@ -16,10 +16,6 @@ import {
   EVMHomeAdaptorProvider,
 } from "../Adaptors/EVMAdaptors";
 import { IDestinationBridgeProviderProps } from "../Adaptors/interfaces";
-import {
-  SubstrateDestinationAdaptorProvider,
-  SubstrateHomeAdaptorProvider,
-} from "../Adaptors/SubstrateAdaptors";
 import { HomeBridgeContext, DestinationBridgeContext } from "..";
 import {
   AddMessageAction,
@@ -101,18 +97,6 @@ function selectProvider(
         <EVMDestinationAdaptorProvider>
           {props.children}
         </EVMDestinationAdaptorProvider>
-      ),
-    },
-    substrate: {
-      home: (
-        <SubstrateHomeAdaptorProvider>
-          {props.children}
-        </SubstrateHomeAdaptorProvider>
-      ),
-      destination: (
-        <SubstrateDestinationAdaptorProvider>
-          {props.children}
-        </SubstrateDestinationAdaptorProvider>
       ),
     },
     unset: {

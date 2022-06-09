@@ -9,7 +9,7 @@ export type TokenConfig = {
   isDoubleApproval?: boolean;
 };
 
-export type ChainType = "Ethereum" | "Substrate";
+export type ChainType = "Ethereum";
 
 export type BridgeConfig = {
   networkId?: number;
@@ -32,19 +32,8 @@ export type EvmBridgeConfig = BridgeConfig & {
   deployedBlockNumber?: number;
 };
 
-export type SubstrateBridgeConfig = BridgeConfig & {
-  type: "Substrate";
-  chainbridgePalletName: string;
-  bridgeFeeFunctionName?: string; // If this value is provided, the chain value will be used will be used
-  bridgeFeeValue?: number; // If the above value is not provided, this value will be used for the fee. No scaling should be applied.
-  transferPalletName: string;
-  transferFunctionName: string;
-  typesFileName: string;
-  blockExplorer?: string;
-};
-
 export type ChainbridgeConfig = {
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains: Array<EvmBridgeConfig>;
 };
 
 export type UIConfig = {

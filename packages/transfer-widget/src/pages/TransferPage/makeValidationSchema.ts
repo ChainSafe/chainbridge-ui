@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { utils } from "ethers";
 
-import { isValidSubstrateAddress } from "../../utils/Helpers";
 import { BridgeConfig } from "@chainsafe/chainbridge-ui-core";
 import { PreflightDetails } from "./TransferPage";
 
@@ -98,9 +97,6 @@ export default function makeValidationSchema({
     receiver: yup
       .string()
       .test("Valid address", "Please add a valid address", (value) => {
-        if (destinationChainConfig?.type === "Substrate") {
-          return isValidSubstrateAddress(value as string);
-        }
         return utils.isAddress(value as string);
       })
       .required("Please add a receiving address"),

@@ -3,7 +3,6 @@ import {
   BridgeConfig,
   chainbridgeConfig,
   EvmBridgeConfig,
-  SubstrateBridgeConfig,
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
@@ -17,7 +16,7 @@ import { useDestinationBridge } from "../DestinationBridgeContext";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
-  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains?: Array<EvmBridgeConfig>;
 }
 
 type ChainbridgeContext = {
@@ -57,7 +56,7 @@ type ChainbridgeContext = {
     tokenAddress: string,
     destinationChainId: number
   ) => Promise<boolean | undefined>;
-  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains?: Array<EvmBridgeConfig>;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(

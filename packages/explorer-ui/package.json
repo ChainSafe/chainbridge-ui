@@ -23,8 +23,6 @@
     "@emotion/styled": "11.8.1"
   },
   "devDependencies": {
-    "@polkadot/api": "3.11.1",
-    "@polkadot/typegen": "^4.11.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
     "@testing-library/user-event": "^12.1.7",

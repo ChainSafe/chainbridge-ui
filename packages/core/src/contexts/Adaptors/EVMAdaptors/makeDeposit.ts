@@ -1,6 +1,5 @@
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { providers, BigNumber, utils, Event } from "ethers";
-import { decodeAddress } from "@polkadot/util-crypto";
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 import { TransactionStatus } from "../../NetworkManagerContext";
 
@@ -46,10 +45,6 @@ const makeDeposit =
     const destinationChain = chainbridgeConfig().chains.find(
       (c) => c.domainId === destinationChainId
     );
-    // TODO: create separate version for substrate
-    if (destinationChain?.type === "Substrate") {
-      recipient = `0x${Buffer.from(decodeAddress(recipient)).toString("hex")}`;
-    }
     const token = homeChainConfig.tokens.find(
       (token) => token.address === tokenAddress
     );
