@@ -65,10 +65,17 @@ export const EVMHomeAdaptorProvider = ({
 
   useEffect(() => {
     if (network) {
-      const chain = homeChains.find((chain) => chain.networkId === network);
-      setNetworkId(network);
-      if (chain) {
-        handleSetHomeChain(chain.domainId);
+      const sameChainId = homeChains.every((chain) => chain.networkId === network)
+      if(!sameChainId){
+        const chain = homeChains.find((chain) => chain.networkId === network);
+        setNetworkId(network);
+        console.log("EVM HOME ADAPTORS", chain, network)
+        debugger
+        if (chain) {
+          handleSetHomeChain(chain.domainId);
+        }
+      } else {
+
       }
     }
   }, [handleSetHomeChain, homeChains, network]);
