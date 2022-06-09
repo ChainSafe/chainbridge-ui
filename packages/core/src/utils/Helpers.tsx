@@ -1,8 +1,12 @@
 import dayjs from "dayjs";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { DepositRecord, TransferDetails } from "../reducers/TransfersReducer";
-import { EvmBridgeConfig } from "../chainbridgeConfig";
+import {
+  BridgeConfig,
+  EvmBridgeConfig,
+} from "../chainbridgeConfig";
 import { isCelo } from "../contexts/Adaptors/EVMAdaptors/helpers";
+import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
 
 export const shortenAddress = (address: string) => {
   return `${address.substr(0, 6)}...${address.substr(address.length - 6, 6)}`;
@@ -297,4 +301,30 @@ export const computeTransferDetails = (
     toChain,
     pillColorStatus,
   };
+};
+
+export const computeDirections = (
+  bridgeSetup: BridgeData,
+  destinationChainConfig: BridgeConfig,
+  homeConfig: BridgeConfig
+): { from: "chain1" | "chain2"; to: "chain1" | "chain2" } | undefined => {
+  if (bridgeSetup !== undefined) {
+    return Object.keys(bridgeSetup!).reduce((acc, chain) => {
+      if (
+        Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+        homeConfig!.domainId
+      ) {
+        acc = { ...acc, from: chain };
+        return acc;
+      }
+      if (
+        Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+        destinationChainConfig?.domainId
+      ) {
+        acc = { ...acc, to: chain };
+        return acc;
+      }
+    }, {} as any);
+  }
+  return undefined;
 };

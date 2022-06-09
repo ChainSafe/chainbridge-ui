@@ -58,6 +58,12 @@ export type TransactionStatus =
   | "Transfer Completed"
   | "Transfer Aborted";
 
+
+export type HomeChains = BridgeConfig & {
+  bridgeAddress: string;
+  erc20HandlerAddress: string;
+}
+
 export type LocalWeb3Context = {
   address?: string;
   ethBalance?: number;
@@ -90,7 +96,7 @@ export type LocalWeb3Context = {
   destinationChainConfig: BridgeConfig | undefined;
 
   destinationChains: Array<{ domainId: number; name: string }>;
-  homeChains: BridgeConfig[];
+  homeChains: HomeChains[];
   handleSetHomeChain: (domainId: number | undefined) => void;
   setDestinationChain: (domainId: number | undefined) => void;
 

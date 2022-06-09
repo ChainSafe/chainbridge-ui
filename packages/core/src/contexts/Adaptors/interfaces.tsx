@@ -8,6 +8,7 @@ import {
   TxIsDone,
   TransitState,
 } from "../../reducers/TransitMessageReducer";
+import { Directions } from "@chainsafe/chainbridge-sdk-core";
 
 export interface IHomeBridgeProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -39,12 +40,12 @@ export interface HomeChainAdaptorContext {
   connect: () => Promise<void>;
   disconnect: (resetWalletConnect?: boolean) => Promise<void>;
 
-  deposit(
-    amount: number,
-    recipient: string,
-    tokenAddress: string,
-    destinationChainId: number
-  ): Promise<void>;
+  deposit(params: {
+    amount: number;
+    recipient: string;
+    from: Directions;
+    to: Directions;
+  }): Promise<void>;
 
   relayerThreshold: number | undefined;
 

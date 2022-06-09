@@ -8,18 +8,21 @@ import {
   TxIsDone,
 } from "../../../reducers/TransitMessageReducer";
 import { TransactionStatus } from "../../NetworkManagerContext";
+import { BridgeData, BridgeEvents, Directions } from "@chainsafe/chainbridge-sdk-core";
 
 const handleProposalVote = (
-  destinationBridge: Bridge,
-  homeChainConfig: BridgeConfig,
-  depositNonce: string,
   depositVotes: number,
   tokensDispatch: Dispatch<AddMessageAction | ResetAction | TxIsDone>,
   setDepositVotes: (input: number) => void,
-  transactionStatus?: TransactionStatus
+  chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents },
+  computedDirections: { from: Directions, to: Directions },
+  transactionStatus?: TransactionStatus,
 ) => {
-  destinationBridge.on(
-    destinationBridge.filters.ProposalVote(null, null, null, null),
+  const { from, to } = computedDirections
+
+  const events = chainbridgeData![from as keyof BridgeData]
+
+  events?.voteEvents![to as keyof BridgeData](
     async (
       originDomainId: number,
       depositNonce: number,
@@ -50,6 +53,6 @@ const handleProposalVote = (
         },
       });
     }
-  );
+  )
 };
 export default handleProposalVote;
