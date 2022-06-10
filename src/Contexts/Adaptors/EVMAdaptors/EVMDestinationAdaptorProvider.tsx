@@ -102,7 +102,6 @@ export const EVMDestinationAdaptorProvider = ({
               });
               break;
             case 3:
-              console.log("Transfer Completed Check!!!");
               if (transactionStatus === "Transfer Completed") return;
               setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);

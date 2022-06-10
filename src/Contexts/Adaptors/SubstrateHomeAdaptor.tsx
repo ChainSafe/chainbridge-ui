@@ -15,8 +15,9 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
-import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
+import { SubstrateBridgeConfig, getСhainConfig } from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
+import { hasTokenSupplies } from "./EVMAdaptors/helpers";
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -152,7 +153,7 @@ export const SubstrateHomeAdaptorProvider = ({
             )
           );
           setTokens({
-            [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
+            [homeChainConfig.tokens[0].address || "TOKEN"]: {
               decimals:
                 homeChainConfig.tokens[0].decimals ?? homeChainConfig.decimals,
               balance: transferableBalance,
@@ -297,6 +298,36 @@ export const SubstrateHomeAdaptorProvider = ({
     [api, setDepositNonce, setTransactionStatus, address, homeChainConfig]
   );
 
+  const handleCheckSupplies = useCallback(
+    async (
+      amount: number,
+      tokenAddress: string,
+      destinationChainId: number
+    ) => {
+      if (homeChainConfig) {
+        const destinationChain = getСhainConfig(destinationChainId);
+        const token = homeChainConfig.tokens.find(
+          (token) => token.address === tokenAddress
+        );
+
+        if (destinationChain?.type === "Ethereum" && token) {
+          const hasSupplies = await hasTokenSupplies(
+            destinationChain,
+            tokens,
+            token,
+            amount,
+            tokenAddress
+          );
+          if (!hasSupplies) {
+            return false;
+          }
+        }
+        return true;
+      }
+    },
+    [homeChainConfig, tokens]
+  );
+
   // Required for adaptor however not needed for substrate
   const wrapToken = async (value: number): Promise<string> => {
     return "Not implemented";
@@ -333,7 +364,7 @@ export const SubstrateHomeAdaptorProvider = ({
         nativeTokenBalance: 0,
         accounts: accounts,
         selectAccount: selectAccount,
-        handleCheckSupplies: undefined,
+        handleCheckSupplies,
       }}
     >
       {children}
