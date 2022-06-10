@@ -156,6 +156,7 @@ export const SubstrateHomeAdaptorProvider = ({
         },
         getNetworkName: () => homeChainConfig?.name || "undefined",
         bridgeFee,
+        // @ts-ignore
         deposit,
         depositAmount,
         selectedToken,

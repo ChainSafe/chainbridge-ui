@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ethers } from "ethers";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -35,10 +36,10 @@ import {
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
 
 import makeValidationSchema from "./makeValidationSchema";
-import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, FeeOracleResult } from "@chainsafe/chainbridge-sdk-core";
 
 export type PreflightDetails = {
-  tokenAmount: number;
+  tokenAmount: string;
   token: string;
   tokenSymbol: string;
   receiver: string;
@@ -64,8 +65,8 @@ const TransferPage = () => {
     address,
     checkSupplies,
   } = useChainbridge();
-
-  const { bridgeSetup } = useBridge()
+  const [customFee, setCustomFee] = useState<FeeOracleResult>()
+  const { chainbridgeData, chainbridgeInstance, bridgeSetup } = useBridge()
   const { accounts, selectAccount } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -75,7 +76,7 @@ const TransferPage = () => {
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: "",
     token: "",
-    tokenAmount: 0,
+    tokenAmount: "0",
     tokenSymbol: "",
   });
 
@@ -101,13 +102,33 @@ const TransferPage = () => {
       resolver: yupResolver(transferSchema),
       defaultValues: {
         token: "",
-        tokenAmount: 0,
+        tokenAmount: "0",
         receiver: "",
       },
     });
 
   const watchToken = watch("token", "");
-  const watchAmount = watch("tokenAmount", 0);
+  const watchAmount = watch("tokenAmount", "0");
+  const destAddress = watch("receiver", address)
+
+  async function setFee(amount: string){
+    if (chainbridgeInstance && amount && address) {
+      const fee = await chainbridgeInstance.fetchFeeData({
+        amount: amount,
+        recipientAddress: destAddress,
+        from: "chain1",
+        to: "chain2",
+      });
+      if (fee) {
+        setCustomFee(fee)
+      }
+    }
+
+  }
+
+  useEffect(() => {
+    setFee(watchAmount)
+  }, [watchAmount, preflightDetails])
 
   const onSubmit: SubmitHandler<PreflightDetails> = (values) => {
     setPreflightDetails({
@@ -160,7 +181,7 @@ const TransferPage = () => {
                   ...preflightDetails,
                   token: tokenAddress,
                   receiver: "",
-                  tokenAmount: 0,
+                  tokenAmount: "0",
                   tokenSymbol: "",
                 });
               }}
@@ -225,8 +246,14 @@ const TransferPage = () => {
         <Fees
           amountFormikName="tokenAmount"
           className={classes.fees}
-          fee={bridgeFee}
-          feeSymbol={homeConfig?.nativeTokenSymbol}
+          fee={customFee ? customFee.calculatedRate : "0"}
+          feeSymbol={
+            customFee &&
+            customFee.erc20TokenAddress &&
+            customFee.erc20TokenAddress !== ethers.constants.AddressZero
+              ? tokens[customFee.erc20TokenAddress].symbol
+              : homeConfig?.nativeTokenSymbol
+          }
           symbol={
             preflightDetails && !!tokens && tokens[preflightDetails.token]
               ? tokens[preflightDetails.token].symbol
@@ -290,26 +317,23 @@ const TransferPage = () => {
             }
           }, {} as any);
 
-
-          const { from, to: destinationChainDirection } = directionsForDeposit
+          const { from, to: destinationChainDirection } = directionsForDeposit;
 
           const paramsForDeposit = {
             amount: preflightDetails.tokenAmount,
             recipient: preflightDetails.receiver,
             from,
-            to: destinationChainDirection
-          }
+            to: destinationChainDirection,
+            feeData: customFee!.feeData
+          };
 
           setPreflightModalOpen(false);
-          preflightDetails &&
-            deposit(
-              paramsForDeposit
-            );
+          preflightDetails && deposit(paramsForDeposit);
         }}
         sourceNetwork={homeConfig?.name || ""}
         targetNetwork={destinationChainConfig?.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
-        value={preflightDetails?.tokenAmount || 0}
+        value={preflightDetails?.tokenAmount || '0'}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
       {/* This is here due to requiring router */}

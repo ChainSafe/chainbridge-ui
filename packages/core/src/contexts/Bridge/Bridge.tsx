@@ -4,6 +4,11 @@ import React, {
   useEffect,
   useReducer,
 } from "react";
+import {
+  BridgeConfig,
+  chainbridgeConfig,
+  ChainType,
+} from "../../chainbridgeConfig";
 import { useWeb3 } from "../localWeb3Context";
 import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
 import { chainbridgeReducer, ChainbridgeState } from '../../reducers'
@@ -59,9 +64,14 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
         return acc;
       }, {} as BridgeData);
 
+      const { feeOracleSetup } = chainbridgeConfig()
+
       bridgeDispatcher({
         type: "setInstanceAndData",
-        bridgeSetup
+        payload: {
+          bridgeSetup,
+          feeOracleSetup
+        }
       })
     }
   }, [homeChains]);

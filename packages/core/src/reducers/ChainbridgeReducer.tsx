@@ -1,4 +1,4 @@
-import { BridgeData, BridgeEvents, Chainbridge } from "@chainsafe/chainbridge-sdk-core"
+import { BridgeData, BridgeEvents, Chainbridge, FeeOracleData } from "@chainsafe/chainbridge-sdk-core"
 
 export type ChainbridgeState = {
   chainbridgeInstance: Chainbridge | undefined;
@@ -6,7 +6,10 @@ export type ChainbridgeState = {
   bridgeSetup: BridgeData | undefined
 }
 
-export type ChainbridgeReducerAction = | { type: 'setInstanceAndData', bridgeSetup: BridgeData }
+export type ChainbridgeReducerAction = {
+  type: "setInstanceAndData";
+  payload: { bridgeSetup: BridgeData, feeOracleSetup: FeeOracleData };
+};
 
 export const chainbridgeReducer = (
   state: ChainbridgeState,
@@ -14,14 +17,15 @@ export const chainbridgeReducer = (
 ) => {
   switch(action.type) {
     case "setInstanceAndData": {
-      const chainbridge = new Chainbridge( { bridgeSetup: action.bridgeSetup })
+      const { bridgeSetup, feeOracleSetup } = action.payload;
+      const chainbridge = new Chainbridge({ bridgeSetup, feeOracleSetup });
       const chainbridgeConnected = chainbridge.initializeConnection()
 
       return {
         ...state,
         chainbridgeInstance: chainbridge,
         chainbridgeData: chainbridgeConnected,
-        bridgeSetup: action.bridgeSetup
+        bridgeSetup: bridgeSetup
       }
     }
     default:

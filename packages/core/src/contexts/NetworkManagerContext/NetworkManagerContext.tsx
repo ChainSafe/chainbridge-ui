@@ -6,6 +6,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
+import { Directions } from "@chainsafe/chainbridge-sdk-core";
 import {
   BridgeConfig,
   chainbridgeConfig,
@@ -132,10 +133,13 @@ function selectProvider(
             isReady: false,
             selectedToken: "",
             deposit: async (
-              amount: number,
-              recipient: string,
-              tokenAddress: string,
-              destinationChainId: number
+              params: {
+                amount: string;
+                recipient: string;
+                from: Directions;
+                to: Directions;
+                feeData: string;
+              }
             ) => undefined,
             setDepositAmount: () => undefined,
             tokens: {},

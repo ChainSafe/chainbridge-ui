@@ -35,7 +35,6 @@ export const EVMHomeAdaptorProvider = ({
     handleSetHomeChain,
     homeChains,
   } = useLocalWeb3();
-
   const { chainbridgeData, chainbridgeInstance, bridgeSetup } = useBridge()
 
   const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
@@ -92,10 +91,8 @@ export const EVMHomeAdaptorProvider = ({
     setSelectedToken,
     gasPrice,
     homeChainConfig,
-    homeBridge,
     provider,
     address,
-    bridgeFee,
     chainbridgeData,
     chainbridgeInstance,
     bridgeSetup
@@ -143,7 +140,7 @@ export const EVMHomeAdaptorProvider = ({
         chainConfig: homeChainConfig,
         address,
         nativeTokenBalance: ethBalance,
-        handleCheckSupplies,
+        handleCheckSupplies
       }}
     >
       {children}
