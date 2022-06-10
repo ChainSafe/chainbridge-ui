@@ -22,20 +22,23 @@ const makeDeposit =
     gasPrice: number,
 
     homeChainConfig?: BridgeConfig,
-    homeBridge?: Bridge,
     provider?: providers.Web3Provider,
     address?: string,
-    bridgeFee?: number,
-    chainbridgeData?: { chain1: BridgeEvents, chain2: BridgeEvents },
+    chainbridgeData?: { chain1: BridgeEvents; chain2: BridgeEvents },
     chainbridgeInstance?: Chainbridge,
     bridgeSetup?: BridgeData
   ) =>
-  async (
-    paramsForDeposit: {amount: string, recipient: string, from: Directions, to: Directions}
-  ) => {
-
+  async (paramsForDeposit: {
+    amount: string;
+    recipient: string;
+    from: Directions;
+    to: Directions;
+    feeData: string;
+  }) => {
     const token = homeChainConfig!.tokens.find(
-      (token) => token.address === bridgeSetup![paramsForDeposit.from as keyof BridgeData].erc20Address
+      (token) =>
+        token.address ===
+        bridgeSetup![paramsForDeposit.from as keyof BridgeData].erc20Address
     );
 
     if (!token) {
@@ -61,11 +64,6 @@ const makeDeposit =
       const currentAllowance = await chainbridgeInstance?.checkCurrentAllowance(
         paramsForDeposit.from,
         address!
-      )
-
-      console.log(
-        "🚀  currentAllowance",
-        currentAllowance
       );
 
       // TODO extract token allowance logic to separate function
@@ -85,26 +83,28 @@ const makeDeposit =
 
       }
 
-      events?.bridgeEvents((
-        destinationDomainId: number,
-        resourceId: string,
-        depositNonce: number,
-        user: string,
-        data: string,
-        handlerResponse: string,
-        tx: Event
-      ) => {
-        setDepositNonce(`${depositNonce.toString()}`);
-        setTransactionStatus("In Transit");
-        setHomeTransferTxHash(tx.transactionHash);
-      })
-
+      events?.bridgeEvents(
+        (
+          destinationDomainId: number,
+          resourceId: string,
+          depositNonce: number,
+          user: string,
+          data: string,
+          handlerResponse: string,
+          tx: Event
+        ) => {
+          setDepositNonce(`${depositNonce.toString()}`);
+          setTransactionStatus("In Transit");
+          setHomeTransferTxHash(tx.transactionHash);
+        }
+      );
       await chainbridgeInstance?.deposit(
-        Number(paramsForDeposit.amount),
+        paramsForDeposit.amount,
         paramsForDeposit.recipient,
         paramsForDeposit.from,
-        paramsForDeposit.to
-      )
+        paramsForDeposit.to,
+        paramsForDeposit.feeData
+      );
 
       return Promise.resolve();
     } catch (error) {

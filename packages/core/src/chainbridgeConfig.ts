@@ -33,8 +33,14 @@ export type EvmBridgeConfig = BridgeConfig & {
 };
 
 
+export type FeeOracleData = {
+	feeOracleBaseUrl: string;
+	feeOracleHandlerAddress: string;
+}
+
 export type ChainbridgeConfig = {
   chains: Array<EvmBridgeConfig>;
+  feeOracleSetup: FeeOracleData,
 };
 
 export type UIConfig = {

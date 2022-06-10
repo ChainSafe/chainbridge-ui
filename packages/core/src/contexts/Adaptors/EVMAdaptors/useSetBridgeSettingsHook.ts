@@ -19,8 +19,9 @@ export function useSetBridgeSettingsHook(homeBridge?: Bridge) {
     };
     const getBridgeFee = async () => {
       if (homeBridge) {
-        const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
-        setBridgeFee(bridgeFee);
+        // TODO update fee logic
+        // const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
+        setBridgeFee(0);
       }
     };
     getRelayerThreshold();

@@ -27,10 +27,11 @@ type ChainbridgeContext = {
   destinationChains: Array<{ domainId: number; name: string }>;
   destinationChainConfig?: BridgeConfig;
   deposit(params: {
-    amount: number;
+    amount: string;
     recipient: string;
     from: Directions;
     to: Directions;
+    feeData: string;
   }): Promise<void>;
   resetDeposit(): void;
   // depositVotes: number;
@@ -118,7 +119,7 @@ const ChainbridgeProvider = ({
   };
 
   const handleDeposit = useCallback(
-    async (paramsForDeposit: { amount: number, recipient: string, from: Directions, to: Directions }) => {
+    async (paramsForDeposit: { amount: string, recipient: string, from: Directions, to: Directions, feeData: string }) => {
       if (chainConfig && destinationChainConfig) {
         return await deposit(
           paramsForDeposit
