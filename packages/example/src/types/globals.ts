@@ -1,4 +1,4 @@
-import { ChainbridgeConfig, UIConfig } from "../chainbridgeConfig";
+import { ChainbridgeConfig, UIConfig } from "@chainsafe/chainbridge-ui-core";
 
 declare global {
   interface Window {

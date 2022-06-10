@@ -15,27 +15,14 @@ import {
   DepositRecord,
   TransferDetails,
   EvmBridgeConfig,
-  SubstrateBridgeConfig,
 } from "@chainsafe/chainbridge-ui-core";
 
-const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
-const { hexToU8a, isHex } = require("@polkadot/util");
 
 export const isCelo = (networkId?: number) =>
   [42220, 44787, 62320].includes(networkId ?? 0);
 
 export const shortenAddress = (address: string) => {
   return `${address.substr(0, 6)}...${address.substr(address.length - 6, 6)}`;
-};
-
-export const isValidSubstrateAddress = (address: string) => {
-  try {
-    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
-
-    return true;
-  } catch (error) {
-    return false;
-  }
 };
 
 export const getNetworkName = (id: any) => {
@@ -91,7 +78,7 @@ export const showImageUrlNetworkIcons = (url?: string) =>
     : PredefinedIcons[url!] || url;
 
 export const selectToken = (
-  config: EvmBridgeConfig | SubstrateBridgeConfig | undefined,
+  config: EvmBridgeConfig | undefined,
   tokenAddress: string
 ) => config?.tokens.find((token) => token.address === tokenAddress);
 
@@ -101,21 +88,15 @@ export const getTokenIcon = () => {
 };
 
 export const getNetworkIcon = (
-  config: EvmBridgeConfig | SubstrateBridgeConfig | undefined
+  config: EvmBridgeConfig | undefined
 ) => {
   if (config === undefined) {
     return undefined;
   }
-  if (config.type === "Ethereum") {
-    if (isCelo(config.networkId)) {
-      return CeloIcon;
-    } else {
-      return EthIcon;
-    }
-    // } else if (config.type === "Cosmos") {
-    //   return CosmosIcon
-  } else if (config.type === "Substrate") {
-    return PolkadotIcon;
+  if (isCelo(config.networkId)) {
+    return CeloIcon;
+  } else {
+    return EthIcon;
   }
 };
 
@@ -190,7 +171,7 @@ export const computeAndFormatAmount = (amount: string) => {
 const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
 
 export const selectChains = (
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>,
+  chains: Array<EvmBridgeConfig>,
   fromDomainId: number,
   toDomainId: number
 ) => {
@@ -202,7 +183,7 @@ export const selectChains = (
 
 export const computeTransferDetails = (
   txDetails: DepositRecord,
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>
+  chains: Array<EvmBridgeConfig>
 ): TransferDetails => {
   const {
     timestamp,

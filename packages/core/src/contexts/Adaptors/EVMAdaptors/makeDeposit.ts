@@ -1,6 +1,5 @@
 import { Bridge, BridgeFactory } from "@chainsafe/chainbridge-contracts";
 import { providers, BigNumber, utils, Event } from "ethers";
-import { decodeAddress } from "@polkadot/util-crypto";
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
 import { TransactionStatus } from "../../NetworkManagerContext";
 

@@ -14,8 +14,7 @@ import {
 import {
   DepositRecord,
   TransferDetails,
-  EvmBridgeConfig,
-  SubstrateBridgeConfig
+  EvmBridgeConfig
 } from "@chainsafe/chainbridge-ui-core";
 import {
   formatTransferDate,
@@ -38,7 +37,7 @@ type ExplorerTable = {
   active: boolean;
   setActive: (state: boolean) => void;
   transferDetails: TransferDetails;
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains: Array<EvmBridgeConfig>;
   handleTimelineButtonClick: () => void;
   timelineButtonClicked: boolean;
 };
