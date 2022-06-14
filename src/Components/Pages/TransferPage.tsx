@@ -236,6 +236,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
         },
         "& [class*='standardIcon']": {
           backgroundColor: "white",
+          height: "30px",
         },
       },
       "& span:last-child.error": {
@@ -773,6 +774,14 @@ const TransferPage = () => {
                 target="_blank"
               >
                 Cere Homepage
+              </NavLink>
+              <NavLink
+                style={{ textDecoration: "none" }}
+                className={classes.footerText}
+                to={{ pathname: process.env.REACT_APP_SUPPORT_URL }}
+                target="_blank"
+              >
+                Support
               </NavLink>
               <NavLink
                 style={{ textDecoration: "none" }}

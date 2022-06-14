@@ -62,13 +62,15 @@ window.__RUNTIME_CONFIG__ = {
         transferFunctionName: "transferNative",
         typesFileName: "bridgeTypes.json",
         existentialDepositPlusNetworkFee: "1.03",
+        bridgeAccountId: "5EYCAe5g7bGpFHagwe26HiRHdHdE3hobrwV6hq1UD2BPAiZb",
         tokens: [
           {
             address: "cere-native",
             name: cereTokenName,
             symbol: cereTokenSymbol,
             imageUri: "CEREIcon",
-            resourceId: "cere-native",
+            resourceId:
+              "0x000000000000000000000000000000c76ebe4a02bbc34786d860b355f5a5ce00",
             decimals: cereTokenDecimals,
           },
         ],
