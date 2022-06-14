@@ -5,11 +5,10 @@
     "access": "restricted"
   },
   "dependencies": {
-    "@chainsafe/chainbridge-sdk-core": "link:../../../chainsafe/chainbridge-sdk/packages/sdk",
+    "@chainsafe/chainbridge-sdk-core": "^1.0.3",
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",
-    "@chainsafe/chainbridge-contracts": "2.0.0",
     "@chainsafe/chainbridge-ui-core": "link:../core",
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
