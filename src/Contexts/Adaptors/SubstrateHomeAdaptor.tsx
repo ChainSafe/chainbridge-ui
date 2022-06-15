@@ -305,24 +305,25 @@ export const SubstrateHomeAdaptorProvider = ({
       destinationChainId: number
     ) => {
       if (homeChainConfig) {
-        const destinationChain = getСhainConfig(destinationChainId);
+        const destinationChainConfig = getСhainConfig(destinationChainId);
         const token = homeChainConfig.tokens.find(
           (token) => token.address === tokenAddress
         );
 
-        if (destinationChain?.type === "Ethereum" && token) {
-          const hasSupplies = await hasTokenSupplies(
-            destinationChain,
+        if (destinationChainConfig?.type === "Ethereum" && token) {
+          return await hasTokenSupplies(
+            destinationChainConfig,
             tokens,
             token,
             amount,
             tokenAddress
           );
-          if (!hasSupplies) {
-            return false;
-          }
+        } else {
+          console.warn(
+            `The destination chain type ${destinationChainConfig?.type} is unknown. Please check it.`
+          );
+          return true;
         }
-        return true;
       }
     },
     [homeChainConfig, tokens]

@@ -284,15 +284,18 @@ export const EVMHomeAdaptorProvider = ({
   const handleCheckSupplies = useCallback(
     async (amount: number) => {
       if (destinationChainConfig?.type === "Substrate") {
-        const hasSupplies = await hasTokenSupplies(
+        return await hasTokenSupplies(
           api as ApiPromise,
           (destinationChainConfig as SubstrateBridgeConfig).bridgeAccountId,
           amount,
           destinationChainConfig.decimals
         );
-        if (!hasSupplies) return false;
+      } else {
+        console.warn(
+          `The destination chain type ${destinationChainConfig?.type} is unknown. Please check it.`
+        );
+        return true;
       }
-      return true;
     },
     [destinationChainConfig, api]
   );
