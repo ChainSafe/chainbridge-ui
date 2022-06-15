@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   chainbridgeConfig,
   EvmBridgeConfig,
+  SubstrateBridgeConfig,
   TokenConfig,
 } from "../../../chainbridgeConfig";
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
@@ -16,7 +17,9 @@ import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
-import { hasTokenSupplies, getPriceCompatibility } from "./helpers";
+import { getPriceCompatibility } from "./helpers";
+import { createApi, hasTokenSupplies } from "../SubstrateApis/ChainBridgeAPI";
+import { ApiPromise } from "@polkadot/api";
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -72,6 +75,7 @@ export const EVMHomeAdaptorProvider = ({
 
   const {
     homeChainConfig,
+    destinationChainConfig,
     setTransactionStatus,
     setDepositNonce,
     handleSetHomeChain,
@@ -99,6 +103,24 @@ export const EVMHomeAdaptorProvider = ({
   const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
     undefined
   );
+  const [api, setApi] = useState<ApiPromise | undefined>();
+  const [initialising, setInitialising] = useState(false);
+  const [walletSelected, setWalletSelected] = useState(false);
+
+  useEffect(() => {
+    if (destinationChainConfig?.type !== "Substrate" || initialising || api)
+      return;
+    setInitialising(true);
+    createApi(
+      destinationChainConfig.rpcUrl,
+      destinationChainConfig.rpcFallbackUrls
+    )
+      .then((api) => {
+        setApi(api);
+        setInitialising(false);
+      })
+      .catch(console.error);
+  }, [destinationChainConfig, initialising]);
 
   useEffect(() => {
     if (network) {
@@ -110,8 +132,6 @@ export const EVMHomeAdaptorProvider = ({
     }
   }, [handleSetHomeChain, homeChains, network, setNetworkId]);
 
-  const [initialising, setInitialising] = useState(false);
-  const [walletSelected, setWalletSelected] = useState(false);
   useEffect(() => {
     if (initialising || homeBridge || !onboard) return;
     console.log("starting init");
@@ -262,35 +282,22 @@ export const EVMHomeAdaptorProvider = ({
   }, [wallet, network, onboard]);
 
   const handleCheckSupplies = useCallback(
-    async (
-      amount: number,
-      tokenAddress: string,
-      destinationChainId: number
-    ) => {
-      if (homeChainConfig) {
-        const destinationChain = chainbridgeConfig.chains.find(
-          (c) => c.chainId === destinationChainId
+    async (amount: number) => {
+      if (destinationChainConfig?.type === "Substrate") {
+        return await hasTokenSupplies(
+          api as ApiPromise,
+          (destinationChainConfig as SubstrateBridgeConfig).bridgeAccountId,
+          amount,
+          destinationChainConfig.decimals
         );
-        const token = homeChainConfig.tokens.find(
-          (token) => token.address === tokenAddress
+      } else {
+        console.warn(
+          `Liquidity check is skipping. The destination chain type ${destinationChainConfig?.type} is unknown. Please check it.`
         );
-
-        if (destinationChain?.type === "Ethereum" && token) {
-          const hasSupplies = await hasTokenSupplies(
-            destinationChain,
-            tokens,
-            token,
-            amount,
-            tokenAddress
-          );
-          if (!hasSupplies) {
-            return false;
-          }
-        }
         return true;
       }
     },
-    [homeChainConfig, tokens]
+    [destinationChainConfig, api]
   );
 
   const deposit = useCallback(

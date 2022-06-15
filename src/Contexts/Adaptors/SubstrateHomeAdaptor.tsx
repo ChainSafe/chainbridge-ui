@@ -15,8 +15,9 @@ import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { VoidFn } from "@polkadot/api/types";
 import { utils } from "ethers";
-import { SubstrateBridgeConfig } from "../../chainbridgeConfig";
+import { SubstrateBridgeConfig, getСhainConfig } from "../../chainbridgeConfig";
 import { toFixedWithoutRounding } from "../../Utils/Helpers";
+import { hasTokenSupplies } from "./EVMAdaptors/helpers";
 
 export const SubstrateHomeAdaptorProvider = ({
   children,
@@ -152,7 +153,7 @@ export const SubstrateHomeAdaptorProvider = ({
             )
           );
           setTokens({
-            [homeChainConfig.tokens[0].symbol || "TOKEN"]: {
+            [homeChainConfig.tokens[0].address || "TOKEN"]: {
               decimals:
                 homeChainConfig.tokens[0].decimals ?? homeChainConfig.decimals,
               balance: transferableBalance,
@@ -297,6 +298,37 @@ export const SubstrateHomeAdaptorProvider = ({
     [api, setDepositNonce, setTransactionStatus, address, homeChainConfig]
   );
 
+  const handleCheckSupplies = useCallback(
+    async (
+      amount: number,
+      tokenAddress: string,
+      destinationChainId: number
+    ) => {
+      if (homeChainConfig) {
+        const destinationChainConfig = getСhainConfig(destinationChainId);
+        const token = homeChainConfig.tokens.find(
+          (token) => token.address === tokenAddress
+        );
+
+        if (destinationChainConfig?.type === "Ethereum" && token) {
+          return await hasTokenSupplies(
+            destinationChainConfig,
+            tokens,
+            token,
+            amount,
+            tokenAddress
+          );
+        } else {
+          console.warn(
+            `Liquidity check is skipping. The destination chain type ${destinationChainConfig?.type} is unknown. Please check it.`
+          );
+          return true;
+        }
+      }
+    },
+    [homeChainConfig, tokens]
+  );
+
   // Required for adaptor however not needed for substrate
   const wrapToken = async (value: number): Promise<string> => {
     return "Not implemented";
@@ -333,7 +365,7 @@ export const SubstrateHomeAdaptorProvider = ({
         nativeTokenBalance: 0,
         accounts: accounts,
         selectAccount: selectAccount,
-        handleCheckSupplies: undefined,
+        handleCheckSupplies,
       }}
     >
       {children}

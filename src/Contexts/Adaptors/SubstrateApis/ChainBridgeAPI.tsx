@@ -47,9 +47,7 @@ export const submitDeposit = (
   return api.tx[subChainConfig.transferPalletName][
     subChainConfig.transferFunctionName
   ](
-    new BigNumber(amount)
-      .multipliedBy(base.pow(new BigNumber(subChainConfig.decimals)))
-      .toString(10),
+    getBNFromDecimalAmount(amount, subChainConfig.decimals).toString(),
     recipient,
     dstChainId
   );
@@ -64,12 +62,14 @@ export const getBridgeProposalVotes = async (
   decimalAmount: number
 ): Promise<GetBridgeProsalVotesRes | undefined> => {
   const destinationChainConfig = getСhainConfig(destinationChainId);
-  const decimals = new BigNumber(destinationChainConfig.decimals);
-
   const call = api.registry.createType("Call", {
     args: [
       decodeAddress(recipient),
-      await decimalToBalance(api, decimalAmount, decimals),
+      await decimalToBalance(
+        api,
+        decimalAmount,
+        destinationChainConfig.decimals
+      ),
     ],
     callIndex: api.tx.erc20.transfer.callIndex,
   });
@@ -83,10 +83,36 @@ export const getBridgeProposalVotes = async (
 
 export const decimalToBalance = async (
   api: ApiPromise,
-  decimalAmount: number,
-  decimals: BigNumber
+  amount: number,
+  decimals: number
 ) => {
-  const amount = new BigNumber(decimalAmount);
-  const balance = amount.multipliedBy(base.pow(decimals));
-  return api.registry.createType("Balance", balance.toString());
+  const amountBN = getBNFromDecimalAmount(amount, decimals);
+  return api.registry.createType("Balance", amountBN.toString());
+};
+
+export const getBalance = async (
+  api: ApiPromise,
+  address: string
+): Promise<BigNumber> => {
+  return new BigNumber(
+    (await api.query.system.account(address)).data.free.toString()
+  );
+};
+
+export const hasTokenSupplies = async (
+  api: ApiPromise,
+  address: string,
+  amount: number,
+  decimals: number
+): Promise<boolean> => {
+  const balance = await getBalance(api, address);
+  const amountBN = getBNFromDecimalAmount(amount, decimals);
+  return amountBN.isLessThan(balance);
+};
+
+export const getBNFromDecimalAmount = (
+  decimalAmount: number,
+  decimals: number
+): BigNumber => {
+  return new BigNumber(decimalAmount).multipliedBy(base.pow(decimals));
 };

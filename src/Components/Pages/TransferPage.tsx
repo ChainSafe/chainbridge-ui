@@ -234,10 +234,15 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
             borderRight: 0,
           },
         },
+        "& [class*='standardIcon']": {
+          backgroundColor: "white",
+          height: "30px",
+        },
       },
       "& span:last-child.error": {
         position: "absolute",
         width: "calc(100% + 62px)",
+        lineHeight: "1em",
       },
     },
     maxButton: {
@@ -470,7 +475,7 @@ const TransferPage = () => {
       })
       .test(
         "Bridge Supplies",
-        "Not enough tokens on the destination chain. Please contact support.",
+        "Max bridging amount exceeded. Please contact support.",
         async (value) => {
           if (checkSupplies && destinationChainConfig && value) {
             const supplies = await checkSupplies(
@@ -769,6 +774,14 @@ const TransferPage = () => {
                 target="_blank"
               >
                 Cere Homepage
+              </NavLink>
+              <NavLink
+                style={{ textDecoration: "none" }}
+                className={classes.footerText}
+                to={{ pathname: process.env.REACT_APP_SUPPORT_URL }}
+                target="_blank"
+              >
+                Support
               </NavLink>
               <NavLink
                 style={{ textDecoration: "none" }}
