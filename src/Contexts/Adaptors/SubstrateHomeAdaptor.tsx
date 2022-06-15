@@ -320,7 +320,7 @@ export const SubstrateHomeAdaptorProvider = ({
           );
         } else {
           console.warn(
-            `The destination chain type ${destinationChainConfig?.type} is unknown. Please check it.`
+            `Liquidity check is skipping. The destination chain type ${destinationChainConfig?.type} is unknown. Please check it.`
           );
           return true;
         }
