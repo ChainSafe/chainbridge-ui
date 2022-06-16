@@ -100,26 +100,6 @@ export default function HomeNetworkConnectView({
             </section>
           ))}
       </div>
-      {isReady &&
-        walletType === "Substrate" &&
-        accounts &&
-        accounts.length > 0 && (
-          <div>
-            <section className={classes.accountSelector}>
-              <SelectInput
-                label="Select account"
-                className={classes.generalInput}
-                options={accounts.map((acc, i) => ({
-                  label: acc.address,
-                  value: i,
-                }))}
-                onChange={(value) => selectAccount && selectAccount(value)}
-                value={accounts.findIndex((v) => v.address === address)}
-                placeholder="Select an account"
-              />
-            </section>
-          </div>
-        )}
     </>
   );
 }

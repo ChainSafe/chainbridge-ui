@@ -3,7 +3,6 @@ import {
   BridgeConfig,
   chainbridgeConfig,
   EvmBridgeConfig,
-  SubstrateBridgeConfig,
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
@@ -17,7 +16,7 @@ import { computeDirections } from "../../utils/Helpers";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
-  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains?: Array<EvmBridgeConfig>;
 }
 
 type ChainbridgeContext = {
@@ -28,10 +27,11 @@ type ChainbridgeContext = {
   destinationChains: Array<{ domainId: number; name: string }>;
   destinationChainConfig?: BridgeConfig;
   deposit(params: {
-    amount: number;
+    amount: string;
     recipient: string;
     from: Directions;
     to: Directions;
+    feeData: string;
   }): Promise<void>;
   resetDeposit(): void;
   // depositVotes: number;
@@ -58,7 +58,7 @@ type ChainbridgeContext = {
     tokenAddress: string,
     destinationChainId: number
   ) => Promise<boolean | undefined>;
-  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains?: Array<EvmBridgeConfig>;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
@@ -119,7 +119,7 @@ const ChainbridgeProvider = ({
   };
 
   const handleDeposit = useCallback(
-    async (paramsForDeposit: { amount: number, recipient: string, from: Directions, to: Directions }) => {
+    async (paramsForDeposit: { amount: string, recipient: string, from: Directions, to: Directions, feeData: string }) => {
       if (chainConfig && destinationChainConfig) {
         return await deposit(
           paramsForDeposit

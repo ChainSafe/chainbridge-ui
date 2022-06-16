@@ -4,25 +4,12 @@ import { DepositRecord, TransferDetails } from "../reducers/TransfersReducer";
 import {
   BridgeConfig,
   EvmBridgeConfig,
-  SubstrateBridgeConfig,
 } from "../chainbridgeConfig";
 import { isCelo } from "../contexts/Adaptors/EVMAdaptors/helpers";
 import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
-const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
-const { hexToU8a, isHex } = require("@polkadot/util");
 
 export const shortenAddress = (address: string) => {
   return `${address.substr(0, 6)}...${address.substr(address.length - 6, 6)}`;
-};
-
-export const isValidSubstrateAddress = (address: string) => {
-  try {
-    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
-
-    return true;
-  } catch (error) {
-    return false;
-  }
 };
 
 export const getNetworkName = (id: any) => {
@@ -55,7 +42,7 @@ export const getNetworkName = (id: any) => {
 };
 
 export const selectToken = (
-  config: EvmBridgeConfig | SubstrateBridgeConfig | undefined,
+  config: EvmBridgeConfig | undefined,
   tokenAddress: string
 ) => config?.tokens.find((token) => token.address === tokenAddress);
 
@@ -131,7 +118,7 @@ export const computeAndFormatAmount = (amount: string) => {
 const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
 
 export const selectChains = (
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>,
+  chains: Array<EvmBridgeConfig>,
   fromDomainId: number,
   toDomainId: number
 ) => {
@@ -143,7 +130,7 @@ export const selectChains = (
 
 export const computeTransferDetails = (
   txDetails: DepositRecord,
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>
+  chains: Array<EvmBridgeConfig>
 ): TransferDetails => {
   const {
     timestamp,

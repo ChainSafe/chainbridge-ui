@@ -6,6 +6,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
+import { Directions } from "@chainsafe/chainbridge-sdk-core";
 import {
   BridgeConfig,
   chainbridgeConfig,
@@ -16,10 +17,6 @@ import {
   EVMHomeAdaptorProvider,
 } from "../Adaptors/EVMAdaptors";
 import { IDestinationBridgeProviderProps } from "../Adaptors/interfaces";
-import {
-  SubstrateDestinationAdaptorProvider,
-  SubstrateHomeAdaptorProvider,
-} from "../Adaptors/SubstrateAdaptors";
 import { HomeBridgeContext, DestinationBridgeContext } from "..";
 import {
   AddMessageAction,
@@ -110,18 +107,6 @@ function selectProvider(
         </BridgeProvider>
       ),
     },
-    substrate: {
-      home: (
-        <SubstrateHomeAdaptorProvider>
-          {props.children}
-        </SubstrateHomeAdaptorProvider>
-      ),
-      destination: (
-        <SubstrateDestinationAdaptorProvider>
-          {props.children}
-        </SubstrateDestinationAdaptorProvider>
-      ),
-    },
     unset: {
       home: (
         <HomeBridgeContext.Provider
@@ -132,10 +117,13 @@ function selectProvider(
             isReady: false,
             selectedToken: "",
             deposit: async (
-              amount: number,
-              recipient: string,
-              tokenAddress: string,
-              destinationChainId: number
+              params: {
+                amount: string;
+                recipient: string;
+                from: Directions;
+                to: Directions;
+                feeData: string;
+              }
             ) => undefined,
             setDepositAmount: () => undefined,
             tokens: {},

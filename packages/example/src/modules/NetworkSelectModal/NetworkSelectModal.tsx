@@ -45,46 +45,19 @@ const NetworkSelectModal = () => {
             }
           </DialogTitle>
           <section className={classes.buttons}>
-            {chains?.every((item) => item.type === "Ethereum") ? (
-              <Button
-                sx={{ color }}
-                variant="contained"
-                onClick={() => {
-                  // console.log("SELECTING WALLET TYPE ETHEREUM");
-                  setWalletType("Ethereum");
-                }}
-              >
-                {savedWallet !== ""
-                  ? `Connect to ${savedWallet}`
-                  : "Use Ethereum wallet"}
-              </Button>
-            ) : (
-              <>
-                <Button
-                  sx={{ color }}
-                  onClick={() => setWalletType("Ethereum")}
-                  variant="contained"
-                >
-                  Use Ethereum wallet
-                </Button>
-                <Button
-                  sx={{ color }}
-                  onClick={() => setWalletType("Substrate")}
-                  variant="contained"
-                >
-                  Use Substrate wallet
-                </Button>
-              </>
-            )}
+            <Button
+              sx={{ color }}
+              variant="contained"
+              onClick={() => {
+                // console.log("SELECTING WALLET TYPE ETHEREUM");
+                setWalletType("Ethereum");
+              }}
+            >
+              {savedWallet !== ""
+                ? `Connect to ${savedWallet}`
+                : "Use Ethereum wallet"}
+            </Button>
           </section>
-        </>
-      )}
-      {walletType === "Substrate" && (
-        <>
-          <Typography variant="h2" component="p">
-            Connecting to node
-          </Typography>
-          <LinearProgress variant="determinate" />
         </>
       )}
     </Dialog>

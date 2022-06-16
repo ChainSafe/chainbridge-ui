@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
-  EvmBridgeConfig,
-  SubstrateBridgeConfig,
+  EvmBridgeConfig
 } from "@chainsafe/chainbridge-ui-core";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,7 +9,7 @@ type SelectNetworkProp = {
   className?: string;
   value?: string;
   onChange?: any;
-  chains: (EvmBridgeConfig | SubstrateBridgeConfig)[];
+  chains: (EvmBridgeConfig)[];
 };
 
 export default function SelectNetwork({
