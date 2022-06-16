@@ -8,6 +8,7 @@
     "@chainsafe/chainbridge-sdk-core": "1.0.3",
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
+    "bnc-onboard": "1.38.3",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",
     "@chainsafe/chainbridge-contracts": "2.0.0",
     "@chainsafe/chainbridge-ui-core": "1.1.1",
