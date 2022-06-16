@@ -5,8 +5,6 @@ WORKDIR /app
 COPY . .
 RUN yarn install --frozen-lockfile
 RUN ls -al
-RUN yarn build:core
-RUN ls -al ./packages/core
 RUN yarn build:ui
 
 FROM nginx:1.19-alpine AS server
