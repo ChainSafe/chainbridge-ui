@@ -35,12 +35,12 @@ export const SubstrateHomeAdaptorProvider = ({
     homeChains,
     depositAmount,
     setDepositAmount,
-    depositRecipient,
     setDepositRecipient,
     fallback,
     address,
     setAddress,
     analytics,
+    setHomeTransferTxHash,
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
@@ -271,6 +271,7 @@ export const SubstrateHomeAdaptorProvider = ({
                     .then((response) => {
                       const depositNonce = `${response.toJSON()}`;
                       setDepositNonce(depositNonce);
+                      setHomeTransferTxHash(status.asFinalized.toHex());
                       setTransactionStatus("In Transit");
                       analytics.trackTransferInTransitEvent({
                         address,

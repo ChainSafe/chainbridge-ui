@@ -39,6 +39,7 @@ type ChainbridgeContext = {
   depositAmount?: number;
   bridgeFee?: number;
   inTransitMessages: Array<TransitMessage>;
+  homeTransferTxHash?: string;
   transferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
@@ -73,6 +74,7 @@ const ChainbridgeProvider = ({
     setDestinationChain,
     setDepositNonce,
     setDepositVotes,
+    homeTransferTxHash,
     transferTxHash,
     inTransitMessages,
     tokensDispatch,
@@ -162,6 +164,7 @@ const ChainbridgeProvider = ({
         transactionStatus,
         inTransitMessages,
         depositAmount: depositAmount,
+        homeTransferTxHash,
         transferTxHash: transferTxHash,
         selectedToken: selectedToken,
         // TODO: Confirm if EVM specific

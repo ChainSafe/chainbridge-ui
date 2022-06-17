@@ -35,6 +35,7 @@ export type BridgeConfig = {
   decimals: number;
   availableAsHomeNetwork?: boolean;
   transferFallback: TransferFallback[];
+  blockExplorer?: string;
 };
 
 export type EvmBridgeConfig = BridgeConfig & {
@@ -42,7 +43,6 @@ export type EvmBridgeConfig = BridgeConfig & {
   erc20HandlerAddress: string;
   type: "Ethereum";
   //This should be the full path to display a tx hash, without the trailing slash, ie. https://etherscan.io/tx
-  blockExplorer?: string;
   defaultGasPrice?: number;
   gasPriceSuggestionEnabled?: boolean;
   defaultGasPriceIncreaseInPercents?: number;

@@ -10,7 +10,7 @@ import {
 import ExclamationCircleSvg from "./../media/Icons/exclamation-mark-icon.png";
 import CustomModal from "../Components/Custom/CustomModal";
 import { useChainbridge } from "../Contexts/ChainbridgeContext";
-import { EvmBridgeConfig } from "../chainbridgeConfig";
+import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
 import { styles } from "../Constants/constants";
 
 const useStyles = makeStyles(
@@ -73,7 +73,7 @@ const useStyles = makeStyles(
           "linear-gradient(105.79deg, #A700E1 1.84%, #0024E2 102.94%)",
         borderRadius: constants.generalUnit / 2,
         minHeight: constants.generalUnit * 4,
-        marginTop: constants.generalUnit * 5,
+        marginTop: constants.generalUnit * 2,
         "& > *": {
           textDecoration: "none",
           marginRight: constants.generalUnit,
@@ -85,6 +85,10 @@ const useStyles = makeStyles(
         fontWeight: "bold",
         textDecoration: "none",
         "&:hover": {
+          background: "none",
+          color: "white",
+        },
+        "&:focus": {
           background: "none",
           color: "white",
         },
@@ -214,6 +218,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     homeConfig,
     destinationChainConfig,
     depositAmount,
+    homeTransferTxHash,
     transferTxHash,
     selectedToken,
     tokens,
@@ -300,6 +305,29 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               This should take a few minutes. <br />
               <strong> Please do not refresh or leave the page.</strong>
             </div>
+            <section className={classes.buttons}>
+              <Button
+                onClick={() =>
+                  homeTransferTxHash &&
+                  window.open(
+                    `${
+                      (homeConfig as SubstrateBridgeConfig).blockExplorer
+                    }/${homeTransferTxHash}`,
+                    "_blank"
+                  )
+                }
+                size="small"
+                className={classes.button}
+                variant="outline"
+                disabled={
+                  !homeConfig ||
+                  !(homeConfig as SubstrateBridgeConfig).blockExplorer ||
+                  !homeTransferTxHash
+                }
+              >
+                View home chain transaction
+              </Button>
+            </section>
           </div>
         ) : transactionStatus === "Transfer Completed" ? (
           <>
@@ -312,7 +340,30 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               </strong>
             </Typography>
             <section className={classes.buttons}>
-              {/* <Button
+              <Button
+                onClick={() =>
+                  homeTransferTxHash &&
+                  window.open(
+                    `${
+                      (homeConfig as SubstrateBridgeConfig).blockExplorer
+                    }/${homeTransferTxHash}`,
+                    "_blank"
+                  )
+                }
+                size="small"
+                className={classes.button}
+                variant="outline"
+                disabled={
+                  !homeConfig ||
+                  !(homeConfig as SubstrateBridgeConfig).blockExplorer ||
+                  !homeTransferTxHash
+                }
+              >
+                View home chain transaction
+              </Button>
+            </section>
+            <section className={classes.buttons}>
+              <Button
                 onClick={() =>
                   destinationChainConfig &&
                   (destinationChainConfig as EvmBridgeConfig).blockExplorer &&
@@ -327,14 +378,16 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 size="small"
                 className={classes.button}
                 variant="outline"
-                // disabled={
-                //   !destinationChain ||
-                //   !destinationChain.blockExplorer ||
-                //   !transferTxHash
-                // }
+                disabled={
+                  !destinationChainConfig ||
+                  !(destinationChainConfig as EvmBridgeConfig).blockExplorer ||
+                  !transferTxHash
+                }
               >
-                View transaction
-              </Button> */}
+                View destination chain transaction
+              </Button>
+            </section>
+            <section className={classes.buttons}>
               <Button
                 size="small"
                 className={classes.button}
@@ -350,26 +403,6 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
             <Typography className={classes.receipt} component="p">
               Something went wrong and we could not complete your transfer.
             </Typography>
-            {/* {homeConfig &&
-              (homeConfig as EvmBridgeConfig).blockExplorer &&
-              transferTxHash && (
-                <Button
-                  onClick={() =>
-                    window.open(
-                      `${
-                        (homeConfig as EvmBridgeConfig).blockExplorer
-                      }/${transferTxHash}`,
-                      "_blank"
-                    )
-                  }
-                  size="small"
-                  className={classes.button}
-                  variant="outline"
-                  disabled
-                >
-                  View transaction
-                </Button>
-              )} */}
             <section>
               <div className={classes.buttons}>
                 <Button

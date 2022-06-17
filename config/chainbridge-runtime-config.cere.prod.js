@@ -18,6 +18,7 @@ window.__RUNTIME_CONFIG__ = {
         erc20HandlerAddress: "0x8fe028Eb002bbc3ec45c5dF8acfFf67eC95B6f88",
         rpcUrl:
           "https://polygon-mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
+        blockExplorer: "https://polygonscan.com/tx",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
         defaultGasPrice: 800,
@@ -52,6 +53,8 @@ window.__RUNTIME_CONFIG__ = {
         name: "Cere Mainnet",
         decimals: cereTokenDecimals,
         rpcUrl: "wss://rpc.v2.mainnet.cere.network/ws",
+        blockExplorer:
+          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.v2.mainnet.cere.network%2Fws#/explorer/query",
         rpcFallbackUrls: ["wss://archive.v2.mainnet.cere.network/ws"],
         type: "Substrate",
         nativeTokenSymbol: "CERE",
@@ -92,6 +95,7 @@ window.__RUNTIME_CONFIG__ = {
         bridgeAddress: "0xCaF65AB2eC9B39403966991eb34B1e8B9E44C041",
         erc20HandlerAddress: "0x8fe028Eb002bbc3ec45c5dF8acfFf67eC95B6f88",
         rpcUrl: "https://mainnet.infura.io/v3/0aca1499facc499bb195d2d437f78603",
+        blockExplorer: "https://etherscan.io/tx",
         type: "Ethereum",
         nativeTokenSymbol: "ETH",
         defaultGasPrice: 400,

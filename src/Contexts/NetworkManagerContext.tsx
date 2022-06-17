@@ -87,6 +87,9 @@ interface NetworkManagerContext {
 
   tokensDispatch: Dispatch<AddMessageAction | ResetAction>;
 
+  setHomeTransferTxHash: (input: string) => void;
+  homeTransferTxHash: string;
+
   setTransferTxHash: (input: string) => void;
   transferTxHash: string;
 
@@ -125,6 +128,7 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     []
   );
 
+  const [homeTransferTxHash, setHomeTransferTxHash] = useState<string>("");
   const [transferTxHash, setTransferTxHash] = useState<string>("");
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
@@ -283,6 +287,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setDepositNonce,
         setDepositVotes,
         tokensDispatch,
+        homeTransferTxHash,
+        setHomeTransferTxHash,
         setTransferTxHash,
         transferTxHash,
         depositRecipient,
