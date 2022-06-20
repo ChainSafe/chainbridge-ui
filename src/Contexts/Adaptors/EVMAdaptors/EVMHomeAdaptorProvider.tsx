@@ -88,6 +88,8 @@ export const EVMHomeAdaptorProvider = ({
     fallback,
     analytics,
     setAddress,
+    setApi,
+    api,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -103,7 +105,6 @@ export const EVMHomeAdaptorProvider = ({
   const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
     undefined
   );
-  const [api, setApi] = useState<ApiPromise | undefined>();
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
 

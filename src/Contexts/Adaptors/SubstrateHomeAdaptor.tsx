@@ -23,7 +23,6 @@ export const SubstrateHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
   const registry = new TypeRegistry();
-  const [api, setApi] = useState<ApiPromise | undefined>();
   const [isReady, setIsReady] = useState(false);
   const [accounts, setAccounts] = useState<InjectedAccountType[]>([]);
 
@@ -41,6 +40,8 @@ export const SubstrateHomeAdaptorProvider = ({
     address,
     setAddress,
     analytics,
+    api,
+    setApi,
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(

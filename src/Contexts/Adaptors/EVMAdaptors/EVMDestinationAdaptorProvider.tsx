@@ -31,12 +31,9 @@ export const EVMDestinationAdaptorProvider = ({
     setFallback,
     address,
     analytics,
+    destinationBridge,
+    setDestinationBridge,
   } = useNetworkManager();
-
-  const [destinationBridge, setDestinationBridge] = useState<
-    Bridge | undefined
-  >(undefined);
-
   useEffect(() => {
     if (destinationBridge) return;
     const provider = getProvider(destinationChainConfig);
@@ -48,7 +45,7 @@ export const EVMDestinationAdaptorProvider = ({
       );
       setDestinationBridge(bridge);
     }
-  }, [destinationChainConfig, destinationBridge, transactionStatus]);
+  }, [destinationChainConfig]);
 
   useEffect(() => {
     if (

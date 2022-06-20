@@ -34,9 +34,9 @@ export const SubstrateDestinationAdaptorProvider = ({
     fallback,
     address,
     analytics,
+    api,
+    setApi,
   } = useNetworkManager();
-
-  const [api, setApi] = useState<ApiPromise | undefined>();
 
   const [initiaising, setInitialising] = useState(false);
   useEffect(() => {
