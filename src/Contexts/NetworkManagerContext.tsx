@@ -111,6 +111,9 @@ interface NetworkManagerContext {
 
   setApi: (input: ApiPromise | undefined) => void;
   api: ApiPromise | undefined;
+
+  setListenerActive: (input: boolean) => void;
+  listenerActive: boolean;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -171,6 +174,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
   >(undefined);
 
   const [api, setApi] = useState<ApiPromise | undefined>();
+
+  const [listenerActive, setListenerActive] = useState(false);
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
@@ -312,6 +317,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         setDestinationBridge,
         api,
         setApi,
+        listenerActive,
+        setListenerActive,
       }}
     >
       {walletType === "Ethereum" ? (
