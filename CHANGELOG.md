@@ -2,7 +2,7 @@
 
 ## vNext
 
-- ...
+- Updated Devnet url
 
 ## v0.14.0
 
