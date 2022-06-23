@@ -2,7 +2,11 @@
 
 ## vNext
 
-- ...
+- Updated Devnet url
+
+## v0.14.0
+
+- Added liquidity enough check before transfer starts
 
 ## v0.13.0
 
