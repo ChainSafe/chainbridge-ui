@@ -382,7 +382,12 @@ type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const { walletType, setWalletType, handleSetHomeChain } = useNetworkManager();
+  const {
+    walletType,
+    setWalletType,
+    handleSetHomeChain,
+    setAddress,
+  } = useNetworkManager();
   const destinationBridge = useDestinationBridge();
 
   const {
@@ -595,6 +600,7 @@ const TransferPage = () => {
                       disconnect(),
                     ]);
                     setWalletType("unset");
+                    setAddress(undefined);
                   }}
                 >
                   Change
