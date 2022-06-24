@@ -22,8 +22,6 @@ import { hasTokenSupplies } from "./EVMAdaptors/helpers";
 export const SubstrateHomeAdaptorProvider = ({
   children,
 }: IHomeBridgeProviderProps) => {
-  const registry = new TypeRegistry();
-  const [api, setApi] = useState<ApiPromise | undefined>();
   const [isReady, setIsReady] = useState(false);
   const [accounts, setAccounts] = useState<InjectedAccountType[]>([]);
 
@@ -41,6 +39,8 @@ export const SubstrateHomeAdaptorProvider = ({
     address,
     setAddress,
     analytics,
+    api,
+    setApi,
   } = useNetworkManager();
 
   const [relayerThreshold, setRelayerThreshold] = useState<number | undefined>(
@@ -57,18 +57,20 @@ export const SubstrateHomeAdaptorProvider = ({
     handleConnect();
   });
 
-  const [initiaising, setInitialising] = useState(false);
+  const [initialising, setInitialising] = useState(false);
   useEffect(() => {
     // Once the chain ID has been set in the network context, the homechain configuration will be automatically set thus triggering this
-    if (!homeChainConfig || initiaising || api) return;
+    if (!homeChainConfig || initialising || api) return;
     setInitialising(true);
     createApi(homeChainConfig.rpcUrl, homeChainConfig.rpcFallbackUrls)
-      .then((api) => {
+      .then(async (api) => {
+        await api.isReady;
         setApi(api);
+        setIsReady(true);
         setInitialising(false);
       })
       .catch(console.error);
-  }, [homeChainConfig, registry, api, initiaising]);
+  }, [homeChainConfig, initialising]);
 
   const getRelayerThreshold = useCallback(async () => {
     if (api) {
@@ -208,12 +210,6 @@ export const SubstrateHomeAdaptorProvider = ({
     }
   }, [isReady, handleSetHomeChain, homeChains]);
 
-  useEffect(() => {
-    // This is a simple check
-    // The reason for having a isReady is that the UI can lazy load data from this point
-    api?.isReady.then(() => setIsReady(true));
-  }, [api, setIsReady]);
-
   const selectAccount = useCallback(
     (index: number) => {
       setAddress(accounts[index].address);
@@ -344,7 +340,9 @@ export const SubstrateHomeAdaptorProvider = ({
       value={{
         connect: handleConnect,
         disconnect: async () => {
-          await api?.disconnect();
+          if (api?.isConnected) await api?.disconnect();
+          setApi(undefined);
+          setIsReady(false);
         },
         getNetworkName: () => homeChainConfig?.name || "undefined",
         bridgeFee,

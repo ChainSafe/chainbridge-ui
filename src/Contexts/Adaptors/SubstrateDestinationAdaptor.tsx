@@ -9,7 +9,6 @@ import {
 import { IDestinationBridgeProviderProps } from "./interfaces";
 
 import { ApiPromise } from "@polkadot/api";
-import { UnsubscribePromise } from "@polkadot/api/types";
 import {
   SubstrateBridgeConfig,
   getСhainTransferFallbackConfig,
@@ -34,31 +33,29 @@ export const SubstrateDestinationAdaptorProvider = ({
     fallback,
     address,
     analytics,
+    api,
+    setApi,
+    listenerActive,
+    setListenerActive,
   } = useNetworkManager();
 
-  const [api, setApi] = useState<ApiPromise | undefined>();
-
-  const [initiaising, setInitialising] = useState(false);
+  const [initialising, setInitialising] = useState(false);
   useEffect(() => {
     // Once the chain ID has been set in the network context, the destination configuration will be automatically
     // set thus triggering this
-    if (!destinationChainConfig || initiaising || api) return;
+    if (!destinationChainConfig || initialising || api) return;
     setInitialising(true);
     createApi(
       destinationChainConfig.rpcUrl,
       destinationChainConfig.rpcFallbackUrls
     )
-      .then((api) => {
+      .then(async (api) => {
+        await api.isReady;
         setApi(api);
         setInitialising(false);
       })
       .catch(console.error);
-  }, [destinationChainConfig, api, initiaising, transactionStatus]);
-
-  const [listenerActive, setListenerActive] = useState<
-    UnsubscribePromise | undefined
-  >(undefined);
-
+  }, [destinationChainConfig, initialising]);
   useEffect(() => {
     if (api && !listenerActive && depositNonce) {
       // Wire up event listeners
@@ -121,19 +118,15 @@ export const SubstrateDestinationAdaptorProvider = ({
           }
         });
       });
-      setListenerActive(unsubscribe);
+      setListenerActive(true);
     } else if (listenerActive && !depositNonce) {
-      const unsubscribeCall = async () => {
-        setListenerActive(undefined);
-      };
-      unsubscribeCall();
+      setListenerActive(false);
     }
   }, [
     api,
     depositNonce,
     depositVotes,
     destinationChainConfig,
-    listenerActive,
     setDepositVotes,
     setTransactionStatus,
     tokensDispatch,
@@ -219,7 +212,8 @@ export const SubstrateDestinationAdaptorProvider = ({
     <DestinationBridgeContext.Provider
       value={{
         disconnect: async () => {
-          await api?.disconnect();
+          if (api?.isConnected) await api?.disconnect();
+          setApi(undefined);
         },
       }}
     >
