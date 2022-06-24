@@ -5,6 +5,7 @@ import {
   createApi,
   getBridgeProposalVotes,
   VoteStatus,
+  getTransferTxHashByNonce,
 } from "./SubstrateApis/ChainBridgeAPI";
 import { IDestinationBridgeProviderProps } from "./interfaces";
 
@@ -34,6 +35,8 @@ export const SubstrateDestinationAdaptorProvider = ({
     fallback,
     address,
     analytics,
+    transferTxHash,
+    setTransferTxHash,
   } = useNetworkManager();
 
   const [api, setApi] = useState<ApiPromise | undefined>();
@@ -203,8 +206,16 @@ export const SubstrateDestinationAdaptorProvider = ({
   ]);
 
   useEffect(() => {
-    console.log({ transactionStatus });
-  }, [transactionStatus]);
+    if (transactionStatus === "Transfer Completed") {
+      if (!api || transferTxHash) return;
+      getTransferTxHashByNonce(api, parseInt(depositNonce as string)).then(
+        (hash) => {
+          console.log({ hash });
+          if (hash) setTransferTxHash(hash);
+        }
+      );
+    }
+  }, [api, transactionStatus]);
 
   useEffect(() => {
     const canInitFallback =

@@ -78,6 +78,9 @@ const useStyles = makeStyles(
           textDecoration: "none",
           marginRight: constants.generalUnit,
         },
+        "& > button[disabled]": {
+          background: "none!important",
+        },
       },
       button: {
         border: "none",
