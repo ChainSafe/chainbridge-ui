@@ -257,6 +257,13 @@ export const EVMDestinationAdaptorProvider = ({
         parseInt(depositNonce as string)
       ).then((txHash: string) => {
         if (txHash) setTransferTxHash(txHash);
+        else
+          analytics.undefinedTransferTxHashFromFallback({
+            address: address as string,
+            recipient: depositRecipient as string,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount as number,
+          });
       });
     }
   }, [destinationBridge, transactionStatus, depositRecipient]);
