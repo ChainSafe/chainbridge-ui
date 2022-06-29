@@ -209,9 +209,8 @@ export const SubstrateDestinationAdaptorProvider = ({
     if (transactionStatus === "Transfer Completed") {
       if (!api || transferTxHash) return;
       getTransferTxHashByNonce(api, parseInt(depositNonce as string)).then(
-        (hash) => {
-          console.log({ hash });
-          if (hash) setTransferTxHash(hash);
+        (txHash: string | undefined) => {
+          if (txHash) setTransferTxHash(txHash);
         }
       );
     }

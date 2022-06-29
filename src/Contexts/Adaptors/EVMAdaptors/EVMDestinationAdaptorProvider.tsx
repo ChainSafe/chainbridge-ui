@@ -9,7 +9,12 @@ import {
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
-import { getProvider, getErc20ProposalHash, VoteStatus } from "./helpers";
+import {
+  getProvider,
+  getErc20ProposalHash,
+  VoteStatus,
+  getTransferTxHashByNonce,
+} from "./helpers";
 import { Fallback } from "../../../Utils/Fallback";
 
 export const EVMDestinationAdaptorProvider = ({
@@ -31,6 +36,7 @@ export const EVMDestinationAdaptorProvider = ({
     setFallback,
     address,
     analytics,
+    transferTxHash,
   } = useNetworkManager();
 
   const [destinationBridge, setDestinationBridge] = useState<
@@ -242,6 +248,18 @@ export const EVMDestinationAdaptorProvider = ({
     destinationBridge,
     fallback,
   ]);
+
+  useEffect(() => {
+    if (transactionStatus === "Transfer Completed") {
+      if (!destinationBridge || transferTxHash) return;
+      getTransferTxHashByNonce(
+        destinationChainConfig as EvmBridgeConfig,
+        parseInt(depositNonce as string)
+      ).then((txHash: string) => {
+        if (txHash) setTransferTxHash(txHash);
+      });
+    }
+  }, [destinationBridge, transactionStatus, depositRecipient]);
 
   useEffect(() => {
     const canInitFallback =

@@ -1,6 +1,9 @@
 import { CeloProvider } from "@celo-tools/celo-ethers-wrapper";
 import { ethers, utils, BigNumber } from "ethers";
-import { Erc20HandlerFactory } from "@chainsafe/chainbridge-contracts";
+import {
+  BridgeFactory,
+  Erc20HandlerFactory,
+} from "@chainsafe/chainbridge-contracts";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 
 import { Erc20DetailedFactory } from "../../../Contracts/Erc20DetailedFactory";
@@ -177,6 +180,30 @@ export function getErc20ProposalHash(
     erc20AddressHandlerContract +
     getEthBridgeData(decimalAmount, recipient).substr(2);
   return utils.keccak256(data);
+}
+
+export async function getTransferTxHashByNonce(
+  destinationChain: EvmBridgeConfig,
+  depositNonce: number
+): Promise<any> {
+  let provider = getProvider(destinationChain);
+  await provider.ready;
+  const bridgeContract = BridgeFactory.connect(
+    (destinationChain as EvmBridgeConfig).bridgeAddress,
+    provider
+  );
+  let eventFilter = bridgeContract.filters.ProposalEvent(
+    null,
+    depositNonce,
+    VoteStatus.EXECUTED,
+    null,
+    null
+  );
+  const eventResult = await bridgeContract.queryFilter(eventFilter, -3000);
+  console.log(
+    'ProposalEvent with "executed" status: ' + JSON.stringify(eventResult)
+  );
+  return eventResult[0].transactionHash;
 }
 
 export enum VoteStatus {
