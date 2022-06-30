@@ -21,7 +21,7 @@ import {
   BridgeProvider,
 } from "@chainsafe/chainbridge-ui-core";
 import { AppWrapper } from "./layouts";
-import { getConfigFromAWS } from "./configFromAWS"
+import { getChainbridgeConfig } from "./getChainbridgeConfig"
 import "@chainsafe/common-theme/dist/font-faces.css";
 
 if (
@@ -41,7 +41,7 @@ const AppWrap: React.FC<{ config?: any, useExternalProvider?: any, externalProvi
   const setConfig = async () => {
     if (!window.__RUNTIME_CONFIG__) {
       // @ts-ignore
-      window.__RUNTIME_CONFIG__ = await getConfigFromAWS();
+      window.__RUNTIME_CONFIG__ = await getChainbridgeConfig();
       setIsReady(true);
     }
   }
