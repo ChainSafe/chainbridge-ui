@@ -1,0 +1,13 @@
+version: '3' # specify docker-compose version
+
+services:
+  nginx:
+    build:
+      context: ./
+      dockerfile: server.dockerfile
+    ports:
+      - "8000:8000" # specify port mapping
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
