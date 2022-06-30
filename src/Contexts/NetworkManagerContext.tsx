@@ -28,6 +28,8 @@ import {
 import { blockchainChainIds } from "../Constants/constants";
 import { Fallback } from "../Utils/Fallback";
 import AnalyticsService from "../Services/Analytics";
+import { Bridge } from "@chainsafe/chainbridge-contracts";
+import { ApiPromise } from "@polkadot/api";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -106,6 +108,15 @@ interface NetworkManagerContext {
   address: string | undefined;
 
   analytics: AnalyticsService;
+
+  setDestinationBridge: (input: Bridge | undefined) => void;
+  destinationBridge: Bridge | undefined;
+
+  setApi: (input: ApiPromise | undefined) => void;
+  api: ApiPromise | undefined;
+
+  setListenerActive: (input: boolean) => void;
+  listenerActive: boolean;
 }
 
 const NetworkManagerContext = React.createContext<
@@ -161,6 +172,14 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
       },
     })
   );
+
+  const [destinationBridge, setDestinationBridge] = useState<
+    Bridge | undefined
+  >(undefined);
+
+  const [api, setApi] = useState<ApiPromise | undefined>();
+
+  const [listenerActive, setListenerActive] = useState(false);
 
   const handleSetHomeChain = useCallback(
     (chainId: number | undefined) => {
@@ -300,6 +319,12 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         address,
         setAddress,
         analytics,
+        destinationBridge,
+        setDestinationBridge,
+        api,
+        setApi,
+        listenerActive,
+        setListenerActive,
       }}
     >
       {walletType === "Ethereum" ? (

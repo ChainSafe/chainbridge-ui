@@ -22,9 +22,9 @@ const getRpcProviderFromHttpUrl = (url: string) => {
       user: urlInstance.username,
       password: urlInstance.password,
     };
-    return new ethers.providers.JsonRpcProvider(urlInfo);
+    return new ethers.providers.StaticJsonRpcProvider(urlInfo);
   }
-  return new ethers.providers.JsonRpcProvider(url);
+  return new ethers.providers.StaticJsonRpcProvider(url);
 };
 
 export function getProvider(destinationChainConfig?: any) {

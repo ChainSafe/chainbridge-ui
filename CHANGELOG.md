@@ -2,7 +2,14 @@
 
 ## vNext
 
-- ...
+## v0.15.0
+
+- Updated Devnet url
+- Fixed duplicate requests to Cere/Polygon/Ethereum
+
+## v0.14.0
+
+- Added liquidity enough check before transfer starts
 
 ## v0.13.0
 

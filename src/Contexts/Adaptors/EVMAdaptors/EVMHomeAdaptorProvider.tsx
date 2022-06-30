@@ -18,7 +18,7 @@ import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { parseUnits } from "ethers/lib/utils";
 import { decodeAddress } from "@polkadot/util-crypto";
 import { getPriceCompatibility } from "./helpers";
-import { createApi, hasTokenSupplies } from "../SubstrateApis/ChainBridgeAPI";
+import { hasTokenSupplies } from "../SubstrateApis/ChainBridgeAPI";
 import { ApiPromise } from "@polkadot/api";
 
 export const EVMHomeAdaptorProvider = ({
@@ -89,6 +89,7 @@ export const EVMHomeAdaptorProvider = ({
     analytics,
     setAddress,
     setHomeTransferTxHash,
+    api,
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -104,24 +105,8 @@ export const EVMHomeAdaptorProvider = ({
   const [wrapTokenConfig, setWrapperConfig] = useState<TokenConfig | undefined>(
     undefined
   );
-  const [api, setApi] = useState<ApiPromise | undefined>();
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
-
-  useEffect(() => {
-    if (destinationChainConfig?.type !== "Substrate" || initialising || api)
-      return;
-    setInitialising(true);
-    createApi(
-      destinationChainConfig.rpcUrl,
-      destinationChainConfig.rpcFallbackUrls
-    )
-      .then((api) => {
-        setApi(api);
-        setInitialising(false);
-      })
-      .catch(console.error);
-  }, [destinationChainConfig, initialising]);
 
   useEffect(() => {
     if (network) {

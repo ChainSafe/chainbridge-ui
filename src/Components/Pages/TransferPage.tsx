@@ -382,7 +382,12 @@ type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const { walletType, setWalletType, handleSetHomeChain } = useNetworkManager();
+  const {
+    walletType,
+    setWalletType,
+    handleSetHomeChain,
+    setAddress,
+  } = useNetworkManager();
   const destinationBridge = useDestinationBridge();
 
   const {
@@ -588,13 +593,14 @@ const TransferPage = () => {
                   className={classes.changeButton}
                   variant="body1"
                   onClick={async () => {
+                    handleSetHomeChain(undefined);
+                    setDestinationChain(undefined);
                     await Promise.all([
                       destinationBridge.disconnect(),
                       disconnect(),
                     ]);
-                    handleSetHomeChain(undefined);
-                    setDestinationChain(undefined);
                     setWalletType("unset");
+                    setAddress(undefined);
                   }}
                 >
                   Change
