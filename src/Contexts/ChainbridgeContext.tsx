@@ -84,6 +84,9 @@ const ChainbridgeProvider = ({
     homeChainConfig,
     destinationChains,
     chainId,
+    setTransferTxHash,
+    setHomeTransferTxHash,
+    setAddress,
   } = useNetworkManager();
 
   const {
@@ -116,6 +119,9 @@ const ChainbridgeProvider = ({
       type: "resetMessages",
     });
     setSelectedToken("");
+    setAddress(undefined);
+    setTransferTxHash(undefined);
+    setHomeTransferTxHash(undefined);
   };
 
   const handleDeposit = useCallback(
