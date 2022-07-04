@@ -4,6 +4,7 @@ import cors from "cors";
 import { SSM } from "@aws-sdk/client-ssm";
 
 const PORT = process.env.PORT || 8000;
+const HOST = process.env.HOST || 'localhost';
 
 const app: Application = express();
 app.use(cors());
@@ -37,5 +38,5 @@ app.get("/config", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+  console.log(`⚡️[server]: Server is running at https://${HOST}:${PORT}`);
 });

@@ -8,6 +8,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -37,12 +39,18 @@ if (
 
 const AppWrap: React.FC<{ config?: any, useExternalProvider?: any, externalProviderSource?: any }> = (props) => {
   const [isReady, setIsReady] = useState(false);
+  const [errMessage, setErrMessage] = useState<undefined|string>()
 
   const setConfig = async () => {
     if (!window.__RUNTIME_CONFIG__) {
-      // @ts-ignore
-      window.__RUNTIME_CONFIG__ = await getChainbridgeConfig();
-      setIsReady(true);
+      const config = await getChainbridgeConfig();
+      if (config.error) {
+        setErrMessage(config.error.message)
+      } else {
+        // @ts-ignore
+        window.__RUNTIME_CONFIG__ = config
+      }
+      setIsReady(true)
     }
   }
 
@@ -52,7 +60,25 @@ const AppWrap: React.FC<{ config?: any, useExternalProvider?: any, externalProvi
   return (
     <>
       {isReady ? (
-        <App />
+        errMessage ? (
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{ minHeight: "100vh" }}
+          >
+            <Grid item xs={3}>
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                {errMessage}
+              </Alert>
+            </Grid>
+          </Grid>
+        ) : (
+          <App />
+        )
       ) : (
         <Grid
           container
