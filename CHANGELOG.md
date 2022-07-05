@@ -2,6 +2,8 @@
 
 ## vNext
 
+- Rename ERC20 to ERC-20
+
 ## v0.15.0
 
 - Updated Devnet url
