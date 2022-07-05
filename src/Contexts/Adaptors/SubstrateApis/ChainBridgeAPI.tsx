@@ -24,6 +24,15 @@ export type GetBridgeProsalVotesRes = {
 
 export type Extrinsic = { method: { method: string; args: string[] } };
 
+export type GetBlockRes = {
+  block: {
+    header: {
+      number: string;
+    };
+    extrinsics: Extrinsic[];
+  };
+};
+
 export const createApi = async (rpcUrl: string, rpcFallbackUrls?: string[]) => {
   let urls = [rpcUrl];
   if (rpcFallbackUrls) {
@@ -115,12 +124,12 @@ export const hasTokenSupplies = async (
 export const getBlockHashByNumber = async (
   api: ApiPromise,
   blockNumber: number
-): Promise<any> => {
-  return api.rpc.chain.getBlockHash(blockNumber);
+): Promise<string> => {
+  return (await api.rpc.chain.getBlockHash(blockNumber)).toString();
 };
 
-export const getLatestBlock = async (api: ApiPromise): Promise<any> => {
-  return (await api.rpc.chain.getBlock()).toHuman();
+export const getLatestBlock = async (api: ApiPromise): Promise<GetBlockRes> => {
+  return (await api.rpc.chain.getBlock()).toHuman() as GetBlockRes;
 };
 
 export const getBlockByHash = async (

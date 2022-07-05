@@ -204,6 +204,13 @@ export const SubstrateDestinationAdaptorProvider = ({
       getTransferTxHashByNonce(api, parseInt(depositNonce as string)).then(
         (txHash: string | undefined) => {
           if (txHash) setTransferTxHash(txHash);
+          else
+            analytics.transferUndefinedTxHashFromFallback({
+              address: address as string,
+              recipient: depositRecipient as string,
+              nonce: parseInt(depositNonce as string),
+              amount: depositAmount as number,
+            });
         }
       );
     }
