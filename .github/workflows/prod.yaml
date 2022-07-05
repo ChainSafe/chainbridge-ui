@@ -1,0 +1,67 @@
+name: Release to prod
+on:
+  push:
+    branches:
+      - master-cere
+
+jobs:
+  build:
+    runs-on: [self-hosted, cere-network-large-workers]
+    container:
+      image: node:14-buster
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install system packages
+        run: |
+          apt update
+          apt install -y python3
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: 'node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
+      - name: Install packages
+        run: |
+          cp .env.prod .env
+          sh ./scripts/copy-prod-config.sh
+          yarn install
+      - name: Build
+        env: 
+          CI: false
+        run: yarn build
+      - name: Prepare artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build
+  
+  deploy:
+    runs-on: [self-hosted, cere-network-large-workers]
+    needs: build
+    container:
+      image: ubuntu:20.04
+    steps:
+      - name: Restore build
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+      - name: Install aws-cli
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          apt update
+          apt install -y awscli
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PRD_NETWORK_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PRD_NETWORK_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Deploy
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME_PRD }}
+          CF_DISTRIBUTION_ID: ${{ secrets.CF_DISTRIBUTION_ID_PRD }}
+        run: |
+          aws s3 sync --metadata-directive="REPLACE" build/ s3://${S3_BUCKET}
+          aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths "/*"
