@@ -92,7 +92,7 @@ class AnalyticsService {
     });
   }
 
-  transferUndefinedTxHashFromFallback({
+  trackTransferUndefinedTxHashFromFallback({
     address,
     recipient,
     nonce,

@@ -205,7 +205,7 @@ export const SubstrateDestinationAdaptorProvider = ({
         (txHash: string | undefined) => {
           if (txHash) setTransferTxHash(txHash);
           else
-            analytics.transferUndefinedTxHashFromFallback({
+            analytics.trackTransferUndefinedTxHashFromFallback({
               address: address as string,
               recipient: depositRecipient as string,
               nonce: parseInt(depositNonce as string),

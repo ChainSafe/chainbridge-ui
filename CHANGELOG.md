@@ -2,6 +2,8 @@
 
 ## vNext
 
+- Implement transfer tx links
+
 ## v0.15.0
 
 - Updated Devnet url
