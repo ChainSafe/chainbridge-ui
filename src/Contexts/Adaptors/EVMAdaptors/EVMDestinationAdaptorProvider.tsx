@@ -77,7 +77,14 @@ export const EVMDestinationAdaptorProvider = ({
           dataHash,
           tx
         ) => {
-          const txReceipt = await tx.getTransactionReceipt();
+          // Catch an error here because on disconnect it breaks the application
+          let txReceipt;
+          try {
+            txReceipt = await tx.getTransactionReceipt();
+          } catch (err) {
+            console.error(err);
+          }
+          if (!txReceipt) return;
           const proposalStatus = BigNumber.from(status).toNumber();
           switch (proposalStatus) {
             case 1:
@@ -139,7 +146,14 @@ export const EVMDestinationAdaptorProvider = ({
           null
         ),
         async (originChainId, depositNonce, status, resourceId, tx) => {
-          const txReceipt = await tx.getTransactionReceipt();
+          // Catch an error here because on disconnect it breaks the application
+          let txReceipt;
+          try {
+            txReceipt = await tx.getTransactionReceipt();
+          } catch (err) {
+            console.error(err);
+          }
+          if (!txReceipt) return;
           if (txReceipt.status === 1) {
             setDepositVotes(depositVotes + 1);
           }
