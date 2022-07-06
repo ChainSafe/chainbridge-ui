@@ -3,6 +3,7 @@
 ## vNext
 
 - Rename ERC20 to ERC-20
+- Migrated to GitHub actions
 
 ## v0.15.0
 
