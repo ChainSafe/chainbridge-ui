@@ -2,7 +2,7 @@
 
 ## vNext
 
-- Implement transfer tx links
+- Implemented transfer tx links to source, destination chains during tokens transfer
 
 ## v0.15.0
 
