@@ -269,7 +269,7 @@ export const EVMDestinationAdaptorProvider = ({
       ).then((txHash: string) => {
         if (txHash) setTransferTxHash(txHash);
         else
-          analytics.trackTransferUndefinedTxHashFromFallback({
+          analytics.trackTransferUndefinedTxHash({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),

@@ -92,13 +92,13 @@ class AnalyticsService {
     });
   }
 
-  trackTransferUndefinedTxHashFromFallback({
+  trackTransferUndefinedTxHash({
     address,
     recipient,
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.trackEvent("transfer_undefined_tx_hash_from_fallback", {
+    this.ga.trackEvent("transfer_undefined_tx_hash", {
       address: `"${address}"`,
       recipient: `"${recipient}"`,
       nonce,
