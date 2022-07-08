@@ -532,11 +532,11 @@ const TransferPage = () => {
               </>
             ) : walletType === "Ethereum" ? (
               <span className={classes.title}>
-                Transfer Tokens (ERC20 to Native)
+                Transfer Tokens (ERC-20 to Native)
               </span>
             ) : (
               <span className={classes.title}>
-                Transfer Tokens (Native to ERC20)
+                Transfer Tokens (Native to ERC-20)
               </span>
             ))}
         </div>
@@ -561,7 +561,7 @@ const TransferPage = () => {
                   className={classes.EthWalletBtn}
                   onClick={() => setWalletType("Ethereum")}
                 >
-                  Connect with ERC20 Wallet
+                  Connect with ERC-20 Wallet
                 </Button>
                 {process.env.REACT_APP_CONNECT_WITH_SUBSTRATE_WALLET_ENABLED ===
                   "true" && (

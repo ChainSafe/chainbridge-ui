@@ -4,6 +4,11 @@
 
 - Implemented transfer tx links to source, destination chains during tokens transfer
 
+## v0.16.0
+
+- Rename ERC20 to ERC-20
+- Migrated to GitHub actions
+
 ## v0.15.0
 
 - Updated Devnet url
