@@ -10,6 +10,8 @@
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
     "@chainsafe/web3-context": "1.2.0",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "@material-ui/styles": "4.10.0",
     "@polkadot/api": "4.2.1",
     "@polkadot/extension-dapp": "0.37.1",

@@ -18,6 +18,7 @@ window.__RUNTIME_CONFIG__ = {
         erc20HandlerAddress: "0x8Ee8876d13e79b846fb6c3e5Ffe226a2e111387a",
         rpcUrl:
           "https://polygon-mumbai.infura.io/v3/178b87e860404572bc217ca53fe594bd",
+        blockExplorer: "https://mumbai.polygonscan.com/tx",
         type: "Ethereum",
         nativeTokenSymbol: "MATIC",
         defaultGasPrice: 800,
@@ -52,6 +53,8 @@ window.__RUNTIME_CONFIG__ = {
         name: "Cere Testnet",
         decimals: cereTokenDecimals,
         rpcUrl: "wss://rpc.v2.testnet.cere.network/ws",
+        blockExplorer:
+          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.testnet.cere.network%3A9945#/explorer/query",
         rpcFallbackUrls: ["wss://archive.v2.testnet.cere.network/ws"],
         type: "Substrate",
         nativeTokenSymbol: "CERE",
@@ -90,6 +93,7 @@ window.__RUNTIME_CONFIG__ = {
         name: "Ethereum Goerli",
         decimals: cereTokenDecimals,
         rpcUrl: "https://goerli.infura.io/v3/0aca1499facc499bb195d2d437f78603",
+        blockExplorer: "https://goerli.etherscan.io/tx",
         bridgeAddress: "0x4E297d17A3d945Ed96dBbD205317501e92d8D6E8",
         erc20HandlerAddress: "0x92c1576845703089CF6c0788379ED81f75F45dd5",
         type: "Ethereum",

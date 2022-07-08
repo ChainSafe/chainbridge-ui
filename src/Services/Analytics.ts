@@ -91,6 +91,20 @@ class AnalyticsService {
       amount,
     });
   }
+
+  trackTransferUndefinedTxHash({
+    address,
+    recipient,
+    nonce,
+    amount,
+  }: TransferEventData) {
+    this.ga.trackEvent("transfer_undefined_tx_hash", {
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
+      nonce,
+      amount,
+    });
+  }
 }
 
 export default AnalyticsService;

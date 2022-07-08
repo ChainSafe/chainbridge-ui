@@ -9,7 +9,12 @@ import {
 import { useNetworkManager } from "../../NetworkManagerContext";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
-import { getProvider, getErc20ProposalHash, VoteStatus } from "./helpers";
+import {
+  getProvider,
+  getErc20ProposalHash,
+  VoteStatus,
+  getTransferTxHashByNonce,
+} from "./helpers";
 import { Fallback } from "../../../Utils/Fallback";
 
 export const EVMDestinationAdaptorProvider = ({
@@ -31,6 +36,7 @@ export const EVMDestinationAdaptorProvider = ({
     setFallback,
     address,
     analytics,
+    transferTxHash,
     destinationBridge,
     setDestinationBridge,
   } = useNetworkManager();
@@ -71,7 +77,14 @@ export const EVMDestinationAdaptorProvider = ({
           dataHash,
           tx
         ) => {
-          const txReceipt = await tx.getTransactionReceipt();
+          // Catch an error here because on disconnect it breaks the application
+          let txReceipt;
+          try {
+            txReceipt = await tx.getTransactionReceipt();
+          } catch (err) {
+            console.error(err);
+          }
+          if (!txReceipt) return;
           const proposalStatus = BigNumber.from(status).toNumber();
           switch (proposalStatus) {
             case 1:
@@ -133,7 +146,14 @@ export const EVMDestinationAdaptorProvider = ({
           null
         ),
         async (originChainId, depositNonce, status, resourceId, tx) => {
-          const txReceipt = await tx.getTransactionReceipt();
+          // Catch an error here because on disconnect it breaks the application
+          let txReceipt;
+          try {
+            txReceipt = await tx.getTransactionReceipt();
+          } catch (err) {
+            console.error(err);
+          }
+          if (!txReceipt) return;
           if (txReceipt.status === 1) {
             setDepositVotes(depositVotes + 1);
           }
@@ -239,6 +259,25 @@ export const EVMDestinationAdaptorProvider = ({
     destinationBridge,
     fallback,
   ]);
+
+  useEffect(() => {
+    if (transactionStatus === "Transfer Completed") {
+      if (!destinationBridge || transferTxHash) return;
+      getTransferTxHashByNonce(
+        destinationChainConfig as EvmBridgeConfig,
+        parseInt(depositNonce as string)
+      ).then((txHash: string) => {
+        if (txHash) setTransferTxHash(txHash);
+        else
+          analytics.trackTransferUndefinedTxHash({
+            address: address as string,
+            recipient: depositRecipient as string,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount as number,
+          });
+      });
+    }
+  }, [destinationBridge, transactionStatus, depositRecipient]);
 
   useEffect(() => {
     const canInitFallback =

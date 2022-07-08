@@ -39,6 +39,7 @@ type ChainbridgeContext = {
   depositAmount?: number;
   bridgeFee?: number;
   inTransitMessages: Array<TransitMessage>;
+  homeTransferTxHash?: string;
   transferTxHash?: string;
   selectedToken?: string;
   transactionStatus?: TransactionStatus;
@@ -73,6 +74,7 @@ const ChainbridgeProvider = ({
     setDestinationChain,
     setDepositNonce,
     setDepositVotes,
+    homeTransferTxHash,
     transferTxHash,
     inTransitMessages,
     tokensDispatch,
@@ -82,6 +84,9 @@ const ChainbridgeProvider = ({
     homeChainConfig,
     destinationChains,
     chainId,
+    setTransferTxHash,
+    setHomeTransferTxHash,
+    setAddress,
   } = useNetworkManager();
 
   const {
@@ -114,6 +119,9 @@ const ChainbridgeProvider = ({
       type: "resetMessages",
     });
     setSelectedToken("");
+    setAddress(undefined);
+    setTransferTxHash(undefined);
+    setHomeTransferTxHash(undefined);
   };
 
   const handleDeposit = useCallback(
@@ -162,6 +170,7 @@ const ChainbridgeProvider = ({
         transactionStatus,
         inTransitMessages,
         depositAmount: depositAmount,
+        homeTransferTxHash,
         transferTxHash: transferTxHash,
         selectedToken: selectedToken,
         // TODO: Confirm if EVM specific

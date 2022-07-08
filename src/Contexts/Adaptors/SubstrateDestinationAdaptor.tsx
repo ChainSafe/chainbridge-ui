@@ -5,6 +5,7 @@ import {
   createApi,
   getBridgeProposalVotes,
   VoteStatus,
+  getTransferTxHashByNonce,
 } from "./SubstrateApis/ChainBridgeAPI";
 import { IDestinationBridgeProviderProps } from "./interfaces";
 
@@ -33,6 +34,8 @@ export const SubstrateDestinationAdaptorProvider = ({
     fallback,
     address,
     analytics,
+    transferTxHash,
+    setTransferTxHash,
     api,
     setApi,
     listenerActive,
@@ -56,10 +59,13 @@ export const SubstrateDestinationAdaptorProvider = ({
       })
       .catch(console.error);
   }, [destinationChainConfig, initialising]);
+
   useEffect(() => {
     if (api && !listenerActive && depositNonce) {
       // Wire up event listeners
       // Subscribe to system events via storage
+      // Use here scoped counter because "depositVotes" state var doesn't recalculate inside "system.events" scope
+      let depositVotesCounter = 0;
       const unsubscribe = api.query.system.events((events) => {
         console.log("----- Received " + events.length + " event(s): -----");
         // loop through the Vec<EventRecord>
@@ -88,13 +94,14 @@ export const SubstrateDestinationAdaptorProvider = ({
                 .chainbridgePalletName &&
             event.method === "VoteFor"
           ) {
-            setDepositVotes(depositVotes + 1);
+            ++depositVotesCounter;
+            setDepositVotes(depositVotesCounter);
             tokensDispatch({
               type: "addMessage",
               payload: {
                 address: "Substrate Relayer",
                 signed: "Confirmed",
-                order: parseFloat(`1.${depositVotes + 1}`),
+                order: parseFloat(`1.${depositVotesCounter + 1}`),
               },
             });
           }
@@ -103,10 +110,10 @@ export const SubstrateDestinationAdaptorProvider = ({
             event.section ===
               (destinationChainConfig as SubstrateBridgeConfig)
                 .chainbridgePalletName &&
-            depositVotes === 1 &&
             event.method === "ProposalApproved"
           ) {
-            setDepositVotes(depositVotes + 1);
+            ++depositVotesCounter;
+            setDepositVotes(depositVotesCounter);
             setTransactionStatus("Transfer Completed");
             fallback?.stop();
             analytics.trackTransferCompletedEvent({
@@ -196,8 +203,22 @@ export const SubstrateDestinationAdaptorProvider = ({
   ]);
 
   useEffect(() => {
-    console.log({ transactionStatus });
-  }, [transactionStatus]);
+    if (transactionStatus === "Transfer Completed") {
+      if (!api || transferTxHash) return;
+      getTransferTxHashByNonce(api, parseInt(depositNonce as string)).then(
+        (txHash: string | undefined) => {
+          if (txHash) setTransferTxHash(txHash);
+          else
+            analytics.trackTransferUndefinedTxHash({
+              address: address as string,
+              recipient: depositRecipient as string,
+              nonce: parseInt(depositNonce as string),
+              amount: depositAmount as number,
+            });
+        }
+      );
+    }
+  }, [api, transactionStatus]);
 
   useEffect(() => {
     const canInitFallback =

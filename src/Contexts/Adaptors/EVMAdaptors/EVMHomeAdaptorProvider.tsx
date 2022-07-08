@@ -88,6 +88,7 @@ export const EVMHomeAdaptorProvider = ({
     fallback,
     analytics,
     setAddress,
+    setHomeTransferTxHash,
     api,
   } = useNetworkManager();
 
@@ -394,7 +395,8 @@ export const EVMHomeAdaptorProvider = ({
             token.resourceId,
             null
           ),
-          (destChainId, resourceId, depositNonce) => {
+          (destChainId, resourceId, depositNonce, tx) => {
+            setHomeTransferTxHash(tx.transactionHash);
             setDepositNonce(`${depositNonce.toString()}`);
             setTransactionStatus("In Transit");
             analytics.trackTransferInTransitEvent({

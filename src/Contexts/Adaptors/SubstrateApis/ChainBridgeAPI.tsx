@@ -22,6 +22,17 @@ export type GetBridgeProsalVotesRes = {
   expiry: string;
 };
 
+export type Extrinsic = { method: { method: string; args: string[] } };
+
+export type GetBlockRes = {
+  block: {
+    header: {
+      number: string;
+    };
+    extrinsics: Extrinsic[];
+  };
+};
+
 export const createApi = async (rpcUrl: string, rpcFallbackUrls?: string[]) => {
   let urls = [rpcUrl];
   if (rpcFallbackUrls) {
@@ -110,9 +121,53 @@ export const hasTokenSupplies = async (
   return amountBN.isLessThan(balance);
 };
 
+export const getBlockHashByNumber = async (
+  api: ApiPromise,
+  blockNumber: number
+): Promise<string> => {
+  return (await api.rpc.chain.getBlockHash(blockNumber)).toString();
+};
+
+export const getLatestBlock = async (api: ApiPromise): Promise<GetBlockRes> => {
+  return (await api.rpc.chain.getBlock()).toHuman() as GetBlockRes;
+};
+
+export const getBlockByHash = async (
+  api: ApiPromise,
+  blockHash: string
+): Promise<any> => {
+  return (await api.rpc.chain.getBlock(blockHash)).toHuman();
+};
+
+export const getTransferTxHashByNonce = async (
+  api: ApiPromise,
+  nonce: number
+): Promise<string | undefined> => {
+  let attempts = 0;
+  let limit = 10;
+  let { block } = await getLatestBlock(api);
+  let blockNumber = parseIntFromHuman(block.header.number);
+  do {
+    const blockHash = await getBlockHashByNumber(api, blockNumber);
+    block = (await getBlockByHash(api, blockHash)).block;
+    const extrinsic = block.extrinsics.find(
+      (extrinsic: Extrinsic) =>
+        extrinsic.method.method === "acknowledgeProposal" &&
+        parseIntFromHuman(extrinsic.method.args[0]) === nonce
+    );
+    if (extrinsic) return blockHash;
+    ++attempts;
+    --blockNumber;
+  } while (attempts <= limit);
+};
+
 export const getBNFromDecimalAmount = (
   decimalAmount: number,
   decimals: number
 ): BigNumber => {
   return new BigNumber(decimalAmount).multipliedBy(base.pow(decimals));
+};
+
+export const parseIntFromHuman = (human: string): number => {
+  return parseInt(human.replaceAll(",", ""));
 };

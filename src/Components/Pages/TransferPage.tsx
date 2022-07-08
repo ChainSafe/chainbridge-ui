@@ -387,6 +387,8 @@ const TransferPage = () => {
     setWalletType,
     handleSetHomeChain,
     setAddress,
+    setTransferTxHash,
+    setHomeTransferTxHash,
   } = useNetworkManager();
   const destinationBridge = useDestinationBridge();
 
@@ -601,6 +603,8 @@ const TransferPage = () => {
                     ]);
                     setWalletType("unset");
                     setAddress(undefined);
+                    setTransferTxHash(undefined);
+                    setHomeTransferTxHash(undefined);
                   }}
                 >
                   Change

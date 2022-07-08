@@ -14,8 +14,8 @@ export class Fallback {
         const res = await this.pollingCallback();
         if (!res && this.started()) this.stop();
       }, this.pollingIntervalMs);
+      console.log("Fallback started");
     }, this.delayMs);
-    console.log("Fallback started");
   }
 
   stop(): void {
