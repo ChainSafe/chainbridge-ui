@@ -20,6 +20,9 @@
   },
   "scripts": {
     "start:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c start",
+    "start:ui:prod": "NODE_ENV=production SSM_PARAMETER_NAME=/chainbridge/chainbridge-ui-local yarn start:ui",
+    "build:server": "yarn wsrun -p @chainsafe/chainbridge-ui-config-server -c build:server",
+    "start:config-server": "yarn wsrun -p @chainsafe/chainbridge-ui-config-server -c start:prod",
     "build:ui": "yarn wsrun -p @chainsafe/chainbridge-ui -c build",
     "build:explorer": "yarn wsrun -p @chainsafe/explorer-ui -c build",
     "start:basic": "yarn wsrun -p @chainsafe/chainbridge-basic -c start",

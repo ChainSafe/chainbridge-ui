@@ -3,15 +3,19 @@ import { initializeConnector } from "@web3-react/core";
 import { WalletConnect } from "@web3-react/walletconnect";
 import { Typography, Button } from "@mui/material";
 import { WalletconnectIcon } from "@fusion-icons/react/web3";
+import { getChainbridgeConfig } from "../../getChainbridgeConfig"
+
 
 function convertToWc() {
+  if (!window.__RUNTIME_CONFIG__) {
+    return []
+  }
   const result = window.__RUNTIME_CONFIG__.CHAINBRIDGE.chains.map((chain) => [
     chain.networkId!,
     chain.rpcUrl,
   ]);
   return Object.fromEntries(result);
 }
-convertToWc();
 
 export const [walletConnect, hooks] = initializeConnector<WalletConnect>(
   (actions) =>

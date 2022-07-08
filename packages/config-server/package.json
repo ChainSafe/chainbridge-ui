@@ -1,0 +1,31 @@
+{
+  "name": "@chainsafe/chainbridge-ui-config-server",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.112.0",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "cors": "^2.8.5",
+    "@types/cors": "^2.8.12",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.8",
+    "chalk": "^4.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-only-warn": "^1.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.0",
+    "pretty-quick": "3.0.2",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.5.2"
+  },
+  "scripts": {
+    "start:server": "ts-node --transpileOnly ./src/index.ts",
+    "build:server": "yarn tsc",
+    "start:prod": "node ./build/index.js"
+  }
+}
