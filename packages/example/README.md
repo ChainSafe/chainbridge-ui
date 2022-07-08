@@ -14,9 +14,6 @@
 
 - JS Framework: [React](https://github.com/facebook/react) + [Typescript](https://github.com/microsoft/TypeScript)
 - Blockchain components: [Ethers.js](https://github.com/ethers-io/ethers.js/) + [web3-context](https://github.com/chainsafe/web3-context)
-- Styling: [JSS](https://cssinjs.org/?v=v10.0.3) + [Chainsafe UI Styling](https://npmjs.com/packages/@chainsafe/common-theme/)
-- Forms & Validation: [Formik](https://jaredpalmer.com/formik) + [Yup](https://github.com/jquense/yup)
-- Notifications: [Chainsafe UI Components](https://npmjs.com/packages/@chainsafe/common-components/)
 
 ## Install
 
@@ -26,6 +23,12 @@ yarn install
 
 Create a `.env` file based on the `.env.example` file in the root of the project.
 Get a Blocknative DAPP ID (here)[https://explorer.blocknative.com/account] and populate the respective field in the `.env` file
+
+You can copy one of our configs for local development or create your own:
+```
+cp ./config/chainbridge-runtime-config.evm.json ./public/chainbridge-runtime-config.json
+```
+Make sure that the config file in public folder is named `chainbridge-runtime-config.json``
 
 ## Usage
 
@@ -87,12 +90,30 @@ Run `yarn build`.
 
 Deploy the contents of the `/build` folder to any static website host (eg. S3, Azure storage) or IPFS.
 
-The project can also be built and deployed to Netlify, Render.com by configuring the Build command and Publish directory on the respective service.
+# Configuration server for running in the AWS enviroment
+
+To run production enviroment you can use our `config-server` package to run tiny nodejs app which get config from AWS SSM and provide it to the App in `json` format
+
+You can test it localy if you have your AWS credentials setuped in your terminal
+````
+cd ../packages/config-server
+yarn start:server
+````
+
+# Docker configuration
+
+There is `Dockerfile` for frontend in root direcotry and `server.dockerfile` for configuration server.
+
+It can be run together with `docker-compose` from root direcotry :
+
+````
+docker-compose -f ./docker-compose.yml up
+````
+Keep in mind that you need to have `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` envs set in your enviroment
 
 # ChainSafe Security Policy
 
 ## Reporting a Security Bug
-
 We take all security issues seriously, if you believe you have found a security issue within a ChainSafe
 project please notify us immediately. If an issue is confirmed, we will take all necessary precautions
 to ensure a statement and patch release is made in a timely manner.

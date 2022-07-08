@@ -1,5 +1,8 @@
+const CONFIG_SERVER_HOST = process.env.REACT_APP_CONFIG_SERVER_HOST
+const CONFIG_SERVER_PORT = process.env.REACT_APP_CONFIG_SERVER_PORT
+
 const getLocalConfig = () => fetch('/chainbridge-runtime-config.json').then(res => res.json())
-const getConfigFromSSM =  () => fetch('http://localhost:8000/config').then(res => res.json())
+const getConfigFromSSM =  () => fetch(`//${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}/config`).then(res => res.json())
 
 export async function getChainbridgeConfig(){
   let config

@@ -45,7 +45,7 @@ const AppWrap: React.FC<{ config?: any, useExternalProvider?: any, externalProvi
     if (!window.__RUNTIME_CONFIG__) {
       const config = await getChainbridgeConfig();
       if (config.error) {
-        setErrMessage(config.error.message)
+        setErrMessage(config.error.message ?? config.error.name)
       } else {
         // @ts-ignore
         window.__RUNTIME_CONFIG__ = config
