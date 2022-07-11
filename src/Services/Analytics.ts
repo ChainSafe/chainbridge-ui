@@ -110,14 +110,14 @@ class AnalyticsService {
     });
   }
 
-  trackGetTransferTxHash({
+  trackGotTransferTxHash({
     address,
     recipient,
     nonce,
     amount,
     timeMs,
   }: TransferEventData & EventTime) {
-    this.ga.trackEvent("transfer_get_tx_hash", {
+    this.ga.trackEvent("transfer_got_tx_hash", {
       address: `"${address}"`,
       recipient: `"${recipient}"`,
       nonce,

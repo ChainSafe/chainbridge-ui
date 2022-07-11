@@ -271,7 +271,7 @@ export const EVMDestinationAdaptorProvider = ({
         if (txHash) {
           setTransferTxHash(txHash);
           const timeMs = performance.now() - startTime;
-          analytics.trackGetTransferTxHash({
+          analytics.trackGotTransferTxHash({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
