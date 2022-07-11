@@ -270,9 +270,15 @@ export const EVMDestinationAdaptorProvider = ({
       ).then((txHash: string) => {
         if (txHash) {
           setTransferTxHash(txHash);
-          console.log(
-            `Get trasfer tx hash time: ${performance.now() - startTime}`
-          );
+          const timeMs = performance.now() - startTime;
+          analytics.trackGetTransferTxHash({
+            address: address as string,
+            recipient: depositRecipient as string,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount as number,
+            timeMs,
+          });
+          console.log(`Get trasfer tx hash time: ${timeMs} ms`);
         } else {
           analytics.trackTransferUndefinedTxHash({
             address: address as string,
@@ -283,7 +289,7 @@ export const EVMDestinationAdaptorProvider = ({
         }
       });
     }
-  }, [destinationBridge, transactionStatus, depositRecipient]);
+  }, [destinationBridge, transactionStatus, depositRecipient, transferTxHash]);
 
   useEffect(() => {
     const canInitFallback =
