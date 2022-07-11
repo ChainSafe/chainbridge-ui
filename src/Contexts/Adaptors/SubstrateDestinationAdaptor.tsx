@@ -205,16 +205,22 @@ export const SubstrateDestinationAdaptorProvider = ({
   useEffect(() => {
     if (transactionStatus === "Transfer Completed") {
       if (!api || transferTxHash) return;
+      const startTime = performance.now();
       getTransferTxHashByNonce(api, parseInt(depositNonce as string)).then(
         (txHash: string | undefined) => {
-          if (txHash) setTransferTxHash(txHash);
-          else
+          if (txHash) {
+            setTransferTxHash(txHash);
+            console.log(
+              `Get trasfer tx hash time: ${performance.now() - startTime}`
+            );
+          } else {
             analytics.trackTransferUndefinedTxHash({
               address: address as string,
               recipient: depositRecipient as string,
               nonce: parseInt(depositNonce as string),
               amount: depositAmount as number,
             });
+          }
         }
       );
     }

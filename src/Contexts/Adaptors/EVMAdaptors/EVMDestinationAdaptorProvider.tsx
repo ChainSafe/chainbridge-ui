@@ -263,18 +263,24 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (transactionStatus === "Transfer Completed") {
       if (!destinationBridge || transferTxHash) return;
+      const startTime = performance.now();
       getTransferTxHashByNonce(
         destinationChainConfig as EvmBridgeConfig,
         parseInt(depositNonce as string)
       ).then((txHash: string) => {
-        if (txHash) setTransferTxHash(txHash);
-        else
+        if (txHash) {
+          setTransferTxHash(txHash);
+          console.log(
+            `Get trasfer tx hash time: ${performance.now() - startTime}`
+          );
+        } else {
           analytics.trackTransferUndefinedTxHash({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
             amount: depositAmount as number,
           });
+        }
       });
     }
   }, [destinationBridge, transactionStatus, depositRecipient]);
