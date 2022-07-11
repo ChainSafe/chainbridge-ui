@@ -263,21 +263,33 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     if (transactionStatus === "Transfer Completed") {
       if (!destinationBridge || transferTxHash) return;
+      const startTime = performance.now();
       getTransferTxHashByNonce(
         destinationChainConfig as EvmBridgeConfig,
         parseInt(depositNonce as string)
       ).then((txHash: string) => {
-        if (txHash) setTransferTxHash(txHash);
-        else
+        if (txHash) {
+          setTransferTxHash(txHash);
+          const timeMs = performance.now() - startTime;
+          analytics.trackGotTransferTxHash({
+            address: address as string,
+            recipient: depositRecipient as string,
+            nonce: parseInt(depositNonce as string),
+            amount: depositAmount as number,
+            timeMs,
+          });
+          console.log(`Get trasfer tx hash time: ${timeMs} ms`);
+        } else {
           analytics.trackTransferUndefinedTxHash({
             address: address as string,
             recipient: depositRecipient as string,
             nonce: parseInt(depositNonce as string),
             amount: depositAmount as number,
           });
+        }
       });
     }
-  }, [destinationBridge, transactionStatus, depositRecipient]);
+  }, [destinationBridge, transactionStatus, depositRecipient, transferTxHash]);
 
   useEffect(() => {
     const canInitFallback =

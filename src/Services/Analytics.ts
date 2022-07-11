@@ -15,6 +15,10 @@ type TransferEventData = {
   nonce?: number;
 };
 
+type EventTime = {
+  timeMs: number;
+};
+
 class AnalyticsService {
   ga: GA;
 
@@ -103,6 +107,22 @@ class AnalyticsService {
       recipient: `"${recipient}"`,
       nonce,
       amount,
+    });
+  }
+
+  trackGotTransferTxHash({
+    address,
+    recipient,
+    nonce,
+    amount,
+    timeMs,
+  }: TransferEventData & EventTime) {
+    this.ga.trackEvent("transfer_got_tx_hash", {
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
+      nonce,
+      amount,
+      timeMs,
     });
   }
 }
