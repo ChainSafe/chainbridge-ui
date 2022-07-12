@@ -247,10 +247,17 @@ export const SubstrateHomeAdaptorProvider = ({
               address,
               { signer: injector.signer },
               ({ status, events }) => {
-                status.isInBlock &&
+                if (status.isInBlock) {
+                  setTransactionStatus("Transfer from Source");
+                  analytics.trackTransferFromSourceEvent({
+                    address,
+                    recipient,
+                    amount: depositAmount as number,
+                  });
                   console.log(
                     `Completed at block hash #${status.isInBlock.toString()}`
                   );
+                }
 
                 if (status.isFinalized) {
                   events.filter(({ event }) => {
@@ -268,8 +275,8 @@ export const SubstrateHomeAdaptorProvider = ({
                       const depositNonce = `${response.toJSON()}`;
                       setDepositNonce(depositNonce);
                       setHomeTransferTxHash(status.asFinalized.toHex());
-                      setTransactionStatus("In Transit");
-                      analytics.trackTransferInTransitEvent({
+                      setTransactionStatus("Transfer to Destination ");
+                      analytics.trackTransferToDestinationEvent({
                         address,
                         recipient,
                         nonce: parseInt(depositNonce),

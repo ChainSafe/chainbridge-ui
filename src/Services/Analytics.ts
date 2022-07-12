@@ -26,13 +26,25 @@ class AnalyticsService {
     this.ga = new GA(options.ga);
   }
 
-  trackTransferInTransitEvent({
+  trackTransferFromSourceEvent({
+    address,
+    recipient,
+    amount,
+  }: TransferEventData) {
+    this.ga.trackEvent("transfer_from_source", {
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
+      amount,
+    });
+  }
+
+  trackTransferToDestinationEvent({
     address,
     recipient,
     nonce,
     amount,
   }: TransferEventData) {
-    this.ga.trackEvent("transfer_in_transit", {
+    this.ga.trackEvent("transfer_to_destination", {
       address: `"${address}"`,
       recipient: `"${recipient}"`,
       nonce,

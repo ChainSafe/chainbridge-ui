@@ -152,7 +152,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               status={
                 transactionStatus === "Initializing Transfer"
                   ? "none"
-                  : transactionStatus === "In Transit"
+                  : transactionStatus === "Transfer from Source"
                   ? "progress"
                   : "done"
               }
@@ -172,8 +172,10 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
               stepNumber={3}
               status={
                 transactionStatus === "Initializing Transfer" ||
-                transactionStatus === "In Transit"
+                transactionStatus === "Transfer from Source"
                   ? "none"
+                  : transactionStatus === "Transfer to Destination "
+                  ? "progress"
                   : "done"
               }
               stepLink={
@@ -193,7 +195,8 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
           <Step title="Transfer Aborted" status="aborted"></Step>
         )}
         {transactionStatus === "Initializing Transfer" ||
-        transactionStatus === "In Transit" ? (
+        transactionStatus === "Transfer from Source" ||
+        transactionStatus === "Transfer to Destination " ? (
           <div className={classes.initCopy}>
             <div>
               This should take a few minutes. <br />

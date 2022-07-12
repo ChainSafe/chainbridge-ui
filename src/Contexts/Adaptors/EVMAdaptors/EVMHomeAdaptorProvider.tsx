@@ -398,8 +398,8 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce, tx) => {
             setHomeTransferTxHash(tx.transactionHash);
             setDepositNonce(`${depositNonce.toString()}`);
-            setTransactionStatus("In Transit");
-            analytics.trackTransferInTransitEvent({
+            setTransactionStatus("Transfer to Destination ");
+            analytics.trackTransferToDestinationEvent({
               address,
               recipient,
               nonce: parseInt(depositNonce),
@@ -414,6 +414,12 @@ export const EVMHomeAdaptorProvider = ({
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
         ).wait();
+        setTransactionStatus("Transfer from Source");
+        analytics.trackTransferFromSourceEvent({
+          address,
+          recipient,
+          amount: depositAmount as number,
+        });
 
         return Promise.resolve();
       } catch (error) {
