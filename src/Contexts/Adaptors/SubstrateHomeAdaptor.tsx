@@ -241,6 +241,7 @@ export const SubstrateHomeAdaptorProvider = ({
           const injector = await web3FromSource(targetAccount.meta.source);
           setDepositAmount(amount);
           setDepositRecipient(recipient);
+          setSelectedToken(tokenAddress);
           setTransactionStatus("Initializing Transfer");
           transferExtrinsic
             .signAndSend(
