@@ -1,9 +1,9 @@
 <p align="center"><a href="https://https://chainsafe.io/"><img width="250" title="Chainbridge UI" src='assets/chainsafe_logo.png'/></a></p>
 
-# ChainbridgeUI
+# SygmaUI
 
 ## Introduction
-**Chainbridge UI** is an OpenSource (under GNU Lesser General Public License v3.0) whitelabel application for developers
+**Sygma UI** is an OpenSource (under GNU Lesser General Public License v3.0) whitelabel application for developers
 to work with Chainsafe [Chainbridge](https://github.com/ChainSafe/chainbridge-core). UI consist of two part:
 BridgeUI is used to interact with [Bridge](https://github.com/chainsafe/chainbridge-solidity) smart contracts
 in order to send deposits.
