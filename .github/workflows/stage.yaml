@@ -6,63 +6,18 @@ on:
       - 'hotfix/**'
 
 jobs:
-  build:
-    runs-on: [self-hosted, cere-network-large-workers]
-    container:
-      image: node:14-buster
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install system packages
-        run: |
-          apt update
-          apt install -y python3
-      - name: Restore cache
-        uses: actions/cache@v2
-        with:
-          path: 'node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
-      - name: Install packages
-        run: |
-          cp .env.stage .env
-          sh ./scripts/copy-stage-config.sh
-          yarn install
-      - name: Build
-        env: 
-          CI: false
-        run: yarn build
-      - name: Prepare artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: build
-  
-  deploy:
-    runs-on: [self-hosted, cere-network-large-workers]
-    needs: build
-    container:
-      image: ubuntu:20.04
-    steps:
-      - name: Restore build
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build
-      - name: Install aws-cli
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          apt update
-          apt install -y awscli
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.STG_NETWORK_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.STG_NETWORK_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Deploy
-        env:
-          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME_STG }}
-          CF_DISTRIBUTION_ID: ${{ secrets.CF_DISTRIBUTION_ID_STG }}
-        run: |
-          aws s3 sync --metadata-directive="REPLACE" build/ s3://${S3_BUCKET}
-          aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths "/*"
+  build-and-deploy:
+    uses: Cerebellum-Network/reusable-workflows/.github/workflows/build-and-upload-static.yaml@master
+    with:
+      runs-on: '["self-hosted", "cere-network-large-workers"]'
+      build_container: 'node:14-buster'
+      deploy_container: 'ubuntu:20.04'
+      install_packages_command: 'cp .env.stage .env; sh ./scripts/copy-stage-config.sh; yarn install'
+      build_command: 'yarn build'
+      path_to_static_files_to_upload: 'build'
+    secrets:
+      NETWORK_AWS_ACCESS_KEY_ID: ${{ secrets.STG_NETWORK_AWS_ACCESS_KEY_ID }}
+      NETWORK_AWS_SECRET_ACCESS_KEY: ${{ secrets.STG_NETWORK_AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME_STG }}
+      CF_DISTRIBUTION_ID: ${{ secrets.CF_DISTRIBUTION_ID_STG }}
