@@ -1,11 +1,11 @@
-<p align="center"><a href="https://https://chainsafe.io/"><img width="250" title="Chainbridge UI" src='assets/chainsafe_logo.png'/></a></p>
+<p align="center"><a href="https://https://chainsafe.io/"><img width="250" title="Sygma UI" src='assets/full-logo.png'/></a></p>
 
 # SygmaUI
 
 ## Introduction
 **Sygma UI** is an OpenSource (under GNU Lesser General Public License v3.0) whitelabel application for developers
-to work with Chainsafe [Chainbridge](https://github.com/ChainSafe/chainbridge-core). UI consist of two part:
-BridgeUI is used to interact with [Bridge](https://github.com/chainsafe/chainbridge-solidity) smart contracts
+to work with Chainsafe [Sygma](https://github.com/ChainSafe/sygma). UI consist of two part:
+BridgeUI is used to interact with [Bridge](https://github.com/chainsafe/sygma-solidity) smart contracts
 in order to send deposits.
 ExplorerUI is used to track and navigate every bridging that happens over specific Bridge smart contract.
 
@@ -28,19 +28,19 @@ Before running our bridge code you will need to have installed `golang`, `docker
 * docker -> [install](https://docs.docker.com/engine/install/)
 * docker-compose -> [install](https://docs.docker.com/compose/install/)
 
-In order for your to bridge tokens from one network to another, you are going to need to clone [chainbridge-core](https://github.com/ChainSafe/chainbridge-core). This project contains everything you need to run a bridge with two `evm` networks, and all the contracts deployed. Check the [README](https://github.com/ChainSafe/chainbridge-core/blob/main/README.md) and follow the instructions to install and have everything ready.
+In order for your to bridge tokens from one network to another, you are going to need to clone [Sygma](https://github.com/ChainSafe/sygma). This project contains everything you need to run a bridge with two `evm` networks, and all the contracts deployed. Check the [README](https://github.com/ChainSafe/sygma/blob/main/README.md) and follow the instructions to install and have everything ready.
 
-After you cloned `chainbridge-core` you can run the following command:
+After you cloned `sygma` you can run the following command:
 
 ```bash
-make local-setup
+make example
 ```
 
 This command is going to run a script that creates two evm nodes and I will run three relayers. After this is going to deploy all the contracts to the `evm` nodes. This process could take a couple of minutes to complete. After that, you are going to see something like this message:
 
 ```bash
 ===============================================
-🎉🎉🎉 ChainBridge Successfully Deployed 🎉🎉🎉
+🎉🎉🎉 Sygma Successfully Deployed 🎉🎉🎉
 
 - Chain 1 -
 Bridge: 0xd606A00c1A39dA53EA7Bb3Ab570BBE40b156EB66
@@ -74,21 +74,23 @@ This means that you have all the address that you need to run the UI locally.
 A quick note aside: if you want to check the logs of your nodes or the relayers, you can go `/e2e/evm-evm` folder and run the following command:
 
 ```bash
-docker-compose -f docker-compose.e2e.yml logs relayer1
+# inside the root directory of sygma
+cd example
+docker-compose -f ./docker-compose.yml logs setup
 ```
 
-This is going to output the `relayer1` logs. You can also run the command with the `-f` flag to follow the output of your services. If you want to see all the logs of your services just run `docker-compose -f docker-compose.e2e.yml logs`.
+This is going to output the `relayer1` logs. You can also run the command with the `-f` flag to follow the output of your services. If you want to see all the logs of your services just run `docker-compose -f docker-compose.yml logs -f`.
 
 After you get the address for the contracts deployed on your local setup, we need to add this to the `runtime` config of our UI.
 
-Go to `/packages/example` that contains our full UI, and inside the config folder, edit the `chainbridge-runtime-config.evm.js` file with the addresses that you got after the deploy.
+Go to `/packages/example` that contains our full UI, and inside the config folder, edit the `sygma-runtime-config.evm.js` file with the addresses that you got after the deploy.
 
 You will end up with something like this:
 
 ```js
 window.__RUNTIME_CONFIG__ = {
   INDEXER__URL: "http://localhost:8000",
-  CHAINBRIDGE: {
+  SYGMA: {
     chains: [
       {
         domainId: 1,
@@ -141,9 +143,9 @@ window.__RUNTIME_CONFIG__ = {
 
 Then you can start the UI and you can try to connect using metamask. For this you will also need to add the local nodes to the `networks` section of your metamaks. The relevant data to setup local networks on metamaks are the endpoints of the networks, already defined in the runtime config, and the `chainId` also already defined in the runtime config as `networkId`.
 
-After this you will also need to import the token to your metamask wallet. Notice that the local nodes have some accounts that hold some tokens. You can check those accounts and the private keys of them [here](https://github.com/ChainSafe/chainbridge-deploy/blob/main/cb-sol-cli/constants.js)
+After this you will also need to import the token to your metamask wallet. Notice that the local nodes have some accounts that hold some tokens. You can check those accounts and the private keys of them.
 
-In the case of the local setup `alice`, `bob` and `charlie` are some of the accounts with tokens. Also the three of the are the main relayers. So, if you want to import `alice` account to metamask, you will need to use [her private key](https://github.com/ChainSafe/chainbridge-deploy/blob/f2aa0932e8f98037569fb9ff7b4948be380bacab/cb-sol-cli/constants.js#L40).
+In the case of the local setup `alice`, `bob` and `charlie` are some of the accounts with tokens. Also the three of the are the main relayers. So, if you want to import `alice` account to metamask, you will need to use her private key:
 
 This is are the most relevant private keys
 
@@ -152,14 +154,14 @@ This is are the most relevant private keys
 0x0000000000000000000000000000000000000000000000000000000000657665 // EVE PRIVATE KEY
 ```
 
-`Eve` is the bridge admin. She holds 10 `erc20` tokens on her side. `Alice` has native tokens that you can transfer using metamask to your personal account. It is recommended that you don't use relayers accounts to test transfers in your local setup. For this you can use [chainbridge-core-example](https://github.com/ChainSafe/chainbridge-core-example) to build the binary and have access to the cli to perform some task.
+`Eve` is the bridge admin. She holds 10 `erc20` tokens on her side. `Alice` has native tokens that you can transfer using metamask to your personal account. It is recommended that you don't use relayers accounts to test transfers in your local setup. For this you can use [sygma-core-example](https://github.com/ChainSafe/sygma-core-example) to build the binary and have access to the cli to perform some task.
 ### Minting some tokens.
 
 
 Now we are ready to mint some tokens. Eve has 10 TST tokens already minted, but we can mint more.
 
 ```bash
-./chainbridge-core-example \
+./sygma-core-example \
 evm-cli \
 --url <LOCAL-NODE-URL> \
 --private-key <PRIVATE-KEY EVE> \
@@ -174,7 +176,7 @@ mint \
 So using `Eve` private key you would have the following command:
 
 ```bash
-./chainbridge-core-example \
+./sygma-core-example \
 evm-cli \
 --url "http://localhost:8545" \
 --private-key "0000000000000000000000000000000000000000000000000000000000657665" \
@@ -206,7 +208,7 @@ yarn start:ui
 And that's it, you are going to see the UI connected to local networks
 
 ## FAQ
-Please check our [Q&A section](https://github.com/ChainSafe/chainbridge-ui/discussions/categories/q-a)
+Please check our [Q&A section](https://github.com/ChainSafe/sygma-ui/discussions/categories/q-a)
 
 ## Support
 <a href="https://discord.gg/ykXsJKfhgq">

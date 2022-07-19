@@ -1,4 +1,4 @@
-# Chainbridge UI
+# Sygma UI
 
 ## Table of Contents
 
@@ -26,9 +26,9 @@ Get a Blocknative DAPP ID (here)[https://explorer.blocknative.com/account] and p
 
 You can copy one of our configs for local development or create your own:
 ```
-cp ./config/chainbridge-runtime-config.evm.json ./public/chainbridge-runtime-config.json
+cp ./config/sygma-runtime-config.evm.json ./public/sygma-runtime-config.json
 ```
-Make sure that the config file in public folder is named `chainbridge-runtime-config.json``
+Make sure that the config file in public folder is named `sygma-runtime-config.json``
 
 ## Usage
 
