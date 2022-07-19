@@ -72,7 +72,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     tokens,
   } = useChainbridge();
   const { homeTransferTxHash } = useHomeBridge();
-  const { transferTxHash, depositVotes, inTransitMessages } =
+  const { transferTxHash, inTransitMessages } =
     useDestinationBridge();
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
 
@@ -150,7 +150,6 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         <Typography className={classes.heading} variant="h5" component="h5">
           {getTransactionStateHeader(
             transactionStatus,
-            depositVotes,
             relayerThreshold
           )}
         </Typography>

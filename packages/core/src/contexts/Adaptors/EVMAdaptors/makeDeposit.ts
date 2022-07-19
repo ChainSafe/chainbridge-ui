@@ -24,7 +24,7 @@ const makeDeposit =
     homeChainConfig?: BridgeConfig,
     provider?: providers.Web3Provider,
     address?: string,
-    chainbridgeData?: { chain1: BridgeEvents; chain2: BridgeEvents },
+    // chainbridgeData?: { chain1: BridgeEvents; chain2: BridgeEvents },
     chainbridgeInstance?: Chainbridge,
     bridgeSetup?: BridgeData
   ) =>
@@ -46,7 +46,7 @@ const makeDeposit =
       return;
     }
 
-    const events = chainbridgeData![paramsForDeposit.from as keyof BridgeData]
+    // const events = chainbridgeData![paramsForDeposit.from as keyof BridgeData]
 
     const { erc20Address: tokenAddress } = bridgeSetup![paramsForDeposit.from as keyof BridgeData]
 
@@ -62,7 +62,6 @@ const makeDeposit =
       );
 
       const currentAllowance = await chainbridgeInstance?.checkCurrentAllowance(
-        paramsForDeposit.from,
         address!
       );
 
@@ -71,40 +70,56 @@ const makeDeposit =
         if (currentAllowance! > 0 &&
           token.isDoubleApproval
         ) {
-          await chainbridgeInstance!.approve(
-            "0",
-            paramsForDeposit.from
-          )
+          await chainbridgeInstance!.approve({
+            amounForApproval: "0",
+          })
         }
-        await chainbridgeInstance!.approve(
-          paramsForDeposit.amount,
-          paramsForDeposit.from
-        )
+        await chainbridgeInstance!.approve({
+          amounForApproval: paramsForDeposit.amount,
+        })
 
       }
 
-      events?.bridgeEvents(
-        (
-          destinationDomainId: number,
-          resourceId: string,
-          depositNonce: number,
-          user: string,
-          data: string,
-          handlerResponse: string,
-          tx: Event
-        ) => {
-          setDepositNonce(`${depositNonce.toString()}`);
-          setTransactionStatus("In Transit");
-          setHomeTransferTxHash(tx.transactionHash);
-        }
-      );
-      await chainbridgeInstance?.deposit(
-        paramsForDeposit.amount,
-        paramsForDeposit.recipient,
-        paramsForDeposit.from,
-        paramsForDeposit.to,
-        paramsForDeposit.feeData
-      );
+      // chainbridgeInstance?.homeChainDepositEventListener(
+      //   (
+      //     destinationDomainId: any,
+      //     resourceId: any,
+      //     depositNonce: any,
+      //     user: any,
+      //     data: any,
+      //     handleResponse: any,
+      //     tx: Event
+      //   ) => {
+      //     setDepositNonce(`${depositNonce.toString()}`);
+      //     setTransactionStatus("In Transit");
+      //     setHomeTransferTxHash(tx.transactionHash);
+      //   }
+      // )
+      // events?.bridgeEvents(
+      //   (
+      //     destinationDomainId: number,
+      //     resourceId: string,
+      //     depositNonce: number,
+      //     user: string,
+      //     data: string,
+      //     handlerResponse: string,
+      //     tx: Event
+      //   ) => {
+      //     setDepositNonce(`${depositNonce.toString()}`);
+      //     setTransactionStatus("In Transit");
+      //     setHomeTransferTxHash(tx.transactionHash);
+      //   }
+      // );
+      const depositTx = await chainbridgeInstance?.deposit({
+        amount: paramsForDeposit.amount,
+        recipientAddress: paramsForDeposit.recipient,
+        feeData: paramsForDeposit.feeData
+      });
+      if (depositTx?.status === 1) {
+        setDepositNonce('1')
+        setTransactionStatus("In Transit");
+        setHomeTransferTxHash(depositTx.transactionHash);
+      }
 
       return Promise.resolve();
     } catch (error) {

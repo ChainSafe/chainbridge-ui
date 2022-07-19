@@ -108,14 +108,17 @@ const ChainbridgeProvider = ({
 
   const resetDeposit = () => {
     chainbridgeConfig().chains.length > 2 && setDestinationChain(undefined);
-    setTransactionStatus(undefined);
     setDepositNonce(undefined);
     setDepositVotes(0);
     setDepositAmount(undefined);
     tokensDispatch({
       type: "resetMessages",
     });
+    tokensDispatch({
+      type: "setTransactionIsDone",
+    });
     setSelectedToken("");
+    setTransactionStatus(undefined);
   };
 
   const handleDeposit = useCallback(

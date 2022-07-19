@@ -14,15 +14,15 @@ const handleProposalVote = (
   depositVotes: number,
   tokensDispatch: Dispatch<AddMessageAction | ResetAction | TxIsDone>,
   setDepositVotes: (input: number) => void,
-  chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents },
+  // chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents },
   computedDirections: { from: Directions, to: Directions },
   transactionStatus?: TransactionStatus,
 ) => {
   const { from, to } = computedDirections
 
-  const events = chainbridgeData![from as keyof BridgeData]
+  // const events = chainbridgeData![from as keyof BridgeData]
 
-  events?.voteEvents![to as keyof BridgeData](
+  // events?.voteEvents![to as keyof BridgeData](
     async (
       originDomainId: number,
       depositNonce: number,
@@ -53,6 +53,6 @@ const handleProposalVote = (
         },
       });
     }
-  )
+  // )
 };
 export default handleProposalVote;

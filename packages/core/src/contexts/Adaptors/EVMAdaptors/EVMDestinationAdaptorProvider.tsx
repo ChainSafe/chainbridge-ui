@@ -22,7 +22,7 @@ export const EVMDestinationAdaptorProvider = ({
     transactionStatus,
   } = useWeb3();
 
-  const { chainbridgeData, bridgeSetup } = useBridge();
+  const { bridgeSetup, chainbridgeInstance } = useBridge();
 
   const computedDirections = computeDirections(
     bridgeSetup!,
@@ -48,43 +48,45 @@ export const EVMDestinationAdaptorProvider = ({
   const destinationBridge = useDestinationBridgeHook(destinationChainConfig);
 
   useEffect(() => {
+    console.log(depositNonce, !inTransitMessages.txIsDone)
     if (
       depositNonce &&
       !inTransitMessages.txIsDone
     ) {
+      console.log('depositNonce', depositNonce, '!inTransitMessages.txIsDone', !inTransitMessages.txIsDone)
       handleProposalEvent(
-        destinationChainConfig!,
         setTransactionStatus,
         setTransferTxHash,
         tokensDispatch,
-        chainbridgeData!,
-        computedDirections!
-      );
-
-      handleProposalVote(
-        depositVotes,
-        tokensDispatch,
-        setDepositVotes,
-        chainbridgeData!,
         computedDirections!,
-        transactionStatus
+        chainbridgeInstance!,
+        setDepositVotes,
+        depositVotes,
+        transferTxHash
       );
+      // handleProposalVote(
+      //   depositVotes,
+      //   tokensDispatch,
+      //   setDepositVotes,
+      //   chainbridgeData!,
+      //   computedDirections!,
+      //   transactionStatus
+      // );
     }
     return () => {
       //@ts-ignore
       destinationBridge?.removeAllListeners();
     };
   }, [
+    transferTxHash,
     depositNonce,
-    homeChainConfig,
-    destinationBridge,
+    // destinationBridge,
     depositVotes,
-    destinationChainConfig,
-    setDepositVotes,
-    setTransactionStatus,
-    setTransferTxHash,
-    tokensDispatch,
-    transactionStatus
+    // setDepositVotes,
+    // setTransactionStatus,
+    // setTransferTxHash,
+    // tokensDispatch,
+    // transactionStatus
   ]);
 
   return (

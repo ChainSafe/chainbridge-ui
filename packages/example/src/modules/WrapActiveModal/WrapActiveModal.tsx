@@ -72,7 +72,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
               {action === "wrap"
                 ? `Successfully wrapped ${homeConfig?.nativeTokenSymbol} to ${tokenInfo.symbol}`
                 : `Successfully unwrapped ${tokenInfo.symbol} to ${homeConfig?.nativeTokenSymbol}`}
-              {homeConfig &&
+              {/* {homeConfig &&
                 (homeConfig as EvmBridgeConfig).blockExplorer &&
                 txHash && (
                   <>
@@ -87,7 +87,7 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
                       View Transaction
                     </a>
                   </>
-                )}
+                )} */}
             </Typography>
             <section className={classes.buttons}>
               <Button

@@ -21,6 +21,7 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
   amountFormikName,
   amount,
 }: IFeesFormikWrapped) => {
+  // console.log("🚀 ~ file: index.tsx ~ line 24 ~ fee", fee)
   // const { values } = useFormikContext();
 
   return (
@@ -30,7 +31,7 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
           <>
             <Typography component="p">Bridge Fee</Typography>
             <Typography component="p">
-              {Number(fee).toFixed(2)} {feeSymbol}
+              {Number(fee).toFixed(8)} {feeSymbol}
             </Typography>
           </>
         )}
