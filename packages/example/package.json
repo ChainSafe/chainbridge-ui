@@ -1,5 +1,5 @@
 {
-  "name": "@chainsafe/chainbridge-ui",
+  "name": "@chainsafe/sygma-ui",
   "version": "1.0.0",
   "publishConfig": {
     "access": "restricted"

@@ -1,4 +1,4 @@
-# Chainbridge basic example
+# Sygma basic example
 
 This package demonstrate basic usage and implementation of our context providers for bridge purposes
 

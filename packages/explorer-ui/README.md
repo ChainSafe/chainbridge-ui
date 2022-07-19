@@ -1,6 +1,6 @@
-<p align="center"><a href="https://https://chainsafe.io/"><img width="250" title="Chainbridge UI" src='../../assets/chainsafe_logo.png'/></a></p>
+<p align="center"><a href="https://https://chainsafe.io/"><img width="250" title="Chainbridge UI" src='../../assets/full-logo.png'/></a></p>
 
-# Chainbridge Explorer UI
+# Sygma Explorer UI
 
 This repo contains the our Explorer UI app for checking the data of the tokens transfer for our swap UI.
 

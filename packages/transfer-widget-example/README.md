@@ -1,11 +1,11 @@
-# ChainBridgeUI widget example
+# Sygma UI widget example
 
-Basic CRA application with ChainBridgeUI react widget and example config
+Basic CRA application with Sygma UI react widget and example config
 
 ## Install
 
 ```
-git clone git@github.com:ChainSafe/chainbridge-ui.git
+git clone git@github.com:ChainSafe/sygma-ui.git
 cd packages/transfer-widget-example/
 yarn install
 ```
