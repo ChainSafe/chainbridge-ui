@@ -189,6 +189,7 @@ export const SubstrateHomeAdaptorProvider = ({
                 meta: {
                   ...meta,
                   name: `${meta.name} (${meta.source})`,
+                  addressName: meta.name,
                 },
               }));
             })
