@@ -52,10 +52,10 @@ window.__RUNTIME_CONFIG__ = {
         networkId: 2,
         name: "Cere Mainnet",
         decimals: cereTokenDecimals,
-        rpcUrl: "wss://rpc.v2.mainnet.cere.network/ws",
+        rpcUrl: "wss://rpc.mainnet.cere.network/ws",
         blockExplorer:
-          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.v2.mainnet.cere.network%2Fws#/explorer/query",
-        rpcFallbackUrls: ["wss://archive.v2.mainnet.cere.network/ws"],
+          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.mainnet.cere.network%2Fws#/explorer/query",
+        rpcFallbackUrls: ["wss://archive.mainnet.cere.network/ws"],
         type: "Substrate",
         nativeTokenSymbol: "CERE",
         availableAsHomeNetwork: true,
