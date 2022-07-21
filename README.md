@@ -1,10 +1,10 @@
-<p align="center"><a href="https://https://chainsafe.io/"><img width="250" title="Sygma UI" src='assets/full-logo.png'/></a></p>
+<p align="center"><a href="https://buildwithsygma.com"><img width="250" title="Sygma UI" src='assets/full-logo.png'/></a></p>
 
 # SygmaUI
 
 ## Introduction
 **Sygma UI** is an OpenSource (under GNU Lesser General Public License v3.0) whitelabel application for developers
-to work with Chainsafe [Sygma](https://github.com/ChainSafe/sygma). UI consist of two part:
+to work with [Sygma](https://github.com/ChainSafe/sygma). UI consist of two part:
 BridgeUI is used to interact with [Bridge](https://github.com/chainsafe/sygma-solidity) smart contracts
 in order to send deposits.
 ExplorerUI is used to track and navigate every bridging that happens over specific Bridge smart contract.
