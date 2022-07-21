@@ -17,7 +17,6 @@ export interface IWeb3ProviderWrapper {
 export type InjectedAccountType = {
   address: string;
   meta: {
-    addressName?: string;
     name: string;
     source: string;
   };
