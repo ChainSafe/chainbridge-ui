@@ -10,7 +10,7 @@ import {
 } from "../../../chainbridgeConfig";
 
 import { getPriceCompatibility } from "./helpers";
-import { BridgeData, BridgeEvents, Chainbridge, Directions } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, BridgeEvents, Sygma, Directions } from "@chainsafe/chainbridge-sdk-core";
 
 const makeDeposit =
   (
@@ -25,7 +25,7 @@ const makeDeposit =
     provider?: providers.Web3Provider,
     address?: string,
     // chainbridgeData?: { chain1: BridgeEvents; chain2: BridgeEvents },
-    chainbridgeInstance?: Chainbridge,
+    chainbridgeInstance?: Sygma,
     bridgeSetup?: BridgeData
   ) =>
   async (paramsForDeposit: {

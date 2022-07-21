@@ -10,7 +10,7 @@ import {
   ChainType,
 } from "../../chainbridgeConfig";
 import { useWeb3 } from "../localWeb3Context";
-import { BridgeData, Chainbridge } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, Sygma } from "@chainsafe/chainbridge-sdk-core";
 import { chainbridgeReducer, ChainbridgeState } from '../../reducers'
 
 interface IBridgeContext {
@@ -25,7 +25,6 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
   const { homeChains, ...rest } = useWeb3();
   const initState: ChainbridgeState = {
     chainbridgeInstance: undefined,
-    // chainbridgeData: undefined,
     bridgeSetup: undefined
   }
   const [bridgeState, bridgeDispatcher] = useReducer(
@@ -34,7 +33,10 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
   );
 
   useEffect(() => {
+
     if (homeChains.length) {
+      const web3provider = rest.provider
+
       const bridgeSetup: BridgeData = homeChains.reduce((acc, chain, idx) => {
         const {
           bridgeAddress,
@@ -72,11 +74,9 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
 
       const { feeOracleSetup } = chainbridgeConfig()
       let isMounted = true;
-      const chainbridgeInstance = new Chainbridge({ bridgeSetup, feeOracleSetup });
-      chainbridgeInstance.initializeConnectionFromWeb3Provider(window.ethereum).then((res) => {
-        // console.log("🚀 ~ file: Bridge.tsx ~ line 71 ~ chainbridgeInstance.initializeConnectionFromWeb3Provider ~ res", res)
+      const chainbridgeInstance = new Sygma({ bridgeSetup, feeOracleSetup });
+      chainbridgeInstance.initializeConnectionFromWeb3Provider(web3provider?.provider).then((res) => {
         if (isMounted) {
-          // console.log(this)
           bridgeDispatcher({
             type: "setInstanceAndData",
             payload: {
@@ -86,7 +86,7 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
             }
           })
         }
-
+        chainbridgeInstance.setHomeWeb3Provider(web3provider?.provider)
       })
       return () => { isMounted = false }
     }

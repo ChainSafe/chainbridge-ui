@@ -8,7 +8,7 @@ import {
   ResetAction,
   TxIsDone
 } from "../../../reducers/TransitMessageReducer";
-import { BridgeData, BridgeEvents, Directions, Chainbridge } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, BridgeEvents, Directions, Sygma } from "@chainsafe/chainbridge-sdk-core";
 import { Listener } from '@ethersproject/providers';
 const handleProposalEvent = (
   setTransactionStatus: (message: TransactionStatus | undefined) => void,
@@ -16,7 +16,7 @@ const handleProposalEvent = (
   tokensDispatch:  Dispatch<AddMessageAction | ResetAction | TxIsDone>,
   // chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents },
   computedDirections: { from: Directions, to: Directions },
-  chainbridgeInstance: Chainbridge,
+  chainbridgeInstance: Sygma,
   setDepositVotes: any,
   depositVotes: any,
   transferTxHash: string,

@@ -40,12 +40,10 @@ const ConnectToMetamask = ({
   const error = useError();
   const isActivating = useIsActivating();
   const provider = useProvider();
-  console.log("🚀 ~ file: ConnectToMetamask.tsx ~ line 43 ~ provider", provider)
 
   const isActive = useIsActive();
 
   useEffect(() => {
-    chainbridgeInstance?.initializeConnectionFromWeb3Provider(provider)
     setIsLoading(isActivating);
   }, [isActivating]);
 

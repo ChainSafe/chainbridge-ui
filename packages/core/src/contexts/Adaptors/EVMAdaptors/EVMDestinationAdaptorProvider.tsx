@@ -7,7 +7,6 @@ import { evmDestinationReducer } from "../../../reducers/EvmDestinationReducer";
 
 import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
-import handleProposalVote from "./handleProposalVote";
 import { useBridge } from "../../Bridge";
 import { computeDirections } from "../../../utils/Helpers";
 
@@ -48,12 +47,10 @@ export const EVMDestinationAdaptorProvider = ({
   const destinationBridge = useDestinationBridgeHook(destinationChainConfig);
 
   useEffect(() => {
-    console.log(depositNonce, !inTransitMessages.txIsDone)
     if (
       depositNonce &&
       !inTransitMessages.txIsDone
     ) {
-      console.log('depositNonce', depositNonce, '!inTransitMessages.txIsDone', !inTransitMessages.txIsDone)
       handleProposalEvent(
         setTransactionStatus,
         setTransferTxHash,
@@ -64,14 +61,6 @@ export const EVMDestinationAdaptorProvider = ({
         depositVotes,
         transferTxHash
       );
-      // handleProposalVote(
-      //   depositVotes,
-      //   tokensDispatch,
-      //   setDepositVotes,
-      //   chainbridgeData!,
-      //   computedDirections!,
-      //   transactionStatus
-      // );
     }
     return () => {
       //@ts-ignore
@@ -80,13 +69,7 @@ export const EVMDestinationAdaptorProvider = ({
   }, [
     transferTxHash,
     depositNonce,
-    // destinationBridge,
     depositVotes,
-    // setDepositVotes,
-    // setTransactionStatus,
-    // setTransferTxHash,
-    // tokensDispatch,
-    // transactionStatus
   ]);
 
   return (

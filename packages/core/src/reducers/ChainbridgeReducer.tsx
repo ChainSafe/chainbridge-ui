@@ -1,15 +1,14 @@
-import { BridgeData, BridgeEvents, Chainbridge, FeeOracleData } from "@chainsafe/chainbridge-sdk-core"
+import { BridgeData, BridgeEvents, Sygma, FeeOracleData } from "@chainsafe/chainbridge-sdk-core"
 import { providers } from "ethers";
 
 export type ChainbridgeState = {
-  chainbridgeInstance: Chainbridge | undefined;
-  // chainbridgeData: { chain1: BridgeEvents, chain2: BridgeEvents } | undefined;
+  chainbridgeInstance: Sygma | undefined;
   bridgeSetup: BridgeData | undefined
 }
 
 export type ChainbridgeReducerAction = {
   type: "setInstanceAndData";
-  payload: { bridgeSetup: BridgeData, feeOracleSetup: FeeOracleData, chainbridgeInstance: Chainbridge };
+  payload: { bridgeSetup: BridgeData, feeOracleSetup: FeeOracleData, chainbridgeInstance: Sygma };
 } | {
   type: "setAll";
   payload: {
@@ -27,15 +26,10 @@ export const chainbridgeReducer = (
 ) => {
   switch(action.type) {
     case "setInstanceAndData": {
-      const { bridgeSetup, feeOracleSetup, chainbridgeInstance } = action.payload;
-      // const chainbridge = new Chainbridge({ bridgeSetup, feeOracleSetup });
-      // const chainbridgeConnected = chainbridge
-      // chainbridge.initializeConnectionFromWeb3Provider(window.ethereum)
-      // console.log('connected')
+      const { bridgeSetup, chainbridgeInstance } = action.payload;
       return {
         ...state,
         chainbridgeInstance: chainbridgeInstance,
-        // chainbridgeData: chainbridgeConnected,
         bridgeSetup: bridgeSetup
       }
     }
