@@ -4,13 +4,11 @@ import { useNetworkManager } from "../NetworkManagerContext";
 import { createApi, submitDeposit } from "./SubstrateApis/ChainBridgeAPI";
 import { IHomeBridgeProviderProps, InjectedAccountType } from "./interfaces";
 
-import { ApiPromise } from "@polkadot/api";
 import {
   web3Accounts,
   web3Enable,
   web3FromSource,
 } from "@polkadot/extension-dapp";
-import { TypeRegistry } from "@polkadot/types";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { BigNumber as BN } from "bignumber.js";
 import { VoidFn } from "@polkadot/api/types";
@@ -188,7 +186,7 @@ export const SubstrateHomeAdaptorProvider = ({
                 address,
                 meta: {
                   ...meta,
-                  name: `${meta.name} (${meta.source})`,
+                  name: meta.name || address,
                 },
               }));
             })
