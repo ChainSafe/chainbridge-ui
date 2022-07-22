@@ -3,6 +3,7 @@
 ## vNext
 
 - Implemented transfer tx links to source, destination chains during tokens transfer
+- Replace account address with its name on the select account dropdown
 
 ## v0.16.0
 
