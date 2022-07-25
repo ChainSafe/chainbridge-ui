@@ -7,7 +7,8 @@ export const useStyles = makeStyles(({ constants }: ITheme) =>
       borderTopLeftRadius: constants.generalUnit / 2,
       borderTopRightRadius: constants.generalUnit / 2,
       overflow: "hidden",
-      position: "absolute",
+      //@ts-ignore-line
+      position: `absolute !important`,
     },
   })
 );

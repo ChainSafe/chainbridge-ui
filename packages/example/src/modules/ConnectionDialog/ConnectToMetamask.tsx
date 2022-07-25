@@ -3,6 +3,9 @@ import { initializeConnector } from "@web3-react/core";
 import { MetaMask } from "@web3-react/metamask";
 import { Typography, Button } from "@mui/material";
 import { MetamaskIcon } from "@fusion-icons/react/web3";
+import {
+  useBridge
+} from "@chainsafe/chainbridge-ui-core";
 
 export const [metaMask, hooks] = initializeConnector<MetaMask>(
   (actions) => new MetaMask(actions)
@@ -30,6 +33,7 @@ const ConnectToMetamask = ({
   isLoading: boolean;
   setIsLoading: any;
 }) => {
+  const {chainbridgeInstance } = useBridge()
   const chainId = useChainId();
   const accounts = useAccounts();
   const account = useAccount();

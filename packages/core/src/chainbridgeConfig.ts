@@ -20,7 +20,13 @@ export type BridgeConfig = {
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
   decimals: number;
+  feeSettings: FeeSettings
 };
+
+export type FeeSettings = {
+  type: 'basic' | 'feeOracle' | 'none';
+  address: string;
+}
 
 export type EvmBridgeConfig = BridgeConfig & {
   bridgeAddress: string;
@@ -30,6 +36,10 @@ export type EvmBridgeConfig = BridgeConfig & {
   blockExplorer?: string;
   defaultGasPrice?: number;
   deployedBlockNumber?: number;
+  feeSettings: {
+    type: 'basic' | 'feeOracle' | 'none';
+    address: string;
+  };
 };
 
 

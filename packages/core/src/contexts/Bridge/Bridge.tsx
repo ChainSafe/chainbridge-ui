@@ -10,7 +10,7 @@ import {
   ChainType,
 } from "../../chainbridgeConfig";
 import { useWeb3 } from "../localWeb3Context";
-import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, Sygma } from "@chainsafe/sygma-sdk-core";
 import { chainbridgeReducer, ChainbridgeState } from '../../reducers'
 
 interface IBridgeContext {
@@ -25,7 +25,6 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
   const { homeChains, ...rest } = useWeb3();
   const initState: ChainbridgeState = {
     chainbridgeInstance: undefined,
-    chainbridgeData: undefined,
     bridgeSetup: undefined
   }
   const [bridgeState, bridgeDispatcher] = useReducer(
@@ -34,7 +33,10 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
   );
 
   useEffect(() => {
+
     if (homeChains.length) {
+      const web3provider = rest.provider
+
       const bridgeSetup: BridgeData = homeChains.reduce((acc, chain, idx) => {
         const {
           bridgeAddress,
@@ -43,6 +45,9 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
           rpcUrl,
           domainId,
           decimals,
+          feeSettings,
+          name,
+          networkId
         } = chain;
 
         // NOTE: ASUMPTION HERE IS THAT WE HAVE ONLY ONE TOKEN
@@ -58,6 +63,9 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
             domainId,
             erc20ResourceID: resourceId,
             decimals,
+            feeSettings,
+            name,
+            networkId
           },
         };
 
@@ -65,14 +73,21 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
       }, {} as BridgeData);
 
       const { feeOracleSetup } = chainbridgeConfig()
-
-      bridgeDispatcher({
-        type: "setInstanceAndData",
-        payload: {
-          bridgeSetup,
-          feeOracleSetup
+      let isMounted = true;
+      const chainbridgeInstance = new Sygma({ bridgeSetup, feeOracleSetup });
+      chainbridgeInstance.initializeConnectionFromWeb3Provider(web3provider?.provider).then((res) => {
+        if (isMounted) {
+          bridgeDispatcher({
+            type: "setInstanceAndData",
+            payload: {
+              bridgeSetup,
+              feeOracleSetup,
+              chainbridgeInstance: res
+            }
+          })
         }
       })
+      return () => { isMounted = false }
     }
   }, [homeChains]);
 

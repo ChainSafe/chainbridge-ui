@@ -45,13 +45,11 @@ const networkManagerReducer = (
     case "setTransactionStatus": {
       const { payload } = action
 
-      if(payload !== undefined){
-        return {
-          ...state,
-          transactionStatus: payload
-        }
+      return {
+        ...state,
+        transactionStatus: payload
       }
-      return state
+
     }
     case "addMessage":
       return {
