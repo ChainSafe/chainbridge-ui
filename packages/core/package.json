@@ -1,7 +1,7 @@
 {
-  "name": "@chainsafe/chainbridge-ui-core",
+  "name": "@chainsafe/sygma-ui-core",
   "version": "1.1.1",
-  "description": "Context providers for Chainbridge UI",
+  "description": "Context providers for Sygma UI",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "author": "Chainsafe Products Team",
