@@ -10,7 +10,7 @@ import {
 } from "../../../chainbridgeConfig";
 
 import { getPriceCompatibility } from "./helpers";
-import { BridgeData, BridgeEvents, Sygma, Directions } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, BridgeEvents, Sygma, Directions } from "@chainsafe/sygma-sdk-core";
 
 const makeDeposit =
   (
@@ -24,7 +24,6 @@ const makeDeposit =
     homeChainConfig?: BridgeConfig,
     provider?: providers.Web3Provider,
     address?: string,
-    // chainbridgeData?: { chain1: BridgeEvents; chain2: BridgeEvents },
     chainbridgeInstance?: Sygma,
     bridgeSetup?: BridgeData
   ) =>
@@ -45,8 +44,6 @@ const makeDeposit =
       console.log("Invalid token selected");
       return;
     }
-
-    // const events = chainbridgeData![paramsForDeposit.from as keyof BridgeData]
 
     const { erc20Address: tokenAddress } = bridgeSetup![paramsForDeposit.from as keyof BridgeData]
 
@@ -80,36 +77,6 @@ const makeDeposit =
 
       }
 
-      // chainbridgeInstance?.homeChainDepositEventListener(
-      //   (
-      //     destinationDomainId: any,
-      //     resourceId: any,
-      //     depositNonce: any,
-      //     user: any,
-      //     data: any,
-      //     handleResponse: any,
-      //     tx: Event
-      //   ) => {
-      //     setDepositNonce(`${depositNonce.toString()}`);
-      //     setTransactionStatus("In Transit");
-      //     setHomeTransferTxHash(tx.transactionHash);
-      //   }
-      // )
-      // events?.bridgeEvents(
-      //   (
-      //     destinationDomainId: number,
-      //     resourceId: string,
-      //     depositNonce: number,
-      //     user: string,
-      //     data: string,
-      //     handlerResponse: string,
-      //     tx: Event
-      //   ) => {
-      //     setDepositNonce(`${depositNonce.toString()}`);
-      //     setTransactionStatus("In Transit");
-      //     setHomeTransferTxHash(tx.transactionHash);
-      //   }
-      // );
       const depositTx = await chainbridgeInstance?.deposit({
         amount: paramsForDeposit.amount,
         recipientAddress: paramsForDeposit.recipient,

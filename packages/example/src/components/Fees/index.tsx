@@ -2,7 +2,6 @@ import React from "react";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-// import { useFormikContext } from "formik";
 
 interface IFeesFormikWrapped {
   className?: string;
@@ -21,9 +20,6 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
   amountFormikName,
   amount,
 }: IFeesFormikWrapped) => {
-  // console.log("🚀 ~ file: index.tsx ~ line 24 ~ fee", fee)
-  // const { values } = useFormikContext();
-
   return (
     <Box sx={{ my: 2 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>

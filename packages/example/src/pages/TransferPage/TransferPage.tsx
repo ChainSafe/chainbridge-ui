@@ -36,7 +36,7 @@ import {
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
 
 import makeValidationSchema from "./makeValidationSchema";
-import { BridgeData, FeeDataResult } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, FeeDataResult } from "@chainsafe/sygma-sdk-core";
 
 export type PreflightDetails = {
   tokenAmount: string;
@@ -118,7 +118,6 @@ const TransferPage = () => {
         recipientAddress: destAddress
       });
       if (!(fee instanceof Error)) {
-        console.log("🚀 ~ file: TransferPage.tsx ~ line 124 ~ setFee ~ fee", fee)
         setCustomFee(fee)
       }
     }

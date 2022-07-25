@@ -10,7 +10,7 @@ import { TransitState } from "../../reducers/TransitMessageReducer";
 import { TransactionStatus, useWeb3 } from "../../index";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { useDestinationBridge } from "../DestinationBridgeContext";
-import { Directions } from "@chainsafe/chainbridge-sdk-core";
+import { Directions } from "@chainsafe/sygma-sdk-core";
 import { useBridge } from '../Bridge'
 import { computeDirections } from "../../utils/Helpers";
 

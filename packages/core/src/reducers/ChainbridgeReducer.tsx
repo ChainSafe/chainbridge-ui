@@ -1,4 +1,4 @@
-import { BridgeData, BridgeEvents, Sygma, FeeOracleData } from "@chainsafe/chainbridge-sdk-core"
+import { BridgeData, BridgeEvents, Sygma, FeeOracleData } from "@chainsafe/sygma-sdk-core"
 import { providers } from "ethers";
 
 export type ChainbridgeState = {

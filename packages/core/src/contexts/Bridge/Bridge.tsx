@@ -10,7 +10,7 @@ import {
   ChainType,
 } from "../../chainbridgeConfig";
 import { useWeb3 } from "../localWeb3Context";
-import { BridgeData, Sygma } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, Sygma } from "@chainsafe/sygma-sdk-core";
 import { chainbridgeReducer, ChainbridgeState } from '../../reducers'
 
 interface IBridgeContext {
@@ -86,7 +86,6 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
             }
           })
         }
-        chainbridgeInstance.setHomeWeb3Provider(web3provider?.provider)
       })
       return () => { isMounted = false }
     }

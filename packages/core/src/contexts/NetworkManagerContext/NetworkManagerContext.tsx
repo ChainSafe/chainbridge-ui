@@ -6,7 +6,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { Directions } from "@chainsafe/chainbridge-sdk-core";
+import { Directions } from "@chainsafe/sygma-sdk-core";
 import {
   BridgeConfig,
   chainbridgeConfig,
