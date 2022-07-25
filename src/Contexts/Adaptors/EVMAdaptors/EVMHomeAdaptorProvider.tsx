@@ -365,6 +365,7 @@ export const EVMHomeAdaptorProvider = ({
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
             token.isDoubleApproval
           ) {
+            setTransactionStatus("Transfer from Source");
             //We need to reset the user's allowance to 0 before we give them a new allowance
             //TODO Should we alert the user this is happening here?
             await (
@@ -414,7 +415,7 @@ export const EVMHomeAdaptorProvider = ({
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
         ).wait();
-        setTransactionStatus("Transfer from Source");
+
         analytics.trackTransferFromSourceEvent({
           address,
           recipient,
