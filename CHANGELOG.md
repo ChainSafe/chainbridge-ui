@@ -3,6 +3,7 @@
 ## vNext
 
 - Implemented transfer tx links to source, destination chains during tokens transfer
+- Removed v2 subdomains from public urls
 
 ## v0.16.0
 
