@@ -239,16 +239,33 @@ export const SubstrateHomeAdaptorProvider = ({
           const injector = await web3FromSource(targetAccount.meta.source);
           setDepositAmount(amount);
           setDepositRecipient(recipient);
+          setSelectedToken(tokenAddress);
           setTransactionStatus("Initializing Transfer");
+          analytics.trackTransferInitializingEvent({
+            address,
+            recipient,
+            amount: depositAmount as number,
+          });
+
           transferExtrinsic
             .signAndSend(
               address,
               { signer: injector.signer },
               ({ status, events }) => {
-                status.isInBlock &&
+                if (status.isReady) {
+                  setTransactionStatus("Transfer from Source");
+                  analytics.trackTransferFromSourceEvent({
+                    address,
+                    recipient,
+                    amount: depositAmount as number,
+                  });
+                }
+
+                if (status.isInBlock) {
                   console.log(
                     `Completed at block hash #${status.isInBlock.toString()}`
                   );
+                }
 
                 if (status.isFinalized) {
                   events.filter(({ event }) => {
@@ -266,8 +283,8 @@ export const SubstrateHomeAdaptorProvider = ({
                       const depositNonce = `${response.toJSON()}`;
                       setDepositNonce(depositNonce);
                       setHomeTransferTxHash(status.asFinalized.toHex());
-                      setTransactionStatus("In Transit");
-                      analytics.trackTransferInTransitEvent({
+                      setTransactionStatus("Transfer to Destination");
+                      analytics.trackTransferToDestinationEvent({
                         address,
                         recipient,
                         nonce: parseInt(depositNonce),

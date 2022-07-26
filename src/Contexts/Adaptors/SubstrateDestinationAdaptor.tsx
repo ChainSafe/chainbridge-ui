@@ -235,7 +235,7 @@ export const SubstrateDestinationAdaptorProvider = ({
   useEffect(() => {
     const canInitFallback =
       process.env.REACT_APP_TRANSFER_FALLBACK_ENABLED === "true" &&
-      transactionStatus === "In Transit" &&
+      transactionStatus === "Transfer from Source" &&
       api &&
       !fallback?.started();
     if (canInitFallback) initFallbackMechanism();

@@ -324,6 +324,12 @@ export const EVMHomeAdaptorProvider = ({
       setDepositRecipient(recipient);
       setDepositAmount(amount);
       setSelectedToken(tokenAddress);
+      analytics.trackTransferInitializingEvent({
+        address,
+        recipient,
+        amount: depositAmount as number,
+      });
+
       const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
       const erc20Decimals = tokens[tokenAddress].decimals;
 
@@ -365,6 +371,7 @@ export const EVMHomeAdaptorProvider = ({
             Number(utils.formatUnits(currentAllowance, erc20Decimals)) > 0 &&
             token.isDoubleApproval
           ) {
+            setTransactionStatus("Transfer from Source");
             //We need to reset the user's allowance to 0 before we give them a new allowance
             //TODO Should we alert the user this is happening here?
             await (
@@ -398,8 +405,8 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce, tx) => {
             setHomeTransferTxHash(tx.transactionHash);
             setDepositNonce(`${depositNonce.toString()}`);
-            setTransactionStatus("In Transit");
-            analytics.trackTransferInTransitEvent({
+            setTransactionStatus("Transfer to Destination");
+            analytics.trackTransferToDestinationEvent({
               address,
               recipient,
               nonce: parseInt(depositNonce),
@@ -414,6 +421,12 @@ export const EVMHomeAdaptorProvider = ({
             value: utils.parseUnits((bridgeFee || 0).toString(), 18),
           })
         ).wait();
+
+        analytics.trackTransferFromSourceEvent({
+          address,
+          recipient,
+          amount: depositAmount as number,
+        });
 
         return Promise.resolve();
       } catch (error) {
