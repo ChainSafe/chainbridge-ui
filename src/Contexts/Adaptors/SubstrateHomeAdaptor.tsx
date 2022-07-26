@@ -248,13 +248,16 @@ export const SubstrateHomeAdaptorProvider = ({
               address,
               { signer: injector.signer },
               ({ status, events }) => {
-                if (status.isInBlock) {
+                if (status.isReady) {
                   setTransactionStatus("Transfer from Source");
                   analytics.trackTransferFromSourceEvent({
                     address,
                     recipient,
                     amount: depositAmount as number,
                   });
+                }
+
+                if (status.isInBlock) {
                   console.log(
                     `Completed at block hash #${status.isInBlock.toString()}`
                   );
