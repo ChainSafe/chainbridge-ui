@@ -52,9 +52,10 @@ window.__RUNTIME_CONFIG__ = {
         networkId: 2,
         name: "Cere Devnet",
         decimals: cereTokenDecimals,
-        rpcUrl: "wss://rpc.v2.devnet.cere.network/ws",
+        rpcUrl: "wss://rpc.devnet.cere.network/ws",
         blockExplorer:
-          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.v2.devnet.cere.network%2Fws#/explorer/query",
+          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.devnet.cere.network%2Fws#/explorer/query",
+        rpcFallbackUrls: ["wss://archive.devnet.cere.network/ws"],
         type: "Substrate",
         nativeTokenSymbol: "CERE",
         availableAsHomeNetwork: true,
