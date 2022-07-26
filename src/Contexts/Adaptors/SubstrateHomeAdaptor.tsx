@@ -243,6 +243,12 @@ export const SubstrateHomeAdaptorProvider = ({
           setDepositRecipient(recipient);
           setSelectedToken(tokenAddress);
           setTransactionStatus("Initializing Transfer");
+          analytics.trackTransferInitializingEvent({
+            address,
+            recipient,
+            amount: depositAmount as number,
+          });
+
           transferExtrinsic
             .signAndSend(
               address,
@@ -279,7 +285,7 @@ export const SubstrateHomeAdaptorProvider = ({
                       const depositNonce = `${response.toJSON()}`;
                       setDepositNonce(depositNonce);
                       setHomeTransferTxHash(status.asFinalized.toHex());
-                      setTransactionStatus("Transfer to Destination ");
+                      setTransactionStatus("Transfer to Destination");
                       analytics.trackTransferToDestinationEvent({
                         address,
                         recipient,

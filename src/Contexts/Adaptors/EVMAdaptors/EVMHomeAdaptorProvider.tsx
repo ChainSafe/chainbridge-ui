@@ -324,6 +324,12 @@ export const EVMHomeAdaptorProvider = ({
       setDepositRecipient(recipient);
       setDepositAmount(amount);
       setSelectedToken(tokenAddress);
+      analytics.trackTransferInitializingEvent({
+        address,
+        recipient,
+        amount: depositAmount as number,
+      });
+
       const erc20 = Erc20DetailedFactory.connect(tokenAddress, signer);
       const erc20Decimals = tokens[tokenAddress].decimals;
 
@@ -399,7 +405,7 @@ export const EVMHomeAdaptorProvider = ({
           (destChainId, resourceId, depositNonce, tx) => {
             setHomeTransferTxHash(tx.transactionHash);
             setDepositNonce(`${depositNonce.toString()}`);
-            setTransactionStatus("Transfer to Destination ");
+            setTransactionStatus("Transfer to Destination");
             analytics.trackTransferToDestinationEvent({
               address,
               recipient,

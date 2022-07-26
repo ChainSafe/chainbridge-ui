@@ -26,6 +26,18 @@ class AnalyticsService {
     this.ga = new GA(options.ga);
   }
 
+  trackTransferInitializingEvent({
+    address,
+    recipient,
+    amount,
+  }: TransferEventData) {
+    this.ga.trackEvent("transfer_initializing", {
+      address: `"${address}"`,
+      recipient: `"${recipient}"`,
+      amount,
+    });
+  }
+
   trackTransferFromSourceEvent({
     address,
     recipient,

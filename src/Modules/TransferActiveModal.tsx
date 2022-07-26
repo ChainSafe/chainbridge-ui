@@ -174,7 +174,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 transactionStatus === "Initializing Transfer" ||
                 transactionStatus === "Transfer from Source"
                   ? "none"
-                  : transactionStatus === "Transfer to Destination "
+                  : transactionStatus === "Transfer to Destination"
                   ? "progress"
                   : "done"
               }
@@ -196,7 +196,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         )}
         {transactionStatus === "Initializing Transfer" ||
         transactionStatus === "Transfer from Source" ||
-        transactionStatus === "Transfer to Destination " ? (
+        transactionStatus === "Transfer to Destination" ? (
           <div className={classes.initCopy}>
             <div>
               This should take a few minutes. <br />
