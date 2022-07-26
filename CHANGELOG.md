@@ -3,7 +3,7 @@
 ## vNext
 
 - Implemented transfer tx links to source, destination chains during tokens transfer
-- Removed v2 subdomains from public urls
+- Updated Cere Blockchain public URLs
 
 ## v0.16.0
 
