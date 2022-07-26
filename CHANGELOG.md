@@ -4,6 +4,7 @@
 
 - Implemented transfer tx links to source, destination chains during tokens transfer
 - Updated Cere Blockchain public URLs
+- Replaced account address with its name on the select account dropdown
 
 ## v0.16.0
 

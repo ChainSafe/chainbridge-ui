@@ -630,7 +630,7 @@ const TransferPage = () => {
                         label="Select account"
                         className={classes.generalInput}
                         options={accounts.map((acc, i) => ({
-                          label: acc.address,
+                          label: acc.meta.name,
                           value: i,
                         }))}
                         onChange={(value) =>
