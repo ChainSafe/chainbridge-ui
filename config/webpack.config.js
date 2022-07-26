@@ -26,13 +26,20 @@ const ForkTsCheckerWebpackPlugin =
     : require("react-dev-utils/ForkTsCheckerWebpackPlugin");
 const postcssNormalize = require("postcss-normalize");
 
+const babelRuntimeEntry = require.resolve("babel-preset-react-app");
+const babelRuntimeEntryHelpers = require.resolve(
+  "@babel/runtime/helpers/esm/assertThisInitialized",
+  { paths: [babelRuntimeEntry] }
+);
+const babelRuntimeRegenerator = require.resolve("@babel/runtime/regenerator", {
+  paths: [babelRuntimeEntry],
+});
+
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false";
-
-const isExtendingEslintConfig = process.env.EXTEND_ESLINT === "true";
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
@@ -243,7 +250,6 @@ module.exports = function (webpackEnv) {
               ascii_only: true,
             },
           },
-          sourceMap: shouldUseSourceMap,
         }),
         // This is only used in production mode
         new CssMinimizerPlugin(),
@@ -299,7 +305,12 @@ module.exports = function (webpackEnv) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+        new ModuleScopePlugin(paths.appSrc, [
+          paths.appPackageJson,
+          babelRuntimeEntry,
+          babelRuntimeEntryHelpers,
+          babelRuntimeRegenerator,
+        ]),
       ],
       fallback: {
         fs: false,
@@ -460,8 +471,8 @@ module.exports = function (webpackEnv) {
                 // Babel sourcemaps are needed for debugging into node_modules
                 // code.  Without the options below, debuggers like VSCode
                 // show incorrect code and set breakpoints on the wrong lines.
-                sourceMaps: shouldUseSourceMap,
-                inputSourceMap: shouldUseSourceMap,
+                sourceMaps: false,
+                inputSourceMap: false,
               },
             },
             // "postcss" loader applies autoprefixer to our CSS.
