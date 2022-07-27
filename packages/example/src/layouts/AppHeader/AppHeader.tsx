@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { Switch, NavLink, Link } from "react-router-dom";
 
 import { shortenAddress } from "../../utils/Helpers";
-import { useChainbridge } from "@chainsafe/chainbridge-ui-core";
+import { useChainbridge } from "@chainsafe/sygma-ui-core";
 import { useStyles } from "./styles";
 
 const ROUTE_LINKS_HEADERS = [

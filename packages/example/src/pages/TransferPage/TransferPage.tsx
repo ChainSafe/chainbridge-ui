@@ -13,7 +13,7 @@ import {
   useHomeBridge,
   useNetworkManager,
   useWeb3,
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 

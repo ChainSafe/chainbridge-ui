@@ -5,7 +5,7 @@ import { Typography, Button } from "@mui/material";
 import { MetamaskIcon } from "@fusion-icons/react/web3";
 import {
   useBridge
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 
 export const [metaMask, hooks] = initializeConnector<MetaMask>(
   (actions) => new MetaMask(actions)

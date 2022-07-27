@@ -2,7 +2,7 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-import { WalletType } from "@chainsafe/chainbridge-ui-core";
+import { WalletType } from "@chainsafe/sygma-ui-core";
 import { BridgeConfig } from "../../chainbridgeConfig";
 
 type HomeNetworkConnectViewProps = {

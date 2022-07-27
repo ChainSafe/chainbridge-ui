@@ -2,7 +2,7 @@ import React from "react";
 import { SelectInput } from "@chainsafe/common-components";
 import { Typography, Button } from "@mui/material";
 
-import { WalletType } from "@chainsafe/chainbridge-ui-core";
+import { WalletType } from "@chainsafe/sygma-ui-core";
 import { BridgeConfig } from "../../chainbridgeConfig";
 
 import { ConnectionDialog } from "../../modules";

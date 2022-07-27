@@ -21,7 +21,7 @@ import {
   LocalProvider,
   chainbridgeConfig,
   BridgeProvider,
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 import { AppWrapper } from "./layouts";
 import { getChainbridgeConfig } from "./getChainbridgeConfig"
 import "@chainsafe/common-theme/dist/font-faces.css";
