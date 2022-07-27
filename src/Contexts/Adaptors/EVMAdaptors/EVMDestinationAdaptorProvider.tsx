@@ -294,7 +294,7 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     const canInitFallback =
       process.env.REACT_APP_TRANSFER_FALLBACK_ENABLED === "true" &&
-      transactionStatus === "Transfer from Source" &&
+      transactionStatus === "Transfer to Destination" &&
       destinationBridge &&
       !fallback?.started();
     if (canInitFallback) initFallbackMechanism();
