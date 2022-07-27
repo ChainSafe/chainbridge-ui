@@ -1,0 +1,137 @@
+{
+  "containerDefinitions": [ 
+     { 
+        "name": "explorer-ui-container-STAGE",
+        "essential": true,
+        "image": "852551629426.dkr.ecr.us-east-2.amazonaws.com/explorer-ui-stage:STAGE",
+        "logConfiguration": {
+         "logDriver": "awsfirelens",
+         "options": {
+             "provider": "ecs",
+             "dd_service": "explorer-ui",
+             "dd_tags": "env:STAGE,project:chainexplorer",
+             "dd_message_key": "log",
+             "Host": "http-intake.logs.datadoghq.com",
+             "TLS": "on",
+             "dd_source": "explorer-ui-container-STAGE",
+             "Name": "datadog"
+         },
+         "secretOptions": [
+             {
+                 "name": "apikey",
+                 "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/common/datadog/key"
+             }
+         ]
+         },
+        "portMappings": [ 
+           { 
+              "containerPort": 80,
+              "hostPort": 80,
+              "protocol": "tcp"
+           }
+        ],
+        "environment": [
+          {
+            "value": "explorer-ui",
+            "name": "DD_SERVICE"
+          }
+        ],
+        "secrets": [ 
+           { 
+              "name": "mychainexplorersecret",
+              "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/chainexplorer/example"
+           }
+        ]
+     },
+     {
+      "name": "datadog-agent",
+      "image": "gcr.io/datadoghq/agent:latest",
+      "essential": true,
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+              "awslogs-group": "/ecs/explorer-ui-STAGE",
+              "awslogs-region": "us-east-2",
+              "awslogs-stream-prefix": "ecs"
+          }
+      },
+      "portMappings": [
+          {
+              "hostPort": 8126,
+              "protocol": "tcp",
+              "containerPort": 8126
+          }
+      ],
+      "command": [],
+      "cpu": 0,
+      "environment": [
+          {
+              "name": "DD_APM_ENABLED",
+              "value": "true"
+          },
+          {
+              "name": "DD_APM_NON_LOCAL_TRAFFIC",
+              "value": "true"
+          },
+          {
+              "name": "DD_TAGS",
+              "value": "env:STAGE,project:explorer-ui"
+          },
+          {
+              "name": "ECS_FARGATE",
+              "value": "true"
+          },
+          {
+            "name": "ENV",
+            "value": "STAGE"
+          }
+      ],
+      "secrets": [
+          {
+              "name": "DD_API_KEY",
+              "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/common/datadog/key"
+          }
+      ],
+      "mountPoints"   : [],
+      "volumesFrom"   : []
+  },
+  {
+      "name": "log_router",
+      "image": "906394416424.dkr.ecr.us-east-2.amazonaws.com/aws-for-fluent-bit:latest",
+      "essential": true,
+      "firelensConfiguration": {
+          "type": "fluentbit",
+          "options": {
+              "enable-ecs-log-metadata": "true"
+          }
+      },
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+              "awslogs-group": "/ecs/explorer-ui-STAGE",
+              "awslogs-region": "us-east-2",
+              "awslogs-stream-prefix": "ecs"
+          }
+      },
+      "portMappings": [],
+      "command": [],
+      "cpu": 0,
+      "environment": [],
+      "mountPoints": [],
+      "user": "0",
+      "volumesFrom": []
+  }
+  ],
+  "cpu": "256",
+  "executionRoleArn": "arn:aws:iam::852551629426:role/explorer-ui-ecsTaskExecutionRole",
+  "family": "explorer-ui-container-STAGE",
+  "memory": "512",
+  "networkMode": "awsvpc",
+  "runtimePlatform": {
+       "operatingSystemFamily": "LINUX"
+   },
+
+  "requiresCompatibilities": [ 
+      "FARGATE" 
+   ]
+}
