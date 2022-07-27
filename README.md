@@ -211,20 +211,24 @@ And that's it, you are going to see the UI connected to local networks
 The transfer UI will get config from config-server using http request
 So we need to deploy two services:
 ### [config-server](../packages/config-server)
-environment variables:
-  for AWS credentials:
-    - AWS_ACCESS_KEY_ID
-    - AWS_SECRET_ACCESS_KEY
-    - AWS_SESSION_TOKEN
-  for configuration nodejs application:
-    - HOST=localhost (could be any other host)
-    - PORT=8000
-    - SSM_PARAMETER_NAME=/chainbridge/chainbridge-ui-local (i’ve created test parameter in SSM but it could any other new param like /chainbridge/chainbridge-ui-prod or such)
+Environment variables for AWS:
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_SESSION_TOKEN
+
+Environment variables for configuration nodejs application:
+
+- HOST=localhost (could be any other host)
+- PORT=8000
+- SSM_PARAMETER_NAME=/chainbridge/chainbridge-ui-local (i’ve created test parameter in SSM but it could any other new param like /chainbridge/chainbridge-ui-prod or such)
+
 ### [transfer-ui](../packages/example)
 environment variables:
 - CONFIG_SERVER_HOST=localhost (the host of config server)
 - CONFIG_SERVER_PORT=8000 ( the port of config server)
 For ease of understanding config, I created [docker-compose.yml](../docker-compose.yml) with all this services and env examples and dockerfiles for transfer UI and for config-server (edited)
+
 
 ## FAQ
 Please check our [Q&A section](https://github.com/ChainSafe/sygma-ui/discussions/categories/q-a)
