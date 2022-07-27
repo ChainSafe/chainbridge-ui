@@ -2,6 +2,10 @@
 
 ## vNext
 
+...
+
+## v0.17.0
+
 - Implemented transfer tx links to source, destination chains during tokens transfer
 - Replaced account address with its name on the select account dropdown
 - Updated Cere Blockchain public URLs
