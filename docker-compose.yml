@@ -1,0 +1,26 @@
+version: '3' # specify docker-compose version
+
+services:
+  config-server:
+    build:
+      context: ./
+      dockerfile: server.dockerfile
+    ports:
+      - "8000:8000" # specify port mapping
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - HOST=localhost
+      - SSM_PARAMETER_NAME=/chainbridge/chainbridge-ui-local
+
+  transfer-ui:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        - CONFIG_SERVER_HOST=localhost
+        - CONFIG_SERVER_PORT=8000
+    ports:
+      - "3002:80" # specify port mapping
+

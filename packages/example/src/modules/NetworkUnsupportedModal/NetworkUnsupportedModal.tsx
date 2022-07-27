@@ -11,7 +11,7 @@ import {
   useHomeBridge,
   chainbridgeConfig,
   useWeb3
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 import { ROUTE_LINKS } from "../../routes";
 import { useStyles } from "./styles";
 

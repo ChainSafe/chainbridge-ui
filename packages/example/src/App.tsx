@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { utils, ethers } from "ethers";
+
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import CssBaseline from "@mui/material/CssBaseline";
+
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -13,9 +21,9 @@ import {
   LocalProvider,
   chainbridgeConfig,
   BridgeProvider,
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 import { AppWrapper } from "./layouts";
-import { utils } from "ethers";
+import { getChainbridgeConfig } from "./getChainbridgeConfig"
 import "@chainsafe/common-theme/dist/font-faces.css";
 
 if (
@@ -28,6 +36,68 @@ if (
     release: process.env.REACT_APP_SENTRY_RELEASE,
   });
 }
+
+const AppWrap: React.FC<{ config?: any, useExternalProvider?: any, externalProviderSource?: any }> = (props) => {
+  const [isReady, setIsReady] = useState(false);
+  const [errMessage, setErrMessage] = useState<undefined|string>()
+
+  const setConfig = async () => {
+    if (!window.__RUNTIME_CONFIG__) {
+      const config = await getChainbridgeConfig();
+      if (config.error) {
+        setErrMessage(config.error.message ?? config.error.name)
+      } else {
+        // @ts-ignore
+        window.__RUNTIME_CONFIG__ = config
+      }
+      setIsReady(true)
+    }
+  }
+
+  useEffect(() => {
+    setConfig()
+  }, []);
+  return (
+    <>
+      {isReady ? (
+        errMessage ? (
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{ minHeight: "100vh" }}
+          >
+            <Grid item xs={3}>
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                {errMessage}
+              </Alert>
+            </Grid>
+          </Grid>
+        ) : (
+          <App />
+        )
+      ) : (
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          style={{ minHeight: "100vh" }}
+        >
+          <Grid item xs={3}>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress size="6rem" />
+            </Box>
+          </Grid>
+        </Grid>
+      )}
+    </>
+  );
+};
 
 const App: React.FC<{}> = () => {
   const {
@@ -115,4 +185,4 @@ const App: React.FC<{}> = () => {
   );
 };
 
-export default App;
+export default AppWrap;

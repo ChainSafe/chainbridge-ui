@@ -1,20 +1,19 @@
 {
-  "name": "@chainsafe/chainbridge-ui",
+  "name": "@chainsafe/sygma-ui",
   "version": "1.0.0",
   "publishConfig": {
     "access": "restricted"
   },
   "dependencies": {
-    "@chainsafe/chainbridge-sdk-core": "1.0.3",
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
-    "bnc-onboard": "1.38.3",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",
-    "@chainsafe/chainbridge-contracts": "2.0.0",
-    "@chainsafe/chainbridge-ui-core": "1.1.1",
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
+    "@chainsafe/sygma-sdk-core": "1.1.4",
+    "@chainsafe/sygma-ui-core": "1.0.0",
     "@chainsafe/web3-context": "1.2.0",
+    "@fusion-icons/react": "0.0.0",
     "@hookform/resolvers": "^2.8.4",
     "@material-ui/styles": "4.10.0",
     "@mui/icons-material": "^5.2.1",
@@ -24,7 +23,14 @@
     "@sentry/react": "^5.26.0",
     "@use-it/interval": "^1.0.0",
     "@walletconnect/client": "1.7.1",
+    "@walletconnect/ethereum-provider": "^1.7.5",
     "@walletconnect/qrcode-modal": "1.7.1",
+    "@web3-react/core": "8.0.19-beta.0",
+    "@web3-react/empty": "8.0.10-beta.0",
+    "@web3-react/metamask": "8.0.16-beta.0",
+    "@web3-react/types": "8.0.10-beta.0",
+    "@web3-react/walletconnect": "8.0.23-beta.0",
+    "bnc-onboard": "1.38.3",
     "clsx": "^1.1.1",
     "dayjs": "^1.9.1",
     "ethers": "^5.4.5",
@@ -37,14 +43,7 @@
     "react-scripts": "^3.4.4",
     "react-toast-notifications": "2.4.0",
     "styled-components": "^5.3.3",
-    "yup": "^0.29.3",
-    "@walletconnect/ethereum-provider": "^1.7.5",
-    "@web3-react/core": "8.0.19-beta.0",
-    "@web3-react/empty": "8.0.10-beta.0",
-    "@web3-react/metamask": "8.0.16-beta.0",
-    "@web3-react/types": "8.0.10-beta.0",
-    "@web3-react/walletconnect": "8.0.23-beta.0",
-    "@fusion-icons/react": "0.0.0"
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@sentry/cli": "1.58.0",
@@ -62,6 +61,7 @@
     "@types/yup": "^0.29.9",
     "chalk": "^4.1.0",
     "craco": "^0.0.3",
+    "dotenv": "^16.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-only-warn": "^1.0.3",
     "eslint-plugin-prettier": "^4.0.0",
@@ -71,7 +71,7 @@
     "typescript": "^4.5.2"
   },
   "scripts": {
-    "start": "yarn setup:copy-dev-config && BROWSER=none craco --max_old_space_size=4096 start",
+    "start": "BROWSER=none craco --max_old_space_size=4096 start",
     "build": "craco --max_old_space_size=4096 build",
     "sentry": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); node scripts/sentry.js)",
     "release": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); yarn build && node scripts/sentry.js)",
@@ -82,11 +82,10 @@
     "clean": "yarn clean:dependencies && yarn clean:dist",
     "prettier": "prettier --config .prettierrc 'packages/**/src/**/*.{ts,tsx,js,jsx,md}' --write",
     "start:tunnel": "./ngrok http https://localhost:3000",
-    "start:centrifuge": "docker-compose -f ./docker-compose-centrifuge.yml up -V",
-    "start:evm-example": "docker-compose -f ./docker-compose-node.yml up -V",
-    "setup:example": "./scripts/setup-eth-example.sh && node --experimental-json-modules ./scripts/setup-sub-example.mjs",
-    "setup:centrifuge": "./scripts/setup-eth-centrifuge.sh",
-    "setup:copy-dev-config": "./scripts/copy-dev-config.sh"
+    "setup:copy-dev-config": "./scripts/copy-dev-config.sh",
+    "test:aws": "ts-node ./src/configFromAWS",
+    "start:server": "ts-node --transpileOnly ./server/index.ts",
+    "build:server": "yarn tsc ./server/index.ts"
   },
   "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {

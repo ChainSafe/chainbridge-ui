@@ -7,7 +7,6 @@ import { evmDestinationReducer } from "../../../reducers/EvmDestinationReducer";
 
 import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
-import handleProposalVote from "./handleProposalVote";
 import { useBridge } from "../../Bridge";
 import { computeDirections } from "../../../utils/Helpers";
 
@@ -22,7 +21,7 @@ export const EVMDestinationAdaptorProvider = ({
     transactionStatus,
   } = useWeb3();
 
-  const { chainbridgeData, bridgeSetup } = useBridge();
+  const { bridgeSetup, chainbridgeInstance } = useBridge();
 
   const computedDirections = computeDirections(
     bridgeSetup!,
@@ -53,21 +52,14 @@ export const EVMDestinationAdaptorProvider = ({
       !inTransitMessages.txIsDone
     ) {
       handleProposalEvent(
-        destinationChainConfig!,
         setTransactionStatus,
         setTransferTxHash,
         tokensDispatch,
-        chainbridgeData!,
-        computedDirections!
-      );
-
-      handleProposalVote(
-        depositVotes,
-        tokensDispatch,
-        setDepositVotes,
-        chainbridgeData!,
         computedDirections!,
-        transactionStatus
+        chainbridgeInstance!,
+        setDepositVotes,
+        depositVotes,
+        transferTxHash
       );
     }
     return () => {
@@ -75,16 +67,9 @@ export const EVMDestinationAdaptorProvider = ({
       destinationBridge?.removeAllListeners();
     };
   }, [
+    transferTxHash,
     depositNonce,
-    homeChainConfig,
-    destinationBridge,
     depositVotes,
-    destinationChainConfig,
-    setDepositVotes,
-    setTransactionStatus,
-    setTransferTxHash,
-    tokensDispatch,
-    transactionStatus
   ]);
 
   return (

@@ -13,7 +13,7 @@ import {
   useHomeBridge,
   useNetworkManager,
   useWeb3,
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -36,7 +36,7 @@ import {
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
 
 import makeValidationSchema from "./makeValidationSchema";
-import { BridgeData, FeeOracleResult } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData, FeeDataResult } from "@chainsafe/sygma-sdk-core";
 
 export type PreflightDetails = {
   tokenAmount: string;
@@ -65,8 +65,8 @@ const TransferPage = () => {
     address,
     checkSupplies,
   } = useChainbridge();
-  const [customFee, setCustomFee] = useState<FeeOracleResult>()
-  const { chainbridgeData, chainbridgeInstance, bridgeSetup } = useBridge()
+  const [customFee, setCustomFee] = useState<FeeDataResult>()
+  const {chainbridgeInstance, bridgeSetup } = useBridge()
   const { accounts, selectAccount } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -115,11 +115,9 @@ const TransferPage = () => {
     if (chainbridgeInstance && amount && address) {
       const fee = await chainbridgeInstance.fetchFeeData({
         amount: amount,
-        recipientAddress: destAddress,
-        from: "chain1",
-        to: "chain2",
+        recipientAddress: destAddress
       });
-      if (fee) {
+      if (!(fee instanceof Error)) {
         setCustomFee(fee)
       }
     }
@@ -246,7 +244,7 @@ const TransferPage = () => {
         <Fees
           amountFormikName="tokenAmount"
           className={classes.fees}
-          fee={customFee ? customFee.calculatedRate : "0"}
+          fee={customFee ? customFee.calculatedRate.toString() : "0"}
           feeSymbol={
             customFee &&
             customFee.erc20TokenAddress &&

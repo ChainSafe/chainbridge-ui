@@ -6,7 +6,7 @@ import {
   EvmBridgeConfig,
 } from "../chainbridgeConfig";
 import { isCelo } from "../contexts/Adaptors/EVMAdaptors/helpers";
-import { BridgeData } from "@chainsafe/chainbridge-sdk-core";
+import { BridgeData } from "@chainsafe/sygma-sdk-core";
 
 export const shortenAddress = (address: string) => {
   return `${address.substr(0, 6)}...${address.substr(address.length - 6, 6)}`;

@@ -1,4 +1,4 @@
-import { ChainbridgeConfig, UIConfig } from "@chainsafe/chainbridge-ui-core";
+import { ChainbridgeConfig, UIConfig } from "@chainsafe/sygma-ui-core";
 
 declare global {
   interface Window {

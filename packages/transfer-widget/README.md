@@ -1,15 +1,15 @@
-# ChainBridgeUI widget example
+# Sygma UI widget example
 
-This package provides a minimal implementation of the ChainBridgeUI transfer form
+This package provides a minimal implementation of the Sygma UI transfer form
 
 ## How to use
 
-### ChainBridgeUI with integrated connection logic
+### Sygma UI with integrated connection logic
 
 widget with integrated [onboardjs](https://docs.blocknative.com/onboard)
 
 ```jsx
-import Widget from "chainbridge-ui-transfer-widget-unstable";
+import Widget from "sygma-ui-transfer-widget-unstable";
 const App: React.FC<{}> = () => {
 
   // Your ChainBridgeUI config
@@ -26,7 +26,7 @@ Widget with standard web3 provider passing as an argument. Could be useful if yo
 
 ```jsx
 import React, { useEffect, useState } from "react";
-import Widget from "chainbridge-ui-transfer-widget-unstable";
+import Widget from "sygma-ui-transfer-widget-unstable";
 
 const App: React.FC<{}> = () => {
   const [provider, setProvider] = useState()
