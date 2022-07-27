@@ -12,6 +12,7 @@ services:
       - AWS_SECRET_ACCESS_KEY
       - AWS_SESSION_TOKEN
       - HOST=localhost
+      - PORT=8000
       - SSM_PARAMETER_NAME=/chainbridge/chainbridge-ui-local
 
   transfer-ui:
