@@ -144,7 +144,7 @@ export const getTransferTxHashByNonce = async (
   nonce: number
 ): Promise<string | undefined> => {
   let attempts = 0;
-  let limit = 10;
+  let limit = 150;
   let { block } = await getLatestBlock(api);
   let blockNumber = parseIntFromHuman(block.header.number);
   do {
