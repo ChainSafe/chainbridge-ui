@@ -10,7 +10,7 @@ import {
   useChainbridge,
   TransactionStatus,
   useWeb3 as useLocalWeb3
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 
 import InitTransferBody from "./InitTransferBody";
 import InTransitBody from "./InTransitBody";

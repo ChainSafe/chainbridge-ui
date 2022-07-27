@@ -6,7 +6,7 @@ import {
   useHomeBridge,
   useNetworkManager,
   useWeb3 as useLocalWeb3,
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 import { useStyles } from "./styles";
 
 interface IChangeNetworkDrawerProps {

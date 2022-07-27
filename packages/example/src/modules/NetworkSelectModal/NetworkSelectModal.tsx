@@ -3,7 +3,7 @@ import {
   useNetworkManager,
   useChainbridge,
   useWeb3,
-} from "@chainsafe/chainbridge-ui-core";
+} from "@chainsafe/sygma-ui-core";
 import { useStyles } from "./styles";
 import {
   Button,
