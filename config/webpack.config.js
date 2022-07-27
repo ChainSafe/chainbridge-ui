@@ -16,6 +16,7 @@ const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
+const ESLintPlugin = require("eslint-webpack-plugin");
 const paths = require("./paths");
 const modules = require("./modules");
 const getClientEnvironment = require("./env");
@@ -724,6 +725,30 @@ module.exports = function (webpackEnv) {
             infrastructure: "silent",
           },
         }),
+      new ESLintPlugin({
+        // Plugin options
+        extensions: ["js", "mjs", "jsx", "ts", "tsx"],
+        formatter: require.resolve("react-dev-utils/eslintFormatter"),
+        eslintPath: require.resolve("eslint"),
+        failOnError: false,
+        context: paths.appSrc,
+        cache: true,
+        cacheLocation: path.resolve(
+          paths.appNodeModules,
+          ".cache/.eslintcache"
+        ),
+        // ESLint class options
+        cwd: paths.appPath,
+        resolvePluginsRelativeTo: __dirname,
+        baseConfig: {
+          extends: [require.resolve("eslint-config-react-app/base")],
+          rules: {
+            ...(!hasJsxRuntime && {
+              "react/react-in-jsx-scope": "error",
+            }),
+          },
+        },
+      }),
       // Work around for Buffer is undefined:
       // https://github.com/webpack/changelog-v5/issues/10
       new webpack.ProvidePlugin({
