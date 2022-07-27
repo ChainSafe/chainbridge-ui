@@ -208,7 +208,7 @@ yarn start:ui
 And that's it, you are going to see the UI connected to local networks
 
 ## Deployment configuration for AWS
-The transfer UI will get config from config-server using http request
+The configuration consists of nodejs server which pulls the config from SSM and provides it as JSON for TransferUI frontend application.
 So we need to deploy two services:
 ### [config-server](../packages/config-server)
 Environment variables for AWS:
