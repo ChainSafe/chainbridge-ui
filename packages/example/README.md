@@ -100,7 +100,7 @@ cd ../packages/config-server
 yarn start:server
 ````
 
-# Docker configuration
+# Deployment
 
 There is `Dockerfile` for frontend in root direcotry and `server.dockerfile` for configuration server.
 
@@ -109,7 +109,12 @@ It can be run together with `docker-compose` from root direcotry :
 ````
 docker-compose -f ./docker-compose.yml up
 ````
-Keep in mind that you need to have `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` envs set in your enviroment
+
+Environment variables to access [config-server](../config-server):
+
+- CONFIG_SERVER_HOST=localhost (the host of config server)
+- CONFIG_SERVER_PORT=8000 ( the port of config server)
+
 
 # ChainSafe Security Policy
 
