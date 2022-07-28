@@ -52,7 +52,7 @@ jobs:
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ecs/task_definition-config-server_${{ env.ENVIRONMENT }}.json
+          task-definition: ecs/task_definition-config-server-${{ env.ENVIRONMENT }}.json
           service: config-server-service-${{ env.ENVIRONMENT }}
           cluster: config-server-${{ env.ENVIRONMENT }}
           wait-for-service-stability: true

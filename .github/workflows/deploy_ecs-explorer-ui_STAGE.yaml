@@ -53,7 +53,7 @@
 #       - name: Deploy to Amazon ECS
 #         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
 #         with:
-#           task-definition: ecs/task_definition-explorer-ui_${{ env.ENVIRONMENT }}.json
+#           task-definition: ecs/task_definition-explorer-ui-${{ env.ENVIRONMENT }}.json
 #           service: explorer-ui-service-${{ env.ENVIRONMENT }}
 #           cluster: explorer-ui-${{ env.ENVIRONMENT }}
 #           wait-for-service-stability: true
