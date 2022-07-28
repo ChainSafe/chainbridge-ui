@@ -34,7 +34,15 @@
            {
              "value": "transfer-ui",
              "name": "DD_SERVICE"
-           }
+           },
+           {
+            "value": "https://config-server-stage.chainsafe.io",
+            "name": "CONFIG_SERVER_HOST"
+          },
+          {
+            "value": "8000",
+            "name": "CONFIG_SERVER_PORT"
+          }
          ],
          "secrets": [ 
             { 

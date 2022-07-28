@@ -34,12 +34,20 @@
           {
             "value": "config-server",
             "name": "DD_SERVICE"
+          },
+          {
+            "name": "PORT",
+            "value": "8000"
+          },
+          {
+            "name": "HOST",
+            "value": "localhost"
           }
         ],
         "secrets": [ 
            { 
-              "name": "mychainexplorersecret",
-              "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/chainexplorer/example"
+              "name": "SSM_PARAMETER_NAME",
+              "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/chainbridge/chainbridge-ui-local"
            }
         ]
      },
