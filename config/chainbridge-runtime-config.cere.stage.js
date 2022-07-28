@@ -54,7 +54,7 @@ window.__RUNTIME_CONFIG__ = {
         decimals: cereTokenDecimals,
         rpcUrl: "wss://rpc.testnet.cere.network/ws",
         blockExplorer:
-          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.testnet.cere.network%3A9945#/explorer/query",
+          "https://explorer.cere.network/?rpc=wss%3A%2F%2Farchive.testnet.cere.network%2Fws#/explorer/query",
         rpcFallbackUrls: ["wss://archive.testnet.cere.network/ws"],
         type: "Substrate",
         nativeTokenSymbol: "CERE",
