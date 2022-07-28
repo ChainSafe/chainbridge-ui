@@ -54,7 +54,7 @@ jobs:
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ecs/task_definition_${{ env.ENVIRONMENT }}.json
+          task-definition: ecs/task_definition-transfer-ui_${{ env.ENVIRONMENT }}.json
           service: transfer-ui-service-${{ env.ENVIRONMENT }}
           cluster: transfer-ui-${{ env.ENVIRONMENT }}
           wait-for-service-stability: true
