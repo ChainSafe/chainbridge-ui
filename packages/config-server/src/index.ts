@@ -38,6 +38,10 @@ app.get("/config", (req, res) => {
   });
 });
 
+app.get("/health",  (req, res) => {
+  res.sendStatus(200)
+})
+
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at https://${HOST}:${PORT}`);
 });
