@@ -1,9 +1,9 @@
-name: Deploy ECS Bridge UI
+name: Deploy ECS Transfer UI
 
 on:
   push:
     branches:
-      - devops/apps-ecs
+      - devops/ecs-services
 
 # on:
 #   workflow_run:
@@ -16,12 +16,12 @@ on:
 
 env:
   AWS_REGION: "us-east-2"
-  ECR_REPOSITORY: bridge-ui-stage
+  ECR_REPOSITORY: transfer-ui-stage
   ENVIRONMENT: STAGE
 
 jobs:
   deploy:
-    name: Deploy Bridge UI
+    name: Deploy Transfer UI
     runs-on: ubuntu-18.04
 
     permissions:
@@ -34,7 +34,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::852551629426:role/github-actions-${{ env.ENVIRONMENT }}-chainbridge
+          role-to-assume: arn:aws:iam::852551629426:role/github-actions-${{ env.ENVIRONMENT }}-chaintransfer
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: GithubActions
 
@@ -46,6 +46,8 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
+          cp yarn.lock packages/transfer-widget
+          cd packages/transfer-widget
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }} .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }}
 
@@ -53,6 +55,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ecs/task_definition_${{ env.ENVIRONMENT }}.json
-          service: bridge-ui-service-${{ env.ENVIRONMENT }}
-          cluster: bridge-ui-${{ env.ENVIRONMENT }}
+          service: transfer-ui-service-${{ env.ENVIRONMENT }}
+          cluster: transfer-ui-${{ env.ENVIRONMENT }}
           wait-for-service-stability: true
