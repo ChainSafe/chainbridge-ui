@@ -47,7 +47,7 @@
         "secrets": [ 
            { 
               "name": "SSM_PARAMETER_NAME",
-              "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/chainbridge/chainbridge-ui-local"
+              "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/chainbridge/chainbridge-ui-configuration"
            }
         ]
      },
