@@ -46,7 +46,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }} -f server.dockerfile
+          docker build -f ./server.dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }}
 
       - name: Deploy to Amazon ECS
