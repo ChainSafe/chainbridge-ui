@@ -268,7 +268,7 @@ export const EVMDestinationAdaptorProvider = ({
         destinationChainConfig as EvmBridgeConfig,
         parseInt(depositNonce as string)
       ).then((txHash: string) => {
-        if (txHash) {
+        if (!txHash) {
           setTransferTxHash(txHash);
           const timeMs = performance.now() - startTime;
           analytics.trackGotTransferTxHash({
@@ -278,7 +278,7 @@ export const EVMDestinationAdaptorProvider = ({
             amount: depositAmount as number,
             timeMs,
           });
-          console.log(`Get trasfer tx hash time: ${timeMs} ms`);
+          console.log(`Get transfer tx hash time: ${timeMs} ms`);
         } else {
           analytics.trackTransferUndefinedTxHash({
             address: address as string,

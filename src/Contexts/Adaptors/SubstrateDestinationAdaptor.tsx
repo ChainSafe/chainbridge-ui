@@ -208,7 +208,7 @@ export const SubstrateDestinationAdaptorProvider = ({
       const startTime = performance.now();
       getTransferTxHashByNonce(api, parseInt(depositNonce as string)).then(
         (txHash: string | undefined) => {
-          if (txHash) {
+          if (!txHash) {
             setTransferTxHash(txHash);
             const timeMs = performance.now() - startTime;
             analytics.trackGotTransferTxHash({
@@ -218,7 +218,7 @@ export const SubstrateDestinationAdaptorProvider = ({
               amount: depositAmount as number,
               timeMs,
             });
-            console.log(`Get trasfer tx hash time: ${timeMs} ms`);
+            console.log(`Get transfer tx hash time: ${timeMs} ms`);
           } else {
             analytics.trackTransferUndefinedTxHash({
               address: address as string,
