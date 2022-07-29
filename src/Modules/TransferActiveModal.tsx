@@ -8,6 +8,8 @@ import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
 import { styles } from "../Constants/constants";
 
+const txLinkIsLoaddingMessage = "...Transaction Link is loading";
+
 const useStyles = makeStyles(({ animation, constants }: ITheme) =>
   createStyles({
     root: {
@@ -162,7 +164,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 }/${homeTransferTxHash}`,
                 text: "Transaction Link",
                 loadingText: !homeTransferTxHash
-                  ? "...transaction is loading"
+                  ? txLinkIsLoaddingMessage
                   : undefined,
               }}
             ></Step>
@@ -183,7 +185,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                 }/${transferTxHash}`,
                 text: "Transaction Link",
                 loadingText: !transferTxHash
-                  ? "...transaction link is loading"
+                  ? txLinkIsLoaddingMessage
                   : undefined,
               }}
             ></Step>

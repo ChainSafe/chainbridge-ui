@@ -208,7 +208,7 @@ export const SubstrateDestinationAdaptorProvider = ({
       const startTime = performance.now();
       getTransferTxHashByNonce(api, parseInt(depositNonce as string)).then(
         (txHash: string | undefined) => {
-          if (!txHash) {
+          if (txHash) {
             setTransferTxHash(txHash);
             const timeMs = performance.now() - startTime;
             analytics.trackGotTransferTxHash({

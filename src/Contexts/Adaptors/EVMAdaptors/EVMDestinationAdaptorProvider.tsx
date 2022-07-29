@@ -113,8 +113,8 @@ export const EVMDestinationAdaptorProvider = ({
               break;
             case 3:
               if (transactionStatus === "Transfer Completed") return;
-              setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
+              setTransactionStatus("Transfer Completed");
               fallback?.stop();
               analytics.trackTransferCompletedEvent({
                 address: address as string,
@@ -268,7 +268,7 @@ export const EVMDestinationAdaptorProvider = ({
         destinationChainConfig as EvmBridgeConfig,
         parseInt(depositNonce as string)
       ).then((txHash: string) => {
-        if (!txHash) {
+        if (txHash) {
           setTransferTxHash(txHash);
           const timeMs = performance.now() - startTime;
           analytics.trackGotTransferTxHash({
