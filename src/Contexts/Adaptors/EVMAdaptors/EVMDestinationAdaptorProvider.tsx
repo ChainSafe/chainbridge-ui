@@ -113,8 +113,8 @@ export const EVMDestinationAdaptorProvider = ({
               break;
             case 3:
               if (transactionStatus === "Transfer Completed") return;
-              setTransactionStatus("Transfer Completed");
               setTransferTxHash(tx.transactionHash);
+              setTransactionStatus("Transfer Completed");
               fallback?.stop();
               analytics.trackTransferCompletedEvent({
                 address: address as string,
@@ -278,7 +278,7 @@ export const EVMDestinationAdaptorProvider = ({
             amount: depositAmount as number,
             timeMs,
           });
-          console.log(`Get trasfer tx hash time: ${timeMs} ms`);
+          console.log(`Get transfer tx hash time: ${timeMs} ms`);
         } else {
           analytics.trackTransferUndefinedTxHash({
             address: address as string,

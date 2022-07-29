@@ -8,6 +8,8 @@ import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
 import { styles } from "../Constants/constants";
 
+const txLinkIsLoaddingMessage = "Transaction Link is loading...";
+
 const useStyles = makeStyles(({ animation, constants }: ITheme) =>
   createStyles({
     root: {
@@ -156,16 +158,15 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                   ? "progress"
                   : "done"
               }
-              stepLink={
-                homeTransferTxHash
-                  ? {
-                      url: `${
-                        (homeConfig as SubstrateBridgeConfig).blockExplorer
-                      }/${homeTransferTxHash}`,
-                      text: "Transaction Link",
-                    }
-                  : undefined
-              }
+              stepLink={{
+                url: `${
+                  (homeConfig as SubstrateBridgeConfig).blockExplorer
+                }/${homeTransferTxHash}`,
+                text: "Transaction Link",
+                loadingText: !homeTransferTxHash
+                  ? txLinkIsLoaddingMessage
+                  : undefined,
+              }}
             ></Step>
             <Step
               title="Transfer to destination chain"
@@ -178,17 +179,15 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
                   ? "progress"
                   : "done"
               }
-              stepLink={
-                transferTxHash
-                  ? {
-                      url: `${
-                        (destinationChainConfig as EvmBridgeConfig)
-                          .blockExplorer
-                      }/${transferTxHash}`,
-                      text: "Transaction Link",
-                    }
-                  : undefined
-              }
+              stepLink={{
+                url: `${
+                  (destinationChainConfig as EvmBridgeConfig).blockExplorer
+                }/${transferTxHash}`,
+                text: "Transaction Link",
+                loadingText: !transferTxHash
+                  ? txLinkIsLoaddingMessage
+                  : undefined,
+              }}
             ></Step>
           </>
         ) : (

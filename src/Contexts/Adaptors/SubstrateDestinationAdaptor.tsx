@@ -218,7 +218,7 @@ export const SubstrateDestinationAdaptorProvider = ({
               amount: depositAmount as number,
               timeMs,
             });
-            console.log(`Get trasfer tx hash time: ${timeMs} ms`);
+            console.log(`Get transfer tx hash time: ${timeMs} ms`);
           } else {
             analytics.trackTransferUndefinedTxHash({
               address: address as string,

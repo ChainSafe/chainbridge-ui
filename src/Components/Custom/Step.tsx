@@ -49,7 +49,10 @@ const useStyles = makeStyles<ITheme, { status: Status }>(
         fontStyle: "normal",
         fontWeight: "bold",
         marginLeft: constants.generalUnit * 1.5,
-        textDecoration: "none",
+        textDecoration: "underline",
+      },
+      linkLoadingText: {
+        marginLeft: constants.generalUnit * 1.5,
       },
       title: {
         marginLeft: constants.generalUnit * 1.5,
@@ -68,6 +71,7 @@ interface IStepProps {
   stepLink?: {
     url: string;
     text: string;
+    loadingText?: string | undefined;
   };
 }
 
@@ -94,13 +98,19 @@ const Step: React.FC<IStepProps> = ({
           {title}
         </Typography>
         {stepLink ? (
-          <NavLink
-            className={classes.linkText}
-            to={{ pathname: stepLink.url }}
-            target="_blank"
-          >
-            {stepLink.text}
-          </NavLink>
+          stepLink.loadingText && status === "done" ? (
+            <div className={classes.linkLoadingText}>
+              {stepLink.loadingText}
+            </div>
+          ) : status !== "done" ? null : (
+            <NavLink
+              className={classes.linkText}
+              to={{ pathname: stepLink.url }}
+              target="_blank"
+            >
+              {stepLink.text}
+            </NavLink>
+          )
         ) : null}
       </div>
       {status === "progress" ? (
