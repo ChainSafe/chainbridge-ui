@@ -12,6 +12,10 @@
       "version": "detect"
     }
   },
-  "extends": ["react-app", "plugin:@typescript-eslint/recommended", "prettier"],
+  "extends": [
+    "react-app",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
   "rules": {}
 }
