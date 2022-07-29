@@ -8,7 +8,7 @@ import { useChainbridge } from "../Contexts/ChainbridgeContext";
 import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
 import { styles } from "../Constants/constants";
 
-const txLinkIsLoaddingMessage = "...Transaction Link is loading";
+const txLinkIsLoaddingMessage = "Transaction Link is loading...";
 
 const useStyles = makeStyles(({ animation, constants }: ITheme) =>
   createStyles({
