@@ -42,14 +42,12 @@
           {
             "name": "HOST",
             "value": "localhost"
+          },
+          {
+            "name": "SSM_PARAMETER_NAME",
+            "value": "/chainbridge/chainbridge-ui/configuration"
           }
         ],
-        "secrets": [ 
-           { 
-              "name": "SSM_PARAMETER_NAME",
-              "valueFrom": "arn:aws:ssm:us-east-2:852551629426:parameter/chainbridge/chainbridge-ui/configuration"
-           }
-        ]
      },
      {
       "name": "datadog-agent",
