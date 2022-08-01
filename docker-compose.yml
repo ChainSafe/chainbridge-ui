@@ -8,12 +8,8 @@ services:
     ports:
       - "8000:8000" # specify port mapping
     environment:
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_SESSION_TOKEN
       - HOST=localhost
       - PORT=8000
-      - SSM_PARAMETER_NAME=/chainbridge/chainbridge-ui-local
 
   transfer-ui:
     build:
