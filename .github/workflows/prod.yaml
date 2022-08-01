@@ -8,7 +8,7 @@ jobs:
   build-and-deploy:
     uses: Cerebellum-Network/reusable-workflows/.github/workflows/build-and-upload-static.yaml@master
     with:
-      runs-on: '["self-hosted", "cere-network-large-workers"]'
+      runs-on: '["self-hosted", "cere-network-xlarge-workers"]'
       build_container: 'node:14-buster'
       deploy_container: 'ubuntu:20.04'
       install_packages_command: 'cp .env.prod .env; sh ./scripts/copy-prod-config.sh; yarn install'
