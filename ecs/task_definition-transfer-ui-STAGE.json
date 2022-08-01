@@ -132,6 +132,7 @@
    ],
    "cpu": "256",
    "executionRoleArn": "arn:aws:iam::852551629426:role/transfer-ui-ecsTaskExecutionRole",
+   "taskRoleArn": "arn:aws:iam::852551629426:role/transfer-ui-ecsTaskRole",
    "family": "transfer-ui-container-STAGE",
    "memory": "512",
    "networkMode": "awsvpc",
