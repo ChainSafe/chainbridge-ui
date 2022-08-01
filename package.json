@@ -100,7 +100,7 @@
   },
   "scripts": {
     "start": "yarn setup:copy-dev-config && node scripts/start",
-    "build": "node scripts/build",
+    "build": "node --max-old-space-size=4096 scripts/build",
     "sentry": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); node scripts/sentry.js)",
     "release": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); yarn build && node scripts/sentry.js)",
     "test": "node scripts/test.js",
