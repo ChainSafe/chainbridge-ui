@@ -16,16 +16,12 @@ const ssm = new SSM({
 });
 
 const getConfigFromSSM = async () => {
-  console.log("HOST", HOST)
-  console.log("PORT", PORT)
-  console.log("SSM_PARAM", SSM_PARAMETER_NAME)
   try {
     const data = await ssm.getParameter({
       Name: SSM_PARAMETER_NAME,
       WithDecryption: true,
     });
     const rawResponse = data.Parameter?.Value;
-    console.log("🚀 ~ file: index.ts ~ line 24 ~ getConfigFromSSM ~ rawResponse", rawResponse)
     if (rawResponse) {
       const parsedResponse = JSON.parse(rawResponse);
       return parsedResponse;
