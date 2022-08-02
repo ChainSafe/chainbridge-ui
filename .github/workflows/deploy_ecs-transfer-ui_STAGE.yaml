@@ -45,8 +45,10 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          CONFIG_SERVER_HOST: config-server-stage.chainsafe.io
+          CONFIG_SERVER_PORT: 80
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }} .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }} --build-arg CONFIG_SERVER_HOST=$CONFIG_SERVER_HOST --build-arg CONFIG_SERVER_PORT=$CONFIG_SERVER_PORT . 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }}
 
       - name: Deploy to Amazon ECS
