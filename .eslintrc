@@ -13,10 +13,9 @@
     }
   },
   "extends": [
-    "plugin:react/recommended",
+    "react-app",
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "prettier"
   ],
   "rules": {}
 }

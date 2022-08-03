@@ -2,6 +2,10 @@
 
 ## vNext
 
+- Ejected create-react-app
+- Got rid of craco npm package
+- Updated all vulnerable packages except bnc-onboard
+
 ...
 
 ## v0.17.0

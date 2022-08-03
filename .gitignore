@@ -28,3 +28,5 @@ yarn-error.log*
 
 # runtime config
 public/chainbridge-runtime-config.js
+
+tsconfig.tsbuildinfo
