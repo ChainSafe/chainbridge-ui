@@ -3,7 +3,7 @@ name: Deploy ECS Config Server
 on:
   push:
     branches:
-      - devops/ecs-services
+      - main
 
 # on:
 #   workflow_run:

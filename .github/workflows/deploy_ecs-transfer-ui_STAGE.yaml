@@ -3,7 +3,7 @@ name: Deploy ECS Transfer UI
 on:
   push:
     branches:
-      - devops/ecs-services
+      - main
 
 # on:
 #   workflow_run:
