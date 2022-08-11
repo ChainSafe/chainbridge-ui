@@ -1,9 +1,9 @@
-name: Deploy ECS Bridge UI
+name: Deploy ECS Config Server
 
 on:
   push:
     branches:
-      - devops/apps-ecs
+      - main
 
 # on:
 #   workflow_run:
@@ -16,12 +16,12 @@ on:
 
 env:
   AWS_REGION: "us-east-2"
-  ECR_REPOSITORY: bridge-ui-stage
+  ECR_REPOSITORY: config-server-stage
   ENVIRONMENT: STAGE
 
 jobs:
   deploy:
-    name: Deploy Bridge UI
+    name: Deploy Config Server
     runs-on: ubuntu-18.04
 
     permissions:
@@ -46,13 +46,13 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }} .
+          docker build -f ./server.dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }} .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.ENVIRONMENT }}
 
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ecs/task_definition_${{ env.ENVIRONMENT }}.json
-          service: bridge-ui-service-${{ env.ENVIRONMENT }}
-          cluster: bridge-ui-${{ env.ENVIRONMENT }}
+          task-definition: ecs/task_definition-config-server-${{ env.ENVIRONMENT }}.json
+          service: config-server-service-${{ env.ENVIRONMENT }}
+          cluster: config-server-${{ env.ENVIRONMENT }}
           wait-for-service-stability: true
