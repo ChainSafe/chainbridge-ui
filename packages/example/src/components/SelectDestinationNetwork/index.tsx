@@ -3,8 +3,9 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Select, SelectChangeEvent
-} from '@mui/material'
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 
 interface ISelectDestinationNetwork {
   disabled?: boolean;
@@ -32,7 +33,7 @@ const SelectDestinationNetwork: React.FC<ISelectDestinationNetwork> = ({
         id="select-destination-network"
         onChange={handleChange}
         label={label}
-        value={value ? value.toString() : ""}
+        value={value !== undefined ? value.toString() : ""}
       >
         {options.map((option: { label: any; value: any }) => (
           <MenuItem key={option.value} value={option.value}>

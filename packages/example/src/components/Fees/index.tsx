@@ -37,7 +37,7 @@ const FeesFormikWrapped: React.FC<IFeesFormikWrapped> = ({
           <>
             <Typography component="p">Transfer Amount:</Typography>
             <Typography component="p">
-              {(Number(amount) - Number(fee)).toFixed(2)} {symbol}
+              {(Number(amount) + Number(fee)).toFixed(2)} {symbol}
             </Typography>
           </>
         )}

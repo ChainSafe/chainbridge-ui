@@ -47,10 +47,7 @@ export const EVMDestinationAdaptorProvider = ({
   const destinationBridge = useDestinationBridgeHook(destinationChainConfig);
 
   useEffect(() => {
-    if (
-      depositNonce &&
-      !inTransitMessages.txIsDone
-    ) {
+    if (depositNonce && !inTransitMessages.txIsDone) {
       handleProposalEvent(
         setTransactionStatus,
         setTransferTxHash,
@@ -59,18 +56,15 @@ export const EVMDestinationAdaptorProvider = ({
         chainbridgeInstance!,
         setDepositVotes,
         depositVotes,
-        transferTxHash
+        transferTxHash,
+        Number(depositNonce)
       );
     }
     return () => {
       //@ts-ignore
       destinationBridge?.removeAllListeners();
     };
-  }, [
-    transferTxHash,
-    depositNonce,
-    depositVotes,
-  ]);
+  }, [transferTxHash, depositNonce, depositVotes]);
 
   return (
     <DestinationBridgeContext.Provider

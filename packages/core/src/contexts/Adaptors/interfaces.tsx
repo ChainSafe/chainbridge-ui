@@ -8,7 +8,7 @@ import {
   TxIsDone,
   TransitState,
 } from "../../reducers/TransitMessageReducer";
-import { Directions } from "@chainsafe/sygma-sdk-core";
+import { Directions, FeeDataResult } from "@chainsafe/sygma-sdk-core";
 
 export interface IHomeBridgeProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -45,7 +45,7 @@ export interface HomeChainAdaptorContext {
     recipient: string;
     from: Directions;
     to: Directions;
-    feeData: string;
+    feeData: FeeDataResult;
   }): Promise<void>;
 
   relayerThreshold: number | undefined;

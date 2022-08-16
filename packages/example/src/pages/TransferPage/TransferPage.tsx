@@ -65,8 +65,8 @@ const TransferPage = () => {
     address,
     checkSupplies,
   } = useChainbridge();
-  const [customFee, setCustomFee] = useState<FeeDataResult>()
-  const {chainbridgeInstance, bridgeSetup } = useBridge()
+  const [customFee, setCustomFee] = useState<FeeDataResult>();
+  const { chainbridgeInstance, bridgeSetup } = useBridge();
   const { accounts, selectAccount } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -94,7 +94,7 @@ const TransferPage = () => {
     bridgeFee,
     homeConfig,
     destinationChainConfig,
-    checkSupplies,
+    chainbridgeInstance,
   });
 
   const { handleSubmit, control, setValue, watch, formState } =
@@ -109,29 +109,29 @@ const TransferPage = () => {
 
   const watchToken = watch("token", "");
   const watchAmount = watch("tokenAmount", "0");
-  const destAddress = watch("receiver", address)
+  const destAddress = watch("receiver", address);
 
-  async function setFee(amount: string){
+  async function setFee(amount: string) {
     if (chainbridgeInstance && amount && address) {
       const fee = await chainbridgeInstance.fetchFeeData({
         amount: amount,
-        recipientAddress: destAddress
+        recipientAddress: destAddress,
       });
       if (!(fee instanceof Error)) {
-        setCustomFee(fee)
+        setCustomFee(fee);
       }
     }
-
   }
 
   useEffect(() => {
-    setFee(watchAmount)
-  }, [watchAmount, preflightDetails])
+    console.log("watchAmount", watchAmount);
+    setFee(watchAmount.replace(/\D/g, ""));
+  }, [watchAmount, preflightDetails]);
 
   const onSubmit: SubmitHandler<PreflightDetails> = (values) => {
     setPreflightDetails({
       ...values,
-      tokenSymbol: tokens[values.token].symbol || "",
+      tokenSymbol: "",
     });
     setPreflightModalOpen(true);
   };
@@ -322,7 +322,7 @@ const TransferPage = () => {
             recipient: preflightDetails.receiver,
             from,
             to: destinationChainDirection,
-            feeData: customFee!.feeData
+            feeData: customFee!,
           };
 
           setPreflightModalOpen(false);
@@ -331,7 +331,7 @@ const TransferPage = () => {
         sourceNetwork={homeConfig?.name || ""}
         targetNetwork={destinationChainConfig?.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
-        value={preflightDetails?.tokenAmount || '0'}
+        value={preflightDetails?.tokenAmount || "0"}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
       {/* This is here due to requiring router */}

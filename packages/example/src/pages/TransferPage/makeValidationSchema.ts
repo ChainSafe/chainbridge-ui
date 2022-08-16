@@ -10,7 +10,7 @@ type MakeValidationSchemaOptions = {
   destinationChainConfig: any;
   preflightDetails: PreflightDetails;
   bridgeFee: any;
-  checkSupplies: any;
+  chainbridgeInstance: any;
 };
 export default function makeValidationSchema({
   preflightDetails,
@@ -18,7 +18,7 @@ export default function makeValidationSchema({
   bridgeFee,
   homeConfig,
   destinationChainConfig,
-  checkSupplies,
+  chainbridgeInstance,
 }: MakeValidationSchemaOptions) {
   const selectedToken = homeConfig?.tokens.find(
     (token) => token.address === preflightDetails.token
@@ -71,21 +71,20 @@ export default function makeValidationSchema({
         }
         return false;
       })
-      .test(
-        "Bridge Supplies",
-        "Not enough tokens on the destination chain. Please contact support.",
-        async (value) => {
-          if (checkSupplies && destinationChainConfig && value) {
-            const supplies = await checkSupplies(
-              parseFloat(value),
-              preflightDetails.token,
-              destinationChainConfig.domainId
-            );
-            return Boolean(supplies);
-          }
-          return false;
-        }
-      )
+      // Temprorarily disabled. Will be back again after tokens' fix
+      // .test(
+      //   "Bridge Supplies",
+      //   "Not enough tokens on the destination chain. Please contact support.",
+      //   async (value) => {
+      //     if (chainbridgeInstance && value) {
+      //       const supplies = await chainbridgeInstance.hasTokenSupplies(
+      //         parseFloat(value)
+      //       );
+      //       return Boolean(supplies);
+      //     }
+      //     return false;
+      //   }
+      // )
       .test("Min", "Less than minimum", (value) => {
         if (value) {
           return parseFloat(value) > 0;

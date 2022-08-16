@@ -1,23 +1,22 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-} from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import {
   BridgeConfig,
   chainbridgeConfig,
   ChainType,
 } from "../../chainbridgeConfig";
 import { useWeb3 } from "../localWeb3Context";
-import { BridgeData, Sygma } from "@chainsafe/sygma-sdk-core";
-import { chainbridgeReducer, ChainbridgeState } from '../../reducers'
+import {
+  BridgeData,
+  Sygma,
+  SygmaBridgeSetupList,
+} from "@chainsafe/sygma-sdk-core";
+import { chainbridgeReducer, ChainbridgeState } from "../../reducers";
 
 interface IBridgeContext {
   children: React.ReactNode | React.ReactNode[];
 }
 
-type BridgeContext = ChainbridgeState
+type BridgeContext = ChainbridgeState;
 
 const BridgeContext = createContext<BridgeContext | undefined>(undefined);
 
@@ -25,17 +24,16 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
   const { homeChains, ...rest } = useWeb3();
   const initState: ChainbridgeState = {
     chainbridgeInstance: undefined,
-    bridgeSetup: undefined
-  }
+    bridgeSetup: undefined,
+  };
   const [bridgeState, bridgeDispatcher] = useReducer(
     chainbridgeReducer,
     initState
   );
 
   useEffect(() => {
-
     if (homeChains.length) {
-      const web3provider = rest.provider
+      const web3provider = rest.provider;
 
       const bridgeSetup: BridgeData = homeChains.reduce((acc, chain, idx) => {
         const {
@@ -47,7 +45,7 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
           decimals,
           feeSettings,
           name,
-          networkId
+          networkId,
         } = chain;
 
         // NOTE: ASUMPTION HERE IS THAT WE HAVE ONLY ONE TOKEN
@@ -65,32 +63,39 @@ const BridgeProvider = ({ children }: IBridgeContext) => {
             decimals,
             feeSettings,
             name,
-            networkId
+            networkId,
           },
         };
 
         return acc;
       }, {} as BridgeData);
 
-      const { feeOracleSetup } = chainbridgeConfig()
+      const { feeOracleSetup } = chainbridgeConfig();
       let isMounted = true;
-      const chainbridgeInstance = new Sygma({ bridgeSetup, feeOracleSetup });
-      chainbridgeInstance.initializeConnectionFromWeb3Provider(web3provider?.provider).then((res) => {
-        if (isMounted) {
-          bridgeDispatcher({
-            type: "setInstanceAndData",
-            payload: {
-              bridgeSetup,
-              feeOracleSetup,
-              chainbridgeInstance: res
-            }
-          })
-        }
-      })
-      return () => { isMounted = false }
+      const chainbridgeInstance = new Sygma({
+        bridgeSetup,
+        feeOracleSetup,
+        bridgeSetupList: homeChains as any,
+      });
+      chainbridgeInstance
+        .initializeConnectionFromWeb3Provider(web3provider?.provider)
+        .then((res) => {
+          if (isMounted) {
+            bridgeDispatcher({
+              type: "setInstanceAndData",
+              payload: {
+                bridgeSetup,
+                feeOracleSetup,
+                chainbridgeInstance: res,
+              },
+            });
+          }
+        });
+      return () => {
+        isMounted = false;
+      };
     }
   }, [homeChains]);
-
 
   return (
     <BridgeContext.Provider value={{ ...bridgeState }}>

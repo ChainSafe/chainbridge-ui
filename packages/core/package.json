@@ -1,6 +1,6 @@
 {
   "name": "@chainsafe/sygma-ui-core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Context providers for Sygma UI",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -15,7 +15,7 @@
     "build:watch": "tsc --watch"
   },
   "dependencies": {
-    "@chainsafe/sygma-sdk-core": "1.1.4",
+    "@chainsafe/sygma-sdk-core": "1.1.5",
     "@babel/core": "^7.12.3",
     "@babel/runtime": "^7.12.1",
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",

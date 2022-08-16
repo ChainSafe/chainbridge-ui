@@ -10,8 +10,8 @@
     "@celo-tools/celo-ethers-wrapper": "^0.0.5",
     "@chainsafe/common-components": "1.0.26",
     "@chainsafe/common-theme": "1.0.10",
-    "@chainsafe/sygma-sdk-core": "1.1.4",
-    "@chainsafe/sygma-ui-core": "1.0.0",
+    "@chainsafe/sygma-sdk-core": "1.1.5",
+    "@chainsafe/sygma-ui-core": "1.0.2",
     "@chainsafe/web3-context": "1.2.0",
     "@fusion-icons/react": "0.0.0",
     "@hookform/resolvers": "^2.8.4",
@@ -71,7 +71,7 @@
     "typescript": "^4.5.2"
   },
   "scripts": {
-    "start": "BROWSER=none craco --max_old_space_size=4096 start",
+    "start": "BROWSER=none craco --max_old_space_size=4096 --openssl-legacy-provider start",
     "build": "craco --max_old_space_size=4096 build",
     "sentry": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); node scripts/sentry.js)",
     "release": "(export REACT_APP_SENTRY_RELEASE=$(sentry-cli releases propose-version); yarn build && node scripts/sentry.js)",

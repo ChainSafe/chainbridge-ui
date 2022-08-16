@@ -6,7 +6,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { Directions } from "@chainsafe/sygma-sdk-core";
+import { Directions, FeeDataResult } from "@chainsafe/sygma-sdk-core";
 import {
   BridgeConfig,
   chainbridgeConfig,
@@ -116,15 +116,13 @@ function selectProvider(
             getNetworkName: (id: any) => "",
             isReady: false,
             selectedToken: "",
-            deposit: async (
-              params: {
-                amount: string;
-                recipient: string;
-                from: Directions;
-                to: Directions;
-                feeData: string;
-              }
-            ) => undefined,
+            deposit: async (params: {
+              amount: string;
+              recipient: string;
+              from: Directions;
+              to: Directions;
+              feeData: FeeDataResult;
+            }) => undefined,
             setDepositAmount: () => undefined,
             tokens: {},
             setSelectedToken: (input: string) => undefined,

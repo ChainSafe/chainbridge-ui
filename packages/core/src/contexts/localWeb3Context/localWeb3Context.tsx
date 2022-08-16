@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useCallback } from "react";
-import { Directions } from "@chainsafe/sygma-sdk-core";
+import { Directions, FeeDataResult } from "@chainsafe/sygma-sdk-core";
 import {
   BridgeConfig,
   chainbridgeConfig,
@@ -92,7 +92,7 @@ function selectProvider(
               recipient: string;
               from: Directions;
               to: Directions;
-              feeData: string;
+              feeData: FeeDataResult;
             }) => undefined,
             setDepositAmount: () => undefined,
             tokens: {},
@@ -262,7 +262,7 @@ const LocalProvider = ({
       }
     },
     [networkManager.homeChains]
-    );
+  );
 
   useEffect(() => {
     if (networkManager.walletType !== "unset") {
@@ -371,7 +371,8 @@ const LocalProvider = ({
         setTransactionStatus: (data) =>
           dispatcher({ type: "setTransactionStatus", payload: data }),
         depositNonce: networkManager.depositNonce,
-        setDepositNonce: (data) => dispatcher({ type: "setDepositNonce", payload: data })
+        setDepositNonce: (data) =>
+          dispatcher({ type: "setDepositNonce", payload: data }),
       }}
     >
       <HomeProvider>

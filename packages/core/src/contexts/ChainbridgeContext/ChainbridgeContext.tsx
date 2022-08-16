@@ -10,8 +10,8 @@ import { TransitState } from "../../reducers/TransitMessageReducer";
 import { TransactionStatus, useWeb3 } from "../../index";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { useDestinationBridge } from "../DestinationBridgeContext";
-import { Directions } from "@chainsafe/sygma-sdk-core";
-import { useBridge } from '../Bridge'
+import { Directions, FeeDataResult } from "@chainsafe/sygma-sdk-core";
+import { useBridge } from "../Bridge";
 import { computeDirections } from "../../utils/Helpers";
 
 interface IChainbridgeContextProps {
@@ -31,7 +31,7 @@ type ChainbridgeContext = {
     recipient: string;
     from: Directions;
     to: Directions;
-    feeData: string;
+    feeData: FeeDataResult;
   }): Promise<void>;
   resetDeposit(): void;
   // depositVotes: number;
@@ -102,7 +102,7 @@ const ChainbridgeProvider = ({
     handleCheckSupplies,
   } = useHomeBridge();
 
-  const { chainbridgeInstance, bridgeSetup } = useBridge()
+  const { chainbridgeInstance, bridgeSetup } = useBridge();
 
   const { setDepositVotes, tokensDispatch } = useDestinationBridge();
 
@@ -122,11 +122,15 @@ const ChainbridgeProvider = ({
   };
 
   const handleDeposit = useCallback(
-    async (paramsForDeposit: { amount: string, recipient: string, from: Directions, to: Directions, feeData: string }) => {
+    async (paramsForDeposit: {
+      amount: string;
+      recipient: string;
+      from: Directions;
+      to: Directions;
+      feeData: FeeDataResult;
+    }) => {
       if (chainConfig && destinationChainConfig) {
-        return await deposit(
-          paramsForDeposit
-        )
+        return await deposit(paramsForDeposit);
       }
     },
     [deposit, destinationChainConfig, chainConfig]
