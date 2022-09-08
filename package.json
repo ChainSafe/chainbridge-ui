@@ -98,6 +98,26 @@
     "webpack-manifest-plugin": "5.0.0",
     "workbox-webpack-plugin": "4.3.1"
   },
+  "resolutions": {
+    "bnc-onboard/**/axios": "0.27.2",
+    "bnc-onboard/**/async": "3.2.4",
+    "bnc-onboard/**/yargs-parser": "21.1.1",
+    "bnc-onboard/**/ws": "8.8.1",
+    "bnc-onboard/**/trim-newlines": "4.0.2",
+    "bnc-onboard/**/elliptic": "6.5.4",
+    "bnc-onboard/**/node-fetch": "3.2.10",
+    "bnc-onboard/**/underscore": "1.13.4",
+    "bnc-onboard/**/json-schema": "0.4.0",
+    "bnc-onboard/**/path-parse": "1.0.7",
+    "bnc-onboard/**/simple-get": "4.0.1",
+    "bnc-onboard/**/lodash": "4.17.21",
+    "bnc-onboard/**/y18n": "5.0.8",
+    "bnc-onboard/**/minimist": "1.2.6",
+    "bnc-onboard/**/semver-regex": "4.0.5",
+    "bnc-onboard/**/ansi-regex": "6.0.1",
+    "bnc-onboard/**/cross-fetch": "3.1.5",
+    "bnc-onboard/**/hosted-git-info": "5.1.0"
+  },
   "scripts": {
     "start": "yarn setup:copy-dev-config && node scripts/start",
     "build": "node --max-old-space-size=4096 scripts/build",
