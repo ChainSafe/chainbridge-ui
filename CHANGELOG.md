@@ -2,12 +2,14 @@
 
 ## vNext
 
+...
+
+## v0.18.0
+
 - Ejected create-react-app
 - Got rid of craco npm package
 - Updated all vulnerable packages except bnc-onboard
 - Fixed packages vulnerabilities for bnc-onboard
-
-...
 
 ## v0.17.0
 
