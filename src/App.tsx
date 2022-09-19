@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import {
@@ -37,6 +37,20 @@ const App: React.FC<{}> = () => {
       CHAINBRIDGE: { chains },
     },
   } = window;
+  
+  const ethereumNetworkId = chainbridgeConfig.chains.find(chain => chain.chainId === 0)?.networkId as number;
+  const [networkId, setNetworkId] = useState<number>(ethereumNetworkId);
+  
+  const rpc: {
+    [key:number]: string,
+  } = {};
+
+  chainbridgeConfig.chains.forEach(chain => {
+    if(chain.type === 'Ethereum') {
+      rpc[chain.networkId as number] = chain.rpcUrl;
+    }
+  });
+
   const tokens = chainbridgeConfig.chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
@@ -75,15 +89,24 @@ const App: React.FC<{}> = () => {
         <ToasterProvider autoDismiss>
           <Web3Provider
             tokensToWatch={tokens}
-            networkIds={[5]}
+            networkIds={[networkId]}
             onboardConfig={{
               dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
               walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
+                wallets: [
+                  {
+                    walletName: "walletConnect",
+                    preferred: true,
+                    rpc
+                  },
+                  { walletName: "metamask", preferred: true },
+                ],
               },
               subscriptions: {
-                network: (network) =>
-                  network && console.log("chainId: ", network),
+                network: (newNetworkId) => {
+                  setNetworkId(newNetworkId);
+                  console.log("newNetworkId: ", newNetworkId);
+                },
                 balance: (amount) =>
                   amount && console.log("balance: ", utils.formatEther(amount)),
               },

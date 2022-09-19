@@ -114,7 +114,7 @@ const NetworkUnsupportedModal = () => {
         <Typography component="p" variant="body1">
           This app does not currently support transfers on{" "}
           {getNetworkName(networkId)}. Please, change network from within your
-          browser wallet.
+          wallet.
         </Typography>
         <br />
         <Typography component="p" variant="body1">

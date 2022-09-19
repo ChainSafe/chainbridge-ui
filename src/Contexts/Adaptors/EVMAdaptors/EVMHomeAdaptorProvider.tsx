@@ -124,16 +124,18 @@ export const EVMHomeAdaptorProvider = ({
     setInitialising(true);
     if (!walletSelected) {
       onboard
-        .walletSelect("metamask")
+        .walletSelect()
         .then((success) => {
-          if (window.ethereum) {
-            window.ethereum.on("chainChanged", (ch: any) => {
-              window.location.reload();
-            });
-            window.ethereum.on("accountsChanged", (accounts: any) => {
-              setWalletType("unset");
-            });
-          }
+          const state = onboard.getState();
+          
+          state.wallet.provider.on("chainChanged", (newNetwork: number) => {
+            resetOnboard();
+            window.location.reload();
+          });
+
+          state.wallet.provider.on("accountsChanged", ()=>{
+            setWalletType("unset");
+          });
 
           setWalletSelected(success);
           if (success) {
