@@ -80,6 +80,7 @@ export const EVMHomeAdaptorProvider = ({
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
+    networkId,
     setNetworkId,
     setWalletType,
     depositAmount,
@@ -122,21 +123,35 @@ export const EVMHomeAdaptorProvider = ({
     if (initialising || homeBridge || !onboard) return;
     console.log("starting init");
     setInitialising(true);
+
+    const state = onboard.getState();
+    
+    state.wallet.provider?.on("error", (err: any) => {
+      console.error(err);
+    });
+    
+    state.wallet.provider?.on("chainChanged", (newNetworkId: number) => {
+      setNetworkId(newNetworkId.toString().substring(0, 2) === '0x' ? parseInt(newNetworkId.toString(), 16): newNetworkId );      
+      setWalletType("unset");
+      setWalletSelected(false);
+      resetOnboard();
+    });
+
+    state.wallet.provider?.on("accountsChanged", ()=> {
+      if(walletSelected) setWalletType("unset");
+    });
+
+    const supported = !!chainbridgeConfig.chains.find(chain =>chain.networkId === networkId);
+    if(!!networkId && !supported) {
+      resetOnboard();
+      setWalletType("unset");
+      return;
+    }
+
     if (!walletSelected) {
       onboard
         .walletSelect()
-        .then((success) => {
-          const state = onboard.getState();
-          
-          state.wallet.provider.on("chainChanged", (newNetwork: number) => {
-            resetOnboard();
-            window.location.reload();
-          });
-
-          state.wallet.provider.on("accountsChanged", ()=>{
-            setWalletType("unset");
-          });
-
+        .then(async (success) => {
           setWalletSelected(success);
           if (success) {
             checkIsReady()
@@ -264,7 +279,7 @@ export const EVMHomeAdaptorProvider = ({
 
   const handleConnect = useCallback(async () => {
     if (wallet && wallet.connect && network) {
-      await onboard?.walletSelect("metamask");
+      await onboard?.walletSelect();
       await wallet.connect();
     }
   }, [wallet, network, onboard]);
@@ -520,7 +535,8 @@ export const EVMHomeAdaptorProvider = ({
       value={{
         connect: handleConnect,
         disconnect: async () => {
-          await resetOnboard();
+          resetOnboard();
+          setWalletType("unset");
         },
         getNetworkName,
         bridgeFee,

@@ -72,7 +72,8 @@ const NetworkUnsupportedModal = () => {
 
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
-      setOpen(!homeChainConfig && !!isReady);
+      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === networkId)
+      setOpen(!!networkId && !supported);
       setSupportedNetworks(
         chainbridgeConfig.chains
           .filter((bc) => bc.networkId !== undefined)

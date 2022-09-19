@@ -97,7 +97,7 @@ const App: React.FC<{}> = () => {
                   {
                     walletName: "walletConnect",
                     preferred: true,
-                    rpc
+                    rpc,
                   },
                   { walletName: "metamask", preferred: true },
                 ],
