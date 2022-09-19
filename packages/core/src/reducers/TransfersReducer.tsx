@@ -1,5 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
+import { EvmBridgeConfig } from "../chainbridgeConfig";
 import { computeTransferDetails } from "../utils/Helpers";
 
 export enum ProposalStatus {
@@ -107,8 +107,8 @@ export type TransferResponse = {
 };
 
 type TokenForDetailsView = {
-  fromChain: EvmBridgeConfig | SubstrateBridgeConfig;
-  toChain: EvmBridgeConfig | SubstrateBridgeConfig;
+  fromChain: EvmBridgeConfig;
+  toChain: EvmBridgeConfig;
 };
 
 type MyAddressPayload = {
@@ -144,8 +144,8 @@ export type TransferDetails = {
   voteEvents: Array<Vote>;
   proposalEvents: Array<Proposal>;
   timelineMessages: Array<any>;
-  fromChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
-  toChain: EvmBridgeConfig | SubstrateBridgeConfig | undefined;
+  fromChain: EvmBridgeConfig | undefined;
+  toChain: EvmBridgeConfig | undefined;
   pillColorStatus: { borderColor: string; background: string };
 };
 
@@ -154,7 +154,7 @@ export type ExplorerState = {
   transfers: Array<DepositRecord>;
   pageInfo?: PageInfo;
   error: boolean;
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains: Array<EvmBridgeConfig>;
   transferDetails?: TransferDetails;
   pillColorStatus?: { borderColor: string; background: string };
 };
@@ -182,7 +182,7 @@ export type ExplorerPageState = {
 
   transferDetails: TransferDetails;
   timelineButtonClicked: boolean;
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains: Array<EvmBridgeConfig>;
 };
 
 export function transfersReducer(

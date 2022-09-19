@@ -1,23 +1,15 @@
 import dayjs from "dayjs";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { DepositRecord, TransferDetails } from "../reducers/TransfersReducer";
-import { EvmBridgeConfig, SubstrateBridgeConfig } from "../chainbridgeConfig";
+import {
+  BridgeConfig,
+  EvmBridgeConfig,
+} from "../chainbridgeConfig";
 import { isCelo } from "../contexts/Adaptors/EVMAdaptors/helpers";
-const { decodeAddress, encodeAddress } = require("@polkadot/keyring");
-const { hexToU8a, isHex } = require("@polkadot/util");
+import { BridgeData } from "@chainsafe/sygma-sdk-core";
 
 export const shortenAddress = (address: string) => {
   return `${address.substr(0, 6)}...${address.substr(address.length - 6, 6)}`;
-};
-
-export const isValidSubstrateAddress = (address: string) => {
-  try {
-    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
-
-    return true;
-  } catch (error) {
-    return false;
-  }
 };
 
 export const getNetworkName = (id: any) => {
@@ -50,7 +42,7 @@ export const getNetworkName = (id: any) => {
 };
 
 export const selectToken = (
-  config: EvmBridgeConfig | SubstrateBridgeConfig | undefined,
+  config: EvmBridgeConfig | undefined,
   tokenAddress: string
 ) => config?.tokens.find((token) => token.address === tokenAddress);
 
@@ -126,7 +118,7 @@ export const computeAndFormatAmount = (amount: string) => {
 const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
 
 export const selectChains = (
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>,
+  chains: Array<EvmBridgeConfig>,
   fromDomainId: number,
   toDomainId: number
 ) => {
@@ -138,7 +130,7 @@ export const selectChains = (
 
 export const computeTransferDetails = (
   txDetails: DepositRecord,
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>
+  chains: Array<EvmBridgeConfig>
 ): TransferDetails => {
   const {
     timestamp,
@@ -309,4 +301,30 @@ export const computeTransferDetails = (
     toChain,
     pillColorStatus,
   };
+};
+
+export const computeDirections = (
+  bridgeSetup: BridgeData,
+  destinationChainConfig: BridgeConfig,
+  homeConfig: BridgeConfig
+): { from: "chain1" | "chain2"; to: "chain1" | "chain2" } | undefined => {
+  if (bridgeSetup !== undefined) {
+    return Object.keys(bridgeSetup!).reduce((acc, chain) => {
+      if (
+        Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+        homeConfig!.domainId
+      ) {
+        acc = { ...acc, from: chain };
+        return acc;
+      }
+      if (
+        Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+        destinationChainConfig?.domainId
+      ) {
+        acc = { ...acc, to: chain };
+        return acc;
+      }
+    }, {} as any);
+  }
+  return undefined;
 };

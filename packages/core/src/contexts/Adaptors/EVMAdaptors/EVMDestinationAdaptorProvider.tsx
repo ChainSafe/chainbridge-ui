@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from "react";
-import { useNetworkManager } from "../../NetworkManagerContext/NetworkManagerContext";
+import { useWeb3 } from "../../index";
 import { IDestinationBridgeProviderProps } from "../interfaces";
 import { DestinationBridgeContext } from "../../DestinationBridgeContext";
 import { transitMessageReducer } from "../../../reducers/TransitMessageReducer";
@@ -7,7 +7,8 @@ import { evmDestinationReducer } from "../../../reducers/EvmDestinationReducer";
 
 import { useDestinationBridgeHook } from "./useDestinationBridgeHook";
 import handleProposalEvent from "./handleProposalEvent";
-import handleProposalVote from "./handleProposalVote";
+import { useBridge } from "../../Bridge";
+import { computeDirections } from "../../../utils/Helpers";
 
 export const EVMDestinationAdaptorProvider = ({
   children,
@@ -18,7 +19,15 @@ export const EVMDestinationAdaptorProvider = ({
     homeChainConfig,
     setTransactionStatus,
     transactionStatus,
-  } = useNetworkManager();
+  } = useWeb3();
+
+  const { bridgeSetup, chainbridgeInstance } = useBridge();
+
+  const computedDirections = computeDirections(
+    bridgeSetup!,
+    destinationChainConfig!,
+    homeChainConfig!
+  );
 
   const [state, dispatch] = useReducer(evmDestinationReducer, {
     transferTxHash: "",
@@ -39,31 +48,18 @@ export const EVMDestinationAdaptorProvider = ({
 
   useEffect(() => {
     if (
-      destinationChainConfig &&
-      homeChainConfig?.domainId !== null &&
-      homeChainConfig?.domainId !== undefined &&
-      destinationBridge &&
       depositNonce &&
       !inTransitMessages.txIsDone
     ) {
       handleProposalEvent(
-        destinationBridge,
-        homeChainConfig,
-        depositNonce,
-        destinationChainConfig,
         setTransactionStatus,
         setTransferTxHash,
-        tokensDispatch
-      );
-
-      handleProposalVote(
-        destinationBridge,
-        homeChainConfig,
-        depositNonce,
-        depositVotes,
         tokensDispatch,
+        computedDirections!,
+        chainbridgeInstance!,
         setDepositVotes,
-        transactionStatus
+        depositVotes,
+        transferTxHash
       );
     }
     return () => {
@@ -71,15 +67,9 @@ export const EVMDestinationAdaptorProvider = ({
       destinationBridge?.removeAllListeners();
     };
   }, [
+    transferTxHash,
     depositNonce,
-    homeChainConfig,
-    destinationBridge,
     depositVotes,
-    destinationChainConfig,
-    setDepositVotes,
-    setTransactionStatus,
-    setTransferTxHash,
-    tokensDispatch,
   ]);
 
   return (

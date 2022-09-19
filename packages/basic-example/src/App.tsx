@@ -4,13 +4,13 @@ import {
   LocalProvider,
   NetworkManagerProvider,
   useChainbridge,
-  useNetworkManager,
+  useWeb3
 } from "@chainsafe/chainbridge-ui-core";
 
 import { utils } from "ethers";
 
 const BasicApp = (props: any) => {
-  const { setWalletType } = useNetworkManager();
+  const { setWalletType } = useWeb3();
 
   const handleSetWallet = () => setWalletType("Ethereum")
 

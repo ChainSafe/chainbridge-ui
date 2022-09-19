@@ -42,27 +42,65 @@ export const localWeb3ContextReducer = (
       return {
         ...state,
         isReady: action.payload,
+        savedWallet: action.payload ? state.savedWallet : ""
       };
-    case "setWallet":
+    case "setWallet": {
+      const { payload: { wallet, provider } } = action
       return {
         ...state,
-        wallet: action.payload!,
+        wallet: wallet!,
+        provider: provider!,
+        savedWallet: wallet ? wallet?.name! : ""
       };
+    }
     case "setProvider":
       return {
         ...state,
         provider: action.payload,
       };
-    case "setNetwork":
+    case "setNetworkAndProvider": {
+      const { payload: { network, provider } } = action
       return {
         ...state,
-        network: action.payload,
+        network,
+        provider: provider!,
       };
+    }
+    case "setNetwork": {
+      const { payload } = action
+      return {
+        ...state,
+        network: payload
+      }
+    }
     case "setOnBoard":
       return {
         ...state,
         onboard: action.payload,
       };
+    case 'setWalletConnect': {
+      const { payload: { wallet, provider } } = action
+      return {
+        ...state,
+        wallet: wallet!,
+        provider: provider!,
+        savedWallet: wallet?.name!
+      }
+    }
+    case 'setSavedWallet':
+      return {
+        ...state,
+        savedWallet: action.payload
+      }
+    case 'setAll':
+      const { payload: { provider, isActive, chainId, address } } = action
+      return {
+        ...state,
+        provider,
+        address,
+        isReady: isActive,
+        network: chainId
+      }
     default:
       return state;
   }

@@ -9,7 +9,7 @@ export type TokenConfig = {
   isDoubleApproval?: boolean;
 };
 
-export type ChainType = "Ethereum" | "Substrate";
+export type ChainType = "Ethereum";
 
 export type BridgeConfig = {
   networkId?: number;
@@ -20,7 +20,13 @@ export type BridgeConfig = {
   tokens: TokenConfig[];
   nativeTokenSymbol: string;
   decimals: number;
+  feeSettings: FeeSettings
 };
+
+export type FeeSettings = {
+  type: 'basic' | 'feeOracle' | 'none';
+  address: string;
+}
 
 export type EvmBridgeConfig = BridgeConfig & {
   bridgeAddress: string;
@@ -30,21 +36,21 @@ export type EvmBridgeConfig = BridgeConfig & {
   blockExplorer?: string;
   defaultGasPrice?: number;
   deployedBlockNumber?: number;
+  feeSettings: {
+    type: 'basic' | 'feeOracle' | 'none';
+    address: string;
+  };
 };
 
-export type SubstrateBridgeConfig = BridgeConfig & {
-  type: "Substrate";
-  chainbridgePalletName: string;
-  bridgeFeeFunctionName?: string; // If this value is provided, the chain value will be used will be used
-  bridgeFeeValue?: number; // If the above value is not provided, this value will be used for the fee. No scaling should be applied.
-  transferPalletName: string;
-  transferFunctionName: string;
-  typesFileName: string;
-  blockExplorer?: string;
-};
+
+export type FeeOracleData = {
+	feeOracleBaseUrl: string;
+	feeOracleHandlerAddress: string;
+}
 
 export type ChainbridgeConfig = {
-  chains: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains: Array<EvmBridgeConfig>;
+  feeOracleSetup: FeeOracleData,
 };
 
 export type UIConfig = {
@@ -52,5 +58,6 @@ export type UIConfig = {
   transactionAutoUpdateInterval: number;
 };
 
-export const chainbridgeConfig: ChainbridgeConfig =
-  window.__RUNTIME_CONFIG__.CHAINBRIDGE;
+export const chainbridgeConfig = () => {
+  return window.__RUNTIME_CONFIG__.CHAINBRIDGE;
+}

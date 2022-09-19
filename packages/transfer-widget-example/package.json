@@ -1,0 +1,59 @@
+{
+  "name": "@chainsafe/chainbridge-transfer-widget-example",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "^7.12.3",
+    "chainbridge-ui-transfer-widget-unstable": "^1.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.4",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.0.4",
+    "@testing-library/user-event": "^12.1.7",
+    "@types/history": "^4.7.8",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.8",
+    "@types/react": "^16.9.52",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.2.0",
+    "@types/styled-components": "^5.1.15",
+    "@types/yup": "^0.29.9",
+    "chalk": "^4.1.0",
+    "craco": "^0.0.3",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-only-warn": "^1.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "4.3.0",
+    "prettier": "^2.5.0",
+    "pretty-quick": "3.0.2",
+    "typescript": "^4.5.2"
+  },
+  "cracoConfig": "./craco.config.cjs",
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "start": "yarn setup:copy-dev-config && craco --max_old_space_size=4096 start",
+    "setup:copy-dev-config": "./scripts/copy-dev-config.sh",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

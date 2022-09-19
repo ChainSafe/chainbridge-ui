@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ethers } from "ethers";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -7,10 +8,12 @@ import Button from "@mui/material/Button";
 import clsx from "clsx";
 
 import {
+  useBridge,
   useChainbridge,
   useHomeBridge,
   useNetworkManager,
-} from "@chainsafe/chainbridge-ui-core";
+  useWeb3,
+} from "@chainsafe/sygma-ui-core";
 import { showImageUrl } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -33,9 +36,10 @@ import {
 import HomeNetworkConnectView from "./HomeNetworkConnectView";
 
 import makeValidationSchema from "./makeValidationSchema";
+import { BridgeData, FeeDataResult } from "@chainsafe/sygma-sdk-core";
 
 export type PreflightDetails = {
-  tokenAmount: number;
+  tokenAmount: string;
   token: string;
   tokenSymbol: string;
   receiver: string;
@@ -43,7 +47,9 @@ export type PreflightDetails = {
 
 const TransferPage = () => {
   const classes = useStyles();
-  const { walletType, setWalletType } = useNetworkManager();
+  const { walletType, setWalletType } = useWeb3();
+
+  const { dispatcher } = useWeb3();
 
   const {
     deposit,
@@ -59,7 +65,8 @@ const TransferPage = () => {
     address,
     checkSupplies,
   } = useChainbridge();
-
+  const [customFee, setCustomFee] = useState<FeeDataResult>()
+  const {chainbridgeInstance, bridgeSetup } = useBridge()
   const { accounts, selectAccount } = useHomeBridge();
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [walletConnecting, setWalletConnecting] = useState(false);
@@ -69,7 +76,7 @@ const TransferPage = () => {
   const [preflightDetails, setPreflightDetails] = useState<PreflightDetails>({
     receiver: "",
     token: "",
-    tokenAmount: 0,
+    tokenAmount: "0",
     tokenSymbol: "",
   });
 
@@ -95,13 +102,31 @@ const TransferPage = () => {
       resolver: yupResolver(transferSchema),
       defaultValues: {
         token: "",
-        tokenAmount: 0,
+        tokenAmount: "0",
         receiver: "",
       },
     });
 
   const watchToken = watch("token", "");
-  const watchAmount = watch("tokenAmount", 0);
+  const watchAmount = watch("tokenAmount", "0");
+  const destAddress = watch("receiver", address)
+
+  async function setFee(amount: string){
+    if (chainbridgeInstance && amount && address) {
+      const fee = await chainbridgeInstance.fetchFeeData({
+        amount: amount,
+        recipientAddress: destAddress
+      });
+      if (!(fee instanceof Error)) {
+        setCustomFee(fee)
+      }
+    }
+
+  }
+
+  useEffect(() => {
+    setFee(watchAmount)
+  }, [watchAmount, preflightDetails])
 
   const onSubmit: SubmitHandler<PreflightDetails> = (values) => {
     setPreflightDetails({
@@ -124,6 +149,7 @@ const TransferPage = () => {
         setWalletType={setWalletType}
         setChangeNetworkOpen={setChangeNetworkOpen}
         selectAccount={selectAccount}
+        dispatcher={dispatcher}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
@@ -143,7 +169,7 @@ const TransferPage = () => {
             <TokenSelectInput
               control={control}
               rules={{ required: true }}
-              tokens={tokens}
+              tokens={tokens ?? []}
               name="token"
               disabled={!destinationChainConfig || formState.isSubmitting}
               label={`Balance: `}
@@ -153,26 +179,28 @@ const TransferPage = () => {
                   ...preflightDetails,
                   token: tokenAddress,
                   receiver: "",
-                  tokenAmount: 0,
+                  tokenAmount: "0",
                   tokenSymbol: "",
                 });
               }}
               setValue={setValue}
               options={
-                Object.keys(tokens).map((t) => ({
-                  value: t,
-                  label: (
-                    <div className={classes.tokenItem}>
-                      {tokens[t]?.imageUri && (
-                        <img
-                          src={showImageUrl(tokens[t]?.imageUri)}
-                          alt={tokens[t]?.symbol}
-                        />
-                      )}
-                      <span>{tokens[t]?.symbol || t}</span>
-                    </div>
-                  ),
-                })) || []
+                tokens
+                  ? Object.keys(tokens).map((t) => ({
+                      value: t,
+                      label: (
+                        <div className={classes.tokenItem}>
+                          {tokens[t]?.imageUri && (
+                            <img
+                              src={showImageUrl(tokens[t]?.imageUri)}
+                              alt={tokens[t]?.symbol}
+                            />
+                          )}
+                          <span>{tokens[t]?.symbol || t}</span>
+                        </div>
+                      ),
+                    }))
+                  : []
               }
             />
           </section>
@@ -216,10 +244,16 @@ const TransferPage = () => {
         <Fees
           amountFormikName="tokenAmount"
           className={classes.fees}
-          fee={bridgeFee}
-          feeSymbol={homeConfig?.nativeTokenSymbol}
+          fee={customFee ? customFee.calculatedRate.toString() : "0"}
+          feeSymbol={
+            customFee &&
+            customFee.erc20TokenAddress &&
+            customFee.erc20TokenAddress !== ethers.constants.AddressZero
+              ? tokens[customFee.erc20TokenAddress].symbol
+              : homeConfig?.nativeTokenSymbol
+          }
           symbol={
-            preflightDetails && tokens[preflightDetails.token]
+            preflightDetails && !!tokens && tokens[preflightDetails.token]
               ? tokens[preflightDetails.token].symbol
               : undefined
           }
@@ -261,22 +295,47 @@ const TransferPage = () => {
         receiver={preflightDetails?.receiver || ""}
         sender={address || ""}
         start={() => {
+          const directionsForDeposit: {
+            from: "chain1" | "chain2";
+            to: "chain1" | "chain2";
+          } = Object.keys(bridgeSetup!).reduce((acc, chain) => {
+            if (
+              Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+              homeConfig!.domainId
+            ) {
+              acc = { ...acc, from: chain };
+              return acc;
+            }
+            if (
+              Number(bridgeSetup![chain as keyof BridgeData].domainId) ===
+              destinationChainConfig?.domainId
+            ) {
+              acc = { ...acc, to: chain };
+              return acc;
+            }
+          }, {} as any);
+
+          const { from, to: destinationChainDirection } = directionsForDeposit;
+
+          const paramsForDeposit = {
+            amount: preflightDetails.tokenAmount,
+            recipient: preflightDetails.receiver,
+            from,
+            to: destinationChainDirection,
+            feeData: customFee!.feeData
+          };
+
           setPreflightModalOpen(false);
-          preflightDetails &&
-            deposit(
-              preflightDetails.tokenAmount,
-              preflightDetails.receiver,
-              preflightDetails.token
-            );
+          preflightDetails && deposit(paramsForDeposit);
         }}
         sourceNetwork={homeConfig?.name || ""}
         targetNetwork={destinationChainConfig?.name || ""}
         tokenSymbol={preflightDetails?.tokenSymbol || ""}
-        value={preflightDetails?.tokenAmount || 0}
+        value={preflightDetails?.tokenAmount || '0'}
       />
       <TransferActiveModal open={!!transactionStatus} close={resetDeposit} />
       {/* This is here due to requiring router */}
-      <NetworkUnsupportedModal />
+      {/* <NetworkUnsupportedModal /> */}
       <NetworkSelectModal />
     </div>
   );

@@ -8,23 +8,16 @@ import {
   EvmBridgeConfig,
   TokenConfig,
 } from "../../../chainbridgeConfig";
-import { API as OnboardAPI } from "bnc-onboard/dist/src/interfaces";
 import { Weth } from "../../../Contracts/Weth";
 import { WethFactory } from "../../../Contracts/WethFactory";
-import { Actions } from "../../localWeb3Context/types";
 
 export function useConnectWallet(
   isReady: boolean,
-  checkIsReady: (
-    onboard: OnboardAPI,
-    dispatcher: (action: Actions) => void
-  ) => Promise<boolean>,
-  dispatcher: (action: Actions) => void,
-  onboard?: OnboardAPI,
   homeChainConfig?: BridgeConfig,
   provider?: providers.Web3Provider,
-  network?: number
+  network?: number,
 ) {
+
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -36,120 +29,85 @@ export function useConnectWallet(
   );
 
   useEffect(() => {
-    if (initialising || homeBridge || !onboard) return;
+    if (initialising || homeBridge) return;
     console.log("starting init");
-    setInitialising(true);
     if (!walletSelected) {
-      onboard
-        .walletSelect("metamask")
-        .then((success) => {
-          if (window.ethereum) {
-            window.ethereum.on("chainChanged", (ch: any) => {
-              window.location.reload();
-            });
-          }
-
-          setWalletSelected(success);
-          if (success) {
-            checkIsReady(onboard, dispatcher)
-              .then((success) => {
-                if (success) {
-                  if (homeChainConfig && network && isReady && provider) {
-                    const signer = provider.getSigner();
-                    if (!signer) {
-                      console.log("No signer");
-                      setInitialising(false);
-                      return;
-                    }
-
-                    const bridge = BridgeFactory.connect(
-                      (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                      signer
-                    );
-                    setHomeBridge(bridge);
-
-                    const wrapperToken = homeChainConfig.tokens.find(
-                      (token) => token.isNativeWrappedToken
-                    );
-
-                    if (!wrapperToken) {
-                      setWrapperConfig(undefined);
-                      setWrapper(undefined);
-                    } else {
-                      setWrapperConfig(wrapperToken);
-                      const connectedWeth = WethFactory.connect(
-                        wrapperToken.address,
-                        signer
-                      );
-                      setWrapper(connectedWeth);
-                    }
-                  }
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              })
-              .finally(() => {
-                setInitialising(false);
-              });
-          }
-        })
-        .catch((error) => {
-          setInitialising(false);
-          console.error(error);
+      if (window.ethereum) {
+        window.ethereum.on("chainChanged", (ch: any) => {
+          window.location.reload();
         });
+      }
+
+      if (homeChainConfig && network && isReady && provider) {
+        const signer = provider.getSigner();
+        if (!signer) {
+          console.log("No signer");
+          setInitialising(false);
+          return;
+        }
+
+        const bridge = BridgeFactory.connect(
+          (homeChainConfig as EvmBridgeConfig).bridgeAddress,
+          signer
+        );
+        setHomeBridge(bridge);
+
+        const wrapperToken = homeChainConfig.tokens.find(
+          (token) => token.isNativeWrappedToken
+        );
+
+        if (!wrapperToken) {
+          setWrapperConfig(undefined);
+          setWrapper(undefined);
+        } else {
+          setWrapperConfig(wrapperToken);
+          const connectedWeth = WethFactory.connect(
+            wrapperToken.address,
+            signer
+          );
+          setWrapper(connectedWeth);
+        }
+        setInitialising(false);
+      }
     } else {
-      checkIsReady(onboard, dispatcher)
-        .then((success) => {
-          if (success) {
-            if (homeChainConfig && network && isReady && provider) {
-              const signer = provider.getSigner();
-              if (!signer) {
-                console.log("No signer");
-                setInitialising(false);
-                return;
-              }
-
-              const bridge = BridgeFactory.connect(
-                (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                signer
-              );
-              setHomeBridge(bridge);
-
-              const wrapperToken = homeChainConfig.tokens.find(
-                (token) => token.isNativeWrappedToken
-              );
-
-              if (!wrapperToken) {
-                setWrapperConfig(undefined);
-                setWrapper(undefined);
-              } else {
-                setWrapperConfig(wrapperToken);
-                const connectedWeth = WethFactory.connect(
-                  wrapperToken.address,
-                  signer
-                );
-                setWrapper(connectedWeth);
-              }
-            }
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
+      if (homeChainConfig && network && isReady && provider) {
+        const signer = provider.getSigner();
+        if (!signer) {
+          console.log("No signer");
           setInitialising(false);
-        });
+          return;
+        }
+
+        const bridge = BridgeFactory.connect(
+          (homeChainConfig as EvmBridgeConfig).bridgeAddress,
+          signer
+        );
+        setHomeBridge(bridge);
+
+        const wrapperToken = homeChainConfig.tokens.find(
+          (token) => token.isNativeWrappedToken
+        );
+
+        if (!wrapperToken) {
+          setWrapperConfig(undefined);
+          setWrapper(undefined);
+        } else {
+          setWrapperConfig(wrapperToken);
+          const connectedWeth = WethFactory.connect(
+            wrapperToken.address,
+            signer
+          );
+          setWrapper(connectedWeth);
+        }
+      }
     }
   }, [
     initialising,
     homeChainConfig,
     isReady,
     provider,
-    checkIsReady,
     network,
     homeBridge,
-    onboard,
     walletSelected,
   ]);
 
