@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { utils, ethers } from "ethers";
+
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import CssBaseline from "@mui/material/CssBaseline";
+
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -11,10 +19,11 @@ import {
   ChainbridgeProvider,
   NetworkManagerProvider,
   LocalProvider,
-} from "@chainsafe/chainbridge-ui-core";
+  chainbridgeConfig,
+  BridgeProvider,
+} from "@chainsafe/sygma-ui-core";
 import { AppWrapper } from "./layouts";
-import { chainbridgeConfig } from "./chainbridgeConfig";
-import { utils } from "ethers";
+import { getChainbridgeConfig } from "./getChainbridgeConfig"
 import "@chainsafe/common-theme/dist/font-faces.css";
 
 if (
@@ -28,6 +37,68 @@ if (
   });
 }
 
+const AppWrap: React.FC<{ config?: any, useExternalProvider?: any, externalProviderSource?: any }> = (props) => {
+  const [isReady, setIsReady] = useState(false);
+  const [errMessage, setErrMessage] = useState<undefined|string>()
+
+  const setConfig = async () => {
+    if (!window.__RUNTIME_CONFIG__) {
+      const config = await getChainbridgeConfig();
+      if (config.error) {
+        setErrMessage(config.error.message ?? config.error.name)
+      } else {
+        // @ts-ignore
+        window.__RUNTIME_CONFIG__ = config
+      }
+      setIsReady(true)
+    }
+  }
+
+  useEffect(() => {
+    setConfig()
+  }, []);
+  return (
+    <>
+      {isReady ? (
+        errMessage ? (
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{ minHeight: "100vh" }}
+          >
+            <Grid item xs={3}>
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                {errMessage}
+              </Alert>
+            </Grid>
+          </Grid>
+        ) : (
+          <App />
+        )
+      ) : (
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          style={{ minHeight: "100vh" }}
+        >
+          <Grid item xs={3}>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress size="6rem" />
+            </Box>
+          </Grid>
+        </Grid>
+      )}
+    </>
+  );
+};
+
 const App: React.FC<{}> = () => {
   const {
     __RUNTIME_CONFIG__: {
@@ -36,8 +107,8 @@ const App: React.FC<{}> = () => {
     },
   } = window;
 
-  const tokens = chainbridgeConfig.chains
-    .filter((c) => c.type === "Ethereum")
+  const tokens = chainbridgeConfig()
+    .chains.filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
       if (bc.networkId) {
         return {
@@ -48,6 +119,11 @@ const App: React.FC<{}> = () => {
         return tca;
       }
     }, {});
+
+  const rpcUrls = chains.reduce(
+    (acc, { networkId, rpcUrl }) => ({ ...acc, [networkId!]: rpcUrl }),
+    {}
+  );
 
   return (
     <ErrorBoundary
@@ -77,7 +153,14 @@ const App: React.FC<{}> = () => {
           tokensToWatch={tokens}
           onboardConfig={{
             walletSelect: {
-              wallets: [{ walletName: "metamask", preferred: true }],
+              wallets: [
+                { walletName: "metamask" },
+                {
+                  walletName: "walletConnect",
+                  rpc: { ...rpcUrls },
+                  bridge: "https://bridge.walletconnect.org",
+                },
+              ],
             },
             subscriptions: {
               network: (network: any) =>
@@ -87,7 +170,7 @@ const App: React.FC<{}> = () => {
             },
           }}
         >
-          <NetworkManagerProvider>
+          <BridgeProvider>
             <ChainbridgeProvider chains={chains}>
               <Router>
                 <AppWrapper wrapTokenPage={wrapTokenPage}>
@@ -95,11 +178,11 @@ const App: React.FC<{}> = () => {
                 </AppWrapper>
               </Router>
             </ChainbridgeProvider>
-          </NetworkManagerProvider>
+          </BridgeProvider>
         </LocalProvider>
       </ThemeSwitcher>
     </ErrorBoundary>
   );
 };
 
-export default App;
+export default AppWrap;

@@ -3,21 +3,20 @@ import {
   BridgeConfig,
   chainbridgeConfig,
   EvmBridgeConfig,
-  SubstrateBridgeConfig,
   TokenConfig,
 } from "../../chainbridgeConfig";
 import { Tokens } from "@chainsafe/web3-context/dist/context/tokensReducer";
 import { TransitState } from "../../reducers/TransitMessageReducer";
-import {
-  TransactionStatus,
-  useNetworkManager,
-} from "../NetworkManagerContext/NetworkManagerContext";
+import { TransactionStatus, useWeb3 } from "../../index";
 import { useHomeBridge } from "../HomeBridgeContext";
 import { useDestinationBridge } from "../DestinationBridgeContext";
+import { Directions } from "@chainsafe/sygma-sdk-core";
+import { useBridge } from '../Bridge'
+import { computeDirections } from "../../utils/Helpers";
 
 interface IChainbridgeContextProps {
   children: React.ReactNode | React.ReactNode[];
-  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains?: Array<EvmBridgeConfig>;
 }
 
 type ChainbridgeContext = {
@@ -27,11 +26,13 @@ type ChainbridgeContext = {
   setDestinationChain: (domainId: number | undefined) => void;
   destinationChains: Array<{ domainId: number; name: string }>;
   destinationChainConfig?: BridgeConfig;
-  deposit(
-    amount: number,
-    recipient: string,
-    tokenAddress: string
-  ): Promise<void>;
+  deposit(params: {
+    amount: string;
+    recipient: string;
+    from: Directions;
+    to: Directions;
+    feeData: string;
+  }): Promise<void>;
   resetDeposit(): void;
   // depositVotes: number;
   relayerThreshold?: number;
@@ -57,7 +58,7 @@ type ChainbridgeContext = {
     tokenAddress: string,
     destinationChainId: number
   ) => Promise<boolean | undefined>;
-  chains?: Array<EvmBridgeConfig | SubstrateBridgeConfig>;
+  chains?: Array<EvmBridgeConfig>;
 };
 
 const ChainbridgeContext = React.createContext<ChainbridgeContext | undefined>(
@@ -79,7 +80,7 @@ const ChainbridgeProvider = ({
     homeChainConfig,
     destinationChains,
     domainId,
-  } = useNetworkManager();
+  } = useWeb3();
 
   const {
     connect,
@@ -101,29 +102,31 @@ const ChainbridgeProvider = ({
     handleCheckSupplies,
   } = useHomeBridge();
 
+  const { chainbridgeInstance, bridgeSetup } = useBridge()
+
   const { setDepositVotes, tokensDispatch } = useDestinationBridge();
 
   const resetDeposit = () => {
-    chainbridgeConfig.chains.length > 2 && setDestinationChain(undefined);
-    setTransactionStatus(undefined);
+    chainbridgeConfig().chains.length > 2 && setDestinationChain(undefined);
     setDepositNonce(undefined);
     setDepositVotes(0);
     setDepositAmount(undefined);
     tokensDispatch({
       type: "resetMessages",
     });
+    tokensDispatch({
+      type: "setTransactionIsDone",
+    });
     setSelectedToken("");
+    setTransactionStatus(undefined);
   };
 
   const handleDeposit = useCallback(
-    async (amount: number, recipient: string, tokenAddress: string) => {
+    async (paramsForDeposit: { amount: string, recipient: string, from: Directions, to: Directions, feeData: string }) => {
       if (chainConfig && destinationChainConfig) {
         return await deposit(
-          amount,
-          recipient,
-          tokenAddress,
-          destinationChainConfig.domainId
-        );
+          paramsForDeposit
+        )
       }
     },
     [deposit, destinationChainConfig, chainConfig]

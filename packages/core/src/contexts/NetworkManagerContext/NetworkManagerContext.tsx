@@ -6,6 +6,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
+import { Directions } from "@chainsafe/sygma-sdk-core";
 import {
   BridgeConfig,
   chainbridgeConfig,
@@ -16,10 +17,6 @@ import {
   EVMHomeAdaptorProvider,
 } from "../Adaptors/EVMAdaptors";
 import { IDestinationBridgeProviderProps } from "../Adaptors/interfaces";
-import {
-  SubstrateDestinationAdaptorProvider,
-  SubstrateHomeAdaptorProvider,
-} from "../Adaptors/SubstrateAdaptors";
 import { HomeBridgeContext, DestinationBridgeContext } from "..";
 import {
   AddMessageAction,
@@ -28,9 +25,12 @@ import {
   transitMessageReducer,
   TransitState,
 } from "../../reducers/TransitMessageReducer";
+import { useWeb3 } from "../localWeb3Context";
+import { BridgeProvider } from "../Bridge";
 
 interface INetworkManagerProviderProps {
   children: React.ReactNode | React.ReactNode[];
+  predefinedWalletType?: WalletType;
 }
 
 export type WalletType = ChainType | "select" | "unset";
@@ -94,23 +94,17 @@ function selectProvider(
     : String(type).toLocaleLowerCase();
   const providers: { [key: string]: any } = {
     ethereum: {
-      home: <EVMHomeAdaptorProvider>{props.children}</EVMHomeAdaptorProvider>,
-      destination: (
-        <EVMDestinationAdaptorProvider>
-          {props.children}
-        </EVMDestinationAdaptorProvider>
-      ),
-    },
-    substrate: {
       home: (
-        <SubstrateHomeAdaptorProvider>
-          {props.children}
-        </SubstrateHomeAdaptorProvider>
+        <BridgeProvider>
+          <EVMHomeAdaptorProvider>{props.children}</EVMHomeAdaptorProvider>
+        </BridgeProvider>
       ),
       destination: (
-        <SubstrateDestinationAdaptorProvider>
-          {props.children}
-        </SubstrateDestinationAdaptorProvider>
+        <BridgeProvider>
+          <EVMDestinationAdaptorProvider>
+            {props.children}
+          </EVMDestinationAdaptorProvider>
+        </BridgeProvider>
       ),
     },
     unset: {
@@ -123,10 +117,13 @@ function selectProvider(
             isReady: false,
             selectedToken: "",
             deposit: async (
-              amount: number,
-              recipient: string,
-              tokenAddress: string,
-              destinationChainId: number
+              params: {
+                amount: string;
+                recipient: string;
+                from: Directions;
+                to: Directions;
+                feeData: string;
+              }
             ) => undefined,
             setDepositAmount: () => undefined,
             tokens: {},
@@ -160,13 +157,17 @@ function selectProvider(
       ),
     },
   };
+
   return providers[typeKey][direction];
 }
 
 export const NetworkManagerProvider = ({
   children,
+  predefinedWalletType,
 }: INetworkManagerProviderProps) => {
-  const [walletType, setWalletType] = useState<WalletType>("unset");
+  const [walletType, setWalletType] = useState<WalletType>(
+    predefinedWalletType ?? "Ethereum"
+  );
 
   const [homeChainConfig, setHomeChainConfig] = useState<
     BridgeConfig | undefined
@@ -182,14 +183,26 @@ export const NetworkManagerProvider = ({
   const [transactionStatus, setTransactionStatus] = useState<
     TransactionStatus | undefined
   >(undefined);
+
   const [depositNonce, setDepositNonce] = useState<string | undefined>(
     undefined
   );
+
   const [depositVotes, setDepositVotes] = useState<number>(0);
   const [inTransitMessages, tokensDispatch] = useReducer(
     transitMessageReducer,
     { txIsDone: false, transitMessage: [] }
   );
+
+  const { onboard, savedWallet, tokens } = useWeb3();
+
+  // IF THERE IS NO WALLET BUT ONBOARD IS INITIALIZED
+  // TRIGGER THIS TO OPEN ONBOARD MODAL
+  useEffect(() => {
+    if (savedWallet === "" && onboard !== undefined && tokens === undefined) {
+      onboard.walletSelect();
+    }
+  }, [onboard, savedWallet, walletType]);
 
   const handleSetHomeChain = useCallback(
     (domainId: number | undefined) => {
@@ -202,14 +215,14 @@ export const NetworkManagerProvider = ({
       if (chain) {
         setHomeChainConfig(chain);
         setDestinationChains(
-          chainbridgeConfig.chains.filter(
+          chainbridgeConfig().chains.filter(
             (bridgeConfig: BridgeConfig) =>
               bridgeConfig.domainId !== chain.domainId
           )
         );
-        if (chainbridgeConfig.chains.length === 2) {
+        if (chainbridgeConfig().chains.length === 2) {
           setDestinationChain(
-            chainbridgeConfig.chains.find(
+            chainbridgeConfig().chains.find(
               (bridgeConfig: BridgeConfig) =>
                 bridgeConfig.domainId !== chain.domainId
             )
@@ -223,10 +236,10 @@ export const NetworkManagerProvider = ({
   useEffect(() => {
     if (walletType !== "unset") {
       if (walletType === "select") {
-        setHomeChains(chainbridgeConfig.chains);
+        setHomeChains(chainbridgeConfig().chains);
       } else {
         setHomeChains(
-          chainbridgeConfig.chains.filter(
+          chainbridgeConfig().chains.filter(
             (bridgeConfig: BridgeConfig) => bridgeConfig.type === walletType
           )
         );
@@ -254,14 +267,16 @@ export const NetworkManagerProvider = ({
   );
 
   const HomeProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(walletType, "home", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(walletType, "home", props);
+    },
     [walletType]
   );
 
   const DestinationProvider = useCallback(
-    (props: INetworkManagerProviderProps) =>
-      selectProvider(destinationChainConfig?.type, "destination", props),
+    (props: INetworkManagerProviderProps) => {
+      return selectProvider(destinationChainConfig?.type, "destination", props);
+    },
     [destinationChainConfig?.type]
   );
 

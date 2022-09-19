@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useReducer } from "react";
-import { useNetworkManager } from "../../NetworkManagerContext";
 import { IHomeBridgeProviderProps } from "../interfaces";
 import { HomeBridgeContext } from "../../HomeBridgeContext";
 import { getNetworkName } from "../../../utils/Helpers";
@@ -12,6 +11,7 @@ import makeUnwrappedToken from "./makeUnwrappedToken";
 import makeHandleCheckSupplies from "./makeHandleCheckSupplies";
 import { useSetBridgeSettingsHook } from "./useSetBridgeSettingsHook";
 import { useConnectWallet } from "./useConnectWallet";
+import { useBridge } from "../../Bridge";
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -24,20 +24,25 @@ export const EVMHomeAdaptorProvider = ({
     address,
     tokens,
     wallet,
-    checkIsReady,
     ethBalance,
     onboard,
     resetOnboard,
     dispatcher,
-  } = useLocalWeb3();
-
-  const {
+    savedWallet,
     homeChainConfig,
     setTransactionStatus,
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
-  } = useNetworkManager();
+  } = useLocalWeb3();
+  const { chainbridgeInstance, bridgeSetup } = useBridge()
+
+  const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
+    isReady,
+    homeChainConfig,
+    provider,
+    network,
+  );
 
   const [evmHomeState, dispatch] = useReducer(evmHomeReducer, {
     depositAmount: undefined,
@@ -67,20 +72,11 @@ export const EVMHomeAdaptorProvider = ({
     }
   }, [handleSetHomeChain, homeChains, network]);
 
-  const { homeBridge, wrapper, wrapTokenConfig } = useConnectWallet(
-    isReady,
-    checkIsReady,
-    dispatcher,
-    onboard,
-    homeChainConfig,
-    provider,
-    network
-  );
   const [bridgeFee, relayerThreshold] = useSetBridgeSettingsHook(homeBridge);
 
   const handleConnect = useCallback(async () => {
     if (wallet && wallet.connect && network) {
-      await onboard?.walletSelect("metamask");
+      await onboard?.walletSelect(savedWallet);
       await wallet.connect();
     }
   }, [wallet, network, onboard]);
@@ -95,10 +91,10 @@ export const EVMHomeAdaptorProvider = ({
     setSelectedToken,
     gasPrice,
     homeChainConfig,
-    homeBridge,
     provider,
     address,
-    bridgeFee
+    chainbridgeInstance,
+    bridgeSetup
   );
 
   const wrapToken = makeWrappedToken(
@@ -143,7 +139,7 @@ export const EVMHomeAdaptorProvider = ({
         chainConfig: homeChainConfig,
         address,
         nativeTokenBalance: ethBalance,
-        handleCheckSupplies,
+        handleCheckSupplies
       }}
     >
       {children}

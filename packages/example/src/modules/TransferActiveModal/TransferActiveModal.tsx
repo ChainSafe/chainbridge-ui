@@ -9,7 +9,8 @@ import {
   useHomeBridge,
   useChainbridge,
   TransactionStatus,
-} from "@chainsafe/chainbridge-ui-core";
+  useWeb3 as useLocalWeb3
+} from "@chainsafe/sygma-ui-core";
 
 import InitTransferBody from "./InitTransferBody";
 import InTransitBody from "./InTransitBody";
@@ -60,6 +61,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
   close,
 }: ITransferActiveModalProps) => {
   const classes = useStyles();
+  const { savedWallet, resetOnboard, dispatcher, onboard } = useLocalWeb3()
   const {
     transactionStatus,
     relayerThreshold,
@@ -70,7 +72,7 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
     tokens,
   } = useChainbridge();
   const { homeTransferTxHash } = useHomeBridge();
-  const { transferTxHash, depositVotes, inTransitMessages } =
+  const { transferTxHash, inTransitMessages } =
     useDestinationBridge();
   const tokenSymbol = selectedToken && tokens[selectedToken]?.symbol;
 
@@ -94,6 +96,10 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
           depositAmount={depositAmount}
           tokenSymbol={tokenSymbol}
           destinationChainConfig={destinationChainConfig}
+          savedWallet={savedWallet}
+          resetOnboard={resetOnboard}
+          dispatcher={dispatcher}
+          onboard={onboard!}
         />
       ),
       default: (
@@ -144,7 +150,6 @@ const TransferActiveModal: React.FC<ITransferActiveModalProps> = ({
         <Typography className={classes.heading} variant="h5" component="h5">
           {getTransactionStateHeader(
             transactionStatus,
-            depositVotes,
             relayerThreshold
           )}
         </Typography>

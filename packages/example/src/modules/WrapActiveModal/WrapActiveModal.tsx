@@ -4,7 +4,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import Typography from "@mui/material/Typography";
 import { CustomModal } from "../../components";
-import { useChainbridge } from "@chainsafe/chainbridge-ui-core";
+import { useChainbridge } from "@chainsafe/sygma-ui-core";
 import { EvmBridgeConfig, TokenConfig } from "../../chainbridgeConfig";
 import { useStyles } from "./styles";
 
@@ -72,22 +72,6 @@ const WrapActiveModal: React.FC<IWrapActiveModalProps> = ({
               {action === "wrap"
                 ? `Successfully wrapped ${homeConfig?.nativeTokenSymbol} to ${tokenInfo.symbol}`
                 : `Successfully unwrapped ${tokenInfo.symbol} to ${homeConfig?.nativeTokenSymbol}`}
-              {homeConfig &&
-                (homeConfig as EvmBridgeConfig).blockExplorer &&
-                txHash && (
-                  <>
-                    <br />
-                    <a
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      href={`${
-                        (homeConfig as EvmBridgeConfig).blockExplorer
-                      }/${txHash}`}
-                    >
-                      View Transaction
-                    </a>
-                  </>
-                )}
             </Typography>
             <section className={classes.buttons}>
               <Button

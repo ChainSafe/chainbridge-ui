@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TransitState } from "@chainsafe/chainbridge-ui-core";
+import { TransitState } from "@chainsafe/sygma-ui-core";
 import { BridgeConfig, EvmBridgeConfig } from "../../chainbridgeConfig";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -17,6 +17,11 @@ export default function InTransitBody({
   homeConfig?: BridgeConfig;
   homeTransferTxHash?: string;
 }) {
+  const {
+    __RUNTIME_CONFIG__: {
+      UI_EXPLORER_URL
+    }
+  } = window
   return (
     <>
       <Box sx={{ my: 2 }}>
@@ -53,7 +58,7 @@ export default function InTransitBody({
           (homeConfig as EvmBridgeConfig).blockExplorer &&
           homeTransferTxHash && (
             <Button
-              href={`/explorer/transaction/${homeTransferTxHash}`}
+              href={`${UI_EXPLORER_URL}/explorer/transaction/${homeTransferTxHash}`}
               size="small"
               className={classes.button}
               variant="outlined"

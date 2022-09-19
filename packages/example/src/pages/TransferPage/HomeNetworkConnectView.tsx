@@ -1,10 +1,11 @@
 import React from "react";
 import { SelectInput } from "@chainsafe/common-components";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { Typography, Button } from "@mui/material";
 
-import { WalletType } from "@chainsafe/chainbridge-ui-core";
+import { WalletType } from "@chainsafe/sygma-ui-core";
 import { BridgeConfig } from "../../chainbridgeConfig";
+
+import { ConnectionDialog } from "../../modules";
 
 type HomeNetworkConnectViewProps = {
   isReady: boolean | undefined;
@@ -17,6 +18,7 @@ type HomeNetworkConnectViewProps = {
   accounts: Array<any> | undefined;
   selectAccount: any;
   address: string | undefined;
+  dispatcher: any;
 };
 
 export default function HomeNetworkConnectView({
@@ -33,9 +35,23 @@ export default function HomeNetworkConnectView({
   setWalletType,
   setChangeNetworkOpen,
   selectAccount,
+  dispatcher,
 }: HomeNetworkConnectViewProps) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
+      <ConnectionDialog
+        dispatcher={dispatcher}
+        open={open}
+        handleClose={handleClose}
+      />
       <div className={classes.walletArea}>
         {!isReady && (
           <Button
@@ -49,9 +65,7 @@ export default function HomeNetworkConnectView({
                 opacity: 0.9,
               },
             }}
-            onClick={() => {
-              setWalletType("select");
-            }}
+            onClick={handleClickOpen}
           >
             Connect
           </Button>
@@ -86,26 +100,6 @@ export default function HomeNetworkConnectView({
             </section>
           ))}
       </div>
-      {isReady &&
-        walletType === "Substrate" &&
-        accounts &&
-        accounts.length > 0 && (
-          <div>
-            <section className={classes.accountSelector}>
-              <SelectInput
-                label="Select account"
-                className={classes.generalInput}
-                options={accounts.map((acc, i) => ({
-                  label: acc.address,
-                  value: i,
-                }))}
-                onChange={(value) => selectAccount && selectAccount(value)}
-                value={accounts.findIndex((v) => v.address === address)}
-                placeholder="Select an account"
-              />
-            </section>
-          </div>
-        )}
     </>
   );
 }

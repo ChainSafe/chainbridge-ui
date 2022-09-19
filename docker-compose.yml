@@ -1,0 +1,23 @@
+version: '3' # specify docker-compose version
+
+services:
+  config-server:
+    build:
+      context: ./
+      dockerfile: server.dockerfile
+    ports:
+      - "8000:8000" # specify port mapping
+    environment:
+      - HOST=localhost
+      - PORT=8000
+
+  transfer-ui:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        - CONFIG_SERVER_HOST=localhost
+        - CONFIG_SERVER_PORT=8000
+    ports:
+      - "3002:80" # specify port mapping
+

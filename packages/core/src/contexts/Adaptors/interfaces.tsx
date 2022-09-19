@@ -8,6 +8,7 @@ import {
   TxIsDone,
   TransitState,
 } from "../../reducers/TransitMessageReducer";
+import { Directions } from "@chainsafe/sygma-sdk-core";
 
 export interface IHomeBridgeProviderProps {
   children: React.ReactNode | React.ReactNode[];
@@ -37,14 +38,15 @@ export interface HomeChainAdaptorContext {
   getNetworkName: (id: any) => string;
 
   connect: () => Promise<void>;
-  disconnect: () => Promise<void>;
+  disconnect: (resetWalletConnect?: boolean) => Promise<void>;
 
-  deposit(
-    amount: number,
-    recipient: string,
-    tokenAddress: string,
-    destinationChainId: number
-  ): Promise<void>;
+  deposit(params: {
+    amount: string;
+    recipient: string;
+    from: Directions;
+    to: Directions;
+    feeData: string;
+  }): Promise<void>;
 
   relayerThreshold: number | undefined;
 

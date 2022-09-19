@@ -8,24 +8,5 @@ export function useSetBridgeSettingsHook(homeBridge?: Bridge) {
     undefined
   );
 
-  useEffect(() => {
-    const getRelayerThreshold = async () => {
-      if (homeBridge) {
-        const threshold = BigNumber.from(
-          await homeBridge._relayerThreshold()
-        ).toNumber();
-        setRelayerThreshold(threshold);
-      }
-    };
-    const getBridgeFee = async () => {
-      if (homeBridge) {
-        const bridgeFee = Number(utils.formatEther(await homeBridge._fee()));
-        setBridgeFee(bridgeFee);
-      }
-    };
-    getRelayerThreshold();
-    getBridgeFee();
-  }, [homeBridge]);
-
   return [bridgeFee, relayerThreshold];
 }

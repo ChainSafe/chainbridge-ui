@@ -1,4 +1,4 @@
-# Chainbridge UI
+# Sygma UI
 
 ## Table of Contents
 
@@ -14,9 +14,6 @@
 
 - JS Framework: [React](https://github.com/facebook/react) + [Typescript](https://github.com/microsoft/TypeScript)
 - Blockchain components: [Ethers.js](https://github.com/ethers-io/ethers.js/) + [web3-context](https://github.com/chainsafe/web3-context)
-- Styling: [JSS](https://cssinjs.org/?v=v10.0.3) + [Chainsafe UI Styling](https://npmjs.com/packages/@chainsafe/common-theme/)
-- Forms & Validation: [Formik](https://jaredpalmer.com/formik) + [Yup](https://github.com/jquense/yup)
-- Notifications: [Chainsafe UI Components](https://npmjs.com/packages/@chainsafe/common-components/)
 
 ## Install
 
@@ -27,6 +24,12 @@ yarn install
 Create a `.env` file based on the `.env.example` file in the root of the project.
 Get a Blocknative DAPP ID (here)[https://explorer.blocknative.com/account] and populate the respective field in the `.env` file
 
+You can copy one of our configs for local development or create your own:
+```
+cp ./config/sygma-runtime-config.evm.json ./public/sygma-runtime-config.json
+```
+Make sure that the config file in public folder is named `sygma-runtime-config.json``
+
 ## Usage
 
 ### Development
@@ -36,13 +39,6 @@ For running a local instance use the command:
 ```
 yarn start
 ```
-
-The codebase is configured to be run against the Geth <> Substrate node that can be set up by following the guide [here](https://chainbridge.chainsafe.io/local/) or executing:
-
-- `yarn start:substrate` to start,
-- `yarn setup:example` to initialize
-
-Should the substrate chain you are targetting require different type definitions, the type definitions file should be added to `src/Contexts/Adaptors/SubstrateApis/` and the file name for the types set in the substrate bridge configs.
 
 ### Build
 
@@ -89,30 +85,40 @@ export type EvmBridgeConfig = BridgeConfig & {
 };
 ```
 
-Substrate chains should be configured with the following
-
-```
-export type SubstrateBridgeConfig = BridgeConfig & {
-  type: "Substrate";
-  chainbridgePalletName: string; // The name of the chainbridge palette
-  transferPalletName: string; // The name of the pallet that should initiate transfers
-  bridgeFeeFunctionName?: string; // The name of the function to fetch the bridge fee
-  bridgeFeeValue?: number; // The value of the bridge fee, scaled to human readable amounts. If the `bridgeFeeFunctionName` above is provided the onchain value will take preference.
-  transferFunctionName: string; // The name of the method to call to initiate a transfer
-  typesFileName: string; // The name of the Substrate types file. The file should be located in `src/Contexts/Adaptors/SubstrateApis`
-};
-```
 
 Run `yarn build`.
 
 Deploy the contents of the `/build` folder to any static website host (eg. S3, Azure storage) or IPFS.
 
-The project can also be built and deployed to Netlify, Render.com by configuring the Build command and Publish directory on the respective service.
+# Configuration server for running in the AWS enviroment
+
+To run production enviroment you can use our `config-server` package to run tiny nodejs app which get config from AWS SSM and provide it to the App in `json` format
+
+You can test it localy if you have your AWS credentials setuped in your terminal
+````
+cd ../packages/config-server
+yarn start:server
+````
+
+# Deployment
+
+There is `Dockerfile` for frontend in root direcotry and `server.dockerfile` for configuration server.
+
+It can be run together with `docker-compose` from root direcotry :
+
+````
+docker-compose -f ./docker-compose.yml up
+````
+
+Environment variables to access [config-server](../config-server):
+
+- CONFIG_SERVER_HOST=localhost (the host of config server)
+- CONFIG_SERVER_PORT=8000 ( the port of config server)
+
 
 # ChainSafe Security Policy
 
 ## Reporting a Security Bug
-
 We take all security issues seriously, if you believe you have found a security issue within a ChainSafe
 project please notify us immediately. If an issue is confirmed, we will take all necessary precautions
 to ensure a statement and patch release is made in a timely manner.
