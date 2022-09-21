@@ -172,7 +172,9 @@ export const EVMHomeAdaptorProvider = ({
       console.error(err);
     });
     
+    // On the first connect this event doesn't happen. It happens only on the second connect.
     state.wallet.provider?.on("chainChanged", (newNetworkId: number) => {
+      if(newNetworkId === networkId) return;
       setNetworkId(
         newNetworkId.toString().substring(0, 2) === '0x' 
         ? parseInt(newNetworkId.toString(), 16)
@@ -180,11 +182,12 @@ export const EVMHomeAdaptorProvider = ({
       );      
       setWalletType("unset");
       setWalletSelected(false);
+      setHomeBridge(undefined);
       resetOnboard();
     });
 
     state.wallet.provider?.on("accountsChanged", ()=> {
-      if(walletSelected) setWalletType("unset");
+      setWalletType("unset");
     });
 
     const supported = !!chainbridgeConfig.chains.find(chain =>chain.networkId === networkId);
