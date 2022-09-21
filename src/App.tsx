@@ -30,6 +30,14 @@ if (
   console.log("Sentry logging is initialized");
 }
 
+window.addEventListener("unhandledrejection", function(promiseRejectionEvent) { 
+  console.error(promiseRejectionEvent);
+  if (promiseRejectionEvent.reason.message 
+      === "Cannot read properties of undefined (reading 'description')") {
+    window.location.reload();
+  }
+});
+
 const App: React.FC<{}> = () => {
   const {
     __RUNTIME_CONFIG__: {
@@ -89,27 +97,18 @@ const App: React.FC<{}> = () => {
         <ToasterProvider autoDismiss>
           <Web3Provider
             tokensToWatch={tokens}
-            networkIds={[networkId]}
             onboardConfig={{
               dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
               walletSelect: {
                 wallets: [
+                  { walletName: "metamask", preferred: true },
                   {
                     walletName: "walletConnect",
                     preferred: true,
                     rpc,
                   },
-                  { walletName: "metamask", preferred: true },
                 ],
-              },
-              subscriptions: {
-                network: (newNetworkId) => {
-                  setNetworkId(newNetworkId);
-                  console.log("newNetworkId: ", newNetworkId);
-                },
-                balance: (amount) =>
-                  amount && console.log("balance: ", utils.formatEther(amount)),
-              },
+              }
             }}
             checkNetwork={false}
             gasPricePollingInterval={120}

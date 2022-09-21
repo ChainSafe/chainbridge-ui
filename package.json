@@ -14,7 +14,7 @@
     "@polkadot/api": "4.2.1",
     "@polkadot/extension-dapp": "0.37.1",
     "@sentry/react": "7.7.0",
-    "bnc-onboard": "1.38.4",
+    "bnc-onboard": "1.39.0",
     "clsx": "1.1.1",
     "dayjs": "1.9.1",
     "ethers": "5.4.5",
