@@ -97,6 +97,7 @@ const App: React.FC<{}> = () => {
         <ToasterProvider autoDismiss>
           <Web3Provider
             tokensToWatch={tokens}
+            networkIds={[networkId]}
             onboardConfig={{
               dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
               walletSelect: {
@@ -108,7 +109,15 @@ const App: React.FC<{}> = () => {
                     rpc,
                   },
                 ],
-              }
+              },
+              subscriptions: {
+                network: (newNetworkId) => {
+                  setNetworkId(newNetworkId);
+                  console.log("newNetworkId: ", newNetworkId);
+                },
+                balance: (amount) =>
+                  amount && console.log("balance: ", utils.formatEther(amount)),
+              },
             }}
             checkNetwork={false}
             gasPricePollingInterval={120}

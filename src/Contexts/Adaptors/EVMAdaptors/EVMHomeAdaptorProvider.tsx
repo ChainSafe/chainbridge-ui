@@ -108,6 +108,7 @@ export const EVMHomeAdaptorProvider = ({
   );
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
+  const [account, setAccount] = useState<string | undefined>();
 
   const checkWallet = useCallback(async ()=> {
     try {
@@ -174,6 +175,7 @@ export const EVMHomeAdaptorProvider = ({
     
     // On the first connect this event doesn't happen. It happens only on the second connect.
     state.wallet.provider?.on("chainChanged", (newNetworkId: number) => {
+      console.log('chainChanged:', newNetworkId);
       if(newNetworkId === networkId) return;
       setNetworkId(
         newNetworkId.toString().substring(0, 2) === '0x' 
@@ -186,8 +188,10 @@ export const EVMHomeAdaptorProvider = ({
       resetOnboard();
     });
 
-    state.wallet.provider?.on("accountsChanged", ()=> {
-      setWalletType("unset");
+    state.wallet.provider?.on("accountsChanged", (accounts: string[])=> {
+      console.log('accountsChanged:', accounts);
+      if(walletSelected && account) setWalletType("unset");
+      setAccount(accounts[0])
     });
 
     const supported = !!chainbridgeConfig.chains.find(chain =>chain.networkId === networkId);
