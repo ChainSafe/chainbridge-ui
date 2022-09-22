@@ -190,6 +190,10 @@ export const EVMHomeAdaptorProvider = ({
       setAccount(accounts[0])
     });
 
+    wallet?.provider?.on("start", (data: string[])=> {
+      console.log('stop:', data);
+    });
+
     const supported = !!chainbridgeConfig.chains.find(chain =>chain.networkId === networkId);
     if(!!networkId && !supported) {
       resetOnboard();
@@ -197,17 +201,22 @@ export const EVMHomeAdaptorProvider = ({
       return;
     }
 
+    let connected = false;
     if (!walletSelected) {
       onboard
         .walletSelect()
         .then((success) => {
           setWalletSelected(success);
+          connected = success;
           if (success) checkWallet();
         })
         .catch((error) => {
           setInitialising(false);
           console.error(error);
-        });
+        })
+        .finally(() => {
+          if(!connected) setWalletType("unset");
+        })
     } else {
       checkWallet();
     }
