@@ -167,28 +167,24 @@ export const EVMHomeAdaptorProvider = ({
     console.log("starting init");
     setInitialising(true);
 
-    const state = onboard.getState();
-    
-    state.wallet.provider?.on("error", (err: any) => {
-      console.error(err);
+    wallet?.provider?.on("error", (err: any) => {
+      console.error("Wallet provider error: ", err);
     });
     
     // On the first connect this event doesn't happen. It happens only on the second connect.
-    state.wallet.provider?.on("chainChanged", (newNetworkId: number) => {
-      console.log('chainChanged:', newNetworkId);
+    wallet?.provider?.on("chainChanged", (newNetworkId: number) => {
+      console.log('chainChanged:', newNetworkId, networkId);
       if(newNetworkId === networkId) return;
       setNetworkId(
         newNetworkId.toString().substring(0, 2) === '0x' 
         ? parseInt(newNetworkId.toString(), 16)
         : newNetworkId 
-      );      
-      setWalletType("unset");
-      setWalletSelected(false);
-      setHomeBridge(undefined);
+      );
       resetOnboard();
+      if(isReady) window.location.reload();
     });
 
-    state.wallet.provider?.on("accountsChanged", (accounts: string[])=> {
+    wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
       console.log('accountsChanged:', accounts);
       if(walletSelected && account) setWalletType("unset");
       setAccount(accounts[0])
@@ -512,7 +508,7 @@ export const EVMHomeAdaptorProvider = ({
         connect: handleConnect,
         disconnect: async () => {
           resetOnboard();
-          setWalletType("unset");
+          window.location.reload();
         },
         getNetworkName,
         bridgeFee,

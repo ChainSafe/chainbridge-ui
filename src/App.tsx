@@ -46,8 +46,11 @@ const App: React.FC<{}> = () => {
     },
   } = window;
   
-  const ethereumNetworkId = chainbridgeConfig.chains.find(chain => chain.chainId === 0)?.networkId as number;
-  const [networkId, setNetworkId] = useState<number>(ethereumNetworkId);
+  const selectedWallet = localStorage.getItem('onboard.selectedWallet');
+  const storageConfig = selectedWallet && localStorage.getItem(selectedWallet.toLocaleLowerCase());
+  const onboardConfig = storageConfig && JSON.parse(storageConfig);
+  const ethereumNetworkId = chainbridgeConfig.chains.find(chain => chain.chainId === 0)?.networkId as number;  
+  const [networkId, setNetworkId] = useState<number>(onboardConfig?.chainId || ethereumNetworkId);
   
   const rpc: {
     [key:number]: string,
