@@ -147,7 +147,7 @@ export const EVMHomeAdaptorProvider = ({
         }
       }
     } catch (err) {
-      console.error(err, '!!!!!');
+      console.error(err);
     } finally {
       setInitialising(false);
       return success;
@@ -170,7 +170,7 @@ export const EVMHomeAdaptorProvider = ({
     setInitialising(true);
 
     wallet?.provider?.on("error", (err: any) => {
-      console.error("Wallet provider error: ", err);
+      console.error("Wallet provider error:", err);
     });
     
     // On the first connect this event doesn't happen. It happens only on the second connect.
@@ -189,7 +189,7 @@ export const EVMHomeAdaptorProvider = ({
 
     wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
       console.log('accountsChanged:', accounts);
-      if(walletSelected && account) {
+      if (walletSelected && account) {
         setWalletType("unset");
       }
       setAccount(accounts[0])

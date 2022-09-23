@@ -421,7 +421,7 @@ const TransferPage = () => {
   });
 
   // This is a workaround for Ethereum networks uncaught exception bug
-  useEffect(()=>{
+  useEffect(() => {
     const unhandledRejection = !!localStorage.getItem('unhandledRejection');
     if (unhandledRejection) setWalletType('Ethereum');
   }, []);
