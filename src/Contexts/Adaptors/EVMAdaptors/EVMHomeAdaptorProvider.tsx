@@ -179,14 +179,15 @@ export const EVMHomeAdaptorProvider = ({
         newNetworkId.toString().substring(0, 2) === '0x' 
         ? parseInt(newNetworkId.toString(), 16)
         : newNetworkId 
-      );
-      resetOnboard();
+      );      
       if(isReady) window.location.reload();
     });
 
     wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
       console.log('accountsChanged:', accounts);
-      if(walletSelected && account) setWalletType("unset");
+      if(walletSelected && account) {
+        setWalletType("unset");
+      }
       setAccount(accounts[0])
     });
 
