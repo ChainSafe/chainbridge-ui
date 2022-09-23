@@ -111,8 +111,9 @@ export const EVMHomeAdaptorProvider = ({
   const [account, setAccount] = useState<string | undefined>();
 
   const checkWallet = useCallback(async ()=> {
+    let success = false;
     try {
-      const success = await checkIsReady();
+     success = await checkIsReady();
       if (success) {
         if (homeChainConfig && network && isReady && provider) {
           const signer = provider.getSigner();
@@ -146,9 +147,10 @@ export const EVMHomeAdaptorProvider = ({
         }
       }
     } catch (err) {
-      console.error(err);
+      console.error(err, '!!!!!');
     } finally {
       setInitialising(false);
+      return success;
     }             
   }, [checkIsReady, homeChainConfig, isReady, network, provider]);
 
@@ -203,23 +205,26 @@ export const EVMHomeAdaptorProvider = ({
     // This is a workaround for Ethereum networks uncaught exception bug
     const unhandledRejection = !!localStorage.getItem('unhandledRejection'); 
     if(unhandledRejection) localStorage.removeItem('unhandledRejection');
-    console.log({unhandledRejection});
 
     let connected = false;
     if (!walletSelected && !unhandledRejection) {
       onboard
         .walletSelect()
-        .then((success) => {
+        .then(async (success) => {
+          console.log('wallectSelect:', success);
           setWalletSelected(success);
-          connected = success;
-          if (success) checkWallet();
+          if (success) {
+            connected = await checkWallet() as boolean;
+            console.log('wallectCheck:', connected);
+          }
         })
         .catch((error) => {
-          setInitialising(false);
           console.error(error);
+          setInitialising(false);
+          connected = false;
         })
         .finally(() => {
-          if(!connected) setWalletType("unset");
+          if (!connected) setWalletType("unset");
         })
     } else {
       checkWallet();
