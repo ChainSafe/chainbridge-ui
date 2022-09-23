@@ -420,6 +420,14 @@ const TransferPage = () => {
     tokenSymbol: "",
   });
 
+  // This is a workaround for Ethereum networks uncaught exception bug
+  const unhandledRejection = !!localStorage.getItem('unhandledRejection');
+  console.log({unhandledRejection})
+  if(unhandledRejection) {
+    // localStorage.removeItem('unhandledRejection');
+    setWalletType('Ethereum');    
+  }
+
   useEffect(() => {
     if (walletType !== "select" && walletConnecting === true) {
       setWalletConnecting(false);

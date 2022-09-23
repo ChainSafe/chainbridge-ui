@@ -32,8 +32,10 @@ if (
 
 window.addEventListener("unhandledrejection", function(promiseRejectionEvent) { 
   console.error(promiseRejectionEvent);
+  // This is a workaround for Ethereum networks uncaught exception bug
   if (promiseRejectionEvent.reason.message 
       === "Cannot read properties of undefined (reading 'description')") {
+    localStorage.setItem('unhandledRejection', 'yes');
     window.location.reload();
   }
 });
@@ -49,8 +51,9 @@ const App: React.FC<{}> = () => {
   const selectedWallet = localStorage.getItem('onboard.selectedWallet');
   const storageConfig = selectedWallet && localStorage.getItem(selectedWallet.toLocaleLowerCase());
   const onboardConfig = storageConfig && JSON.parse(storageConfig);
+  const supported = chainbridgeConfig.chains.find(chain => chain.chainId === onboardConfig?.chainId)
   const ethereumNetworkId = chainbridgeConfig.chains.find(chain => chain.chainId === 0)?.networkId as number;  
-  const [networkId, setNetworkId] = useState<number>(onboardConfig?.chainId || ethereumNetworkId);
+  const [networkId, setNetworkId] = useState<number>((supported && onboardConfig?.chainId) || ethereumNetworkId);
   
   const rpc: {
     [key:number]: string,
@@ -115,7 +118,8 @@ const App: React.FC<{}> = () => {
               },
               subscriptions: {
                 network: (newNetworkId) => {
-                  setNetworkId(newNetworkId);
+                  const supported = chainbridgeConfig.chains.find(chain => chain.networkId === newNetworkId);
+                  if(supported) setNetworkId(newNetworkId);
                   console.log("newNetworkId: ", newNetworkId);
                 },
                 balance: (amount) =>

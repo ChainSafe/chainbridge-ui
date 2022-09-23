@@ -174,13 +174,15 @@ export const EVMHomeAdaptorProvider = ({
     // On the first connect this event doesn't happen. It happens only on the second connect.
     wallet?.provider?.on("chainChanged", (newNetworkId: number) => {
       console.log('chainChanged:', newNetworkId, networkId);
-      if(newNetworkId === networkId) return;
+      if (newNetworkId === networkId) return;
       setNetworkId(
         newNetworkId.toString().substring(0, 2) === '0x' 
         ? parseInt(newNetworkId.toString(), 16)
         : newNetworkId 
-      );      
-      if(isReady) window.location.reload();
+      );
+      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === newNetworkId);
+      if (!supported) resetOnboard();
+      if (isReady) window.location.reload();
     });
 
     wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
@@ -191,19 +193,20 @@ export const EVMHomeAdaptorProvider = ({
       setAccount(accounts[0])
     });
 
-    wallet?.provider?.on("start", (data: string[])=> {
-      console.log('stop:', data);
-    });
-
     const supported = !!chainbridgeConfig.chains.find(chain =>chain.networkId === networkId);
-    if(!!networkId && !supported) {
+    if (!!networkId && !supported) {
       resetOnboard();
       setWalletType("unset");
       return;
     }
 
+    // This is a workaround for Ethereum networks uncaught exception bug
+    const unhandledRejection = !!localStorage.getItem('unhandledRejection'); 
+    if(unhandledRejection) localStorage.removeItem('unhandledRejection');
+    console.log({unhandledRejection});
+
     let connected = false;
-    if (!walletSelected) {
+    if (!walletSelected && !unhandledRejection) {
       onboard
         .walletSelect()
         .then((success) => {
