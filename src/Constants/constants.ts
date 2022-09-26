@@ -11,4 +11,9 @@ const blockchainChainIds = {
   CERE: 1,
 };
 
-export { styles, blockchainChainIds };
+const localStorageVars = {
+  UNHANDLED_REJECTION: "unhandledRejection",
+  ONBOARD_SELECTED_WALLET: "onboard.selectedWallet"
+}
+
+export { styles, blockchainChainIds, localStorageVars };

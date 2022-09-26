@@ -59,7 +59,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
 
 const NetworkUnsupportedModal = () => {
   const classes = useStyles();
-  const { homeChainConfig, networkId } = useNetworkManager();
+  const { homeChainConfig, networkId, networkSupported } = useNetworkManager();
   const { getNetworkName, wrapTokenConfig, isReady } = useHomeBridge();
   const { pathname } = useLocation();
 
@@ -72,8 +72,7 @@ const NetworkUnsupportedModal = () => {
 
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
-      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === networkId)
-      setOpen(!!networkId && !supported);
+      setOpen(!!networkId && !networkSupported);
       setSupportedNetworks(
         chainbridgeConfig.chains
           .filter((bc) => bc.networkId !== undefined)
@@ -95,7 +94,14 @@ const NetworkUnsupportedModal = () => {
       setOpen(false);
       setSupportedNetworks([]);
     }
-  }, [pathname, setOpen, homeChainConfig, isReady, wrapTokenConfig]);
+  }, [
+    pathname, 
+    setOpen, 
+    homeChainConfig, 
+    isReady, 
+    wrapTokenConfig,
+    networkSupported
+  ]);
 
   return (
     <CustomModal

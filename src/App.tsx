@@ -16,6 +16,9 @@ import { chainbridgeConfig } from "./chainbridgeConfig";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
 import "@chainsafe/common-theme/dist/font-faces.css";
+import { localStorageVars, blockchainChainIds } from "./Constants/constants";
+
+const { UNHANDLED_REJECTION, ONBOARD_SELECTED_WALLET } = localStorageVars;
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -32,10 +35,10 @@ if (
 
 window.addEventListener("unhandledrejection", function(promiseRejectionEvent) { 
   console.error(promiseRejectionEvent);
-  // This is a workaround for Ethereum networks uncaught exception bug
+  // This is a workaround for Ethereum networks uncaught exception bug https://github.com/blocknative/web3-onboard/issues/728#issuecomment-1252122571
   if (promiseRejectionEvent.reason.message 
       === "Cannot read properties of undefined (reading 'description')") {
-    localStorage.setItem('unhandledRejection', 'yes');
+    localStorage.setItem(UNHANDLED_REJECTION, 'yes');
     window.location.reload();
   }
 });
@@ -48,19 +51,19 @@ const App: React.FC<{}> = () => {
     },
   } = window;
   
-  const selectedWallet = localStorage.getItem('onboard.selectedWallet');
-  const storageConfig = selectedWallet && localStorage.getItem(selectedWallet.toLocaleLowerCase());
-  const onboardConfig = storageConfig && JSON.parse(storageConfig);
-  const supported = chainbridgeConfig.chains.find(chain => chain.chainId === onboardConfig?.chainId)
-  const ethereumNetworkId = chainbridgeConfig.chains.find(chain => chain.chainId === 0)?.networkId as number;  
-  const [networkId, setNetworkId] = useState<number>((supported && onboardConfig?.chainId) || ethereumNetworkId);
+  const wallet = localStorage.getItem(ONBOARD_SELECTED_WALLET);
+  const walletConfigString = wallet && localStorage.getItem(wallet.toLowerCase());
+  const walletConfig = walletConfigString && JSON.parse(walletConfigString);
+  const walletNetworkSupported = chainbridgeConfig.chains.find(chain => chain.networkId === walletConfig?.chainId);
+  const ethNetworkId = chainbridgeConfig.chains.find(chain => chain.chainId === blockchainChainIds.ETHEREUM)?.networkId as number;
+  const [networkId, setNetworkId] = useState<number>((walletNetworkSupported && walletConfig?.chainId) || ethNetworkId);
   
   const rpc: {
     [key:number]: string,
   } = {};
 
   chainbridgeConfig.chains.forEach(chain => {
-    if(chain.type === 'Ethereum') {
+    if (chain.type === 'Ethereum') {
       rpc[chain.networkId as number] = chain.rpcUrl;
     }
   });
@@ -119,8 +122,8 @@ const App: React.FC<{}> = () => {
               subscriptions: {
                 network: (newNetworkId) => {
                   const supported = chainbridgeConfig.chains.find(chain => chain.networkId === newNetworkId);
-                  if(supported) setNetworkId(newNetworkId);
-                  console.log("newNetworkId: ", newNetworkId);
+                  if (supported) setNetworkId(newNetworkId);
+                  console.log(`network updated from ${networkId} to ${newNetworkId}`);
                 },
                 balance: (amount) =>
                   amount && console.log("balance: ", utils.formatEther(amount)),

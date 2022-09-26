@@ -33,6 +33,9 @@ import { styles } from "../../Constants/constants";
 import { ReactComponent as ArrowIcon } from "../../media/Icons/arrow.svg";
 import { ReactComponent as HomeIcon } from "../../media/Icons/home-icon.svg";
 import { useDestinationBridge } from "../../Contexts/DestinationBridgeContext";
+import { localStorageVars } from "../../Constants/constants";
+
+const { UNHANDLED_REJECTION } = localStorageVars;
 
 const PredefinedIcons: any = {
   ETHIcon: ETHIcon,
@@ -422,7 +425,7 @@ const TransferPage = () => {
 
   // This is a workaround for Ethereum networks uncaught exception bug
   useEffect(() => {
-    const unhandledRejection = !!localStorage.getItem('unhandledRejection');
+    const unhandledRejection = !!localStorage.getItem(UNHANDLED_REJECTION);
     if (unhandledRejection) setWalletType('Ethereum');
   }, []);
   

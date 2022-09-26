@@ -20,6 +20,8 @@ import { decodeAddress } from "@polkadot/util-crypto";
 import { getPriceCompatibility } from "./helpers";
 import { hasTokenSupplies } from "../SubstrateApis/ChainBridgeAPI";
 import { ApiPromise } from "@polkadot/api";
+import { localStorageVars } from "../../../Constants/constants";
+const { UNHANDLED_REJECTION } = localStorageVars;
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -91,6 +93,8 @@ export const EVMHomeAdaptorProvider = ({
     setAddress,
     setHomeTransferTxHash,
     api,
+    networkSupported,
+    setNetworkSupported
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -158,11 +162,17 @@ export const EVMHomeAdaptorProvider = ({
     if (network) {
       const chain = homeChains.find((chain) => chain.networkId === network);
       setNetworkId(network);
+      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === networkId);
+      setNetworkSupported(supported);
+      if (!!networkId && !supported) {
+        resetOnboard();
+        setWalletType("unset");
+      }
       if (chain) {
         handleSetHomeChain(chain.chainId);
       }
     }
-  }, [handleSetHomeChain, homeChains, network, setNetworkId]);
+  }, [handleSetHomeChain, homeChains, network, networkId, resetOnboard, setNetworkId, setNetworkSupported, setWalletType]);
 
   useEffect(() => {
     if (initialising || homeBridge || !onboard) return;
@@ -175,47 +185,39 @@ export const EVMHomeAdaptorProvider = ({
     
     // On the first connect this event doesn't happen. It happens only on the second connect.
     wallet?.provider?.on("chainChanged", (newNetworkId: number) => {
-      console.log('chainChanged:', newNetworkId, networkId);
+      console.log(`chain changed from ${networkId} to ${newNetworkId}` );
       if (newNetworkId === networkId) return;
       setNetworkId(
         newNetworkId.toString().substring(0, 2) === '0x' 
         ? parseInt(newNetworkId.toString(), 16)
         : newNetworkId 
       );
-      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === newNetworkId);
-      if (!supported) resetOnboard();
-      if (isReady) window.location.reload();
+      if (isReady && networkSupported) window.location.reload();
     });
 
     wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
-      console.log('accountsChanged:', accounts);
+      console.log(`account changed from ${account} to ${accounts[0]}`);
       if (walletSelected && account) {
         setWalletType("unset");
       }
       setAccount(accounts[0])
     });
 
-    const supported = !!chainbridgeConfig.chains.find(chain =>chain.networkId === networkId);
-    if (!!networkId && !supported) {
-      resetOnboard();
-      setWalletType("unset");
-      return;
-    }
-
+    
     // This is a workaround for Ethereum networks uncaught exception bug
-    const unhandledRejection = !!localStorage.getItem('unhandledRejection'); 
-    if(unhandledRejection) localStorage.removeItem('unhandledRejection');
+    const unhandledRejection = !!localStorage.getItem(UNHANDLED_REJECTION); 
+    if(unhandledRejection) localStorage.removeItem(UNHANDLED_REJECTION);
 
     let connected = false;
     if (!walletSelected && !unhandledRejection) {
       onboard
         .walletSelect()
         .then(async (success) => {
-          console.log('wallectSelect:', success);
+          console.log('wallet selected:', success);
           setWalletSelected(success);
           if (success) {
             connected = await checkWallet() as boolean;
-            console.log('wallectCheck:', connected);
+            console.log('wallect checked:', connected);
           }
         })
         .catch((error) => {
@@ -243,7 +245,10 @@ export const EVMHomeAdaptorProvider = ({
     onboard,
     resetOnboard,
     walletSelected,
-    setWalletType
+    setWalletType,
+    account,
+    networkSupported,
+    wallet
   ]);
 
   useEffect(() => {
