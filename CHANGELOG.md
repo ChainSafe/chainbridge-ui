@@ -2,7 +2,7 @@
 
 ## vNext
 
-...
+- WalletConnect integration
 
 ## v0.18.0
 

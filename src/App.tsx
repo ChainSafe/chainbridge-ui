@@ -121,12 +121,12 @@ const App: React.FC<{}> = () => {
               },
               subscriptions: {
                 network: (newNetworkId) => {
+                  console.log("network onboard subscription: ", { networkId, newNetworkId });
                   const supported = chainbridgeConfig.chains.find(chain => chain.networkId === newNetworkId);
                   if (supported) setNetworkId(newNetworkId);
-                  console.log(`network updated from ${networkId} to ${newNetworkId}`);
                 },
                 balance: (amount) =>
-                  amount && console.log("balance: ", utils.formatEther(amount)),
+                  amount && console.log("balance onboard subscription: ", utils.formatEther(amount)),
               },
             }}
             checkNetwork={false}

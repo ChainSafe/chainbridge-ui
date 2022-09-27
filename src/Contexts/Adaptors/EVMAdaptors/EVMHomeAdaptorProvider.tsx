@@ -160,11 +160,11 @@ export const EVMHomeAdaptorProvider = ({
 
   useEffect(() => {
     if (network) {
-      const chain = homeChains.find((chain) => chain.networkId === network);
+      const chain = chainbridgeConfig.chains.find((chain) => chain.networkId === network);
       setNetworkId(network);
-      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === networkId);
+      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === network);
       setNetworkSupported(supported);
-      if (!!networkId && !supported) {
+      if (!!network && !supported) {
         resetOnboard();
         setWalletType("unset");
       }
@@ -172,7 +172,7 @@ export const EVMHomeAdaptorProvider = ({
         handleSetHomeChain(chain.chainId);
       }
     }
-  }, [handleSetHomeChain, homeChains, network, networkId, resetOnboard, setNetworkId, setNetworkSupported, setWalletType]);
+  }, [handleSetHomeChain, homeChains, network, setNetworkId]);
 
   useEffect(() => {
     if (initialising || homeBridge || !onboard) return;
@@ -183,9 +183,9 @@ export const EVMHomeAdaptorProvider = ({
       console.error("Wallet provider error:", err);
     });
     
-    // On the first connect this event doesn't happen. It happens only on the second connect.
+    // On the first connect to a blockchain this event doesn't happen
     wallet?.provider?.on("chainChanged", (newNetworkId: number) => {
-      console.log(`chain changed from ${networkId} to ${newNetworkId}` );
+      console.log('chainChanged: ', { networkId, newNetworkId });
       if (newNetworkId === networkId) return;
       setNetworkId(
         newNetworkId.toString().substring(0, 2) === '0x' 
@@ -196,10 +196,8 @@ export const EVMHomeAdaptorProvider = ({
     });
 
     wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
-      console.log(`account changed from ${account} to ${accounts[0]}`);
-      if (walletSelected && account) {
-        setWalletType("unset");
-      }
+      console.log('accountsChanged: ', { account, accounts });
+      if (walletSelected && account) setWalletType("unset");
       setAccount(accounts[0])
     });
 
@@ -213,11 +211,11 @@ export const EVMHomeAdaptorProvider = ({
       onboard
         .walletSelect()
         .then(async (success) => {
-          console.log('wallet selected:', success);
+          console.log('walletSelect:', { success });
           setWalletSelected(success);
           if (success) {
             connected = await checkWallet() as boolean;
-            console.log('wallect checked:', connected);
+            console.log('walletCheck:', { connected });
           }
         })
         .catch((error) => {
