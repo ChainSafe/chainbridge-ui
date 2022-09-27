@@ -114,7 +114,7 @@ export const EVMHomeAdaptorProvider = ({
   const [walletSelected, setWalletSelected] = useState(false);
   const [account, setAccount] = useState<string | undefined>();
 
-  const checkWallet = useCallback(async ()=> {
+  const checkWallet = useCallback(async () => {
     let success = false;
     try {
      success = await checkIsReady();
@@ -206,7 +206,7 @@ export const EVMHomeAdaptorProvider = ({
     
     // This is a workaround for Ethereum networks uncaught exception bug
     const unhandledRejection = !!localStorage.getItem(UNHANDLED_REJECTION); 
-    if(unhandledRejection) localStorage.removeItem(UNHANDLED_REJECTION);
+    if (unhandledRejection) localStorage.removeItem(UNHANDLED_REJECTION);
 
     let connected = false;
     if (!walletSelected && !unhandledRejection) {
