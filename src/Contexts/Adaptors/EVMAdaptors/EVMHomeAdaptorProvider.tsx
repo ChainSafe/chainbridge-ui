@@ -40,41 +40,6 @@ export const EVMHomeAdaptorProvider = ({
     resetOnboard,
   } = useWeb3();
 
-  const getNetworkName = (id: any) => {
-    switch (Number(id)) {
-      case 1:
-        return "Ethereum Mainnet";
-      case 2:
-        return "Cere Mainnet (Testnet)";
-      case 3:
-        return "Ethereum Ropsten";
-      case 4:
-        return "Ethereum Rinkeby";
-      case 5:
-        return "Ethereum Goerli";
-      case 6:
-        return "Kotti";
-      case 42:
-        return "Ethereum Kovan";
-      case 61:
-        return "Ethereum Classic - Mainnet";
-      case 42220:
-        return "CELO - Mainnet";
-      case 44787:
-        return "CELO - Alfajores Testnet";
-      case 62320:
-        return "CELO - Baklava Testnet";
-      case 1749641142:
-        return "Besu";
-      case 137:
-        return "Polygon Mainnet";
-      case 80001:
-        return "Polygon Mumbai";
-      default:
-        return "Other";
-    }
-  };
-
   const {
     homeChainConfig,
     destinationChainConfig,
@@ -531,7 +496,6 @@ export const EVMHomeAdaptorProvider = ({
           resetOnboard();
           window.location.reload();
         },
-        getNetworkName,
         bridgeFee,
         deposit,
         depositAmount,

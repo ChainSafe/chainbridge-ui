@@ -121,6 +121,8 @@ interface NetworkManagerContext {
 
   setNetworkSupported: (input: boolean) => void;
   networkSupported: boolean;
+
+  getNetworkName: (id: number) => string
 }
 
 const NetworkManagerContext = React.createContext<
@@ -292,6 +294,41 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
     }
   };
 
+  const getNetworkName = (id: number) => {
+    switch (id) {
+      case 1:
+        return "Ethereum Mainnet";
+      case 2:
+        return "Cere Mainnet (Testnet)";
+      case 3:
+        return "Ethereum Ropsten";
+      case 4:
+        return "Ethereum Rinkeby";
+      case 5:
+        return "Ethereum Goerli";
+      case 6:
+        return "Kotti";
+      case 42:
+        return "Ethereum Kovan";
+      case 61:
+        return "Ethereum Classic - Mainnet";
+      case 42220:
+        return "CELO - Mainnet";
+      case 44787:
+        return "CELO - Alfajores Testnet";
+      case 62320:
+        return "CELO - Baklava Testnet";
+      case 1749641142:
+        return "Besu";
+      case 137:
+        return "Polygon Mainnet";
+      case 80001:
+        return "Polygon Mumbai";
+      default:
+        return "Other";
+    }
+  }
+
   return (
     <NetworkManagerContext.Provider
       value={{
@@ -334,7 +371,8 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
         listenerActive,
         setListenerActive,
         networkSupported,
-        setNetworkSupported
+        setNetworkSupported,
+        getNetworkName
       }}
     >
       {walletType === "Ethereum" ? (
@@ -350,7 +388,6 @@ const NetworkManagerProvider = ({ children }: INetworkManagerProviderProps) => {
           value={{
             connect: async () => undefined,
             disconnect: async () => {},
-            getNetworkName: (id: any) => "",
             isReady: false,
             selectedToken: "",
             deposit: async (

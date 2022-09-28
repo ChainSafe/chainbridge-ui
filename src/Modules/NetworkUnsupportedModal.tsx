@@ -3,14 +3,12 @@ import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
 import CustomModal from "../Components/Custom/CustomModal";
 import {
-  Button,
   ExclamationCircleInverseSvg,
   Typography,
   useLocation,
 } from "@chainsafe/common-components";
 import { useNetworkManager } from "../Contexts/NetworkManagerContext";
 import { ROUTE_LINKS } from "../Components/Routes";
-import { useHomeBridge } from "../Contexts/HomeBridgeContext";
 import { chainbridgeConfig } from "../chainbridgeConfig";
 
 const useStyles = makeStyles(({ constants, palette }: ITheme) =>
@@ -59,12 +57,10 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
 
 const NetworkUnsupportedModal = () => {
   const classes = useStyles();
-  const { homeChainConfig, networkId, networkSupported } = useNetworkManager();
-  const { getNetworkName, wrapTokenConfig, isReady } = useHomeBridge();
+  const { networkId, networkSupported, getNetworkName } = useNetworkManager();
   const { pathname } = useLocation();
 
   const [open, setOpen] = useState(false);
-  const [supportedNetworks, setSupportedNetworks] = useState<number[]>([]);
   const ethereumNetworkIds = [1, 5, 137, 80001];
   const [supportedEthereumNetworks, setSupportedEthereumNetworks] = useState<
     string
@@ -73,11 +69,10 @@ const NetworkUnsupportedModal = () => {
   useEffect(() => {
     if (pathname === ROUTE_LINKS.Transfer) {
       setOpen(!!networkId && !networkSupported);
-      setSupportedNetworks(
+      const supportedNetworks = 
         chainbridgeConfig.chains
           .filter((bc) => bc.networkId !== undefined)
-          .map((bc) => Number(bc.networkId))
-      );
+          .map((bc) => Number(bc.networkId));
       let hasOneEthereumNetwork = false;
       let ethereumNetworks = "";
       for (let i = 0; i < supportedNetworks.length; i++) {
@@ -92,15 +87,12 @@ const NetworkUnsupportedModal = () => {
       setSupportedEthereumNetworks(ethereumNetworks);
     } else {
       setOpen(false);
-      setSupportedNetworks([]);
     }
   }, [
-    pathname, 
-    setOpen, 
-    homeChainConfig, 
-    isReady, 
-    wrapTokenConfig,
-    networkSupported
+    pathname,
+    networkSupported,
+    networkId,
+    getNetworkName,
   ]);
 
   return (
