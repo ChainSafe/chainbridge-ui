@@ -20,6 +20,8 @@ import { decodeAddress } from "@polkadot/util-crypto";
 import { getPriceCompatibility } from "./helpers";
 import { hasTokenSupplies } from "../SubstrateApis/ChainBridgeAPI";
 import { ApiPromise } from "@polkadot/api";
+import { localStorageVars } from "../../../Constants/constants";
+const { UNHANDLED_REJECTION } = localStorageVars;
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -38,41 +40,6 @@ export const EVMHomeAdaptorProvider = ({
     resetOnboard,
   } = useWeb3();
 
-  const getNetworkName = (id: any) => {
-    switch (Number(id)) {
-      case 1:
-        return "Ethereum Mainnet";
-      case 2:
-        return "Cere Mainnet (Testnet)";
-      case 3:
-        return "Ethereum Ropsten";
-      case 4:
-        return "Ethereum Rinkeby";
-      case 5:
-        return "Ethereum Goerli";
-      case 6:
-        return "Kotti";
-      case 42:
-        return "Ethereum Kovan";
-      case 61:
-        return "Ethereum Classic - Mainnet";
-      case 42220:
-        return "CELO - Mainnet";
-      case 44787:
-        return "CELO - Alfajores Testnet";
-      case 62320:
-        return "CELO - Baklava Testnet";
-      case 1749641142:
-        return "Besu";
-      case 137:
-        return "Polygon Mainnet";
-      case 80001:
-        return "Polygon Mumbai";
-      default:
-        return "Other";
-    }
-  };
-
   const {
     homeChainConfig,
     destinationChainConfig,
@@ -80,6 +47,7 @@ export const EVMHomeAdaptorProvider = ({
     setDepositNonce,
     handleSetHomeChain,
     homeChains,
+    networkId,
     setNetworkId,
     setWalletType,
     depositAmount,
@@ -90,6 +58,8 @@ export const EVMHomeAdaptorProvider = ({
     setAddress,
     setHomeTransferTxHash,
     api,
+    networkSupported,
+    setNetworkSupported
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -107,11 +77,62 @@ export const EVMHomeAdaptorProvider = ({
   );
   const [initialising, setInitialising] = useState(false);
   const [walletSelected, setWalletSelected] = useState(false);
+  const [account, setAccount] = useState<string | undefined>();
+
+  const checkWallet = useCallback(async () => {
+    let success = false;
+    try {
+     success = await checkIsReady();
+      if (success) {
+        if (homeChainConfig && network && isReady && provider) {
+          const signer = provider.getSigner();
+          if (!signer) {
+            console.log("No signer");
+            setInitialising(false);
+            return;
+          }
+
+          const bridge = BridgeFactory.connect(
+            (homeChainConfig as EvmBridgeConfig).bridgeAddress,
+            signer
+          );
+          setHomeBridge(bridge);
+
+          const wrapperToken = homeChainConfig.tokens.find(
+            (token) => token.isNativeWrappedToken
+          );
+
+          if (!wrapperToken) {
+            setWrapperConfig(undefined);
+            setWrapper(undefined);
+          } else {
+            setWrapperConfig(wrapperToken);
+            const connectedWeth = WethFactory.connect(
+              wrapperToken.address,
+              signer
+            );
+            setWrapper(connectedWeth);
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setInitialising(false);
+      return success;
+    }             
+  }, [checkIsReady, homeChainConfig, isReady, network, provider]);
 
   useEffect(() => {
     if (network) {
-      const chain = homeChains.find((chain) => chain.networkId === network);
+      const chain = chainbridgeConfig.chains.find((chain) => chain.networkId === network);
       setNetworkId(network);
+      const supported = !!chainbridgeConfig.chains.find(chain => chain.networkId === network);
+      setNetworkSupported(supported);
+      if (!!network && !supported) {
+        resetOnboard();
+        setWalletType("unset");
+      }
       if (chain) {
         handleSetHomeChain(chain.chainId);
       }
@@ -122,121 +143,75 @@ export const EVMHomeAdaptorProvider = ({
     if (initialising || homeBridge || !onboard) return;
     console.log("starting init");
     setInitialising(true);
-    if (!walletSelected) {
-      onboard
-        .walletSelect("metamask")
-        .then((success) => {
-          if (window.ethereum) {
-            window.ethereum.on("chainChanged", (ch: any) => {
-              window.location.reload();
-            });
-            window.ethereum.on("accountsChanged", (accounts: any) => {
-              setWalletType("unset");
-            });
-          }
 
+    wallet?.provider?.on("error", (err: any) => {
+      console.error("Wallet provider error:", err);
+    });
+    
+    // On the first connect to a blockchain this event doesn't happen
+    wallet?.provider?.on("chainChanged", (newNetworkId: number) => {
+      console.log('chainChanged: ', { networkId, newNetworkId });
+      if (newNetworkId === networkId) return;
+      setNetworkId(
+        newNetworkId.toString().substring(0, 2) === '0x' 
+        ? parseInt(newNetworkId.toString(), 16)
+        : newNetworkId 
+      );
+      if (isReady && networkSupported) window.location.reload();
+    });
+
+    wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
+      console.log('accountsChanged: ', { account, accounts });
+      if (walletSelected && account) setWalletType("unset");
+      setAccount(accounts[0])
+    });
+
+    
+    // This is a workaround for Ethereum networks uncaught exception bug
+    const unhandledRejection = !!localStorage.getItem(UNHANDLED_REJECTION); 
+    if (unhandledRejection) localStorage.removeItem(UNHANDLED_REJECTION);
+
+    let connected = false;
+    if (!walletSelected && !unhandledRejection) {
+      onboard
+        .walletSelect()
+        .then(async (success) => {
+          console.log('walletSelect:', { success });
           setWalletSelected(success);
           if (success) {
-            checkIsReady()
-              .then((success) => {
-                if (success) {
-                  if (homeChainConfig && network && isReady && provider) {
-                    const signer = provider.getSigner();
-                    if (!signer) {
-                      console.log("No signer");
-                      setInitialising(false);
-                      return;
-                    }
-
-                    const bridge = BridgeFactory.connect(
-                      (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                      signer
-                    );
-                    setHomeBridge(bridge);
-
-                    const wrapperToken = homeChainConfig.tokens.find(
-                      (token) => token.isNativeWrappedToken
-                    );
-
-                    if (!wrapperToken) {
-                      setWrapperConfig(undefined);
-                      setWrapper(undefined);
-                    } else {
-                      setWrapperConfig(wrapperToken);
-                      const connectedWeth = WethFactory.connect(
-                        wrapperToken.address,
-                        signer
-                      );
-                      setWrapper(connectedWeth);
-                    }
-                  }
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              })
-              .finally(() => {
-                setInitialising(false);
-              });
+            connected = await checkWallet() as boolean;
+            console.log('walletCheck:', { connected });
           }
         })
         .catch((error) => {
+          console.error(error);
           setInitialising(false);
-          console.error(error);
-        });
-    } else {
-      checkIsReady()
-        .then((success) => {
-          if (success) {
-            if (homeChainConfig && network && isReady && provider) {
-              const signer = provider.getSigner();
-              if (!signer) {
-                console.log("No signer");
-                setInitialising(false);
-                return;
-              }
-
-              const bridge = BridgeFactory.connect(
-                (homeChainConfig as EvmBridgeConfig).bridgeAddress,
-                signer
-              );
-              setHomeBridge(bridge);
-
-              const wrapperToken = homeChainConfig.tokens.find(
-                (token) => token.isNativeWrappedToken
-              );
-
-              if (!wrapperToken) {
-                setWrapperConfig(undefined);
-                setWrapper(undefined);
-              } else {
-                setWrapperConfig(wrapperToken);
-                const connectedWeth = WethFactory.connect(
-                  wrapperToken.address,
-                  signer
-                );
-                setWrapper(connectedWeth);
-              }
-            }
-          }
-        })
-        .catch((error) => {
-          console.error(error);
+          connected = false;
         })
         .finally(() => {
-          setInitialising(false);
-        });
+          if (!connected) setWalletType("unset");
+        })
+    } else {
+      checkWallet();
     }
   }, [
+    checkWallet,
     initialising,
     homeChainConfig,
     isReady,
     provider,
     checkIsReady,
     network,
+    networkId,
+    setNetworkId,
     homeBridge,
     onboard,
+    resetOnboard,
     walletSelected,
+    setWalletType,
+    account,
+    networkSupported,
+    wallet
   ]);
 
   useEffect(() => {
@@ -262,7 +237,7 @@ export const EVMHomeAdaptorProvider = ({
 
   const handleConnect = useCallback(async () => {
     if (wallet && wallet.connect && network) {
-      await onboard?.walletSelect("metamask");
+      await onboard?.walletSelect();
       await wallet.connect();
     }
   }, [wallet, network, onboard]);
@@ -518,9 +493,9 @@ export const EVMHomeAdaptorProvider = ({
       value={{
         connect: handleConnect,
         disconnect: async () => {
-          await resetOnboard();
+          resetOnboard();
+          window.location.reload();
         },
-        getNetworkName,
         bridgeFee,
         deposit,
         depositAmount,

@@ -360,7 +360,6 @@ export const SubstrateHomeAdaptorProvider = ({
           setApi(undefined);
           setIsReady(false);
         },
-        getNetworkName: () => homeChainConfig?.name || "undefined",
         bridgeFee,
         deposit,
         depositAmount,

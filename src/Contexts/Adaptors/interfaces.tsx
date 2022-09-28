@@ -25,8 +25,6 @@ export type InjectedAccountType = {
 export interface HomeChainAdaptorContext {
   chainConfig: BridgeConfig | undefined;
 
-  getNetworkName: (id: any) => string;
-
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
 

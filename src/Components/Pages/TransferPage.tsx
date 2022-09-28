@@ -33,6 +33,9 @@ import { styles } from "../../Constants/constants";
 import { ReactComponent as ArrowIcon } from "../../media/Icons/arrow.svg";
 import { ReactComponent as HomeIcon } from "../../media/Icons/home-icon.svg";
 import { useDestinationBridge } from "../../Contexts/DestinationBridgeContext";
+import { localStorageVars } from "../../Constants/constants";
+
+const { UNHANDLED_REJECTION } = localStorageVars;
 
 const PredefinedIcons: any = {
   ETHIcon: ETHIcon,
@@ -55,7 +58,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       position: "relative",
       backgroundColor: "white",
       minWidth: 400,
-      ["@media only screen and (max-width: 360px)"]: {
+      "@media only screen and (max-width: 360px)": {
         minWidth: 320,
       },
     },
@@ -79,7 +82,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       lineHeight: `${constants.generalUnit * 3}px`,
       color: "black",
       paddingLeft: 12,
-      ["@media only screen and (max-width: 360px)"]: {
+      "@media only screen and (max-width: 360px)": {
         fontSize: 24,
       },
     },
@@ -91,7 +94,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       flexDirection: "column",
       justifyContent: "flex-start",
       alignItems: "center",
-      ["@media only screen and (max-width: 360px)"]: {
+      "@media only screen and (max-width: 360px)": {
         width: 320,
       },
     },
@@ -116,7 +119,7 @@ const useStyles = makeStyles(({ constants, palette }: ITheme) =>
       color: "black",
       textAlign: "center",
       paddingBottom: constants.generalUnit * 3.75,
-      ["@media (max-width: 350px)"]: {
+      "@media (max-width: 350px)": {
         fontSize: 20,
       },
     },
@@ -419,6 +422,13 @@ const TransferPage = () => {
     tokenAmount: 0,
     tokenSymbol: "",
   });
+
+  // This is a workaround for Ethereum networks uncaught exception bug
+  useEffect(() => {
+    const unhandledRejection = !!localStorage.getItem(UNHANDLED_REJECTION);
+    if (unhandledRejection) setWalletType('Ethereum');
+  }, []);
+  
 
   useEffect(() => {
     if (walletType !== "select" && walletConnecting === true) {

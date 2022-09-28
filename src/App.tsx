@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { init, ErrorBoundary, showReportDialog } from "@sentry/react";
 import { ThemeSwitcher } from "@chainsafe/common-theme";
 import {
@@ -16,6 +16,9 @@ import { chainbridgeConfig } from "./chainbridgeConfig";
 import { Web3Provider } from "@chainsafe/web3-context";
 import { utils } from "ethers";
 import "@chainsafe/common-theme/dist/font-faces.css";
+import { localStorageVars, blockchainChainIds } from "./Constants/constants";
+
+const { UNHANDLED_REJECTION, ONBOARD_SELECTED_WALLET } = localStorageVars;
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -30,6 +33,16 @@ if (
   console.log("Sentry logging is initialized");
 }
 
+window.addEventListener("unhandledrejection", function(promiseRejectionEvent) { 
+  console.error(promiseRejectionEvent);
+  // This is a workaround for Ethereum networks uncaught exception bug https://github.com/blocknative/web3-onboard/issues/728#issuecomment-1252122571
+  if (promiseRejectionEvent.reason.message 
+      === "Cannot read properties of undefined (reading 'description')") {
+    localStorage.setItem(UNHANDLED_REJECTION, 'yes');
+    window.location.reload();
+  }
+});
+
 const App: React.FC<{}> = () => {
   const {
     __RUNTIME_CONFIG__: {
@@ -37,6 +50,24 @@ const App: React.FC<{}> = () => {
       CHAINBRIDGE: { chains },
     },
   } = window;
+  
+  const wallet = localStorage.getItem(ONBOARD_SELECTED_WALLET);
+  const walletConfigString = wallet && localStorage.getItem(wallet.toLowerCase());
+  const walletConfig = walletConfigString && JSON.parse(walletConfigString);
+  const walletNetworkSupported = chainbridgeConfig.chains.find(chain => chain.networkId === walletConfig?.chainId);
+  const ethNetworkId = chainbridgeConfig.chains.find(chain => chain.chainId === blockchainChainIds.ETHEREUM)?.networkId as number;
+  const [networkId, setNetworkId] = useState<number>((walletNetworkSupported && walletConfig?.chainId) || ethNetworkId);
+  
+  const rpc: {
+    [key:number]: string,
+  } = {};
+
+  chainbridgeConfig.chains.forEach(chain => {
+    if (chain.type === 'Ethereum') {
+      rpc[chain.networkId as number] = chain.rpcUrl;
+    }
+  });
+
   const tokens = chainbridgeConfig.chains
     .filter((c) => c.type === "Ethereum")
     .reduce((tca, bc: any) => {
@@ -75,17 +106,27 @@ const App: React.FC<{}> = () => {
         <ToasterProvider autoDismiss>
           <Web3Provider
             tokensToWatch={tokens}
-            networkIds={[5]}
+            networkIds={[networkId]}
             onboardConfig={{
               dappId: process.env.REACT_APP_BLOCKNATIVE_DAPP_ID,
               walletSelect: {
-                wallets: [{ walletName: "metamask", preferred: true }],
+                wallets: [
+                  { walletName: "metamask", preferred: true },
+                  {
+                    walletName: "walletConnect",
+                    preferred: true,
+                    rpc,
+                  },
+                ],
               },
               subscriptions: {
-                network: (network) =>
-                  network && console.log("chainId: ", network),
+                network: (newNetworkId) => {
+                  console.log("network onboard subscription: ", { networkId, newNetworkId });
+                  const supported = chainbridgeConfig.chains.find(chain => chain.networkId === newNetworkId);
+                  if (supported) setNetworkId(newNetworkId);
+                },
                 balance: (amount) =>
-                  amount && console.log("balance: ", utils.formatEther(amount)),
+                  amount && console.log("balance onboard subscription: ", utils.formatEther(amount)),
               },
             }}
             checkNetwork={false}
