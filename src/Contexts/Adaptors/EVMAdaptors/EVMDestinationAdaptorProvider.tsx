@@ -115,7 +115,6 @@ export const EVMDestinationAdaptorProvider = ({
               if (transactionStatus === "Transfer Completed") return;
               setTransferTxHash(tx.transactionHash);
               setTransactionStatus("Transfer Completed");
-              fallback?.stop();
               analytics.trackTransferCompletedEvent({
                 address: address as string,
                 recipient: depositRecipient as string,
@@ -126,7 +125,6 @@ export const EVMDestinationAdaptorProvider = ({
             case 4:
               setTransactionStatus("Transfer Aborted");
               setTransferTxHash(tx.transactionHash);
-              fallback?.stop();
               analytics.trackTransferAbortedEvent({
                 address: address as string,
                 recipient: depositRecipient as string,
@@ -189,6 +187,7 @@ export const EVMDestinationAdaptorProvider = ({
   ]);
 
   const initFallbackMechanism = useCallback(async (): Promise<void> => {
+    if (!destinationBridge) return;
     const srcChainId = homeChainConfig?.chainId as number;
     const destinationChainId = destinationChainConfig?.chainId as number;
     const {
@@ -207,7 +206,7 @@ export const EVMDestinationAdaptorProvider = ({
       Math.max(pollingMinIntervalMs, 3 * blockTimeMs),
       pollingMaxIntervalMs
     );
-    const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
+    const flb = new Fallback(delayMs, pollingIntervalMs, async () => {
       let res;
       try {
         res = await destinationBridge?.getProposal(
@@ -225,7 +224,7 @@ export const EVMDestinationAdaptorProvider = ({
         case VoteStatus.EXECUTED:
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
-          fallback.stop();
+          flb.stop();
           analytics.trackTransferCompletedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
@@ -236,7 +235,7 @@ export const EVMDestinationAdaptorProvider = ({
         case VoteStatus.CANCELLED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
-          fallback.stop();
+          flb.stop();
           analytics.trackTransferAbortedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
@@ -248,8 +247,8 @@ export const EVMDestinationAdaptorProvider = ({
           return true;
       }
     });
-    fallback.start();
-    setFallback(fallback);
+    flb.start();
+    setFallback(flb);
   }, [
     homeChainConfig,
     destinationChainConfig,
@@ -257,7 +256,10 @@ export const EVMDestinationAdaptorProvider = ({
     depositNonce,
     depositAmount,
     destinationBridge,
-    fallback,
+    address,
+    analytics,
+    setTransactionStatus,
+    setFallback
   ]);
 
   useEffect(() => {
@@ -294,11 +296,20 @@ export const EVMDestinationAdaptorProvider = ({
   useEffect(() => {
     const canInitFallback =
       process.env.REACT_APP_TRANSFER_FALLBACK_ENABLED === "true" &&
-      transactionStatus === "Transfer to Destination" &&
-      destinationBridge &&
-      !fallback?.started();
-    if (canInitFallback) initFallbackMechanism();
-  }, [transactionStatus, destinationBridge, fallback]);
+      transactionStatus === "Transfer to Destination" && !fallback;
+      if (canInitFallback) initFallbackMechanism();
+      if (
+        transactionStatus === "Transfer Completed" ||
+        transactionStatus === "Transfer Aborted"
+      ) {
+        fallback?.stop();
+      }
+  }, [
+    transactionStatus, 
+    destinationBridge, 
+    fallback,
+    initFallbackMechanism
+  ]);
 
   return (
     <DestinationBridgeContext.Provider
