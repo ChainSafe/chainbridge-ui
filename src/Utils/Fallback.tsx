@@ -9,7 +9,7 @@ export class Fallback {
   ) {}
 
   start(): void {
-    if(this.started()) return;
+    if (this.started()) return;
     this.timeout = setTimeout(() => {
       this.interval = setInterval(async () => {
         const res = await this.pollingCallback();

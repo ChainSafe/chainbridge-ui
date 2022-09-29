@@ -159,7 +159,7 @@ export const SubstrateDestinationAdaptorProvider = ({
       Math.max(pollingMinIntervalMs, 3 * blockTimeMs),
       pollingMaxIntervalMs
     );
-    const flb = new Fallback(delayMs, pollingIntervalMs, async () => {
+    const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
       const res = await getBridgeProposalVotes(
         api as ApiPromise,
         srcChainId,
@@ -173,7 +173,7 @@ export const SubstrateDestinationAdaptorProvider = ({
         case VoteStatus.APPROVED:
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
-          flb.stop();
+          fallback.stop();
           analytics.trackTransferCompletedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
@@ -184,7 +184,7 @@ export const SubstrateDestinationAdaptorProvider = ({
         case VoteStatus.REJECTED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
-          flb.stop();
+          fallback.stop();
           analytics.trackTransferAbortedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
@@ -196,8 +196,8 @@ export const SubstrateDestinationAdaptorProvider = ({
           return true;
       }
     });
-    flb.start();
-    setFallback(flb);
+    fallback.start();
+    setFallback(fallback);
   }, [
     api,
     homeChainConfig,

@@ -206,7 +206,7 @@ export const EVMDestinationAdaptorProvider = ({
       Math.max(pollingMinIntervalMs, 3 * blockTimeMs),
       pollingMaxIntervalMs
     );
-    const flb = new Fallback(delayMs, pollingIntervalMs, async () => {
+    const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
       let res;
       try {
         res = await destinationBridge?.getProposal(
@@ -224,7 +224,7 @@ export const EVMDestinationAdaptorProvider = ({
         case VoteStatus.EXECUTED:
           console.log("Transfer completed in fallback mechanism");
           setTransactionStatus("Transfer Completed");
-          flb.stop();
+          fallback.stop();
           analytics.trackTransferCompletedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
@@ -235,7 +235,7 @@ export const EVMDestinationAdaptorProvider = ({
         case VoteStatus.CANCELLED:
           console.log("Transfer aborted in fallback mechanism");
           setTransactionStatus("Transfer Aborted");
-          flb.stop();
+          fallback.stop();
           analytics.trackTransferAbortedFromFallbackEvent({
             address: address as string,
             recipient: depositRecipient as string,
@@ -247,8 +247,8 @@ export const EVMDestinationAdaptorProvider = ({
           return true;
       }
     });
-    flb.start();
-    setFallback(flb);
+    fallback.start();
+    setFallback(fallback);
   }, [
     homeChainConfig,
     destinationChainConfig,
