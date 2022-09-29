@@ -115,7 +115,6 @@ export const SubstrateDestinationAdaptorProvider = ({
             ++depositVotesCounter;
             setDepositVotes(depositVotesCounter);
             setTransactionStatus("Transfer Completed");
-            fallback?.stop();
             analytics.trackTransferCompletedEvent({
               address: address as string,
               recipient: depositRecipient as string,
@@ -137,10 +136,17 @@ export const SubstrateDestinationAdaptorProvider = ({
     setDepositVotes,
     setTransactionStatus,
     tokensDispatch,
+    address,
     fallback,
+    listenerActive,
+    analytics,
+    depositAmount,
+    depositRecipient,
+    setListenerActive
   ]);
 
   const initFallbackMechanism = useCallback(async (): Promise<void> => {
+    if (!api) return;
     const srcChainId = homeChainConfig?.chainId as number;
     const destinationChainId = destinationChainConfig?.chainId as number;
     const {
@@ -199,7 +205,10 @@ export const SubstrateDestinationAdaptorProvider = ({
     depositRecipient,
     depositNonce,
     depositAmount,
-    fallback,
+    address,
+    analytics,
+    setTransactionStatus,
+    setFallback,
   ]);
 
   useEffect(() => {
@@ -235,11 +244,15 @@ export const SubstrateDestinationAdaptorProvider = ({
   useEffect(() => {
     const canInitFallback =
       process.env.REACT_APP_TRANSFER_FALLBACK_ENABLED === "true" &&
-      transactionStatus === "Transfer to Destination" &&
-      api &&
-      !fallback?.started();
+      transactionStatus === "Transfer to Destination" && !fallback;
     if (canInitFallback) initFallbackMechanism();
-  }, [transactionStatus, api, fallback]);
+    if (
+      transactionStatus === "Transfer Completed" ||
+      transactionStatus === "Transfer Aborted"
+    ) {
+      fallback?.stop();
+    }
+  }, [transactionStatus, fallback, initFallbackMechanism]);
 
   return (
     <DestinationBridgeContext.Provider
