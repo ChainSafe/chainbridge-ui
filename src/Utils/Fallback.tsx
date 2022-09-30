@@ -11,12 +11,14 @@ export class Fallback {
   start(): void {
     if (this.started()) return;
     this.timeout = setTimeout(() => {
+      console.log("Fallback delay finished");
       this.interval = setInterval(async () => {
+        console.log("Fallback polling started");
         const res = await this.pollingCallback();
         if (!res && this.started()) this.stop();
       }, this.pollingIntervalMs);
-      console.log("Fallback started");
     }, this.delayMs);
+    console.log("Fallback started");
   }
 
   stop(): void {
