@@ -6,7 +6,7 @@
 ## v0.19.0
 
 - WalletConnect integration
-- Fix fallback mechanism lunch after transaction was finished
+- Fix fallback mechanism launch after transaction was finished
 
 ## v0.18.0
 
