@@ -162,7 +162,7 @@ export const EVMHomeAdaptorProvider = ({
 
     wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
       console.log('accountsChanged: ', { account, accounts });
-      if (walletSelected && account) setWalletType("unset");
+      if (walletSelected) setWalletType("unset");
       setAccount(accounts[0])
     });
 
