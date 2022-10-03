@@ -21,7 +21,7 @@ import { getPriceCompatibility } from "./helpers";
 import { hasTokenSupplies } from "../SubstrateApis/ChainBridgeAPI";
 import { ApiPromise } from "@polkadot/api";
 import { localStorageVars } from "../../../Constants/constants";
-const { UNHANDLED_REJECTION } = localStorageVars;
+const { ONBOARD_SELECTED_WALLET } = localStorageVars;
 
 export const EVMHomeAdaptorProvider = ({
   children,
@@ -59,7 +59,8 @@ export const EVMHomeAdaptorProvider = ({
     setHomeTransferTxHash,
     api,
     networkSupported,
-    setNetworkSupported
+    setNetworkSupported,
+    walletType
   } = useNetworkManager();
 
   const [homeBridge, setHomeBridge] = useState<Bridge | undefined>(undefined);
@@ -166,34 +167,29 @@ export const EVMHomeAdaptorProvider = ({
       setAccount(accounts[0])
     });
 
-    
-    // This is a workaround for Ethereum networks uncaught exception bug
-    const unhandledRejection = !!localStorage.getItem(UNHANDLED_REJECTION); 
-    if (unhandledRejection) localStorage.removeItem(UNHANDLED_REJECTION);
-
+    const selectedWallet = localStorage.getItem(ONBOARD_SELECTED_WALLET) as string;
     let connected = false;
-    if (!walletSelected && !unhandledRejection) {
+
+    if (walletType === "Ethereum") {
       onboard
-        .walletSelect()
-        .then(async (success) => {
-          console.log('walletSelect:', { success });
-          setWalletSelected(success);
-          if (success) {
-            connected = await checkWallet() as boolean;
-            console.log('walletCheck:', { connected });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setInitialising(false);
-          connected = false;
-        })
-        .finally(() => {
-          if (!connected) setWalletType("unset");
-        })
-    } else {
-      checkWallet();
-    }
+          .walletSelect(selectedWallet || '')
+          .then(async (success) => {
+            console.log('walletSelect:', { success });
+            setWalletSelected(success);
+            if (success) {
+              connected = await checkWallet() as boolean;
+              console.log('walletCheck:', { connected });
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            setInitialising(false);
+            connected = false;
+          })
+          .finally(() => {
+            if (!connected) setWalletType("unset");
+          })
+      }
   }, [
     checkWallet,
     initialising,
@@ -211,7 +207,8 @@ export const EVMHomeAdaptorProvider = ({
     setWalletType,
     account,
     networkSupported,
-    wallet
+    wallet,
+    walletType
   ]);
 
   useEffect(() => {

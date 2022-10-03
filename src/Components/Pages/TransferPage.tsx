@@ -427,8 +427,8 @@ const TransferPage = () => {
   useEffect(() => {
     const unhandledRejection = !!localStorage.getItem(UNHANDLED_REJECTION);
     if (unhandledRejection) setWalletType('Ethereum');
+    localStorage.removeItem(UNHANDLED_REJECTION);
   }, []);
-  
 
   useEffect(() => {
     if (walletType !== "select" && walletConnecting === true) {
