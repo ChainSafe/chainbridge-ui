@@ -172,7 +172,7 @@ export const EVMHomeAdaptorProvider = ({
 
     if (walletType === "Ethereum") {
       onboard
-          .walletSelect(selectedWallet || '')
+          .walletSelect(selectedWallet)
           .then(async (success) => {
             console.log('walletSelect:', { success });
             setWalletSelected(success);
