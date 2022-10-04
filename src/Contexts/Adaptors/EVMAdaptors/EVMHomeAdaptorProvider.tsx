@@ -494,7 +494,7 @@ export const EVMHomeAdaptorProvider = ({
         connect: handleConnect,
         disconnect: async () => {
           resetOnboard();
-          window.location.reload();
+          setWalletType("unset");
         },
         bridgeFee,
         deposit,
