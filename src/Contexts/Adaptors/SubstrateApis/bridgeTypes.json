@@ -17,5 +17,6 @@
     "metadata": "Vec<u8>"
   },
   "Address": "IndicesLookupSource",
-  "LookupSource": "IndicesLookupSource"
+  "LookupSource": "IndicesLookupSource",
+  "AccountInfo": "AccountInfoWithDualRefCount"
 }
