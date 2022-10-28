@@ -280,14 +280,14 @@ export const SubstrateHomeAdaptorProvider = ({
                   ]
                     .chainNonces(destinationChainId)
                     .then((response) => {
-                      const depositNonce = `${response.toJSON()}`;
+                      const depositNonce = response.toString() || undefined
                       setDepositNonce(depositNonce);
                       setHomeTransferTxHash(status.asFinalized.toHex());
                       setTransactionStatus("Transfer to Destination");
                       analytics.trackTransferToDestinationEvent({
                         address,
                         recipient,
-                        nonce: parseInt(depositNonce),
+                        nonce: depositNonce? parseInt(depositNonce) : undefined,
                         amount: depositAmount as number,
                       });
                     })

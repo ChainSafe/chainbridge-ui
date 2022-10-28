@@ -209,11 +209,13 @@ export const EVMDestinationAdaptorProvider = ({
     const fallback = new Fallback(delayMs, pollingIntervalMs, async () => {
       let res;
       try {
-        res = await destinationBridge?.getProposal(
-          srcChainId,
-          parseInt(depositNonce as string),
-          erc20ProposalHash
-        );
+        if(depositNonce) {
+          res = await destinationBridge?.getProposal(
+            srcChainId,
+            parseInt(depositNonce),
+            erc20ProposalHash
+          );
+        }        
       } catch (error) {
         console.error(error);
       }

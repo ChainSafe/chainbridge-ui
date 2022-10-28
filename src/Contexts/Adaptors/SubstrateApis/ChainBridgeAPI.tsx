@@ -106,7 +106,7 @@ export const getBalance = async (
   address: string
 ): Promise<BigNumber> => {
   return new BigNumber(
-    (await api.query.system.account(address)).data.free.toString()
+    (await api.query.system.account(address) as any).data.free.toString()
   );
 };
 
