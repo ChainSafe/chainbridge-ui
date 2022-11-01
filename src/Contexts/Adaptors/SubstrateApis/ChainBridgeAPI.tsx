@@ -22,7 +22,7 @@ export type GetBridgeProsalVotesRes = {
   expiry: string;
 };
 
-export type Extrinsic = { method: { method: string; args: string[] } };
+export type Extrinsic = { method: { method: string; args: { nonce: string } } };
 
 export type GetBlockRes = {
   block: {
@@ -153,7 +153,7 @@ export const getTransferTxHashByNonce = async (
     const extrinsic = block.extrinsics.find(
       (extrinsic: Extrinsic) =>
         extrinsic.method.method === "acknowledgeProposal" &&
-        parseIntFromHuman(extrinsic.method.args[0]) === nonce
+        parseIntFromHuman(extrinsic.method.args.nonce) === nonce
     );
     if (extrinsic) return blockHash;
     ++attempts;
