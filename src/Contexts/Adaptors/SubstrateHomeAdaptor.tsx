@@ -287,7 +287,7 @@ export const SubstrateHomeAdaptorProvider = ({
                       analytics.trackTransferToDestinationEvent({
                         address,
                         recipient,
-                        nonce: depositNonce? parseInt(depositNonce) : undefined,
+                        nonce: depositNonce ? parseInt(depositNonce) : undefined,
                         amount: depositAmount as number,
                       });
                     })
