@@ -3,6 +3,10 @@
 ## vNext
 ...
 
+## v0.20.0
+
+- Update Cere node version
+
 ## v0.19.0
 
 - WalletConnect integration
