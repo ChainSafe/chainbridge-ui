@@ -5,7 +5,7 @@
 
 ## v0.20.0
 
-- Update Cere node version
+- Added support of the Cere node v2.32.0
 
 ## v0.19.0
 
