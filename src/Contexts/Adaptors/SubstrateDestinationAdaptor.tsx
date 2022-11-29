@@ -66,10 +66,10 @@ export const SubstrateDestinationAdaptorProvider = ({
       // Subscribe to system events via storage
       // Use here scoped counter because "depositVotes" state var doesn't recalculate inside "system.events" scope
       let depositVotesCounter = 0;
-      const unsubscribe = api.query.system.events((events) => {
+      const unsubscribe = api.query.system.events((events: any) => {
         console.log("----- Received " + events.length + " event(s): -----");
         // loop through the Vec<EventRecord>
-        events.forEach((record) => {
+        events.forEach((record: any) => {
           // extract the phase, event and the event types
           const { event, phase } = record;
           const types = event.typeDef;
@@ -82,9 +82,9 @@ export const SubstrateDestinationAdaptorProvider = ({
               "phase=" +
               phase.toString()
           );
-          console.log(event.meta.documentation.toString());
+          console.log(event.meta.docs.toString());
           // loop through each of the parameters, displaying the type and data
-          event.data.forEach((data, index) => {
+          event.data.forEach((data: any, index: number) => {
             console.log(types[index].type + ";" + data.toString());
           });
 

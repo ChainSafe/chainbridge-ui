@@ -375,7 +375,8 @@ export const EVMHomeAdaptorProvider = ({
           ),
           (destChainId, resourceId, depositNonce, tx) => {
             setHomeTransferTxHash(tx.transactionHash);
-            setDepositNonce(`${depositNonce.toString()}`);
+            const nonce = depositNonce.toString();
+            setDepositNonce(nonce ? nonce : undefined);
             setTransactionStatus("Transfer to Destination");
             analytics.trackTransferToDestinationEvent({
               address,

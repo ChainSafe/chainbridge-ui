@@ -3,6 +3,10 @@
 ## vNext
 ...
 
+## v0.20.0
+
+- Added support of the Cere node v2.32.0
+
 ## v0.19.0
 
 - WalletConnect integration
