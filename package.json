@@ -12,7 +12,7 @@
     "@material-ui/icons": "4.11.3",
     "@material-ui/styles": "4.10.0",
     "@polkadot/api": "8.2.1",
-    "@polkadot/extension-dapp": "0.44.6",
+    "@polkadot/extension-dapp": "0.37.1",
     "@sentry/react": "7.7.0",
     "bnc-onboard": "1.39.1",
     "clsx": "1.1.1",
@@ -145,6 +145,8 @@
   "browserslist": {
     "production": [
       ">0.2%",
+      "not ie <= 99",
+      "not android <= 4.4.4",
       "not dead",
       "not op_mini all"
     ],
