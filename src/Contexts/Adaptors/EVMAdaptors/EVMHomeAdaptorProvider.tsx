@@ -187,7 +187,7 @@ export const EVMHomeAdaptorProvider = ({
             connected = false;
           })
           .finally(() => {
-            if (!connected) setWalletType("unset");
+            if (!connected) window.location.reload();
           })
       }
   }, [
