@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## vNext
-...
+- Fix WalletConnect login issue after auth popup was closed
 
 ## v0.20.0
 
