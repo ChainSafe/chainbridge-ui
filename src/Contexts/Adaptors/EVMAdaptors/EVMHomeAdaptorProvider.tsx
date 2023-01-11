@@ -170,6 +170,7 @@ export const EVMHomeAdaptorProvider = ({
     const selectedWallet = localStorage.getItem(ONBOARD_SELECTED_WALLET) as string;
     let connected = false;
 
+    console.log('wallet select init');
     if (walletType === "Ethereum") {
       onboard
           .walletSelect(selectedWallet)
@@ -187,7 +188,11 @@ export const EVMHomeAdaptorProvider = ({
             connected = false;
           })
           .finally(() => {
-            if (!connected) window.location.reload();
+            if (!connected) {
+              resetOnboard();
+              setWalletType("unset");
+              console.log('finished wallet connection')
+            }  
           })
       }
   }, [
