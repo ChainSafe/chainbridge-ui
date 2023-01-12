@@ -142,7 +142,7 @@ export const EVMHomeAdaptorProvider = ({
 
   useEffect(() => {
     if (initialising || homeBridge || !onboard) return;
-    console.log("starting init");
+    console.log("Starting init");
     setInitialising(true);
 
     wallet?.provider?.on("error", (err: any) => {
@@ -151,7 +151,7 @@ export const EVMHomeAdaptorProvider = ({
     
     // On the first connect to a blockchain this event doesn't happen
     wallet?.provider?.on("chainChanged", (newNetworkId: number) => {
-      console.log('chainChanged: ', { networkId, newNetworkId });
+      console.log("Chain changed:", { networkId, newNetworkId });
       if (newNetworkId === networkId) return;
       setNetworkId(
         newNetworkId.toString().substring(0, 2) === '0x' 
@@ -162,7 +162,7 @@ export const EVMHomeAdaptorProvider = ({
     });
 
     wallet?.provider?.on("accountsChanged", (accounts: string[])=> {
-      console.log('accountsChanged: ', { account, accounts });
+      console.log("Accounts changed:", { account, accounts });
       if (walletSelected) setWalletType("unset");
       setAccount(accounts[0])
     });
@@ -174,11 +174,11 @@ export const EVMHomeAdaptorProvider = ({
       onboard
           .walletSelect(selectedWallet)
           .then(async (success) => {
-            console.log('walletSelect:', { success });
+            console.log("Wallet select:", { success });
             setWalletSelected(success);
             if (success) {
               connected = await checkWallet() as boolean;
-              console.log('walletCheck:', { connected });
+              console.log("Wallet check:", { connected });
             }
           })
           .catch((error) => {
@@ -187,7 +187,11 @@ export const EVMHomeAdaptorProvider = ({
             connected = false;
           })
           .finally(() => {
-            if (!connected) setWalletType("unset");
+            if (!connected) {
+              resetOnboard();
+              setWalletType("unset");
+            }
+            console.log("Wallet connection finished:", { connected });
           })
       }
   }, [
