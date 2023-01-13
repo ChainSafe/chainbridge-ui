@@ -533,7 +533,7 @@ const TransferPage = () => {
       <div className={classes.wrapper}>
         <div className={classes.header}>
           {process.env.REACT_APP_MAINTENANCE === "false" &&
-            (!isReady ? (
+            (!isReady && !transactionStatus ? (
               <>
                 <ArrowIcon className={classes.logo} />
                 <div className={classes.headerText}>
@@ -550,12 +550,12 @@ const TransferPage = () => {
               </span>
             ))}
         </div>
-        {!isReady && process.env.REACT_APP_MAINTENANCE === "false" ? (
+        {!isReady && process.env.REACT_APP_MAINTENANCE === "false" && !transactionStatus ? (
           <hr className={classes.horizontalLine} />
         ) : (
           <></>
         )}
-        {!isReady ? (
+        {!isReady && !transactionStatus? (
           <div className={classes.selectArea}>
             <HomeIcon className={classes.walletLogo} />
 
